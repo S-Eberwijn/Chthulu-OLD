@@ -1,0 +1,89 @@
+.sidebar {
+    width: 5em;
+    height: 100%;
+    position: fixed;
+    background-color: var(--sidebar-color);
+    color: var(--text-color);
+    box-shadow: 1px 0px 25px 0px rgba(0, 0, 0, 0.25);
+    z-index: 25;
+}
+
+header.sidebarHeader {
+    justify-content: center;
+}
+
+.icon {
+    height: 3.75em;
+    width: 3.75em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.icon.selected::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translate(-200%, -50%);
+    background-color: #ddd;
+    height: 3rem !important;
+    width: .25rem;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.bot-icon {
+    border-radius: 50%;
+    overflow: hidden;
+    transition: border-radius 150ms linear;
+}
+
+.guild-icon {
+    height: 3.4em !important;
+    width: 3.4em !important;
+    margin: 0.3em 0px;
+    border-radius: 50%;
+    overflow: hidden;
+    transition: border-radius 150ms linear;
+}
+
+.bot-icon:hover, .guild-icon:hover {
+    border-radius: 15px;
+}
+
+.icon[gIcon]:hover:before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translate(-200%, -50%);
+    background-color: #ddd;
+    height: 2rem;
+    width: .25rem;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+img {
+    width: 100%;
+    height: 100%;
+}
+
+.sidebarContent {
+    height: calc(100% - var(--header-height));
+    overflow-y: scroll;
+    overflow-x: hidden;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    align-items: center;
+    padding: var(--content-padding);
+}
+
+.sidebarContent::-webkit-scrollbar {
+    display: none;
+}

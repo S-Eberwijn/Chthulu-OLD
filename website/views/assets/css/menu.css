@@ -1,0 +1,63 @@
+.menu {
+    width: 0em;
+}
+
+.menu[guild] {
+    width: 20em;
+    background-color: var(--menu-color);
+    color: var(--text-color);
+    height: 100%;
+    box-sizing: border-box;
+    position: fixed;
+    margin-left: 5em;
+    overflow: scroll;
+    scrollbar-width: none;
+    position: relative;
+}
+
+.menu::-webkit-scrollbar {
+    display: none;
+}
+
+header.menuHeader {
+    padding: 1.3em;
+    position: fixed;
+    z-index: 10;
+    background-color: inherit;
+    width: 20rem;
+}
+
+.menuContent {
+    box-sizing: border-box;
+    padding: var(--content-padding);
+    margin-top: 6em;
+}
+
+.menuCategory {
+    box-sizing: border-box;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.menuCategory:nth-child(2) {
+    margin: 1.3em 0px;
+}
+
+.menuCategory span {
+    padding: 0px 1.3em;
+}
+
+.menuCategoryItem {
+    font-size: 16px;
+    font-weight: lighter;
+    padding: 0.1em 0px;
+    transition: 200ms background-color;
+}
+
+.menuCategoryItem:hover {
+    cursor: pointer;
+    background-color: #42494c;
+}
+.menuCategory span a {
+    text-decoration: none;
+}

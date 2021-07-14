@@ -1,0 +1,21 @@
+[{
+        "question": "Give the date of when the session will take place? (dd/m)",
+        "regex": "(([1-2][0-9])|([1-9])|(3[0-1]))/((1[0-2])|([1-9]))",
+        "errorMessage": "Use this format 'dd/mm'!"
+    },
+    {
+        "question": "What time would you like the session to begin? (hh:mm)",
+        "regex": "([01]?[0-9]|2[0-3]):[0-5][0-9]$",
+        "errorMessage": "Use this format 'hh:mm'!"
+    },
+    {
+        "question": "Which players are you taking on this session?",
+        "regex": "(^<@!)([0-9]+)(>)",
+        "errorMessage": "Mention at least one player!"
+    },
+    {
+        "question": "What will be the objective of this session?",
+        "regex": ".*",
+        "errorMessage": "Give an objective!"
+    }
+]

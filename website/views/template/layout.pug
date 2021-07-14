@@ -1,0 +1,66 @@
+doctype html
+html(lang="en")
+    head
+        meta(charset="UTF-8")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        title Chthulu Dashboard
+        block scripts 
+        block styles 
+    body
+        .sidebar
+                header.sidebarHeader
+                    .icon
+                        a.bot-icon(href=`/`)
+                            img(src=bot.user.avatarURL() alt="Chthulu Avatar")
+                .sidebarContent 
+                    each guild in bot.guilds.cache.map(guild => guild)
+                        if (guild.id === selectedGuildId)
+                            .icon.selected
+                                a.guild-icon(href=`/dashboard/${guild.id}`)
+                                    img(src=guild.iconURL() alt="Server Avatar")
+                        else 
+                            .icon(gIcon)
+                                a.guild-icon(href=`/dashboard/${guild.id}`)
+                                    img(src=guild.iconURL() alt="Server Avatar")
+        .menu(guild=isGuildDashboardPage)
+            header.menuHeader
+                span #{guildName}
+            .menuContent 
+                .menuCategory 
+                    span Informational
+                        a(href=`/dashboard/${selectedGuildId}/informational/characters`)
+                            .menuCategoryItem          
+                                span # Characters
+                        a(href=`/dashboard/${selectedGuildId}/informational/nonplayercharacters`)   
+                            .menuCategoryItem
+                                span # NPC's
+                        a(href=`/dashboard/${selectedGuildId}/informational/quests`)   
+                            .menuCategoryItem
+                                span # Quests
+                .menuCategory 
+                    span Sessions
+                        a(href=`/dashboard/${selectedGuildId}/sessions/overview`)   
+                            .menuCategoryItem
+                                span # Overview
+                        a(href=`/dashboard/${selectedGuildId}/sessions/request`)   
+                            .menuCategoryItem  
+                                span # Request Session
+                .menuCategory 
+                    span Settings
+                        a(href=`/dashboard/${selectedGuildId}/settings/dnd`)   
+                            .menuCategoryItem
+                                span # Dungeons & Dragons
+                        a(href=`/dashboard/${selectedGuildId}/settings/general`)   
+                            .menuCategoryItem
+                                span # General
+                        a(href=`/dashboard/${selectedGuildId}/settings/information`)   
+                            .menuCategoryItem
+                                span # Information
+                        a(href=`/dashboard/${selectedGuildId}/settings/miscellaneous`)   
+                            .menuCategoryItem
+                                span # Miscellaneous
+        .dashboard(guild=isGuildDashboardPage)
+            header.dashboardHeader
+                span #{headerTitle} Dashboard
+                button(onclick="window.location='/login';") Login
+            block dashboardContent

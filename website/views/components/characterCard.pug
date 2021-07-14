@@ -1,0 +1,14 @@
+.characterCardHolder
+    .characterCard(unselectable="on")
+        span.characterName #{character.name} (#{character.age})
+        span.characterLevel #{character.level}
+        span.characterDescription #{character.description}
+        .infoBundle
+            span Race
+                span.characterRace #{character.race}
+            span Class 
+                span.characterClass #{character.class} 
+            span Background 
+                span.characterBackground #{character.background}
+        .characterImageHolder 
+            img(src=character.picture_url alt="Character Image")

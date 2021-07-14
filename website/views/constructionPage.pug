@@ -1,0 +1,16 @@
+extends ./template/layout.pug
+block scripts
+    script
+        include ./static/theme.js
+
+block styles 
+    style 
+        include ./assets/css/main.css
+        include ./assets/css/sidebar.css
+        include ./assets/css/menu.css
+        include ./assets/css/dashboard.css
+
+block dashboardContent
+    .dashboardContent(construction=true)
+        img(src="/images/construction.png" alt="Construction")
+
