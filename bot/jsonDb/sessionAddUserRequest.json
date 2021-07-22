@@ -1,5 +1,14 @@
 {
     "sessions": [
-
+        {
+            "session_channel_id": "867051326520950804",
+            "requested": [],
+            "denied": []
+        },
+        {
+            "session_channel_id": "867815349717434368",
+            "requested": [],
+            "denied": []
+        }
     ]
 }

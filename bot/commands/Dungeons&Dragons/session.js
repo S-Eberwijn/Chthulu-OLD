@@ -1,6 +1,8 @@
 const { MessageEmbed } = require('discord.js');
 const SessionRequest = require('../../../database/models/SessionRequest');
 const PlayerCharacter = require('../../../database/models/PlayerCharacter');
+const fs = require("fs");
+
 
 const COMMAND_OPTIONS = ['request'];
 const AWAIT_MESSAGE_OPTIONS = {
@@ -13,7 +15,6 @@ const NAME_OF_DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'F
 
 module.exports.run = async (bot, message, args) => {
     message.delete();
-
 
     // VARIABLES
     const SESSIONS_CATEGORY = message.member.guild.channels.cache.find(c => c.name == "--SESSIONS--" && c.type == "category");
@@ -30,8 +31,26 @@ module.exports.run = async (bot, message, args) => {
 
             // Makes a request channel for the message author
             message.guild.channels.create(`${message.author.username}s-request`, "text").then(async createdChannel => {
+                // TODO: Add right permission to the right people (DM'S, Players, Session Part)
+
                 // Puts the channel under the "--SESSIONS--" category
                 createdChannel.setParent(SESSIONS_CATEGORY, { lockPermission: false });
+
+                // Update channel permissions so everyone can't see it.
+                createdChannel.updateOverwrite(message.channel.guild.roles.everyone, {
+                    VIEW_CHANNEL: false,
+                });
+                
+                // Update channel permissions so Dungeon Masters can see it.
+                createdChannel.updateOverwrite(message.guild.roles.cache.find(role => role.name.toLowerCase().includes('dungeon master')), {
+                    VIEW_CHANNEL: true,
+                });
+                // sessionRequest.get('session_party').forEach(playerId => {
+                //     createdChannel.updateOverwrite(bot.users.cache.get(playerId), {
+                //         VIEW_CHANNEL: true,
+                //     });
+                // });
+
                 createdChannel.send(`<@!${message.author.id}>, welcome to your session request channel!`).then(async () => {
 
                     for (const QUESTION_OBJECT of QUESTIONS_ARRAY) {
@@ -84,11 +103,16 @@ module.exports.run = async (bot, message, args) => {
 
                     SESSION_REQUEST_CHANNEL.send(createSessionChannelEmbed(message.author, sessionDate, sessionParticipants, sessionObjective, messageAuthorCharacter['picture_url'])).then(async sessionChannelEmbedMessage => {
                         await createSessionRequestDatabaseEntry(sessionChannelEmbedMessage.id, sessionDate, sessionParticipants, sessionObjective, createdChannel.id, message.guild.id)
+                        bot.sessionAddUserRequest['sessions'][bot.sessionAddUserRequest['sessions'].length] = {
+                            session_channel_id: createdChannel.id,
+                            requested: [],
+                            denied: []
+                        }
+                        writeToJsonDb("./bot/jsonDb/sessionAddUserRequest.json", bot.sessionAddUserRequest);
                         await sessionChannelEmbedMessage.react('✅');
                         await sessionChannelEmbedMessage.react('❌');
                         await sessionChannelEmbedMessage.react('🙋‍♂️');
                     })
-
                 });
             });
             break;
@@ -139,4 +163,11 @@ function createSessionRequestDatabaseEntry(sessionRequestEmbedId, sessionDate, s
 function getDoubleDigitNumber(number) {
     if (number < 10) return `0${number}`;
     return `${number}`;
+}
+
+// TODO: Centralize this code
+function writeToJsonDb(location, data) {
+    fs.writeFile(`${location}`, JSON.stringify(data, null, 4), err => {
+        if (err) throw err;
+    });
 }

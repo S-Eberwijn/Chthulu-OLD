@@ -4,13 +4,10 @@ const PlannedSession = require('../../database/models/PlannedSession');
 const PlayerCharacter = require('../../database/models/PlayerCharacter.js');
 const GeneralInfo = require('../../database/models/GeneralInfo.js');
 // const PastSession = require('../../database/models/PastSession.js');
-// const fs = require("fs");
-
-
+const fs = require("fs");
 
 module.exports = async (bot, messageReaction, user) => {
     const { message, emoji } = messageReaction;
-
     // When we receive a reaction we check if the reaction is partial or not
     if (messageReaction.partial) {
         // If the message this reaction belongs to was removed the fetching might result in an API error, which we need to handle
@@ -41,7 +38,7 @@ module.exports = async (bot, messageReaction, user) => {
             // Return if the message is not an embed.
             if (!message.embeds[0]) return;
             // Find the session request in the database.
-            const FOUND_SESSION_REQUEST = await SessionRequest.findOne({ where: { message_id: message.id } });
+            let FOUND_SESSION_REQUEST = await SessionRequest.findOne({ where: { message_id: message.id } });
             const GENERAL_SERVER_INFO = await GeneralInfo.findOne({ where: { server_id: messageReaction.message.guild.id } });
 
             // Return if no session request has been found in the database corresponding to the server id.
@@ -53,61 +50,118 @@ module.exports = async (bot, messageReaction, user) => {
             if (message.guild.member(user.id).roles.cache.has(DUNGEON_MASTER_ROLE.id)) {
                 // Return if there is no "planned-session" channel on the server.
                 if (!PLANNED_SESSIONS_CHANNEL) return message.channel.send(`No channel named "planned-session" found! Please create one.`).then(msg => msg.delete({ timeout: 3000 })).catch(err => console.log(err));
-                switch (emoji.name) {
-                    case '✅':
-                        // Send a planned session embed to the "session-planned" channel.
-                        PLANNED_SESSIONS_CHANNEL.send(createPlannedSessionEmbed(user.id, GENERAL_SERVER_INFO.get('session_number'), message.embeds[0])).then(async plannedSessionEmbedMessage => {
-                            // Edit session channel name.
-                            bot.channels.cache.find(c => c.id == FOUND_SESSION_REQUEST.get('session_channel_id') && c.type == "text").setName(`session-${GENERAL_SERVER_INFO.get('session_number')}`);
-                            // Create a planned session in the databse.
-                            createPlannedSessionDatabaseEntry(plannedSessionEmbedMessage.id, FOUND_SESSION_REQUEST, GENERAL_SERVER_INFO, user.id, message.guild.id);
-                            // Add the next session ID to each character of the party.
-                            updatePartyNextSessionId(FOUND_SESSION_REQUEST.get('session_party'), plannedSessionEmbedMessage.id, message.guild.id);
+                try {
+                    switch (emoji.name) {
+                        case '✅':
+                            // Send a planned session embed to the "session-planned" channel.
+                            PLANNED_SESSIONS_CHANNEL.send(createPlannedSessionEmbed(user.id, GENERAL_SERVER_INFO.get('session_number'), message.embeds[0])).then(async plannedSessionEmbedMessage => {
+                                // Edit session channel name.
+                                bot.channels.cache.find(c => c.id == FOUND_SESSION_REQUEST.get('session_channel_id') && c.type == "text").setName(`session-${GENERAL_SERVER_INFO.get('session_number')}`);
+                                // Create a planned session in the databse.
+                                createPlannedSessionDatabaseEntry(plannedSessionEmbedMessage.id, FOUND_SESSION_REQUEST, GENERAL_SERVER_INFO, user.id, message.guild.id);
+                                // Add the next session ID to each character of the party.
+                                updatePartyNextSessionId(FOUND_SESSION_REQUEST.get('session_party'), plannedSessionEmbedMessage.id, message.guild.id);
+                                // Delete the session request in the database.
+                                deleteSessionRequestDatabaseEntry(message.id, message.guild.id);
+                                return message.delete();
+                            });
+                        case '❌':
+                            // Delete session channel.
+                            bot.channels.cache.find(c => c.id == FOUND_SESSION_REQUEST.get('session_channel_id') && c.type == "text").delete();
                             // Delete the session request in the database.
                             deleteSessionRequestDatabaseEntry(message.id, message.guild.id);
+                            // Delete the session request embed.
                             return message.delete();
-                        });
-                    case '❌':
-                        // Delete session channel.
-                        bot.channels.cache.find(c => c.id == FOUND_SESSION_REQUEST.get('session_channel_id') && c.type == "text").delete();
-                        // Delete the session request in the database.
-                        deleteSessionRequestDatabaseEntry(message.id, message.guild.id);
-                        return message.delete();
 
-                    case '🙋‍♂️':
-                        // Alert user that Dungeon Masters cant join session party.
-                        message.channel.send('Dungeon Masters can not join the sessions party of players!').then(msg => msg.delete({ timeout: 3000 })).catch(err => console.log(err));
-                    default:
-                        // Delete the user reaction a.k.a. emoji.
-                        try {
-                            for (const reaction of message.reactions.cache.filter(reaction => reaction.users.cache.has(user.id)).values()) {
-                                await reaction.users.remove(user.id);
-                            }
-                        } catch (error) {
-                            console.error('Failed to remove reactions.');
-                        }
-                        return
+                        case '🙋‍♂️':
+                            // Alert user that Dungeon Masters cant join session party.
+                            message.channel.send('Dungeon Masters can not join the sessions party of players!').then(msg => msg.delete({ timeout: 3000 })).catch(err => console.log(err));
+                        default:
+                            // Delete the user reaction a.k.a. emoji.
+                            return await deleteReactionFromUser(message, user.id);
+                    }
+                } catch (error) {
+                    console.log(error);
                 }
             } else if (USER_CHARACTER) {
-                switch (emoji.name) {
-                    case '🙋‍♂️':
-                        return console.log('TODO: Add user to session')
-                    case '✅':
+                try {
+                    switch (emoji.name) {
+                        case '🙋‍♂️':
+                            //Return if player is already in the session.
+                            if (isPlayerAlreadyInSessionParty(FOUND_SESSION_REQUEST.get('session_party'), user.id)) return message.channel.send('You are already in this session!').then(msg => msg.delete({ timeout: 3000 })).catch(err => console.log(err));
+                            //TODO: Ask the user if he/she wants to leave the session.
 
-                    case '❌':
-                        // Alert user that Dungeon Masters cant join session party.
-                        message.channel.send('You do not have permission to accept or decline a session request!').then(msg => msg.delete({ timeout: 3000 })).catch(err => console.log(err));
-                    default:
-                        // Delete the user reaction a.k.a. emoji.
-                        try {
-                            for (const reaction of message.reactions.cache.filter(reaction => reaction.users.cache.has(user.id)).values()) {
-                                await reaction.users.remove(user.id);
-                            }
-                        } catch (error) {
-                            console.error('Failed to remove reactions.');
-                        }
-                        return
+                            // Return if session is full and no more players can fit.
+                            if (!(FOUND_SESSION_REQUEST.get('session_party').length < 5)) return message.channel.send('This session is full! Only 5 players are allowed!').then(msg => msg.delete({ timeout: 3000 })).catch(err => console.log(err));
+                            // Return if the user already requested for the session.
+                            if (playerAlreadyRequestedForSession(bot, user.id, message, FOUND_SESSION_REQUEST.get('session_channel_id'))) return message.channel.send(`You already requested to join this session, please be patient!`).then(msg => msg.delete({ timeout: 3000 })).catch(err => console.log(err));
+                            // Return if the user already has been denied for the session.
+                            if (playerAlreadyBeenDenied(bot, user.id, message, FOUND_SESSION_REQUEST.get('session_channel_id'))) return message.channel.send(`Your request to join this session has already been declined by the session commander, better luck next time!`).then(msg => msg.delete({ timeout: 5000 })).catch(err => console.log(err));
+                            // Give user feedback on asking the session commander if he/she may join the session.
+                            message.channel.send(`${user}, I have asked the session commander if you may join the session. Please give him/her some time to decide!`).then(msg => msg.delete({ timeout: 5000 })).catch(err => console.log(err));
+                            // Add REQUESTED-status to user in designated database. 
+                            giveUserRequestedStatus(bot, FOUND_SESSION_REQUEST, user)
+                            // Send a message in the session channel to ask the session commander if the user may join the session.
+                            const SESSION_CHANNEL = bot.channels.cache.find(c => c.id == FOUND_SESSION_REQUEST.get('session_channel_id') && c.type == "text");
+                            SESSION_CHANNEL.send(`Hello, ${bot.users.cache.get(FOUND_SESSION_REQUEST.get('session_commander_id'))}. <@!${user.id}> (${USER_CHARACTER.get('name').trim()}) is requesting to join your session!`).then(async msg => {
+                                await msg.react('✔️');
+                                await msg.react('✖️');
+
+                                const emojiFilter = (reaction, user) => {
+                                    if (user.bot === true) return false;
+                                    return (reaction.emoji.name === '✔️' || reaction.emoji.name === '✖️') && user.id === FOUND_SESSION_REQUEST.get('session_commander_id');
+                                };
+                                msg.awaitReactions(emojiFilter, {
+                                    max: 1,
+                                    time: 86400000,
+                                    errors: ['time'],
+                                }).then(async collected => {
+                                    msg.delete().catch(err => console.error(err));
+                                    switch (collected.first().emoji.name) {
+                                        case '✔️':
+                                            // Check again if in the meantime the sessions party is already full.
+                                            FOUND_SESSION_REQUEST = await SessionRequest.findOne({ where: { message_id: message.id } });
+                                            if (!(FOUND_SESSION_REQUEST.get('session_party').length < 5)) return msg.channel.send('This session is full! Only 5 players are allowed!').then(msg => msg.delete({ timeout: 3000 })).catch(err => console.log(err));
+                                            // Send the person who wants to join the session he/she got accepted.
+                                            user.send(`Your request to join ${bot.users.cache.get(FOUND_SESSION_REQUEST.get('session_commander_id')).username}'s session has been **ACCEPTED**`);
+                                            // TODO: Adjust channels permissions.
+
+                                            // Remove user REQUESTED-status in JSON database. 
+                                            removeUserRequestStatus(bot, FOUND_SESSION_REQUEST, user)
+                                            // Update session party database entry.
+                                            updateDatabaseSessionParty(FOUND_SESSION_REQUEST, user.id);
+                                            // Edit the session message embed.
+                                            message.edit(updateSessionEmbed(message, FOUND_SESSION_REQUEST.get('session_party')).embeds[0])
+                                            break;
+                                        case '✖️':
+                                            // Send the person who requested to join the session, he/she got declined.
+                                            user.send(`Your request to join ${bot.users.cache.get(FOUND_SESSION_REQUEST.get('session_commander_id')).username}'s session has been **DECLINED**`);
+                                            // Give the user a DENIED-status in the JSON database.
+                                            giveUserDeniedStatus(bot, FOUND_SESSION_REQUEST, user)
+                                            break;
+                                    }
+                                }).catch(err => {
+                                    console.error(err);
+                                    // Send the person who wants to join the session his/her request has not been answered.
+                                    user.send(`Your request to join ${bot.users.cache.get(FOUND_SESSION_REQUEST.get('session_commander_id')).username}'s session has **NOT BEEN ANSWERED**`);
+                                    // Remove user REQUESTED-status in JSON database. 
+                                    removeUserRequestStatus(bot, FOUND_SESSION_REQUEST, user)
+                                })
+                            })
+                            return console.log('TODO: Add user to session')
+                        case '✅':
+
+                        case '❌':
+                            // Alert user that Dungeon Masters cant join session party.
+                            message.channel.send('You do not have permission to accept or decline a session request!').then(msg => msg.delete({ timeout: 3000 })).catch(err => console.log(err));
+                    }
+                } catch (error) {
+                    console.log(error)
+                } finally {
+                    // Delete the user reaction a.k.a. emoji.
+                    return await deleteReactionFromUser(message, user.id)
                 }
+
             } else {
                 console.log('user does not have a character in database')
 
@@ -134,99 +188,6 @@ module.exports = async (bot, messageReaction, user) => {
     //                         foundSessionRequest.destroy();
     //                         message.delete();
     //                         return;
-    //                     } else return message.channel.send('Something went wrong; Cannot find the right session request in the database!').then(msg => msg.delete({ timeout: 3000 })).catch(err => console.log(err));
-    //                 } else return message.channel.send('Something went wrong; Cannot find this server in the database!').then(msg => msg.delete({ timeout: 3000 })).catch(err => console.log(err));
-    //             } else if (emoji.name === '✖️') {
-    //                 await deleteSessionRequestChannel(message, message.id, message.guild.id)
-    //                 await deleteSessionRequest(message.id, message.guild.id);
-    //                 message.delete();
-    //                 return;
-    //             } else return message.reactions.resolve(emoji.id).users.remove(user.id).catch(err => console.log(err));
-    //         } else if (message.guild.member(user).roles.cache.has(playerRole)) {
-    //             if (emoji.name.includes('adduser')) {
-    //                 message.reactions.resolve(emoji.id).users.remove(user.id).catch(err => console.log(err));
-    //                 await SessionRequest.findOne({ where: { message_id: message.id } }).then(async sessionRequest => {
-    //                     if (!checkIfPlayerIsAlreadyInParty(sessionRequest.get('session_party'), user.id)) {
-    //                         if (sessionRequest.get('session_party').length < 5) {
-    //                             if (!checkIfPlayerAlreadyRequestedOrDenied(bot, user.id, message, sessionRequest.get('session_channel_id'))) {
-    //                                 for (let i = 0; i < bot.sessionAddUserRequest['sessions'].length; i++) {
-    //                                     if (bot.sessionAddUserRequest['sessions'][i].session_channel_id === sessionRequest.get('session_channel_id')) {
-    //                                         bot.sessionAddUserRequest['sessions'][i].requested[bot.sessionAddUserRequest['sessions'][i].requested.length] = { "user_id": `${user.id}` };
-    //                                         break;
-    //                                     }
-    //                                 }
-    //                                 fs.writeFile("./jsonDb/sessionAddUserRequest.json", JSON.stringify(bot.sessionAddUserRequest, null, 4), err => {
-    //                                     if (err) throw err;
-    //                                 });
-    //                             } else return;
-    //                             try {
-    //                                 const createdChannel = bot.channels.cache.find(c => c.id == sessionRequest.get('session_channel_id') && c.type == "text");
-    //                                 createdChannel.send(`Hello, ${bot.users.cache.get(sessionRequest.get('session_commander_id'))}. ${user.username} is requesting to join your session!`).then(async msg => {
-    //                                     await msg.react('✔️');
-    //                                     await msg.react('✖️');
-
-    //                                     const emojiFilter = (reaction, user) => {
-    //                                         if (user.bot === true) return false;
-    //                                         return (reaction.emoji.name === '✔️' || reaction.emoji.name === '✖️') && user.id === sessionRequest.get('session_commander_id');
-    //                                     };
-    //                                     msg.awaitReactions(emojiFilter, {
-    //                                         max: 1,
-    //                                         time: 86400000,
-    //                                         errors: ['time'],
-    //                                     }).then(collected => {
-    //                                         msg.delete().catch();
-    //                                         if (collected.first().emoji.name === '✔️') {
-    //                                             user.send(`Your request to join ${bot.users.cache.get(sessionRequest.get('session_commander_id')).username}'s session has been **ACCEPTED**`);
-    //                                             createdChannel.updateOverwrite(user, {
-    //                                                 VIEW_CHANNEL: true,
-    //                                             });
-    //                                             for (let i = 0; i < bot.sessionAddUserRequest['sessions'].length; i++) {
-    //                                                 if (bot.sessionAddUserRequest['sessions'][i].session_channel_id === sessionRequest.get('session_channel_id')) {
-    //                                                     for (let j = 0; j < bot.sessionAddUserRequest['sessions'][i].requested.length; j++) {
-    //                                                         if (bot.sessionAddUserRequest['sessions'][i].requested[j].user_id === user.id) {
-    //                                                             bot.sessionAddUserRequest['sessions'][i].requested[j].user_id = "";
-    //                                                             break;
-    //                                                         }
-    //                                                     }
-    //                                                 }
-    //                                             }
-    //                                             fs.writeFile("./jsonDb/sessionAddUserRequest.json", JSON.stringify(bot.sessionAddUserRequest, null, 4), err => {
-    //                                                 if (err) throw err;
-    //                                             });
-    //                                             message.edit(updateSessionRequestEmbedPartyMembers(message, sessionRequest.get('session_party'), user.id).embeds[0]);
-    //                                             updateDatabaseSessionRequestParty(sessionRequest, user.id);
-    //                                         } else if (collected.first().emoji.name === '✖️') {
-    //                                             user.send(`Your request to join ${bot.users.cache.get(sessionRequest.get('session_commander_id')).username}'s session has been **DECLINED**`);
-    //                                             for (let i = 0; i < bot.sessionAddUserRequest['sessions'].length; i++) {
-    //                                                 if (bot.sessionAddUserRequest['sessions'][i].session_channel_id === sessionRequest.get('session_channel_id')) {
-    //                                                     for (let j = 0; j < bot.sessionAddUserRequest['sessions'][i].requested.length; j++) {
-    //                                                         if (bot.sessionAddUserRequest['sessions'][i].requested[j].user_id === user.id) {
-    //                                                             bot.sessionAddUserRequest['sessions'][i].requested[j].user_id = "";
-    //                                                             bot.sessionAddUserRequest['sessions'][i].denied[bot.sessionAddUserRequest['sessions'][i].denied.length] = { "user_id": `${user.id}` };
-    //                                                             break;
-    //                                                         }
-    //                                                     }
-    //                                                 }
-    //                                             }
-    //                                             fs.writeFile("./jsonDb/sessionAddUserRequest.json", JSON.stringify(bot.sessionAddUserRequest, null, 4), err => {
-    //                                                 if (err) throw err;
-    //                                             });
-    //                                         }
-    //                                     }).catch(() => {
-    //                                         msg.delete().catch();
-    //                                         user.send(`Your request to join ${bot.users.cache.get(sessionRequest.get('session_commander_id')).username}'s session has **NOT BEEN ANSWERED**`);
-    //                                     });
-    //                                 });
-    //                             } catch (error) {
-    //                                 console.log(error)
-    //                             }
-    //                             return;
-    //                         } else return message.channel.send('A session can only have 5 players!').then(msg => msg.delete({ timeout: 3000 })).catch(err => console.log(err));
-    //                     } else return message.channel.send('You are already in this session request!').then(msg => msg.delete({ timeout: 3000 })).catch(err => console.log(err));
-    //                 }).catch(error => console.error(error));
-    //             }
-    //         } else return message.reactions.cache.get(emoji.name).remove().catch(error => console.error('Failed to remove reactions: ', error));
-    //     }
     // }
     // if (plannedSessionsChannel) {
     //     if (message.channel.id === plannedSessionsChannel.id) {
@@ -300,47 +261,44 @@ async function deleteSessionRequestDatabaseEntry(sessionId, serverId) {
         sessionRequest.destroy();
     });
 }
-// async function deleteSessionRequestChannel(message, sessionId, serverId) {
-//     await SessionRequest.findOne({ where: { message_id: sessionId, server_id: serverId } }).then(sessionRequest => {
-//         message.guild.channels.cache.find(r => r.id === sessionRequest.get('session_channel_id')).delete();
-//     });
-// }
-// function updateDatabaseSessionRequestParty(sessionRequest, playerId) {
-//     let partyMembers = sessionRequest.get('session_party');
-//     partyMembers.push(playerId);
-//     sessionRequest.session_party = partyMembers;
-//     sessionRequest.save();
-// }
-// function updateSessionRequestEmbedPartyMembers(message, party, playerId) {
-//     message.embeds[0].fields[1].value += `, <@${playerId}>`;
-//     message.embeds[0].fields[1].name = message.embeds[0].fields[1].name.replace(`${party.length}`, `${party.length + 1}`);
-//     return message;
-// }
-// function checkIfPlayerIsAlreadyInParty(party, playerId) {
-//     if (party.includes(playerId)) {
-//         return true;
-//     } else return false;
-// }
-// function checkIfPlayerAlreadyRequestedOrDenied(bot, userId, message, sessionChannelId) {
-//     for (let i = 0; i < bot.sessionAddUserRequest['sessions'].length; i++) {
-//         if (bot.sessionAddUserRequest['sessions'][i].session_channel_id === sessionChannelId) {
-//             for (let j = 0; j < bot.sessionAddUserRequest['sessions'][i].requested.length; j++) {
-//                 if (bot.sessionAddUserRequest['sessions'][i].requested[j].user_id === userId) {
-//                     message.channel.send(`${bot.users.cache.get(userId)}, you already requested to join this session, please be patient!`).then(msg => msg.delete({ timeout: 3000 })).catch(err => console.log(err));;
-//                     return true;
-//                 }
-//             }
-//             for (let j = 0; j < bot.sessionAddUserRequest['sessions'][i].denied.length; j++) {
-//                 if (bot.sessionAddUserRequest['sessions'][i].denied[j].user_id === userId) {
-//                     message.channel.send(`${bot.users.cache.get(userId)}, your request to join this session was declined by the session commander, better luck next time!`).then(msg => msg.delete({ timeout: 5000 })).catch(err => console.log(err));;
-//                     return true;
-//                 }
-//             }
-//             break;
-//         }
-//     }
-//     return false;
-// }
+
+function updateDatabaseSessionParty(sessionRequest, playerId) {
+    let partyMembers = sessionRequest.get('session_party');
+    partyMembers.push(playerId);
+    sessionRequest.session_party = partyMembers;
+    sessionRequest.save();
+}
+
+function isPlayerAlreadyInSessionParty(sessionParty, playerID) {
+    return sessionParty.includes(playerID);
+}
+function playerAlreadyBeenDenied(bot, userID, message, sessionChannelID) {
+    // TODO: Make this per server.
+    for (let i = 0; i < bot.sessionAddUserRequest['sessions'].length; i++) {
+        if (bot.sessionAddUserRequest['sessions'][i].session_channel_id === sessionChannelID) {
+            for (let j = 0; j < bot.sessionAddUserRequest['sessions'][i].denied.length; j++) {
+                if (bot.sessionAddUserRequest['sessions'][i].denied[j].user_id === userID) {
+                    return true;
+                }
+            }
+            break;
+        }
+    }
+    return false;
+}
+function playerAlreadyRequestedForSession(bot, userID, message, sessionChannelID) {
+    // TODO: Make this per server.
+    for (let i = 0; i < bot.sessionAddUserRequest['sessions'].length; i++) {
+        if (bot.sessionAddUserRequest['sessions'][i].session_channel_id === sessionChannelID) {
+            for (let j = 0; j < bot.sessionAddUserRequest['sessions'][i].requested.length; j++) {
+                if (bot.sessionAddUserRequest['sessions'][i].requested[j].user_id === userID) {
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
 // async function createPastSessionDatabaseEntry(id, foundPlannedSession, sessionStatus, serverId) {
 //     return new Promise(async function (resolve, reject) {
 //         await PastSession.create({
@@ -356,3 +314,69 @@ async function deleteSessionRequestDatabaseEntry(sessionId, serverId) {
 //         }).then(() => { resolve() }).catch(err => console.log(err));
 //     })
 // }
+
+async function deleteReactionFromUser(message, userID) {
+    try {
+        for (const reaction of message.reactions.cache.filter(reaction => reaction.users.cache.has(userID)).values()) {
+            await reaction.users.remove(userID);
+        }
+    } catch (error) {
+        console.error('Failed to remove reactions.');
+    }
+}
+
+function writeToJsonDb(location, data) {
+    fs.writeFile(`${location}`, JSON.stringify(data, null, 4), err => {
+        if (err) throw err;
+    });
+}
+
+function giveUserRequestedStatus(bot, FOUND_SESSION_REQUEST, user) {
+    for (let i = 0; i < bot.sessionAddUserRequest['sessions'].length; i++) {
+        if (bot.sessionAddUserRequest['sessions'][i].session_channel_id === FOUND_SESSION_REQUEST.get('session_channel_id')) {
+            bot.sessionAddUserRequest['sessions'][i].requested[bot.sessionAddUserRequest['sessions'][i].requested.length] = { "user_id": `${user.id}` };
+            break;
+        }
+    }
+    // Write the edited data to designated JSON database.
+    writeToJsonDb("./bot/jsonDb/sessionAddUserRequest.json", bot.sessionAddUserRequest);
+}
+
+function giveUserDeniedStatus(bot, FOUND_SESSION_REQUEST, user) {
+    for (let i = 0; i < bot.sessionAddUserRequest['sessions'].length; i++) {
+        if (bot.sessionAddUserRequest['sessions'][i].session_channel_id === FOUND_SESSION_REQUEST.get('session_channel_id')) {
+            for (let j = 0; j < bot.sessionAddUserRequest['sessions'][i].requested.length; j++) {
+                if (bot.sessionAddUserRequest['sessions'][i].requested[j].user_id === user.id) {
+                    bot.sessionAddUserRequest['sessions'][i].requested.splice(j, 1);
+                    bot.sessionAddUserRequest['sessions'][i].denied[bot.sessionAddUserRequest['sessions'][i].denied.length] = { "user_id": `${user.id}` };
+                    break;
+                }
+            }
+        }
+    }
+    // Write the edited data to designated JSON database.
+    writeToJsonDb("./bot/jsonDb/sessionAddUserRequest.json", bot.sessionAddUserRequest);
+}
+
+function removeUserRequestStatus(bot, FOUND_SESSION_REQUEST, user) {
+
+    for (let i = 0; i < bot.sessionAddUserRequest['sessions'].length; i++) {
+        if (bot.sessionAddUserRequest['sessions'][i].session_channel_id === FOUND_SESSION_REQUEST.get('session_channel_id')) {
+            for (let j = 0; j < bot.sessionAddUserRequest['sessions'][i].requested.length; j++) {
+                if (bot.sessionAddUserRequest['sessions'][i].requested[j].user_id === user.id) {
+                    // bot.sessionAddUserRequest['sessions'][i].requested[j].user_id = "";
+                    bot.sessionAddUserRequest['sessions'][i].requested.splice(j, 1);
+                    break;
+                }
+            }
+        }
+    }
+    // Write the edited data to designated JSON database.
+    writeToJsonDb("./bot/jsonDb/sessionAddUserRequest.json", bot.sessionAddUserRequest);
+}
+
+function updateSessionEmbed(message, sessionParty) {
+    message.embeds[0].fields[1].name = `**Players(${sessionParty.length}/5)**`;
+    message.embeds[0].fields[1].value = `${sessionParty.map(id => `<@!${id}>`).join(', ')}`
+    return message;
+}
