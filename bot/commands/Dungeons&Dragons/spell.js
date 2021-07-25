@@ -7,7 +7,12 @@ module.exports.run = async (bot, message, args) => {
     let stringMessage = args.join(' ');
     stringMessage = stringMessage.replace(/ /g, "-");
     let url = baseURL + stringMessage;
-    request(url, function (error, response, body) {
+    request({
+        url: url,
+        agentOptions: {
+            rejectUnauthorized: false
+        }
+    }, function (error, response, body) {
         let data = ProcesRequest(body)
         if (data == "404") {
             ritual(message, stringMessage)
@@ -72,7 +77,12 @@ function ProcesRequest(body) {
 function ritual(message, stringMessage) {
     stringMessage = stringMessage.replace(/ /g, "-").toLowerCase() + "-ritual";
     let url = baseURL + stringMessage;
-    request(url, function (error, response, body) {
+    request({
+        url: url,
+        agentOptions: {
+            rejectUnauthorized: false
+        }
+    }, function (error, response, body) {
         let data = ProcesRequest(body)
         /*console.log(data);*/
         if (data == "404") {

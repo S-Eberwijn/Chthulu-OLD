@@ -38,13 +38,91 @@ module.exports.run = async (bot, message, args) => {
 
                 // Update channel permissions so everyone can't see it.
                 createdChannel.updateOverwrite(message.channel.guild.roles.everyone, {
-                    VIEW_CHANNEL: false,
+                    CREATE_INSTANT_INVITE: false,
+                    KICK_MEMBERS: false,
+                    BAN_MEMBERS: false,
+                    ADMINISTRATOR: false,
+                    MANAGE_CHANNELS: false,
+                    MANAGE_GUILD: false,
+                    ADD_REACTIONS: false,
+                    VIEW_CHANNEL: true,
+                    SEND_MESSAGES: false,
+                    SEND_TTS_MESSAGES: false,
+                    MANAGE_MESSAGES: false,
+                    EMBED_LINKS: false,
+                    ATTACH_FILES: false,
+                    READ_MESSAGE_HISTORY: false,
+                    MENTION_EVERYONE: false,
+                    USE_EXTERNAL_EMOJIS: false,
+                    VIEW_GUILD_INSIGHTS: false,
+                    CHANGE_NICKNAME: false,
+                    MANAGE_NICKNAMES: false,
+                    MANAGE_ROLES: false,
+                    MANAGE_WEBHOOKS: false,
+                    MANAGE_EMOJIS: false,
+                    USE_SLASH_COMMANDS: false,
+                    MANAGE_THREADS: false,
+                    USE_PUBLIC_THREADS: false,
                 });
-                
+
                 // Update channel permissions so Dungeon Masters can see it.
                 createdChannel.updateOverwrite(message.guild.roles.cache.find(role => role.name.toLowerCase().includes('dungeon master')), {
+                    CREATE_INSTANT_INVITE: false,
+                    KICK_MEMBERS: false,
+                    BAN_MEMBERS: false,
+                    ADMINISTRATOR: false,
+                    MANAGE_CHANNELS: false,
+                    MANAGE_GUILD: false,
+                    ADD_REACTIONS: true,
                     VIEW_CHANNEL: true,
+                    SEND_MESSAGES: true,
+                    SEND_TTS_MESSAGES: false,
+                    MANAGE_MESSAGES: true,
+                    EMBED_LINKS: true,
+                    ATTACH_FILES: true,
+                    READ_MESSAGE_HISTORY: true,
+                    MENTION_EVERYONE: false,
+                    USE_EXTERNAL_EMOJIS: true,
+                    VIEW_GUILD_INSIGHTS: false,
+                    CHANGE_NICKNAME: true,
+                    MANAGE_NICKNAMES: true,
+                    MANAGE_ROLES: true,
+                    MANAGE_WEBHOOKS: true,
+                    MANAGE_EMOJIS: true,
+                    USE_SLASH_COMMANDS: false,
+                    MANAGE_THREADS: false,
+                    USE_PUBLIC_THREADS: false,
                 });
+
+                // Update channel permissions so session commander can see it.
+                createdChannel.updateOverwrite(bot.users.cache.get(message.author.id), {
+                    CREATE_INSTANT_INVITE: false,
+                    KICK_MEMBERS: false,
+                    BAN_MEMBERS: false,
+                    ADMINISTRATOR: false,
+                    MANAGE_CHANNELS: false,
+                    MANAGE_GUILD: false,
+                    ADD_REACTIONS: true,
+                    VIEW_CHANNEL: true,
+                    SEND_MESSAGES: true,
+                    SEND_TTS_MESSAGES: false,
+                    MANAGE_MESSAGES: false,
+                    EMBED_LINKS: true,
+                    ATTACH_FILES: true,
+                    READ_MESSAGE_HISTORY: true,
+                    MENTION_EVERYONE: false,
+                    USE_EXTERNAL_EMOJIS: true,
+                    VIEW_GUILD_INSIGHTS: false,
+                    CHANGE_NICKNAME: true,
+                    MANAGE_NICKNAMES: false,
+                    MANAGE_ROLES: false,
+                    MANAGE_WEBHOOKS: false,
+                    MANAGE_EMOJIS: false,
+                    USE_SLASH_COMMANDS: false,
+                    MANAGE_THREADS: false,
+                    USE_PUBLIC_THREADS: false,
+                });
+
                 // sessionRequest.get('session_party').forEach(playerId => {
                 //     createdChannel.updateOverwrite(bot.users.cache.get(playerId), {
                 //         VIEW_CHANNEL: true,
@@ -89,6 +167,38 @@ module.exports.run = async (bot, message, args) => {
                                 } else if (QUESTION_OBJECT.question.includes('players')) {
                                     collected.first().mentions.users.first(4).forEach(user => {
                                         sessionParticipants.push(user.id)
+                                        // Update channel permissions so session commander can see it.
+                                        createdChannel.updateOverwrite(bot.users.cache.get(user.id), {
+                                            CREATE_INSTANT_INVITE: false,
+                                            KICK_MEMBERS: false,
+                                            BAN_MEMBERS: false,
+                                            ADMINISTRATOR: false,
+                                            MANAGE_CHANNELS: false,
+                                            MANAGE_GUILD: false,
+                                            ADD_REACTIONS: true,
+                                            VIEW_CHANNEL: true,
+                                            SEND_MESSAGES: true,
+                                            SEND_TTS_MESSAGES: false,
+                                            MANAGE_MESSAGES: false,
+                                            EMBED_LINKS: true,
+                                            ATTACH_FILES: true,
+                                            READ_MESSAGE_HISTORY: true,
+                                            MENTION_EVERYONE: false,
+                                            USE_EXTERNAL_EMOJIS: true,
+                                            VIEW_GUILD_INSIGHTS: false,
+                                            CHANGE_NICKNAME: true,
+                                            MANAGE_NICKNAMES: false,
+                                            MANAGE_ROLES: false,
+                                            MANAGE_WEBHOOKS: false,
+                                            MANAGE_EMOJIS: false,
+                                            USE_SLASH_COMMANDS: false,
+                                            MANAGE_THREADS: false,
+                                            USE_PUBLIC_THREADS: false,
+                                        });
+                                    });
+                                    // Take away permission for everyone else than the party and DM's to see the session channel
+                                    createdChannel.updateOverwrite(message.channel.guild.roles.everyone, {
+                                        VIEW_CHANNEL: false,
                                     });
                                 } else if (QUESTION_OBJECT.question.includes('objective')) {
                                     sessionObjective = collected.first().content;

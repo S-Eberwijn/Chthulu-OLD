@@ -39,8 +39,8 @@ module.exports = async (bot, messageReaction, user) => {
             if (!message.embeds[0]) return;
             // Find the session request in the database.
             let FOUND_SESSION_REQUEST = await SessionRequest.findOne({ where: { message_id: message.id } });
+            // Find the server in the database.
             const GENERAL_SERVER_INFO = await GeneralInfo.findOne({ where: { server_id: messageReaction.message.guild.id } });
-
             // Return if no session request has been found in the database corresponding to the server id.
             if (!FOUND_SESSION_REQUEST) return message.channel.send('Something went wrong; Cannot find this session request in the database!').then(msg => msg.delete({ timeout: 3000 })).catch(err => console.log(err));
             // Return if no general server info has been found in the database corresponding to the server id.
@@ -124,14 +124,41 @@ module.exports = async (bot, messageReaction, user) => {
                                             if (!(FOUND_SESSION_REQUEST.get('session_party').length < 5)) return msg.channel.send('This session is full! Only 5 players are allowed!').then(msg => msg.delete({ timeout: 3000 })).catch(err => console.log(err));
                                             // Send the person who wants to join the session he/she got accepted.
                                             user.send(`Your request to join ${bot.users.cache.get(FOUND_SESSION_REQUEST.get('session_commander_id')).username}'s session has been **ACCEPTED**`);
-                                            // TODO: Adjust channels permissions.
-
+                                            // Adjust permissions of session channel so the newly allowed player can see the channel.
+                                            SESSION_CHANNEL.updateOverwrite(bot.users.cache.get(user.id), {
+                                                CREATE_INSTANT_INVITE: false,
+                                                KICK_MEMBERS: false,
+                                                BAN_MEMBERS: false,
+                                                ADMINISTRATOR: false,
+                                                MANAGE_CHANNELS: false,
+                                                MANAGE_GUILD: false,
+                                                ADD_REACTIONS: true,
+                                                VIEW_CHANNEL: true,
+                                                SEND_MESSAGES: true,
+                                                SEND_TTS_MESSAGES: false,
+                                                MANAGE_MESSAGES: false,
+                                                EMBED_LINKS: true,
+                                                ATTACH_FILES: true,
+                                                READ_MESSAGE_HISTORY: true,
+                                                MENTION_EVERYONE: false,
+                                                USE_EXTERNAL_EMOJIS: true,
+                                                VIEW_GUILD_INSIGHTS: false,
+                                                CHANGE_NICKNAME: true,
+                                                MANAGE_NICKNAMES: false,
+                                                MANAGE_ROLES: false,
+                                                MANAGE_WEBHOOKS: false,
+                                                MANAGE_EMOJIS: false,
+                                                USE_SLASH_COMMANDS: false,
+                                                MANAGE_THREADS: false,
+                                                USE_PUBLIC_THREADS: false,
+                                            });
                                             // Remove user REQUESTED-status in JSON database. 
                                             removeUserRequestStatus(bot, FOUND_SESSION_REQUEST, user)
                                             // Update session party database entry.
                                             updateDatabaseSessionParty(FOUND_SESSION_REQUEST, user.id);
                                             // Edit the session message embed.
-                                            message.edit(updateSessionEmbed(message, FOUND_SESSION_REQUEST.get('session_party')).embeds[0])
+                                            message.edit(updateSessionEmbed(message, FOUND_SESSION_REQUEST.get('session_party')).embeds[0]);
+
                                             break;
                                         case '✖️':
                                             // Send the person who requested to join the session, he/she got declined.
@@ -148,7 +175,6 @@ module.exports = async (bot, messageReaction, user) => {
                                     removeUserRequestStatus(bot, FOUND_SESSION_REQUEST, user)
                                 })
                             })
-                            return console.log('TODO: Add user to session')
                         case '✅':
 
                         case '❌':
@@ -359,7 +385,6 @@ function giveUserDeniedStatus(bot, FOUND_SESSION_REQUEST, user) {
 }
 
 function removeUserRequestStatus(bot, FOUND_SESSION_REQUEST, user) {
-
     for (let i = 0; i < bot.sessionAddUserRequest['sessions'].length; i++) {
         if (bot.sessionAddUserRequest['sessions'][i].session_channel_id === FOUND_SESSION_REQUEST.get('session_channel_id')) {
             for (let j = 0; j < bot.sessionAddUserRequest['sessions'][i].requested.length; j++) {
