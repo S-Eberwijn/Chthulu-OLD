@@ -1,16 +1,47 @@
 //const Player = require('../database/models/Player.js');
 //const SessionRequest = require('../database/models/SessionRequest.js');
+const SessionRequest = require('../../database/models/SessionRequest');
 
 
 module.exports = async (bot, messageReaction, user) => {
-    const { emoji } = messageReaction;
-    // const roleSelectionChannel = bot.channels.cache.find(c => c.name == "role-selection" && c.type == "text");
-    // const sessionRequestChannel = bot.channels.cache.find(c => c.name == "session-request" && c.type == "text");
-    // const dmRole = messageReaction.message.guild.roles.cache.find(role => role.name === 'Dungeon Master');
-    // const playerRole = messageReaction.message.guild.roles.cache.find(role => role.name === 'Player');
+    const { message, emoji } = messageReaction;
+    // When we receive a reaction we check if the reaction is partial or not
+    if (messageReaction.partial) {
+        // If the message this reaction belongs to was removed the fetching might result in an API error, which we need to handle
+        try {
+            await messageReaction.fetch();
+        } catch (error) {
+            return console.log('Something went wrong when fetching the message: ', error);
+        }
+    }
 
     if (user.bot) return;
-    console.log(`${user.username} removed a reaction: ${emoji.name}`);
+    if (message.guild === null) return;
+
+    // CHANNELS
+    const SESSION_REQUEST_CHANNEL = message.member.guild.channels.cache.find(c => c.name.includes("session-request") && c.type == "text");
+
+    if (SESSION_REQUEST_CHANNEL) {
+        // Enter when the message is in the "session-request" channel.
+        if (message.channel.id === SESSION_REQUEST_CHANNEL.id) {
+            // Return if the message is not an embed.
+            if (!message.embeds[0]) return;
+            let FOUND_SESSION_REQUEST = await SessionRequest.findOne({ where: { message_id: message.id } });
+            if (!FOUND_SESSION_REQUEST) return;
+            try {
+                switch (emoji.name) {
+                    case '🙋‍♂️':
+                        if(user.id === FOUND_SESSION_REQUEST.get('session_commander_id')) return message.channel.send('Session commanders can not leave their own session!').then(msg => msg.delete({ timeout: 3000 })).catch(err => console.log(err));
+                        if(!FOUND_SESSION_REQUEST.get('session_party').includes(user.id)) return;
+                        await removePlayerFromDatabaseSessionParty(FOUND_SESSION_REQUEST, user.id);
+                        message.edit(updateSessionEmbedParty(message, FOUND_SESSION_REQUEST.get('session_party')).embeds[0]);
+                }
+            } catch (error) {
+
+            }
+        }
+    }
+
     /*
     if (roleSelectionChannel) {
         if (message.channel.id === roleSelectionChannel.id) {
@@ -68,4 +99,16 @@ module.exports = async (bot, messageReaction, user) => {
         }
     }
     */
+}
+
+function removePlayerFromDatabaseSessionParty(sessionRequest, playerId) {
+    let partyMembers = sessionRequest.get('session_party').filter(id => id != playerId);
+    sessionRequest.session_party = partyMembers;
+    sessionRequest.save();
+}
+
+function updateSessionEmbedParty(message, sessionParty) {
+    message.embeds[0].fields[1].name = `**Players(${sessionParty.length}/5)**`;
+    message.embeds[0].fields[1].value = `${sessionParty.map(id => `<@!${id}>`).join(', ')}`
+    return message;
 }

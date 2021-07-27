@@ -7,11 +7,44 @@
         },
         {
             "session_channel_id": "867815349717434368",
-            "requested": [],
+            "requested": [
+                {
+                    "user_id": "241273372892200963"
+                }
+            ],
             "denied": []
         },
         {
             "session_channel_id": "868565128226959461",
+            "requested": [],
+            "denied": [
+                {
+                    "user_id": "241273372892200963"
+                }
+            ]
+        },
+        {
+            "session_channel_id": "869259629601906698",
+            "requested": [],
+            "denied": []
+        },
+        {
+            "session_channel_id": "869264838562570260",
+            "requested": [],
+            "denied": []
+        },
+        {
+            "session_channel_id": "869297244430565387",
+            "requested": [],
+            "denied": []
+        },
+        {
+            "session_channel_id": "869514176828153896",
+            "requested": [],
+            "denied": []
+        },
+        {
+            "session_channel_id": "869514339646849055",
             "requested": [],
             "denied": []
         }

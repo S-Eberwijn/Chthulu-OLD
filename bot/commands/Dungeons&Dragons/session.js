@@ -132,7 +132,6 @@ module.exports.run = async (bot, message, args) => {
                 createdChannel.send(`<@!${message.author.id}>, welcome to your session request channel!`).then(async () => {
 
                     for (const QUESTION_OBJECT of QUESTIONS_ARRAY) {
-                        console.log(QUESTION_OBJECT)
                         await createdChannel.send(QUESTION_OBJECT.question).then(async function () {
                             let dateRegExp = new RegExp(QUESTION_OBJECT.regex);
                             const filter = response => {

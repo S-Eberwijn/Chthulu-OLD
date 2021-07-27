@@ -56,13 +56,19 @@ module.exports = async (bot, messageReaction, user) => {
                             // Send a planned session embed to the "session-planned" channel.
                             PLANNED_SESSIONS_CHANNEL.send(createPlannedSessionEmbed(user.id, GENERAL_SERVER_INFO.get('session_number'), message.embeds[0])).then(async plannedSessionEmbedMessage => {
                                 // Edit session channel name.
-                                bot.channels.cache.find(c => c.id == FOUND_SESSION_REQUEST.get('session_channel_id') && c.type == "text").setName(`session-${GENERAL_SERVER_INFO.get('session_number')}`);
+                                //TODO FIX LATER
+                                let sessionChannel = bot.channels.cache.find(c => c.id == FOUND_SESSION_REQUEST.get('session_channel_id') && c.type == "text");
+                                if (sessionChannel) sessionChannel.setName(`session-${GENERAL_SERVER_INFO.get('session_number')}`);
                                 // Create a planned session in the databse.
                                 createPlannedSessionDatabaseEntry(plannedSessionEmbedMessage.id, FOUND_SESSION_REQUEST, GENERAL_SERVER_INFO, user.id, message.guild.id);
                                 // Add the next session ID to each character of the party.
                                 updatePartyNextSessionId(FOUND_SESSION_REQUEST.get('session_party'), plannedSessionEmbedMessage.id, message.guild.id);
                                 // Delete the session request in the database.
                                 deleteSessionRequestDatabaseEntry(message.id, message.guild.id);
+                                await plannedSessionEmbedMessage.react('🟢');
+                                await plannedSessionEmbedMessage.react('🔴');
+                                await plannedSessionEmbedMessage.react('🙋‍♂️');
+
                                 return message.delete();
                             });
                         case '❌':
@@ -89,8 +95,6 @@ module.exports = async (bot, messageReaction, user) => {
                         case '🙋‍♂️':
                             //Return if player is already in the session.
                             if (isPlayerAlreadyInSessionParty(FOUND_SESSION_REQUEST.get('session_party'), user.id)) return message.channel.send('You are already in this session!').then(msg => msg.delete({ timeout: 3000 })).catch(err => console.log(err));
-                            //TODO: Ask the user if he/she wants to leave the session.
-
                             // Return if session is full and no more players can fit.
                             if (!(FOUND_SESSION_REQUEST.get('session_party').length < 5)) return message.channel.send('This session is full! Only 5 players are allowed!').then(msg => msg.delete({ timeout: 3000 })).catch(err => console.log(err));
                             // Return if the user already requested for the session.
@@ -157,7 +161,7 @@ module.exports = async (bot, messageReaction, user) => {
                                             // Update session party database entry.
                                             updateDatabaseSessionParty(FOUND_SESSION_REQUEST, user.id);
                                             // Edit the session message embed.
-                                            message.edit(updateSessionEmbed(message, FOUND_SESSION_REQUEST.get('session_party')).embeds[0]);
+                                            message.edit(updateSessionEmbedParty(message, FOUND_SESSION_REQUEST.get('session_party')).embeds[0]);
 
                                             break;
                                         case '✖️':
@@ -175,22 +179,22 @@ module.exports = async (bot, messageReaction, user) => {
                                     removeUserRequestStatus(bot, FOUND_SESSION_REQUEST, user)
                                 })
                             })
+                            return;
                         case '✅':
 
                         case '❌':
                             // Alert user that Dungeon Masters cant join session party.
                             message.channel.send('You do not have permission to accept or decline a session request!').then(msg => msg.delete({ timeout: 3000 })).catch(err => console.log(err));
+                        default:
+                            // Delete the user reaction a.k.a. emoji.
+                            return await deleteReactionFromUser(message, user.id)
                     }
                 } catch (error) {
                     console.log(error)
-                } finally {
-                    // Delete the user reaction a.k.a. emoji.
-                    return await deleteReactionFromUser(message, user.id)
                 }
-
             } else {
-                console.log('user does not have a character in database')
-
+                message.channel.send('You do not have a character in the database of this server! Please create one by typing "!createCharacter".').then(msg => msg.delete({ timeout: 3000 })).catch(err => console.log(err));
+                return await deleteReactionFromUser(message, user.id)
             }
         }
     }
@@ -400,7 +404,7 @@ function removeUserRequestStatus(bot, FOUND_SESSION_REQUEST, user) {
     writeToJsonDb("./bot/jsonDb/sessionAddUserRequest.json", bot.sessionAddUserRequest);
 }
 
-function updateSessionEmbed(message, sessionParty) {
+function updateSessionEmbedParty(message, sessionParty) {
     message.embeds[0].fields[1].name = `**Players(${sessionParty.length}/5)**`;
     message.embeds[0].fields[1].value = `${sessionParty.map(id => `<@!${id}>`).join(', ')}`
     return message;
