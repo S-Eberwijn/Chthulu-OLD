@@ -30,6 +30,7 @@ module.exports = async (bot, messageReaction, user) => {
     const DUNGEON_MASTER_ROLE = messageReaction.message.guild.roles.cache.find(role => role.name.includes('Dungeon Master'));
     // let playerRole = messageReaction.message.guild.roles.cache.find(role => role.name === 'Player');
 
+
     const USER_CHARACTER = await PlayerCharacter.findOne({ where: { player_id: user.id, alive: 1, server_id: message.guild.id } })
     // Enter if the server has a "session-request" channel.
     if (SESSION_REQUEST_CHANNEL) {
@@ -39,6 +40,7 @@ module.exports = async (bot, messageReaction, user) => {
             if (!message.embeds[0]) return;
             // Find the session request in the database.
             let FOUND_SESSION_REQUEST = await SessionRequest.findOne({ where: { message_id: message.id } });
+
             // Find the server in the database.
             const GENERAL_SERVER_INFO = await GeneralInfo.findOne({ where: { server_id: messageReaction.message.guild.id } });
             // Return if no session request has been found in the database corresponding to the server id.
@@ -53,31 +55,33 @@ module.exports = async (bot, messageReaction, user) => {
                 try {
                     switch (emoji.name) {
                         case '✅':
+
                             // Send a planned session embed to the "session-planned" channel.
                             PLANNED_SESSIONS_CHANNEL.send(createPlannedSessionEmbed(user.id, GENERAL_SERVER_INFO.get('session_number'), message.embeds[0])).then(async plannedSessionEmbedMessage => {
                                 // Edit session channel name.
-                                //TODO FIX LATER
-                                let sessionChannel = bot.channels.cache.find(c => c.id == FOUND_SESSION_REQUEST.get('session_channel_id') && c.type == "text");
-                                if (sessionChannel) sessionChannel.setName(`session-${GENERAL_SERVER_INFO.get('session_number')}`);
+                                message.guild.channels.cache.get(FOUND_SESSION_REQUEST.get('session_channel_id')).setName(`session-${GENERAL_SERVER_INFO.get('session_number')}`)
                                 // Create a planned session in the databse.
                                 createPlannedSessionDatabaseEntry(plannedSessionEmbedMessage.id, FOUND_SESSION_REQUEST, GENERAL_SERVER_INFO, user.id, message.guild.id);
                                 // Add the next session ID to each character of the party.
                                 updatePartyNextSessionId(FOUND_SESSION_REQUEST.get('session_party'), plannedSessionEmbedMessage.id, message.guild.id);
                                 // Delete the session request in the database.
                                 deleteSessionRequestDatabaseEntry(message.id, message.guild.id);
+
                                 await plannedSessionEmbedMessage.react('🟢');
                                 await plannedSessionEmbedMessage.react('🔴');
                                 await plannedSessionEmbedMessage.react('🙋‍♂️');
 
-                                return message.delete();
+                                message.delete();
                             });
+                            break;
                         case '❌':
                             // Delete session channel.
-                            bot.channels.cache.find(c => c.id == FOUND_SESSION_REQUEST.get('session_channel_id') && c.type == "text").delete();
+                            message.guild.channels.cache.get(FOUND_SESSION_REQUEST.get('session_channel_id')).delete();
                             // Delete the session request in the database.
                             deleteSessionRequestDatabaseEntry(message.id, message.guild.id);
                             // Delete the session request embed.
-                            return message.delete();
+                            message.delete();
+                            break;
 
                         case '🙋‍♂️':
                             // Alert user that Dungeon Masters cant join session party.
