@@ -123,12 +123,6 @@ module.exports.run = async (bot, message, args) => {
                     USE_PUBLIC_THREADS: false,
                 });
 
-                // sessionRequest.get('session_party').forEach(playerId => {
-                //     createdChannel.updateOverwrite(bot.users.cache.get(playerId), {
-                //         VIEW_CHANNEL: true,
-                //     });
-                // });
-
                 createdChannel.send(`<@!${message.author.id}>, welcome to your session request channel!`).then(async () => {
 
                     for (const QUESTION_OBJECT of QUESTIONS_ARRAY) {
