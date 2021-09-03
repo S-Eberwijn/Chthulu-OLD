@@ -10,12 +10,12 @@ module.exports = async (bot, member) => {
 
     //When a new person joins the server
     if (newcomerRole) member.roles.add(newcomerRole);
-    if (welcomeZoneChannel) welcomeZoneChannel.send(`<@${member.id}>`,await createWelcomeAttachment(member));
+    if (welcomeZoneChannel) welcomeZoneChannel.send({ content: `<@${member.id}>`, files: [await createWelcomeAttachment(member)] });
 
 }
 
-async function createWelcomeAttachment(member){
-    
+async function createWelcomeAttachment(member) {
+
     const canvas = Canvas.createCanvas(800, 250);
     const ctx = canvas.getContext('2d');
 
@@ -34,7 +34,7 @@ async function createWelcomeAttachment(member){
     ctx.fillStyle = '#ffffff';
     ctx.fillText(`#${member.guild.members.cache.filter(m => !m.user.bot).size}`, canvas.width / 1.08, canvas.height / 5.2);
     ctx.lineWidth = 0.5;
-    ctx.strokeText(`#${member.guild.members.cache.filter(m => !m.user.bot).size}`, canvas.width/ 1.08, canvas.height / 5.2);
+    ctx.strokeText(`#${member.guild.members.cache.filter(m => !m.user.bot).size}`, canvas.width / 1.08, canvas.height / 5.2);
 
 
     // Add an exclamation point here and below
@@ -48,7 +48,7 @@ async function createWelcomeAttachment(member){
     ctx.strokeStyle = '#ffffff';
     ctx.lineWidth = 5;
     ctx.strokeRect(0, 0, canvas.width, canvas.height);
-    
+
     ctx.fillStyle = '#ffffff';
     ctx.beginPath();
     ctx.ellipse(125, 125, 105, 105, 0, 0, Math.PI * 2, false);

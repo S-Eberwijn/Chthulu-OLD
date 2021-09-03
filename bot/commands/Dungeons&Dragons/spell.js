@@ -18,7 +18,8 @@ module.exports.run = async (bot, message, args) => {
             ritual(message, stringMessage)
         }
         else {
-            message.channel.send(EmbedSpellInMessage(data, stringMessage));
+            let sigilImage = './bot/images/DnD/SpellSigils/' + data.school + '.png';
+            message.channel.send({ content: 'test', embeds: [EmbedSpellInMessage(data, stringMessage)], files: [sigilImage] });
         }
     });
     return;
@@ -86,10 +87,11 @@ function ritual(message, stringMessage) {
         let data = ProcesRequest(body)
         /*console.log(data);*/
         if (data == "404") {
-            message.channel.send("That spell was not found in the db");
+            message.channel.send({ content: "That spell was not found in the db" });
         }
         else {
-            message.channel.send(EmbedSpellInMessage(data, stringMessage));
+            let sigilImage = './bot/images/DnD/SpellSigils/' + data.school + '.png';
+            message.channel.send({ embeds: [EmbedSpellInMessage(data, stringMessage)], files: [sigilImage] });
         }
 
     });
@@ -107,7 +109,7 @@ function EmbedSpellInMessage(data, message) {
         .setTitle(data.title)
         .setDescription(data.school)
         .setURL(baseURL + message)
-        .attachFiles(['./bot/images/DnD/SpellSigils/' + data.school + '.png'])
+        // .attachFiles(['./bot/images/DnD/SpellSigils/' + data.school + '.png'])
         .setThumbnail('attachment://' + data.school + '.png')
         .addFields(
             { name: '\u200B', value: `Level: **${data.level}**\nCasting time: **${data.castTime}**\nRange: **${data.range}**\nComponents: **${data.comp}**\nDuration: **${data.duration}**`, inline: false },

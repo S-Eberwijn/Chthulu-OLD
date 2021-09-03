@@ -3,27 +3,20 @@ const SessionRequest = require('../../../database/models/SessionRequest');
 const PlayerCharacter = require('../../../database/models/PlayerCharacter');
 const fs = require("fs");
 
-
 const COMMAND_OPTIONS = ['request'];
-const AWAIT_MESSAGE_OPTIONS = {
-    max: 1,
-    time: 300000,
-    errors: ['time'],
-};
 const QUESTIONS_ARRAY = require('../../jsonDb/sessionChannelQuestion.json');
 const NAME_OF_DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
 module.exports.run = async (bot, message, args) => {
-    message.delete();
 
     // VARIABLES
-    const SESSIONS_CATEGORY = message.member.guild.channels.cache.find(c => c.name == "--SESSIONS--" && c.type == "category");
-    const SESSION_REQUEST_CHANNEL = message.member.guild.channels.cache.find(c => c.name.includes("session-request") && c.type == "text");
+    const SESSIONS_CATEGORY = message.member.guild.channels.cache.find(c => c.name == "--SESSIONS--" && c.type == "GUILD_CATEGORY");
+    const SESSION_REQUEST_CHANNEL = message.member.guild.channels.cache.find(c => c.name.includes("session-request") && c.type == "GUILD_TEXT");
     let messageAuthorCharacter = await PlayerCharacter.findOne({ where: { player_id: message.author.id, alive: 1, server_id: message.guild.id } });
-    if (!messageAuthorCharacter) return message.reply(`You do not have a character in the database!\nCreate one by using the "!createcharacter" command.`).then(msg => msg.delete({ timeout: 3000 })).catch(err => console.log(err));
-    if (!SESSIONS_CATEGORY) return message.reply(`There is no category named \"--SESSIONS--\"!`).then(msg => msg.delete({ timeout: 3000 })).catch(err => console.log(err));
-    if (!args[0]) return message.reply("Not enough valid arguments\nCorrect format: !session [request]");
-    if (!COMMAND_OPTIONS.includes(args[0])) return message.reply("Not a valid session option\nCorrect format: !session [request]");
+    if (!messageAuthorCharacter) return message.channel.send({ content: `You do not have a character in the database!\nCreate one by using the "!createcharacter" command.` }).then(msg => { setTimeout(() => msg.delete(), 3000) }).catch(err => console.log(err));
+    if (!SESSIONS_CATEGORY) return message.channel.send({ content: `There is no category named \"--SESSIONS--\"!` }).then(msg => { setTimeout(() => msg.delete(), 3000) }).catch(err => console.log(err));
+    if (!args[0]) return message.channel.send({ content: "Not enough valid arguments\nCorrect format: !session [request]" });
+    if (!COMMAND_OPTIONS.includes(args[0])) return message.channel.send({ content: "Not a valid session option\nCorrect format: !session [request]" });
 
     switch (args[0]) {
         case 'request':
@@ -37,7 +30,7 @@ module.exports.run = async (bot, message, args) => {
                 createdChannel.setParent(SESSIONS_CATEGORY, { lockPermission: false });
 
                 // Update channel permissions so everyone can't see it.
-                createdChannel.updateOverwrite(message.channel.guild.roles.everyone, {
+                createdChannel.permissionOverwrites.edit(message.channel.guild.roles.everyone, {
                     CREATE_INSTANT_INVITE: false,
                     KICK_MEMBERS: false,
                     BAN_MEMBERS: false,
@@ -59,14 +52,12 @@ module.exports.run = async (bot, message, args) => {
                     MANAGE_NICKNAMES: false,
                     MANAGE_ROLES: false,
                     MANAGE_WEBHOOKS: false,
-                    MANAGE_EMOJIS: false,
-                    USE_SLASH_COMMANDS: false,
                     MANAGE_THREADS: false,
                     USE_PUBLIC_THREADS: false,
                 });
 
                 // Update channel permissions so Dungeon Masters can see it.
-                createdChannel.updateOverwrite(message.guild.roles.cache.find(role => role.name.toLowerCase().includes('dungeon master')), {
+                createdChannel.permissionOverwrites.edit(message.guild.roles.cache.find(role => role.name.toLowerCase().includes('dungeon master')), {
                     CREATE_INSTANT_INVITE: false,
                     KICK_MEMBERS: false,
                     BAN_MEMBERS: false,
@@ -88,14 +79,12 @@ module.exports.run = async (bot, message, args) => {
                     MANAGE_NICKNAMES: true,
                     MANAGE_ROLES: true,
                     MANAGE_WEBHOOKS: true,
-                    MANAGE_EMOJIS: true,
-                    USE_SLASH_COMMANDS: false,
                     MANAGE_THREADS: false,
                     USE_PUBLIC_THREADS: false,
                 });
 
                 // Update channel permissions so session commander can see it.
-                createdChannel.updateOverwrite(bot.users.cache.get(message.author.id), {
+                createdChannel.permissionOverwrites.edit(bot.users.cache.get(message.author.id), {
                     CREATE_INSTANT_INVITE: false,
                     KICK_MEMBERS: false,
                     BAN_MEMBERS: false,
@@ -117,26 +106,24 @@ module.exports.run = async (bot, message, args) => {
                     MANAGE_NICKNAMES: false,
                     MANAGE_ROLES: false,
                     MANAGE_WEBHOOKS: false,
-                    MANAGE_EMOJIS: false,
-                    USE_SLASH_COMMANDS: false,
                     MANAGE_THREADS: false,
                     USE_PUBLIC_THREADS: false,
                 });
 
-                createdChannel.send(`<@!${message.author.id}>, welcome to your session request channel!`).then(async () => {
+                createdChannel.send({ content: `<@!${message.author.id}>, welcome to your session request channel!` }).then(async () => {
 
                     for (const QUESTION_OBJECT of QUESTIONS_ARRAY) {
-                        await createdChannel.send(QUESTION_OBJECT.question).then(async function () {
-                            let dateRegExp = new RegExp(QUESTION_OBJECT.regex);
+                        await createdChannel.send({ content: QUESTION_OBJECT.question, fetchReply: true }).then(async () => {
+                            let regExp = new RegExp(QUESTION_OBJECT.regex);
                             const filter = response => {
                                 if (response.author.id === bot.user.id) {
                                     return false;
-                                } else if (dateRegExp.exec(response.content) === null) {
-                                    createdChannel.send(QUESTION_OBJECT.errorMessage);
+                                } else if (regExp.exec(response.content) === null) {
+                                    createdChannel.send({ content: QUESTION_OBJECT.errorMessage });
                                     return false;
                                 } else return true;
                             };
-                            await createdChannel.awaitMessages(filter, AWAIT_MESSAGE_OPTIONS).then((collected) => {
+                            await createdChannel.awaitMessages({ filter, max: 1, time: 300000, errors: ['time'] }).then((collected) => {
                                 if (QUESTION_OBJECT.question.includes('date')) {
                                     let day = collected.first().content.split('/')[0];
                                     let month = collected.first().content.split('/')[1];
@@ -161,7 +148,7 @@ module.exports.run = async (bot, message, args) => {
                                     collected.first().mentions.users.first(4).forEach(user => {
                                         sessionParticipants.push(user.id)
                                         // Update channel permissions so session commander can see it.
-                                        createdChannel.updateOverwrite(bot.users.cache.get(user.id), {
+                                        createdChannel.permissionOverwrites.edit(bot.users.cache.get(user.id), {
                                             CREATE_INSTANT_INVITE: false,
                                             KICK_MEMBERS: false,
                                             BAN_MEMBERS: false,
@@ -183,14 +170,12 @@ module.exports.run = async (bot, message, args) => {
                                             MANAGE_NICKNAMES: false,
                                             MANAGE_ROLES: false,
                                             MANAGE_WEBHOOKS: false,
-                                            MANAGE_EMOJIS: false,
-                                            USE_SLASH_COMMANDS: false,
                                             MANAGE_THREADS: false,
                                             USE_PUBLIC_THREADS: false,
                                         });
                                     });
                                     // Take away permission for everyone else than the party and DM's to see the session channel
-                                    createdChannel.updateOverwrite(message.channel.guild.roles.everyone, {
+                                    createdChannel.permissionOverwrites.edit(message.channel.guild.roles.everyone, {
                                         VIEW_CHANNEL: false,
                                     });
                                 } else if (QUESTION_OBJECT.question.includes('objective')) {
@@ -198,13 +183,13 @@ module.exports.run = async (bot, message, args) => {
                                 }
                             }).catch(function () {
                                 return createdChannel.delete().then(() => {
-                                    message.author.send('Times up! You took too long to respond. Try again by requesting a new session request channel.');
+                                    message.author.send({ content: 'Times up! You took too long to respond. Try again by requesting a new session request channel.' });
                                 });
                             })
                         });
                     };
 
-                    SESSION_REQUEST_CHANNEL.send(createSessionChannelEmbed(message.author, sessionDate, sessionParticipants, sessionObjective, messageAuthorCharacter['picture_url'])).then(async sessionChannelEmbedMessage => {
+                    SESSION_REQUEST_CHANNEL.send({ embeds: [createSessionChannelEmbed(message.author, sessionDate, sessionParticipants, sessionObjective, messageAuthorCharacter['picture_url'])] }).then(async sessionChannelEmbedMessage => {
                         await createSessionRequestDatabaseEntry(sessionChannelEmbedMessage.id, sessionDate, sessionParticipants, sessionObjective, createdChannel.id, message.guild.id)
                         bot.sessionAddUserRequest['sessions'][bot.sessionAddUserRequest['sessions'].length] = {
                             session_channel_id: createdChannel.id,

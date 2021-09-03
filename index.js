@@ -27,8 +27,10 @@ app.use('/', require('./website/routes/login'));
 
 
 // Initialize Discord Bot
-const { Client } = require('discord.js');
-const bot = new Client({ partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
+const { Client, Intents } = require('discord.js');
+const bot = new Client({ partials: ['MESSAGE', 'CHANNEL', 'REACTION'], intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS] });
+// const discordButtons = require("discord-buttons");
+// discordButtons(bot);
 const Enmap = require('enmap');
 bot.commands = new Enmap();
 
@@ -112,3 +114,5 @@ bot.login(BOT_TOKEN).then(() => {
 //         }
 //     });
 // });
+
+//TODO: CHECK FOR PERMISSION TO REMOVE MESSAGES

@@ -2,10 +2,6 @@ const GeneralInfo = require('../../database/models/GeneralInfo.js');
 const PlayerCharacter = require('../../database/models/PlayerCharacter');
 let fs = require('fs');
 
-
-//FIX THIS
-//
-
 exports.renameNickname = async function (oldState, newState) {
     if (oldState.channelID === newState.channelID) return;
 
@@ -25,7 +21,7 @@ exports.renameNickname = async function (oldState, newState) {
     }
 
     let isInCharacterChannel = false;
-
+    //TODO: FIX null reference of .get
     await GeneralInfo.findOne({ where: { server_id: newState.guild.id } }).then((foundServer) => {
         foundServer.get('in_character_channels').forEach(channel => {
             if (channel === newState.channelID) {

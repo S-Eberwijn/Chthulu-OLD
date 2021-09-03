@@ -6,7 +6,7 @@ module.exports.run = async (bot, message, args) => {
     correctedRollString = message.content.replace(/ /g, "").slice(message.content.indexOf(message.content.match(/\d/)) - 1);
 
     let diceRollsArray = correctedRollString.match(/\d{1,24}d\d{1,100}/g);
-    if (typeof diceRollsArray === 'undefined' || diceRollsArray === null) return message.channel.send(`Incorrect arguments!`).then(msg => msg.delete({ timeout: 5000 })).catch(err => console.log(err));
+    if (typeof diceRollsArray === 'undefined' || diceRollsArray === null) return message.channel.send({ content:`Incorrect arguments!`}).then(msg => {setTimeout(() => msg.delete(), 3000)}).catch(err => console.log(err));
 
     //Every Dice That Has To Be Rolled!
     for (let i = 0; i < diceRollsArray.length; i++) {
@@ -15,7 +15,7 @@ module.exports.run = async (bot, message, args) => {
 
         //Checks on each dice roll entry
         //if (typeOfDie % 2 != 0) return message.channel.send(`The type of die you want to roll must be even!`).then(msg => msg.delete({ timeout: 5000 })).catch(err => console.log(err));
-        if (!(getTotalAmountOfDiceToRoll(diceRollsArray) < 25)) return message.channel.send(`Number of dice you want to roll can not be higher than 24!`).then(msg => msg.delete({ timeout: 5000 })).catch(err => console.log(err));
+        if (!(getTotalAmountOfDiceToRoll(diceRollsArray) < 25)) return message.channel.send({ content:`Number of dice you want to roll can not be higher than 24!`}).then(msg => {setTimeout(() => msg.delete(), 3000)}).catch(err => console.log(err));
 
         switch (correctedRollString.charAt(0)) {
             default:
@@ -37,7 +37,7 @@ module.exports.run = async (bot, message, args) => {
 
     //Determine the modifier
     while (correctedRollString.charAt(0).includes('+') || correctedRollString.charAt(0).includes('-')) {
-        if (!correctedRollString.charAt(1)) return message.channel.send(`You did not type anything after the operator`).then(msg => msg.delete({ timeout: 5000 })).catch(err => console.log(err));;
+        if (!correctedRollString.charAt(1)) return message.channel.send({ content:`You did not type anything after the operator`}).then(msg => msg.delete({ timeout: 5000 })).catch(err => console.log(err));;
         switch (correctedRollString.charAt(0)) {
             case '+':
                 toBeAddedValue += parseInt(correctedRollString.substring(1));
@@ -60,7 +60,7 @@ module.exports.run = async (bot, message, args) => {
     setEmbedTitle(embedTitleString, toBeAddedValue, outputEmbed);
 
     //Send the embed to the channel the command was typed in
-    message.channel.send(outputEmbed).catch(console.error);
+    message.channel.send({ embeds: [outputEmbed] }).catch(console.error);
 }
 
 module.exports.help = {

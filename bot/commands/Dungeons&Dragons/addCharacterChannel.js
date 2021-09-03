@@ -2,11 +2,11 @@ const GeneralInfo = require('../../../database/models/GeneralInfo');
 
 module.exports.run = async (bot, message, args) => {
     //
-    if (!args[0]) return message.reply("Not enough valid arguments\nCorrect format: !addCharacterChannel <Channel Name>");
-    if (!message.guild.channels.cache.find(channel => channel.name === `${args[0]}`)) return message.reply("**ERROR**: There is no such channel. Maybe you made a typo?");
+    if (!args[0]) return message.channel.send({ content: "Not enough valid arguments\nCorrect format: !addCharacterChannel <Channel Name>" });
+    if (!message.guild.channels.cache.find(channel => channel.name === `${args[0]}`)) return message.channel.send({ content: "**ERROR**: There is no such channel. Maybe you made a typo?" });
     let channelID = message.guild.channels.cache.find(channel => channel.name === `${args[0]}`).id;
     let foundServer = await GeneralInfo.findOne({ where: { server_id: message.guild.id } })
-    if (!foundServer) return message.reply("**ERROR**: Could not find server in the database!");
+    if (!foundServer) return message.channel.send({ content: "**ERROR**: Could not find server in the database!" });
 
     if (foundServer.in_character_channels != null) {
         let inCharacterChannels = foundServer.get('in_character_channels');

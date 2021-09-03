@@ -1,7 +1,7 @@
 const PREFIX = process.env.PREFIX;
 const GeneralInfo = require('../../database/models/GeneralInfo.js');
 const PlayerCharacter = require('../../database/models/PlayerCharacter.js');
-const { MessageEmbed } = require('discord.js');
+const { MessageEmbed, Permissions } = require('discord.js');
 
 
 
@@ -16,7 +16,10 @@ module.exports = async (bot, message) => {
     var arguments = messageArray.slice(1);
     var commands = bot.commands.get(command.slice(PREFIX.length));
     if (messageArray[0].charAt(0) === PREFIX.charAt(0)) {
-        if (commands) commands.run(bot, message, arguments);
+        if (commands) {
+            if (message.guild.me.permissionsIn(message.channel).has(Permissions.FLAGS.MANAGE_MESSAGES)) message.delete();
+            commands.run(bot, message, arguments);
+        }
     }
     //else if ((await GeneralInfo.findOne({ where: { server_id: message.guild.id } }))['dataValues']['in_character_channels'].split(';').includes(message.channel.id)) {
     //Person must have a character in the Chthulu database in order to type messages in the 'in-character'-text channels.

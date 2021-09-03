@@ -1,66 +1,50 @@
-const { paginationEmbed } = require('../../otherFunctions/paginationEmbed');
-const { MessageEmbed, MessageAttachment } = require('discord.js');
-let categorizedCommands;
-let iterationCounter;
-
+const { MessageEmbed, MessageActionRow, MessageSelectMenu } = require('discord.js');
+const {sendHelpEmbedFunction} = require('../../otherFunctions/sendHelpEmbedFunction.js')
 module.exports.run = async (bot, message, args) => {
-    iterationCounter = 1;
-    let helpEmbed = new MessageEmbed()
-        .setAuthor('Chthulu Commands', bot.user.displayAvatarURL())
-
-    let pages = [];
 
     if (!args[0]) {
-        categorizedCommands = bot.commands.reduce((r, a) => {
-            r[a.help.category] = [...r[a.help.category] || [], a];
-            return r;
-        }, {})
-
-        Object.keys(categorizedCommands).forEach(key => {
-            helpEmbed.setDescription(`\`\`\`${key}\`\`\``)
-            categorizedCommands[key].forEach(command => {
-                if (helpEmbed.fields.length === 24) {
-                    pages.push(helpEmbed);
-                    helpEmbed = new MessageEmbed()
-                        .setAuthor('Chthulu Commands', bot.user.displayAvatarURL())
-                        .setDescription(`\`\`\`${key}\`\`\``);
-                }
-                helpEmbed.addField(`\u200b`, `${process.env.PREFIX}${command.help.name}`, true);
-                helpEmbed.addField('\u200b', '\u200b', true);
-                helpEmbed.addField('\u200b', `${command.help.description}`, true);
-            })
-            pages.push(helpEmbed);
-            helpEmbed = new MessageEmbed()
-                .setAuthor('Chthulu Commands', bot.user.displayAvatarURL());
-        });
-        paginationEmbed(message, pages).catch(err => {
-            message.channel.send("Something went wrong, contact my master...");
-            console.log(err)
-        });
+        sendHelpEmbedFunction(bot, message.channel, message.author)
     } else {
-        if (!bot.commands.has(args[0])) return message.channel.send('I do not posses that command...').then(msg => msg.delete({ timeout: 3000 })).catch(err => console.log(err));
+        if (args[0].includes('!')) args[0] = args[0].slice(1)
+        if (!bot.commands.has(args[0])) return message.channel.send({ content: 'I do not posses that command...' })
+
         let command = bot.commands.get(args[0]);
 
-        helpEmbed
+        let helpEmbed = new MessageEmbed()
+            .setAuthor(`${bot.user.username}`, bot.user.displayAvatarURL())
+            .setColor("GREEN")
             .setThumbnail(`https://media.giphy.com/media/l0ExsgrTuACbtPaqQ/giphy.gif`)
             .setDescription(`
-        **__Command name:__** ${process.env.PREFIX}${command.help.name}
-        **__Command description:__** ${command.help.description}
-        **__Command usage:__** ${command.help.usage || `No additional parameter(s)`}
-        **__Command permissions:__** ${command.help.permissions || `No additional permissions needed`}
-        `)
-
-        message.channel.send(helpEmbed).catch(err => {
-            message.channel.send("Something went wrong, contact my master...");
-            console.log(err)
-        })
+    **__Command name:__** ${process.env.PREFIX}${command.help.name}
+    **__Command description:__** ${command.help.description}
+    **__Command usage:__** ${command.help.usage || `No additional parameter(s)`}
+    **__Command permissions:__** ${command.help.permissions || `No additional permissions needed`}
+    `)
+        await message.channel.send({ embeds: [helpEmbed] }, true)
     }
-
 }
+
 
 module.exports.help = {
     name: "help",
-    alias: [],
+    alias: ["hlp"],
     description: "Gives all possible commands",
     category: "Information"
+}
+
+
+function setEmoji(categoryName) {
+    if (categoryName.toLowerCase().includes('general')) {
+        return '⚙️'
+    } else if (categoryName.toLowerCase().includes('misc')) {
+        return '🎊'
+    } else if (categoryName.toLowerCase().includes('dungeons')) {
+        return '🐉'
+    } else if (categoryName.toLowerCase().includes('info')) {
+        return '🗃️'
+    } else if (categoryName.toLowerCase().includes('test')) {
+        return '🧪'
+    } else {
+        return '🚩'
+    }
 }

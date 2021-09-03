@@ -1,34 +1,109 @@
-const { MessageEmbed } = require('discord.js');
-
+const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
+const { writeToJsonDb } = require('../../otherFunctions/writeToJsonDb')
 module.exports.run = async (bot, message, args) => {
-    message.delete();
-    let botCreation = bot.user.createdAt.toString().split(' ');
+    let likesAndDislikes = require('../../jsonDb/likesAndDislikes.json')
+    let botOwner;
+    try {
+        botOwner = await bot.users.fetch(`${process.env.AUTHOR}`);
+    } catch (error) {
+        botOwner = { username: 'Chthulu', discriminator: '6727' };
+    }
 
-    var botEmbed = new MessageEmbed()
-        //todo fix username
-        .setAuthor(`🤖 ${bot.user.username}#${bot.user.discriminator} 🤖`)
-        .setDescription(`I am here to serve my master: \*\*${bot.users.cache.find(user => user.id === '241273372892200963').username}\*\*`)
-        .setColor("#29e53f")
-        .addField("\_\_\*\*DESCIPTION\*\*\_\_", "---------------------------------------------------------------------------\nDeep in the sea. I wanna swim. Leaving my worries. Far away from me. I need a break. I need to close my eyes. Go far away. And see the ancient skies. I need to know. If I'm still alive. Go far away. And see my roots are fine\n---------------------------------------------------------------------------")
-        .setThumbnail(bot.user.displayAvatarURL())
-        .addFields(
-            { name: '\_\_\*\*BOT NAME\*\*\_\_', value: `${bot.user.username}`, inline: true },
-            { name: '\_\_\*\*ACTIVE SERVERS\*\*\_\_', value: `Active in \*\*${bot.guilds.cache.size}\*\* server(s)`, inline: true }
-        )
-        .addFields(
-            { name: '\_\_\*\*RESURRECTIONS\*\*\_\_', value: `I've been summoned \*\*${bot.ressurection['resurrections'].count}\*\* times`, inline: true },
-            { name: '\_\_\*\*TIME ALIVE\*\*\_\_', value: `${calculateUptimeBot(bot)}`, inline: false },
-            { name: '\u200B', value: '\u200B', inline: true }
-        )
-        .addField("\_\_\*\*CREATED AT\*\*\_\_", `${botCreation[0]}, ${botCreation[1]} ${botCreation[2]} ${botCreation[3]} ${botCreation[4]}`)
-    return message.channel.send(botEmbed);
+    const messageComponents = new MessageActionRow()
+        .addComponents(
+            new MessageButton()
+                .setCustomId('like-bot-button')
+                .setLabel('Like')
+                .setStyle('SUCCESS')
+                .setEmoji('♥️'),
+            new MessageButton()
+                .setCustomId('dislike-bot-button')
+                .setLabel('Dislike')
+                .setStyle('DANGER')
+                .setEmoji('😭'),
+            new MessageButton()
+                .setCustomId('help-bot-button')
+                .setLabel('Help')
+                .setStyle('SECONDARY'),
+            new MessageButton()
+                .setCustomId('delete-bot-button')
+                .setLabel('Delete')
+                .setStyle('SECONDARY'),
+        );
+
+    const sendMessage = await message.channel.send({ content: `Buttons will be gone after 15 seconds!`, embeds: [createBotEmbed(bot, botOwner)], components: [messageComponents] });
+    const collector = sendMessage.createMessageComponentCollector({ componentType: 'BUTTON', time: 15000 });
+
+    collector.on('end', collected => {
+        for (const [key, value] of collected) {
+            if (value.customId === 'delete-bot-button') return sendMessage.delete();
+        }
+        return sendMessage.edit({ content: null, components: [] })
+    });
+
+    collector.on('collect', i => {
+        if (!(i.message.id === sendMessage.id)) return
+        if (!(i.user.id === message.author.id)) return sendMessage.reply({ content: `These buttons aren't for you!`}).then(msg => { setTimeout(() => msg.delete(), 1000) }).catch(err => console.log(err));
+
+        switch (i.customId) {
+            case 'like-bot-button':
+                likesAndDislikes['likes'].push({ userID: `${message.author.id}` })
+                writeToJsonDb('likesAndDislikes', likesAndDislikes);
+                sendMessage.edit({ embeds: [createBotEmbed(bot, botOwner)] })
+                break;
+            case 'dislike-bot-button':
+                sendMessage.reply(`This button does nothing, you better press on the \`♥️ Like\` button!`).then(msg => { setTimeout(() => msg.delete(), 3000) });;
+                break;
+            case 'help-bot-button':
+                const { sendHelpEmbedFunction } = require('../../otherFunctions/sendHelpEmbedFunction.js')
+                sendHelpEmbedFunction(bot, message.channel, message.author)// i.reply({ content: `Maybe I should show you the help command`, ephemeral: true });
+                break;
+            case 'delete-bot-button':
+                collector.stop();
+                break;
+        }
+        i.deferUpdate();
+
+    });
+
 }
 
 module.exports.help = {
     name: "chthulu",
-    alias: [],
+    alias: ["bot", "chthulhu", "cthulu", "chtulu", "chtulhu", "cthulhu"],
     description: "Information about the bot",
     category: "Information"
+}
+
+
+function createBotEmbed(bot, botOwner) {
+    return new MessageEmbed()
+        .setAuthor(`${bot.user.username}#${bot.user.discriminator} `, bot.user.avatarURL())
+        .setDescription(`
+        \*\*Cthulhu\*\* is a Great Old One of great power who lies in a death-like slumber beneath the \*\*Pacific Ocean\*\* in his sunken city of \*\*R'lyeh\*\*. He remains a dominant presence in the eldrich dealings on our world.
+        \*\*\`\`\`I've been awake for ${calculateUptimeBot(bot)}\`\`\`\*\*
+        `)
+        .setColor("GREEN")
+        // .setThumbnail(bot.user.displayAvatarURL())
+        .addFields(
+            {
+                name: `Info:`, value: `
+            💻 \*\*Developer:\*\* \`${botOwner.username}#${botOwner.discriminator}\`
+            🕸 \*\*Website:\*\* [chthulu.online](https://github.com/S-Eberwijn/Chthulu)
+            🚧 \*\*Test Server:\*\* [discord.gg/hYt5hYmkSv](https://discord.gg/hYt5hYmkSv)
+            ✏ \*\*Design:\*\* Looking for new one!
+            `, inline: true
+            },
+            {
+                name: `Stats:`, value: `
+            🗄️ \*\*Servers:\*\* \`${bot.guilds.cache.size}\`
+            👤 \*\*Users:\*\* \`${bot.guilds.cache.reduce((a, g) => a + g.memberCount, 0)}\`
+            🗣️ \*\*Channels:\*\* \`${bot.channels.cache.size}\`
+            🤖 \*\*Commands:\*\* \`${[... new Set(bot.commands.map((o) => o.help.name))].length}\`
+            `, inline: true
+            }
+        )
+        .setFooter(`💗 ${require('../../jsonDb/likesAndDislikes.json')['likes'].length}`)
 }
 
 function calculateUptimeBot(bot) {
@@ -40,7 +115,6 @@ function calculateUptimeBot(bot) {
     let seconds = Math.floor(totalSeconds % 60);
 
     let uptime = `${seconds} seconds`;
-
 
     if (minutes != 0) {
         uptime = `${minutes} minutes and ${seconds} seconds`;

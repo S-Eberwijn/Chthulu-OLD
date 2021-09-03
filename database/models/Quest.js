@@ -9,6 +9,10 @@ module.exports = class CharacterSession extends Model {
                 autoIncrement: true,
                 primaryKey: true
             },
+            quest_giver: {
+                type: DataTypes.STRING(32),
+                allowNull: false
+            },
             quest_description: {
                 type: DataTypes.TEXT,
                 allowNull: false

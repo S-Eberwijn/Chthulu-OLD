@@ -1,4 +1,4 @@
-const { MessageEmbed } = require('discord.js');
+const { MessageEmbed, MessageAttachment } = require('discord.js');
 const PlayerCharacter = require('../../../database/models/PlayerCharacter');
 
 module.exports.run = async (bot, message, args) => {
@@ -7,10 +7,11 @@ module.exports.run = async (bot, message, args) => {
     //Searches the database for a valid character
     let character = await PlayerCharacter.findOne({ where: { player_id: user.id, alive: 1, server_id: message.guild.id } })
     //If a character is linked to the user, return a character card
-    if (!character) return message.channel.send('This user does not have a character!').then(msg => msg.delete({ timeout: 3000 })).catch(err => console.log(err));
+    if (!character) return message.channel.send({ content: 'This user does not have a character!' }).then(msg => {setTimeout(() => msg.delete(), 3000)}).catch(err => console.log(err));
+    const characterLevelImage = new MessageAttachment(`./bot/images/DnD/CharacterLevel/${character.get('level')}.png`)
     const characterEmbed = new MessageEmbed()
         .setColor(0x333333)
-        .attachFiles([`./bot/images/DnD/CharacterLevel/${character.get('level')}.png`])
+        // .attachFiles([`./bot/images/DnD/CharacterLevel/${character.get('level')}.png`])
         .setThumbnail(`attachment://${character.get('level')}.png`)
         .setTitle(`${await getCharacterFullName(character)}(${character.get('age')})`)
         .setImage(character.get('picture_url'))
@@ -20,7 +21,7 @@ module.exports.run = async (bot, message, args) => {
             { name: '\*\*CLASS\*\*', value: `${character.get('class')}`, inline: true },
             { name: '\*\*BACKGROUND\*\*', value: `${character.get('background')}`, inline: true }
         );
-    message.channel.send(characterEmbed);
+    message.channel.send({ embeds: [characterEmbed], files: [characterLevelImage] });
 }
 
 module.exports.help = {
