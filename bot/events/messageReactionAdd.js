@@ -22,9 +22,9 @@ module.exports = async (bot, messageReaction, user) => {
     if (message.guild === null) return;
 
     // CHANNELS
-    const SESSION_REQUEST_CHANNEL_ID = message.guild.channels.cache.find(c => c.name.includes("session-request") && c.type == "GUILD_TEXT") ? message.member.guild.channels.cache.find(c => c.name.includes("session-request") && c.type == "GUILD_TEXT").id : '';
+    const SESSION_REQUEST_CHANNEL_ID = message.guild.channels.cache.find(c => c.name.includes("session-request") && c.type == "GUILD_TEXT") ? message.guild.channels.cache.find(c => c.name.includes("session-request") && c.type == "GUILD_TEXT").id : '';
     const PLANNED_SESSIONS_CHANNEL = message.guild.channels.cache.find(c => c.name.includes("planned-session") && c.type == "GUILD_TEXT");
-    const PLANNED_SESSIONS_CHANNEL_ID = message.guild.channels.cache.find(c => c.name.includes("planned-session") && c.type == "GUILD_TEXT") ? message.member.guild.channels.cache.find(c => c.name.includes("planned-session") && c.type == "GUILD_TEXT").id : '';
+    const PLANNED_SESSIONS_CHANNEL_ID = message.guild.channels.cache.find(c => c.name.includes("planned-session") && c.type == "GUILD_TEXT") ? message.guild.channels.cache.find(c => c.name.includes("planned-session") && c.type == "GUILD_TEXT").id : '';
     const PAST_SESSIONS_CHANNEL = message.guild.channels.cache.find(c => c.name.includes("past-session") && c.type == "GUILD_TEXT");
 
     // ROLES

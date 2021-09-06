@@ -1,7 +1,8 @@
 const { MessageEmbed, MessageActionRow, MessageSelectMenu } = require('discord.js');
 
-exports.sendHelpEmbedFunction = async function (bot, messageChannel, messageAuthor) {
-
+exports.sendHelpEmbedFunction = async function (bot, guildId, messageChannelId, messageAuthorId) {
+    const messageChannel = bot.guilds.cache.get(guildId).channels.cache.get(messageChannelId)
+    // bot.guilds.get(message.guild.id).id
     const categorizedCommands = bot.commands.reduce((r, a) => {
         r[a.help.category] = [...r[a.help.category] || [], a];
         return r;
@@ -32,7 +33,7 @@ exports.sendHelpEmbedFunction = async function (bot, messageChannel, messageAuth
     const initialMessage = await messageChannel.send({ embeds: [initialEmbed], components: [messageComponents] }, true);
 
     const filter = (response) => {
-        return response.user.id === messageAuthor.id;
+        return response.user.id === messageAuthorId;
     }
 
     const collector = messageChannel.createMessageComponentCollector({

@@ -28,7 +28,7 @@ app.use('/', require('./website/routes/login'));
 
 // Initialize Discord Bot
 const { Client, Intents } = require('discord.js');
-const bot = new Client({ partials: ['MESSAGE', 'CHANNEL', 'REACTION'], intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS] });
+const bot = new Client({ restTimeOffset: 0, partials: ['MESSAGE', 'CHANNEL', 'REACTION'], intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS] });
 // const discordButtons = require("discord-buttons");
 // discordButtons(bot);
 const Enmap = require('enmap');

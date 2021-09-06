@@ -1,10 +1,14 @@
 const PlayerCharacter = require('../../database/models/PlayerCharacter');
 
+//TODO: FIX  let characters = await getAliveCharacters();
+
 exports.dashboardPage = async (req, res) => {
     const bot = require('../../index');
-    let characters = await getAliveCharacters();
+    // let characters = await getAliveCharacters();
 
-    res.render('dashboardPage', { isDashboardPage: true, bot: bot, headerTitle: 'Chthulu', guildName: '', characters: characters });
+    // res.render('dashboardPage', { isDashboardPage: true, bot: bot, headerTitle: 'Chthulu', guildName: '', characters: characters });
+    res.render('dashboardPage', { isDashboardPage: true, bot: bot, headerTitle: 'Chthulu', guildName: '' });
+
 }
 
 exports.guildDashboardPage = async (req, res) => {
