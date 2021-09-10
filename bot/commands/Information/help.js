@@ -3,7 +3,7 @@ const {sendHelpEmbedFunction} = require('../../otherFunctions/sendHelpEmbedFunct
 module.exports.run = async (bot, message, args) => {
 
     if (!args[0]) {
-        sendHelpEmbedFunction(bot, message.channel, message.author)
+        sendHelpEmbedFunction(bot, message.guild.id, message.channel.id, message.author.id)
     } else {
         if (args[0].includes('!')) args[0] = args[0].slice(1)
         if (!bot.commands.has(args[0])) return message.channel.send({ content: 'I do not posses that command...' })

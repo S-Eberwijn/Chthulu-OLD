@@ -2,7 +2,7 @@ const { MessageEmbed } = require('discord.js');
 let sumOfResults = 0, resultsPerDieType = [];
 module.exports.run = async (bot, message, args) => {
     resetResults();
-    let typeOfDie = 0, toBeAddedValue = 0, correctedRollString, embedTitleString = `${message.author.username} is rolling `, outputEmbed = new MessageEmbed();
+    let typeOfDie = 0, toBeAddedValue = 0, correctedRollString, embedTitleString = `${message.guild.members.cache.get(message.author.id).nickname ? message.guild.members.cache.get(message.author.id).nickname : message.author.username} is rolling `, outputEmbed = new MessageEmbed();
     correctedRollString = message.content.replace(/ /g, "").slice(message.content.indexOf(message.content.match(/\d/)) - 1);
 
     let diceRollsArray = correctedRollString.match(/\d{1,24}d\d{1,100}/g);

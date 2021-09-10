@@ -1,6 +1,9 @@
 const { MessageEmbed, MessageActionRow, MessageSelectMenu } = require('discord.js');
 
 exports.sendHelpEmbedFunction = async function (bot, guildId, messageChannelId, messageAuthorId) {
+    //TODO FIX const messageChannel = bot.guilds.cache.get(guildId).channels.cache.get(messageChannelId)
+    // TypeError: Cannot read property 'channels' of undefined
+    
     const messageChannel = bot.guilds.cache.get(guildId).channels.cache.get(messageChannelId)
     // bot.guilds.get(message.guild.id).id
     const categorizedCommands = bot.commands.reduce((r, a) => {
