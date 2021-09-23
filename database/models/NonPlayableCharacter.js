@@ -10,7 +10,7 @@ module.exports = class PlayerCharacter extends Model {
             },
             creator_id: {
                 type: DataTypes.STRING(32),
-                allowNull: false
+                allowNull: true
             },
             name: {
                 type: DataTypes.STRING(32),
@@ -32,10 +32,6 @@ module.exports = class PlayerCharacter extends Model {
                 type: DataTypes.STRING(32),
                 allowNull: true
             },
-            background: {
-                type: DataTypes.STRING(32),
-                allowNull: true
-            },
             age: {
                 type: DataTypes.INTEGER,
                 allowNull: true
@@ -44,17 +40,13 @@ module.exports = class PlayerCharacter extends Model {
                 type: DataTypes.STRING(255),
                 allowNull: true
             },
-            status: {
-                type: DataTypes.STRING(32),
-                allowNull: true,
-            },
-            using_npc: {
-                type: DataTypes.STRING(255),
-                allowNull: true,
-            },
             server_id: {
                 type: DataTypes.STRING(32),
                 allowNull: false,
+            },
+            status: {
+                type: DataTypes.STRING(32),
+                allowNull: true,
             }
         }, {
             tableName: 'non_playable_character',

@@ -2,7 +2,7 @@ const { writeToJsonDb } = require('../otherFunctions/writeToJsonDb')
 const { getBotEmbed } = require('../otherFunctions/botEmbed')
 const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
 const PlayerCharacter = require('../../database/models/PlayerCharacter');
-
+const NonPlayableCharacter = require('../../database/models/NonPlayableCharacter');
 
 module.exports = async (bot, interaction) => {
     //TODO: Might change later when applying buttons to character creation 
@@ -84,7 +84,61 @@ module.exports = async (bot, interaction) => {
                 return interaction.reply({ content: `Approved this character`, ephemeral: true })
             case 'decline-character-button':
                 return interaction.message.channel.delete().catch(err => console.error(err));
+              //!createnpc
+            case 'approve-npc-button':
+                const messageComponents4 = new MessageActionRow()
+                    .addComponents(
+                        new MessageButton()
+                            .setCustomId('change-character-name-button')
+                            .setLabel('Change Name')
+                            .setStyle('SECONDARY'),
+                        new MessageButton()
+                            .setCustomId('change-character-age-button')
+                            .setLabel('Change Age')
+                            .setStyle('SECONDARY'),
+                        new MessageButton()
+                            .setCustomId('change-character-short-story-button')
+                            .setLabel('Change Short-Story')
+                            .setStyle('SECONDARY'),
+                    );
+                const messageComponents5 = new MessageActionRow()
+                    .addComponents(
+                        new MessageButton()
+                            .setCustomId('change-character-race-button')
+                            .setLabel('Change Race')
+                            .setStyle('SECONDARY'),
+                        new MessageButton()
+                            .setCustomId('change-character-class-button')
+                            .setLabel('Change Class')
+                            .setStyle('SECONDARY'),
+                        new MessageButton()
+                            .setCustomId('change-character-background-button')
+                            .setLabel('Change Background')
+                            .setStyle('SECONDARY'),
+                    );
+                const messageComponents6 = new MessageActionRow()
+                    .addComponents(
+                        new MessageButton()
+                            .setCustomId('change-character-picture-button')
+                            .setLabel('Change Picture')
+                            .setStyle('SECONDARY'),
+                        new MessageButton()
+                            .setCustomId('delete-character-button')
+                            .setLabel('Delete Character')
+                            .setStyle('DANGER')
+                    );
+                //await NonPlayableCharacter.findOne({ where: { creator_id: interaction.guild.roles.cache.find(role => role.name === "Dungeon Master").id, server_id: interaction.guildId, status: "CREATED" } });
+                await NonPlayableCharacter.findOne({ where: { creator_id: interaction.user.id, server_id: interaction.guildId, status: "CREATING" } }).then((character) => {
+                    if (character) {
+                        character.set("status",'CREATED');
+                        character.save().then(() => interaction.message.edit({ content: null, components: [messageComponents4, messageComponents5, messageComponents6] }))
+                    }
+                });
+                return interaction.reply({ content: `Approved this character`, ephemeral: true })
+            case 'decline-npc-button':
+                return interaction.message.channel.delete().catch(err => console.error(err));
         }
+
     } catch (error) {
         console.log(error)
     } finally {
