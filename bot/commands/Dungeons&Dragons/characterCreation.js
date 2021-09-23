@@ -29,6 +29,7 @@ module.exports.run = async (bot, message, args) => {
     message.guild.channels.cache.forEach(channel => {
         if (channel.name == `${message.author.username.toLowerCase()}-${message.author.discriminator}`)  return message.channel.send({ content: 'You already created a channel before!' }).then(msg => { setTimeout(() => msg.delete(), 3000) }).catch(err => console.log(err));
     });
+    //TODO FIX LATER
     if (message.member.roles.cache.has(message.guild.roles.cache.find(role => role.name.includes('Dungeon Master')).id)) return message.channel.send({ content: 'You\'re not a player, get lost kid!' }).then(msg => { setTimeout(() => msg.delete(), 5000) }).catch(err => console.log(err));
 
     message.guild.channels.create(`${message.author.username}-${message.author.discriminator}`, "text").then(async createdChannel => {

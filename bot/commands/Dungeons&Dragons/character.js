@@ -1,4 +1,3 @@
-const { MessageEmbed, MessageAttachment } = require('discord.js');
 const PlayerCharacter = require('../../../database/models/PlayerCharacter');
 const { getCharacterEmbed, getCharacterLevelImage } = require('../../otherFunctions/characterEmbed')
 

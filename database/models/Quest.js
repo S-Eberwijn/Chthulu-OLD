@@ -25,6 +25,14 @@ module.exports = class CharacterSession extends Model {
                 type: DataTypes.STRING(32),
                 allowNull: false
             },
+            quest_importance_value: {
+                type: DataTypes.INTEGER,
+                allowNull: false
+            },
+            quest_status: {
+                type: DataTypes.STRING(32),
+                allowNull: false
+            },
             server_id: {
                 type: DataTypes.STRING(32),
                 allowNull: false,

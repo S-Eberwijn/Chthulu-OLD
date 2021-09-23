@@ -14,7 +14,7 @@ module.exports = class PlayerCharacter extends Model {
             },
             name: {
                 type: DataTypes.STRING(32),
-                allowNull: false
+                allowNull: true
             },
             title: {
                 type: DataTypes.STRING(64),
@@ -22,31 +22,35 @@ module.exports = class PlayerCharacter extends Model {
             },
             description: {
                 type: DataTypes.TEXT,
-                allowNull: false
+                allowNull: true
             },
             race: {
                 type: DataTypes.STRING(32),
-                allowNull: false
+                allowNull: true
             },
             class: {
                 type: DataTypes.STRING(32),
-                allowNull: false
+                allowNull: true
             },
             background: {
                 type: DataTypes.STRING(32),
-                allowNull: false
+                allowNull: true
             },
             age: {
-                type: DataTypes.INTEGER,
-                allowNull: false
-            },
-            level: {
                 type: DataTypes.INTEGER,
                 allowNull: true
             },
             picture_url: {
                 type: DataTypes.STRING(255),
                 allowNull: true
+            },
+            status: {
+                type: DataTypes.STRING(32),
+                allowNull: true,
+            },
+            using_npc: {
+                type: DataTypes.STRING(255),
+                allowNull: true,
             },
             server_id: {
                 type: DataTypes.STRING(32),
