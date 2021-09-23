@@ -1,0 +1,51 @@
+[{
+    "question": "What will be your npcs name?",
+    "answers": [],
+    "regex": "^[ a-zA-Z0-9!@#$&()'\\-`.+,/\"]{1,32}$",
+    "errorMessage": "Name cannot be longer than 32 characters!",
+    "databaseTable": "name"
+
+},
+{
+    "question": "What will be your npcs race?",
+    "answers": [],
+    "regex": "^[ a-zA-Z0-9!@#$&()'\\-`.+,/\"]{1,32}$",
+    "errorMessage": "Race cannot be longer than 32 characters!",
+    "databaseTable": "race"
+},
+{
+    "question": "What will be your npcs Class?",
+    "answers": ["Unknown","Commoner","Barbarian", "Bard", "Cleric", "Druid", "Fighter", "Monk", "Paladin", "Ranger", "Rogue", "Sorcerer", "Warlock", "Wizard", "Artificer"],
+    "regex": ".*",
+    "errorMessage": "That is not an usable class! Try again!",
+    "databaseTable": "class"
+},
+{
+    "question": "What will be your npcs Occupation?",
+    "answers":[],
+    "regex":"^[ a-zA-Z0-9!@#$&()'\\-`.+,/\"]{1,32}$",
+    "errorMessage":  "Race cannot be longer than 32 characters!",
+    "databaseTable": "title"
+},
+{
+    "question": "What will be your npcs age?",
+    "answers": [],
+    "regex": "^[0-9]{1,7}$",
+    "errorMessage": "Please enter a valid number!",
+    "databaseTable": "age"
+},
+{
+    "question": "What will be your npcs short-story?",
+    "answers": [],
+    "regex": "^.{1,950}$",
+    "errorMessage": "Make your story shorter (max 950 chars)",
+    "databaseTable": "description"
+},
+{
+    "question": "What will be your npcs picture?",
+    "answers": [],
+    "regex": "(http(s?):)([\/|.|\\w|\\s|-])*\\.(?:jpg|gif|png)",
+    "errorMessage": "This is an invalid picture!",
+    "databaseTable": "picture_url"
+}
+]
