@@ -8,14 +8,6 @@ const {paginationEmbed} = require('../../otherFunctions/paginationEmbed')
 
 module.exports.run = async (bot, message, args) => {
     // TODO FINISH FUNCTION
-    const embed1 = new MessageEmbed()
-        .setTitle("First Page")
-        .setDescription("My First Dev.to Post");
-
-    const embed2 = new MessageEmbed()
-        .setTitle("Second Page")
-        .setDescription("The second page of my dev.to post");
-
     const button1 = new MessageButton()
         .setCustomId("npc_previous_button")
         .setLabel("Previous")
@@ -25,8 +17,6 @@ module.exports.run = async (bot, message, args) => {
         .setCustomId("npc_next_button")
         .setLabel("Next")
         .setStyle("SECONDARY");
-
-    const pages = [embed1, embed2];
 
     const buttonList = [button1, button2];
 

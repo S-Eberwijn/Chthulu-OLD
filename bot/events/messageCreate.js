@@ -26,8 +26,8 @@ module.exports = async (bot, message) => {
             if (message.guild.me.permissionsIn(message.channel).has(Permissions.FLAGS.MANAGE_MESSAGES)) message.delete();
             commands.run(bot, message, arguments);
         }
-    }else if (in_character_channels) {
-        if (!(message.guild.id === 679595021317832704) && in_character_channels.includes(message.channel.id)) {
+    } else if (in_character_channels) {
+        if (!(message.guild.id === `679595021317832704`) && in_character_channels.includes(message.channel.id)) {
             if (message.guild.me.permissionsIn(message.channel).has(Permissions.FLAGS.MANAGE_MESSAGES)) message.delete();
 
             //Person must have a character in the Chthulu database in order to type messages in the 'in-character'-text channels.
@@ -45,7 +45,7 @@ module.exports = async (bot, message) => {
 
             //TODO: Maybe make a conversation implementation, so it looks like character are really speaking.
             const characterText = new MessageEmbed()
-                .setColor("#2f3136")
+                .setColor(`#2f3136`)
                 .setAuthor(character.get('name'), character.get('picture_url'))
                 .setDescription(`\>\>\> ${message.content}`)
             message.channel.send({ embeds: [characterText] });
