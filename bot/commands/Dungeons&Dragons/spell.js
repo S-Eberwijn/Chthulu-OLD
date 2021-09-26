@@ -19,7 +19,7 @@ module.exports.run = async (bot, message, args) => {
         }
         else {
             let sigilImage = './bot/images/DnD/SpellSigils/' + data.school + '.png';
-            message.channel.send({ content: 'test', embeds: [EmbedSpellInMessage(data, stringMessage)], files: [sigilImage] });
+            message.channel.send({embeds: [EmbedSpellInMessage(data, stringMessage)], files: [sigilImage] });
         }
     });
     return;
@@ -87,7 +87,7 @@ function ritual(message, stringMessage) {
         let data = ProcesRequest(body)
         /*console.log(data);*/
         if (data == "404") {
-            message.channel.send({ content: "That spell was not found in the db" });
+            message.channel.send({ content: "That spell was not found in the database" });
         }
         else {
             let sigilImage = './bot/images/DnD/SpellSigils/' + data.school + '.png';

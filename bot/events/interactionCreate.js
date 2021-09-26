@@ -4,6 +4,7 @@ const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
 const PlayerCharacter = require('../../database/models/PlayerCharacter');
 const NonPlayableCharacter = require('../../database/models/NonPlayableCharacter');
 
+
 module.exports = async (bot, interaction) => {
     //TODO: Might change later when applying buttons to character creation 
     // if (!(interaction.user.id === interaction.message.author.id)) return interaction.reply({ content: `These buttons are not meant for you!`, ephemeral: true})
@@ -84,7 +85,9 @@ module.exports = async (bot, interaction) => {
                 return interaction.reply({ content: `Approved this character`, ephemeral: true })
             case 'decline-character-button':
                 return interaction.message.channel.delete().catch(err => console.error(err));
-              //!createnpc
+        }
+        //!createnpcF
+        switch (interaction.customId) {
             case 'approve-npc-button':
                 const messageComponents4 = new MessageActionRow()
                     .addComponents(
@@ -97,22 +100,22 @@ module.exports = async (bot, interaction) => {
                             .setLabel('Change Age')
                             .setStyle('SECONDARY'),
                         new MessageButton()
-                            .setCustomId('change-character-short-story-button')
+                            .setCustomId('change-npc-description-button')
                             .setLabel('Change Short-Story')
                             .setStyle('SECONDARY'),
                     );
                 const messageComponents5 = new MessageActionRow()
                     .addComponents(
                         new MessageButton()
-                            .setCustomId('change-character-race-button')
+                            .setCustomId('change-npc-race-button')
                             .setLabel('Change Race')
                             .setStyle('SECONDARY'),
                         new MessageButton()
-                            .setCustomId('change-character-class-button')
+                            .setCustomId('change-npc-class-button')
                             .setLabel('Change Class')
                             .setStyle('SECONDARY'),
                         new MessageButton()
-                            .setCustomId('change-character-background-button')
+                            .setCustomId('change-npc-title-button')
                             .setLabel('Change Background')
                             .setStyle('SECONDARY'),
                     );
@@ -123,6 +126,10 @@ module.exports = async (bot, interaction) => {
                             .setLabel('Change Picture')
                             .setStyle('SECONDARY'),
                         new MessageButton()
+                            .setCustomId('change-npc-visibility-button')
+                            .setLabel('Edit Visibility')
+                            .setStyle('SECONDARY'),
+                        new MessageButton()
                             .setCustomId('delete-character-button')
                             .setLabel('Delete Character')
                             .setStyle('DANGER')
@@ -130,7 +137,7 @@ module.exports = async (bot, interaction) => {
                 //await NonPlayableCharacter.findOne({ where: { creator_id: interaction.guild.roles.cache.find(role => role.name === "Dungeon Master").id, server_id: interaction.guildId, status: "CREATED" } });
                 await NonPlayableCharacter.findOne({ where: { creator_id: interaction.user.id, server_id: interaction.guildId, status: "CREATING" } }).then((character) => {
                     if (character) {
-                        character.set("status",'CREATED');
+                        character.set("status",'INVISIBLE');
                         character.save().then(() => interaction.message.edit({ content: null, components: [messageComponents4, messageComponents5, messageComponents6] }))
                     }
                 });
@@ -138,11 +145,32 @@ module.exports = async (bot, interaction) => {
             case 'decline-npc-button':
                 return interaction.message.channel.delete().catch(err => console.error(err));
         }
-
     } catch (error) {
         console.log(error)
     } finally {
         // interaction.deferUpdate();
     }
 
+    try{
+        switch (interaction.customId) {
+            case 'change-npc-visibility-button':
+                interaction.deferUpdate();
+                let charId = interaction.channel.name.split("⼁")[0];
+                await NonPlayableCharacter.findOne({ where: { character_id: charId, server_id: interaction.guildId } }).then((character) => {
+                    if (character) {
+                        if(character.get("status")=="VISIBLE"){ 
+                            character.set("status",'INVISIBLE');
+                            character.save()
+                        } else if(character.get("status")=="INVISIBLE"){ 
+                            character.set("status",'VISIBLE');
+                            character.save()
+                        }
+                        interaction.channel.send(character.get("name")+" is now " + character.get("status").toLowerCase( ) + " for all players")
+                            .then(msg => { setTimeout(() => msg.delete(), 3000) }).catch(err => console.log(err));
+                    }
+                });
+        }
+    }catch (error) {
+        console.log(error)
+    }
 };

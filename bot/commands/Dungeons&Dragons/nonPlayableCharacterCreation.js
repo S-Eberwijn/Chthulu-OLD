@@ -3,7 +3,7 @@ const NonPlayableCharacter = require('../../../database/models/NonPlayableCharac
 const { MessageEmbed, MessageActionRow, MessageButton, MessageSelectMenu } = require('discord.js');
 
 const QUESTIONS_ARRAY = require('../../jsonDb/npcCreationQuestions.json');
-const { getCharacterEmbed, getCharacterLevelImage } = require('../../otherFunctions/characterEmbed')
+const { getCharacterEmbed, getCharacterLevelImage,getNonPlayableCharacterEmbed } = require('../../otherFunctions/characterEmbed')
 
 module.exports.run = async (bot, message, args) => {
     const characterCreateCategory = message.guild.channels.cache.find(c => c.name == "--CHARACTER CREATION--" && c.type == "GUILD_CATEGORY")
@@ -56,8 +56,8 @@ module.exports.run = async (bot, message, args) => {
                         .setLabel('Decline')
                         .setStyle('DANGER')
                 );
-            createdChannel.send({ content: 'Is this correct?', embeds: [await getCharacterEmbed(newCharacter)], components: [messageComponents], files: [await getCharacterLevelImage(newCharacter)] }).then(async newCharacterEmbed => {
-                await createdChannel.setName(newCharacter.get('name'));
+            createdChannel.send({ content: 'Is this correct?', embeds: [await getNonPlayableCharacterEmbed(newCharacter)], components: [messageComponents] }).then(async newCharacterEmbed => {
+                await createdChannel.setName(newCharacter.get("character_id") + "⼁" + newCharacter.get('name'));
             });
         });
     });
