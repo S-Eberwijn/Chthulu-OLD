@@ -66,7 +66,7 @@ module.exports.run = async (bot, message, args) => {
 module.exports.help = {
     name: "createNPC",
     alias: ["cNPC"],
-    description: "Creates a new channel with questions about your new character",
+    description: "Creates a new channel with questions about your new NPC",
     category: "Dungeons & Dragons"
 }
 
@@ -111,7 +111,6 @@ async function characterCreationQuestion(QUESTION_OBJECT, createdChannel, newCha
         } else if (QUESTION_OBJECT.answers.length > 25) {
             for (let index = 0; index < Math.ceil(QUESTION_OBJECT.answers.length / 25); index++) {
                 const elements = QUESTION_OBJECT.answers.slice(index * 25, 25 * (index + 1));
-                // console.log(elements)
                 messageComponentsArray.push(new MessageActionRow().addComponents(
                     new MessageSelectMenu()
                         .setCustomId(`characterQuestion${index}`)
