@@ -5,6 +5,14 @@ const PlayerCharacter = require('../../database/models/PlayerCharacter');
 const NonPlayableCharacter = require('../../database/models/NonPlayableCharacter');
 
 module.exports = async (bot, interaction) => {
+
+    if (interaction.isCommand()) {
+        const slashCommands = bot.slashCommands.get(interaction.commandName)
+        if (slashCommands) slashCommands.run(interaction)
+    }
+
+
+
     //TODO: Might change later when applying buttons to character creation 
     // if (!(interaction.user.id === interaction.message.author.id)) return interaction.reply({ content: `These buttons are not meant for you!`, ephemeral: true})
     try {
@@ -84,7 +92,7 @@ module.exports = async (bot, interaction) => {
                 return interaction.reply({ content: `Approved this character`, ephemeral: true })
             case 'decline-character-button':
                 return interaction.message.channel.delete().catch(err => console.error(err));
-              //!createnpc
+            //!createnpc
             case 'approve-npc-button':
                 const messageComponents4 = new MessageActionRow()
                     .addComponents(
@@ -130,7 +138,7 @@ module.exports = async (bot, interaction) => {
                 //await NonPlayableCharacter.findOne({ where: { creator_id: interaction.guild.roles.cache.find(role => role.name === "Dungeon Master").id, server_id: interaction.guildId, status: "CREATED" } });
                 await NonPlayableCharacter.findOne({ where: { creator_id: interaction.user.id, server_id: interaction.guildId, status: "CREATING" } }).then((character) => {
                     if (character) {
-                        character.set("status",'CREATED');
+                        character.set("status", 'CREATED');
                         character.save().then(() => interaction.message.edit({ content: null, components: [messageComponents4, messageComponents5, messageComponents6] }))
                     }
                 });
