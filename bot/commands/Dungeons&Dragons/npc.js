@@ -1,9 +1,9 @@
 const NonPlayableCharacter = require('../../../database/models/NonPlayableCharacter');
 const { getNonPlayableCharacterEmbed } = require('../../otherFunctions/characterEmbed')
 
-const { MessageEmbed,MessageButton } = require('discord.js');
+const { MessageEmbed, MessageButton } = require('discord.js');
 
-const {paginationEmbed} = require('../../otherFunctions/paginationEmbed')
+const { paginationEmbed } = require('../../otherFunctions/paginationEmbed')
 
 
 module.exports.run = async (bot, message, args) => {

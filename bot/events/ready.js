@@ -1,4 +1,5 @@
 const fs = require("fs");
+const { createCmd } = require("../../dataHandler")
 
 module.exports = async bot => {
     // Check to see if bot is ready
@@ -22,4 +23,11 @@ module.exports = async bot => {
     fs.writeFile("./bot/jsonDb/ressurection.json", JSON.stringify(bot.ressurection, null, 4), err => {
         if (err) throw err;
     });
+
+    //setting slash command for all guilds
+    bot.guilds.cache.forEach(guild => {
+        createCmd(bot, guild.id)
+    });
+
+
 }

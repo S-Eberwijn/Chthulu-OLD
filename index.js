@@ -33,6 +33,8 @@ const bot = new Client({ restTimeOffset: 0, partials: ['MESSAGE', 'CHANNEL', 'RE
 // discordButtons(bot);
 const Enmap = require('enmap');
 bot.commands = new Enmap();
+bot.slashCommands = new Enmap();
+
 
 // Read and log command files
 fs.readdir("./bot/commands/", async (err, dirs) => {
@@ -57,6 +59,35 @@ fs.readdir("./bot/commands/", async (err, dirs) => {
                 bot.commands.set(commandName.toLowerCase(), fileGet);
                 commandAlias.forEach(alias => {
                     bot.commands.set(alias.toLowerCase(), fileGet);
+                });
+            });
+        });
+    });
+});
+
+// Read and log slash command files
+fs.readdir("./bot/slash-commands/", async (err, dirs) => {
+    if (err) console.log(err);
+    if (dirs.length <= 0) {
+        console.log("Found no dirs files!");
+        return;
+    }
+    dirs.forEach((d, i) => {
+        fs.readdir(`./bot/slash-commands/${d}`, async (err, files) => {
+            if (err) console.log(err);
+            var jsFiles = files.filter(f => f.split(".").pop() === "js");
+            if (dirs.length <= 0) {
+                console.log("Found no dirs files!");
+                return;
+            }
+            jsFiles.forEach((f, i) => {
+                var fileGet = require(`./bot/slash-commands/${d}/${f}`);
+                console.log(`--{ Slash Command ${f} is loaded }--`);
+                var commandName = fileGet.help.name;
+                var commandAlias = fileGet.help.alias;
+                bot.slashCommands.set(commandName.toLowerCase(), fileGet);
+                commandAlias.forEach(alias => {
+                    bot.slashCommands.set(alias.toLowerCase(), fileGet);
                 });
             });
         });

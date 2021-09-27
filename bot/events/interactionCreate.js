@@ -93,6 +93,14 @@ const messageComponents6 = new MessageActionRow().addComponents(
 
 
 module.exports = async (bot, interaction) => {
+
+    if (interaction.isCommand()) {
+        const slashCommands = bot.slashCommands.get(interaction.commandName)
+        if (slashCommands) slashCommands.run(interaction)
+    }
+
+
+
     //TODO: Might change later when applying buttons to character creation 
     // if (!(interaction.user.id === interaction.message.author.id)) return interaction.reply({ content: `These buttons are not meant for you!`, ephemeral: true})
     try {
