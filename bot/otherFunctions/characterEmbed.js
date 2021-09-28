@@ -1,6 +1,7 @@
 const { MessageEmbed, MessageAttachment } = require('discord.js');
 
 exports.getCharacterEmbed = async function (character) {
+    //TODO: Make the embed a fixed size
     // console.log(character);
     return new MessageEmbed()
         .setColor("#2C2F33")
@@ -13,7 +14,9 @@ exports.getCharacterEmbed = async function (character) {
             { name: '\*\*RACE\*\*', value: `${character.get('race')}`, inline: true },
             { name: '\*\*CLASS\*\*', value: `${character.get('class')}`, inline: true },
             { name: '\*\*BACKGROUND\*\*', value: `${character.get('background')}`, inline: true }
-        );
+        )
+        //  .setFooter("55".repeat(100/*any big number works too*/) + "|")
+        
 }
 
 exports.getNonPlayableCharacterEmbed = async function (npc) {
@@ -31,6 +34,7 @@ exports.getNonPlayableCharacterEmbed = async function (npc) {
         );
 }
 
+//TODO: This sometimes doesnt show
 exports.getCharacterLevelImage = async function (character) {
     return new MessageAttachment(`./bot/images/DnD/CharacterLevel/${character.get('level')}.png`)
 }

@@ -22,6 +22,17 @@ module.exports.createCmd = async function (bot, guildId) {
                 required: true
             }],
         },
+        // character slash-command
+        {
+            name: 'character',
+            description: 'Show an user character.',
+            options: [{
+                name: 'user',
+                type: 'USER',
+                description: 'User to look character',
+                required: false
+            }],
+        },
     ]
     await bot.guilds.cache.get(guildId)?.commands.set(data)
 }
