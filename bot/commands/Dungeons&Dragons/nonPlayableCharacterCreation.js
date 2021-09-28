@@ -3,7 +3,7 @@ const NonPlayableCharacter = require('../../../database/models/NonPlayableCharac
 const { MessageEmbed, MessageActionRow, MessageButton, MessageSelectMenu } = require('discord.js');
 
 const QUESTIONS_ARRAY = require('../../jsonDb/npcCreationQuestions.json');
-const { getNonPlayableCharacterEmbed } = require('../../otherFunctions/characterEmbed')
+const { getCharacterEmbed, getCharacterLevelImage,getNonPlayableCharacterEmbed } = require('../../otherFunctions/characterEmbed')
 
 module.exports.run = async (bot, message, args) => {
     const characterCreateCategory = message.guild.channels.cache.find(c => c.name == "--CHARACTER CREATION--" && c.type == "GUILD_CATEGORY")
@@ -56,8 +56,9 @@ module.exports.run = async (bot, message, args) => {
                         .setLabel('Decline')
                         .setStyle('DANGER')
                 );
-            createdChannel.send({ content: 'Is this correct?', embeds: [await getNonPlayableCharacterEmbed(newCharacter)], components: [messageComponents]}).then(async newCharacterEmbed => {
-                await createdChannel.setName(newCharacter.get('name'));
+
+            createdChannel.send({ content: 'Is this correct?', embeds: [await getNonPlayableCharacterEmbed(newCharacter)], components: [messageComponents] }).then(async newCharacterEmbed => {
+                await createdChannel.setName(newCharacter.get("character_id") + "⼁" + newCharacter.get('name'));
             });
         });
     });
@@ -66,7 +67,7 @@ module.exports.run = async (bot, message, args) => {
 module.exports.help = {
     name: "createNPC",
     alias: ["cNPC"],
-    description: "Creates a new channel with questions about your new character",
+    description: "Creates a new channel with questions about your new NPC",
     category: "Dungeons & Dragons"
 }
 
@@ -111,7 +112,6 @@ async function characterCreationQuestion(QUESTION_OBJECT, createdChannel, newCha
         } else if (QUESTION_OBJECT.answers.length > 25) {
             for (let index = 0; index < Math.ceil(QUESTION_OBJECT.answers.length / 25); index++) {
                 const elements = QUESTION_OBJECT.answers.slice(index * 25, 25 * (index + 1));
-                // console.log(elements)
                 messageComponentsArray.push(new MessageActionRow().addComponents(
                     new MessageSelectMenu()
                         .setCustomId(`characterQuestion${index}`)

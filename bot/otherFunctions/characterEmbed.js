@@ -17,7 +17,7 @@ exports.getCharacterEmbed = async function (character) {
 }
 
 exports.getNonPlayableCharacterEmbed = async function (npc) {
-    // console.log(npc);
+    //console.log(npc);
     return new MessageEmbed()
         .setColor("#2C2F33")
         .setTitle(`${npc.get('name')} (${npc.get('age') || '?'})`)
