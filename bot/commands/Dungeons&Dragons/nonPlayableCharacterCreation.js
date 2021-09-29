@@ -8,22 +8,22 @@ const { getCharacterEmbed, getCharacterLevelImage,getNonPlayableCharacterEmbed }
 module.exports.run = async (bot, message, args) => {
     const characterCreateCategory = message.guild.channels.cache.find(c => c.name == "--CHARACTER CREATION--" && c.type == "GUILD_CATEGORY")
     if (!message.member.roles.cache.has(message.guild.roles.cache.find(role => role.name.includes('Dungeon Master')).id)) return message.channel.send({ content: 'You\'re not a dm, get lost kid!' }).then(msg => { setTimeout(() => msg.delete(), 5000) }).catch(err => console.log(err));
-    
-    await NonPlayableCharacter.findOne({ where: { creator_id: message.author.id, server_id: message.guild.id, status: "CREATING" } }).then((character) => { 
+
+    await NonPlayableCharacter.findOne({ where: { creator_id: message.author.id, server_id: message.guild.id, status: "CREATING" } }).then((character) => {
         let name = message.author.username + "-" + message.author.discriminator;
         let tmpchannel = message.guild.channels.cache.find(channel => channel.name == name.toLowerCase());
-        if (!tmpchannel){
+        if (!tmpchannel) {
             if (character) {
                 tmpchannel = message.guild.channels.cache.find(channel => channel.name == character.get("name"));
             }
         }
-        if(tmpchannel){tmpchannel.delete();}
+        if (tmpchannel) { tmpchannel.delete(); }
 
         if (character) {
-             character.destroy() 
-            } 
+            character.destroy()
+        }
     });
-    
+
     let newCharacter = await NonPlayableCharacter.create({
         creator_id: message.author.id,
         server_id: message.guild.id,
@@ -35,7 +35,7 @@ module.exports.run = async (bot, message, args) => {
             .catch(err => console.log(err));
     }
     message.guild.channels.cache.forEach(channel => {
-        if (channel.name == `${message.author.username.toLowerCase()}-${message.author.discriminator}`)  return message.channel.send({ content: 'You already created a channel before!' }).then(msg => { setTimeout(() => msg.delete(), 3000) }).catch(err => console.log(err));
+        if (channel.name == `${message.author.username.toLowerCase()}-${message.author.discriminator}`) return message.channel.send({ content: 'You already created a channel before!' }).then(msg => { setTimeout(() => msg.delete(), 3000) }).catch(err => console.log(err));
     });
     message.guild.channels.create(`${message.author.username}-${message.author.discriminator}`, "text").then(async createdChannel => {
         createdChannel.setParent(characterCreateCategory, { lockPermission: false });
@@ -56,6 +56,7 @@ module.exports.run = async (bot, message, args) => {
                         .setLabel('Decline')
                         .setStyle('DANGER')
                 );
+
             createdChannel.send({ content: 'Is this correct?', embeds: [await getNonPlayableCharacterEmbed(newCharacter)], components: [messageComponents] }).then(async newCharacterEmbed => {
                 await createdChannel.setName(newCharacter.get("character_id") + "⼁" + newCharacter.get('name'));
             });
