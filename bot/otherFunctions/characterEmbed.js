@@ -4,11 +4,11 @@ const { Image, loadImage, createCanvas } = require('canvas');
 const { getAverageColor } = require('fast-average-color-node');
 
 
-exports.sendCharacterEmbedMessage = async function (interaction, character) {
-    await interaction.reply({ embeds: [await getCharacterEmbed(character)], files: [await getCharacterLevelImage(character), await getCharacterPicture(character)] });
-}
+// exports.sendCharacterEmbedMessage = async function (interaction, character) {
+//     await interaction.reply({ embeds: [await getCharacterEmbed(character)], files: [await getCharacterLevelImage(character), await getCharacterPicture(character)] });
+// }
 
-async function getCharacterEmbed(character) {
+exports.getCharacterEmbed = async function (character) {
     // console.log(character);
     return new MessageEmbed()
         .setColor(await getAverageImageColor(character.get('picture_url').toLowerCase()))
@@ -38,7 +38,7 @@ exports.getNonPlayableCharacterEmbed = async function (npc) {
 }
 
 //TODO: This sometimes doesnt show
-async function getCharacterLevelImage(character) {
+exports.getCharacterLevelImage = async function (character) {
     return new MessageAttachment(`./bot/images/DnD/CharacterLevel/${character.get('level')}.png`)
 }
 
@@ -67,8 +67,8 @@ function hasWhiteSpace(s) {
     return s.indexOf(' ') >= 0;
 }
 
-async function getCharacterPicture(character) {
-    const background = await loadImage(character.get('picture_url').toLowerCase());
+exports.getCharacterPicture = async function (character) {
+    const background = await loadImage(character.get('picture_url').toLowerCase().replace(`_`, `\_`));
 
     const canvas = createCanvas(1200, 900);
 
@@ -90,5 +90,5 @@ async function getCharacterPicture(character) {
 async function getAverageImageColor(imageUrl) {
     const color = await getAverageColor(imageUrl)
     return color.hex ? color.hex : "#2C2F33";
-
+    
 }
