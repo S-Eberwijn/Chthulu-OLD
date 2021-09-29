@@ -33,6 +33,50 @@ module.exports.createCmd = async function (bot, guildId) {
                 required: false
             }],
         },
+        // spell slash-command
+        {
+            name: 'spell',
+            description: 'Gives information about a spell.',
+            options: [{
+                name: 'spell-name',
+                type: 'STRING',
+                description: 'Give the name of the spell',
+                required: true
+            }],
+        },
+        {
+            name: 'set-level',
+            description: 'Change a characters level.',
+            options: [{
+                name: 'user',
+                type: 'USER',
+                description: 'User from whom the character is.',
+                required: true
+            },
+            {
+                name: 'level',
+                type: 'NUMBER',
+                description: 'The newly achieved level.',
+                required: true
+            }],
+        },
+        // server cmd
+        {
+            name: 'server',
+            description: 'Gives information about the server.',
+            options: [],
+        },
+        // avatar cmd
+        {
+            name: 'avatar',
+            description: 'Shows the avatar of an user.',
+            options: [{
+                name: 'user',
+                type: 'USER',
+                description: 'User from whom the character is.',
+                required: false
+            }],
+        },
     ]
     await bot.guilds.cache.get(guildId)?.commands.set(data)
 }

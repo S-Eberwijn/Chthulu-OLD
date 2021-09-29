@@ -44,7 +44,7 @@
 {
     "question": "What will be your npcs picture?",
     "answers": [],
-    "regex": "(http(s?):)([\/|.|\\w|\\s|-])*\\.(?:jpg|gif|png)",
+    "regex": "(http(s?):)([\/|.|\\w|\\s|-])*\\.(?:jpg|png)",
     "errorMessage": "This is an invalid picture!",
     "databaseTable": "picture_url"
 }

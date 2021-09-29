@@ -1,4 +1,6 @@
 const { MessageEmbed, MessageAttachment } = require('discord.js');
+const Canvas = require('canvas');
+const { Image, loadImage, createCanvas } = require('canvas');
 
 exports.getCharacterEmbed = async function (character) {
     //TODO: Make the embed a fixed size
@@ -8,15 +10,16 @@ exports.getCharacterEmbed = async function (character) {
         .setThumbnail(`attachment://${character.get('level')}.png`)
         .setTitle(`${await getCharacterFullName(character)} (${character.get('age')})`)
         //TODO: Set default size for image (if possible)??
-        .setImage(character.get('picture_url'))
+        // character.get('picture_url')
+        .setImage(`attachment://img.png`)
         .setDescription(character.get('description'))
         .addFields(
             { name: '\*\*RACE\*\*', value: `${character.get('race')}`, inline: true },
             { name: '\*\*CLASS\*\*', value: `${character.get('class')}`, inline: true },
             { name: '\*\*BACKGROUND\*\*', value: `${character.get('background')}`, inline: true }
         )
-        //  .setFooter("55".repeat(100/*any big number works too*/) + "|")
-        
+    //  .setFooter("55".repeat(100/*any big number works too*/) + "|")
+
 }
 
 exports.getNonPlayableCharacterEmbed = async function (npc) {
@@ -62,4 +65,24 @@ function getCharacterFullName(character) {
 
 function hasWhiteSpace(s) {
     return s.indexOf(' ') >= 0;
+}
+
+exports.getCharacterPicture = async function (character) {
+    const background = await loadImage(character.get('picture_url').toLowerCase());
+
+    const canvas = createCanvas(1200, 900);
+
+    const context = canvas.getContext('2d');
+
+    // Scale and center image
+    var hRatio = canvas.width / background.width;
+    var vRatio = canvas.height / background.height;
+    var ratio = Math.min(hRatio, vRatio);
+    var centerShift_x = (canvas.width - background.width * ratio) / 2;
+    var centerShift_y = (canvas.height - background.height * ratio) / 2;
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    context.drawImage(background, 0, 0, background.width, background.height,
+        centerShift_x, centerShift_y, background.width * ratio, background.height * ratio);
+
+    return new MessageAttachment(canvas.toBuffer(), 'img.png');
 }

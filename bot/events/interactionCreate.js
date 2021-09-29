@@ -97,7 +97,7 @@ module.exports = async (bot, interaction) => {
 
     if (interaction.isCommand()) {
         const slashCommands = bot.slashCommands.get(interaction.commandName)
-        if (slashCommands) slashCommands.run(interaction)
+        if (slashCommands) return slashCommands.run(interaction)
     }
 
 
