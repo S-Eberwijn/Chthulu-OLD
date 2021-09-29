@@ -1,16 +1,19 @@
 const { MessageEmbed, MessageAttachment } = require('discord.js');
 const Canvas = require('canvas');
 const { Image, loadImage, createCanvas } = require('canvas');
+const { getAverageColor } = require('fast-average-color-node');
 
-exports.getCharacterEmbed = async function (character) {
-    //TODO: Make the embed a fixed size
+
+exports.sendCharacterEmbedMessage = async function (interaction, character) {
+    await interaction.reply({ embeds: [await getCharacterEmbed(character)], files: [await getCharacterLevelImage(character), await getCharacterPicture(character)] });
+}
+
+async function getCharacterEmbed(character) {
     // console.log(character);
     return new MessageEmbed()
-        .setColor("#2C2F33")
+        .setColor(await getAverageImageColor(character.get('picture_url').toLowerCase()))
         .setThumbnail(`attachment://${character.get('level')}.png`)
         .setTitle(`${await getCharacterFullName(character)} (${character.get('age')})`)
-        //TODO: Set default size for image (if possible)??
-        // character.get('picture_url')
         .setImage(`attachment://img.png`)
         .setDescription(character.get('description'))
         .addFields(
@@ -18,8 +21,6 @@ exports.getCharacterEmbed = async function (character) {
             { name: '\*\*CLASS\*\*', value: `${character.get('class')}`, inline: true },
             { name: '\*\*BACKGROUND\*\*', value: `${character.get('background')}`, inline: true }
         )
-    //  .setFooter("55".repeat(100/*any big number works too*/) + "|")
-
 }
 
 exports.getNonPlayableCharacterEmbed = async function (npc) {
@@ -27,7 +28,6 @@ exports.getNonPlayableCharacterEmbed = async function (npc) {
     return new MessageEmbed()
         .setColor("#2C2F33")
         .setTitle(`${npc.get('name')} (${npc.get('age') || '?'})`)
-        //TODO: Set default size for image (if possible)??
         .setImage(npc.get('picture_url'))
         .setDescription(npc.get('description'))
         .addFields(
@@ -38,7 +38,7 @@ exports.getNonPlayableCharacterEmbed = async function (npc) {
 }
 
 //TODO: This sometimes doesnt show
-exports.getCharacterLevelImage = async function (character) {
+async function getCharacterLevelImage(character) {
     return new MessageAttachment(`./bot/images/DnD/CharacterLevel/${character.get('level')}.png`)
 }
 
@@ -67,7 +67,7 @@ function hasWhiteSpace(s) {
     return s.indexOf(' ') >= 0;
 }
 
-exports.getCharacterPicture = async function (character) {
+async function getCharacterPicture(character) {
     const background = await loadImage(character.get('picture_url').toLowerCase());
 
     const canvas = createCanvas(1200, 900);
@@ -85,4 +85,10 @@ exports.getCharacterPicture = async function (character) {
         centerShift_x, centerShift_y, background.width * ratio, background.height * ratio);
 
     return new MessageAttachment(canvas.toBuffer(), 'img.png');
+}
+
+async function getAverageImageColor(imageUrl) {
+    const color = await getAverageColor(imageUrl)
+    return color.hex ? color.hex : "#2C2F33";
+
 }
