@@ -101,7 +101,7 @@ async function characterCreationQuestion(QUESTION_OBJECT, createdChannel, newCha
                     .setMinValues(1)
                     .setMaxValues(1)
                     .setDisabled(false)
-                    .addOptions(Object.keys(QUESTION_OBJECT.answers).map(function (key, index) { return { label: `${QUESTION_OBJECT.answers[key].category}`, value: `${QUESTION_OBJECT.answers[key].category}` } }))
+                    .addOptions(Object.keys(QUESTION_OBJECT.answers).map(function (key) { return { label: `${QUESTION_OBJECT.answers[key].category}`, value: `${QUESTION_OBJECT.answers[key].category}` } }))
             ))
             messageComponentsArray.push(new MessageActionRow().addComponents(
                 new MessageSelectMenu()
