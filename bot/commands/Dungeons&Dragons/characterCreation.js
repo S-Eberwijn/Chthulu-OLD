@@ -3,7 +3,7 @@ const PlayerCharacter = require('../../../database/models/PlayerCharacter');
 const { MessageEmbed, MessageActionRow, MessageButton, MessageSelectMenu } = require('discord.js');
 
 const QUESTIONS_ARRAY = require('../../jsonDb/characterCreationQuestions.json');
-const { getCharacterEmbed, getCharacterLevelImage } = require('../../otherFunctions/characterEmbed')
+const { sendCharacterEmbedMessageInChannel } = require('../../otherFunctions/characterEmbed')
 
 module.exports.run = async (bot, message, args) => {
     const characterCreateCategory = message.guild.channels.cache.find(c => c.name == "--CHARACTER CREATION--" && c.type == "GUILD_CATEGORY")
@@ -61,9 +61,7 @@ module.exports.run = async (bot, message, args) => {
                         .setLabel('Decline')
                         .setStyle('DANGER')
                 );
-            createdChannel.send({ content: 'Is this correct?', embeds: [await getCharacterEmbed(newCharacter)], components: [messageComponents], files: [await getCharacterLevelImage(newCharacter)] }).then(async newCharacterEmbed => {
-                await createdChannel.setName(newCharacter.get('name'));
-            });
+            await sendCharacterEmbedMessageInChannel(createdChannel,newCharacter,'Is this correct?',messageComponents).then(async () => {await createdChannel.setName(newCharacter.get('name'));});
         });
     });
 }

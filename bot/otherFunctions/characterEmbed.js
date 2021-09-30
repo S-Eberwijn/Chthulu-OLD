@@ -4,11 +4,37 @@ const { Image, loadImage, createCanvas } = require('canvas');
 const { getAverageColor } = require('fast-average-color-node');
 
 
-// exports.sendCharacterEmbedMessage = async function (interaction, character) {
-//     await interaction.reply({ embeds: [await getCharacterEmbed(character)], files: [await getCharacterLevelImage(character), await getCharacterPicture(character)] });
-// }
-
-exports.getCharacterEmbed = async function (character) {
+exports.sendCharacterEmbedMessageFromInteraction = async function (interaction, character,content=null,components=[]) {
+    await interaction.reply({
+        content: content,
+        embeds: [   await getCharacterEmbed(character)], 
+        files: [    await getCharacterLevelImage(character), 
+                    await getCharacterPicture(character)],
+        components: components});
+}
+exports.sendCharacterEmbedMessageInChannel = async function (channel, character,content=null,components=[]) {
+    await channel.send({ 
+        content: content,
+        embeds: [   await getCharacterEmbed(character)], 
+        files: [    await getCharacterLevelImage(character), 
+                    await getCharacterPicture(character)],
+        components: components });
+}
+exports.sendNPCEmbedMessageInChannel = async function (channel, character,content=null,components=[]) {
+    await channel.send({ 
+        content: content,
+        embeds: [   await getNPCEmbed(character)], 
+        files: [    await getCharacterPicture(character)],
+        components: components });
+}
+exports.sendNPCCharacterEmbedMessageFromInteraction = async function (interaction, character,content=null,components=[]) {
+    await interaction.reply({
+        content: content,
+        embeds: [   await getNonPlayableCharacterEmbed(character)], 
+        files: [    await getCharacterPicture(character)],
+        components: components });
+}
+async function getCharacterEmbed(character) {
     // console.log(character);
     return new MessageEmbed()
         .setColor(await getAverageImageColor(character.get('picture_url').toLowerCase()))
@@ -38,7 +64,7 @@ exports.getNonPlayableCharacterEmbed = async function (npc) {
 }
 
 //TODO: This sometimes doesnt show
-exports.getCharacterLevelImage = async function (character) {
+async function getCharacterLevelImage(character) {
     return new MessageAttachment(`./bot/images/DnD/CharacterLevel/${character.get('level')}.png`)
 }
 
@@ -67,8 +93,8 @@ function hasWhiteSpace(s) {
     return s.indexOf(' ') >= 0;
 }
 
-exports.getCharacterPicture = async function (character) {
-    const background = await loadImage(character.get('picture_url').toLowerCase().replace(`_`, `\_`));
+async function getCharacterPicture(character) {
+    const background = await loadImage(character.get('picture_url').toLowerCase());
 
     const canvas = createCanvas(1200, 900);
 
@@ -90,5 +116,5 @@ exports.getCharacterPicture = async function (character) {
 async function getAverageImageColor(imageUrl) {
     const color = await getAverageColor(imageUrl)
     return color.hex ? color.hex : "#2C2F33";
-    
+
 }
