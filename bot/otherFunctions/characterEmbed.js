@@ -62,7 +62,6 @@ function hasWhiteSpace(s) {
 }
 
 exports.getCharacterPicture = async function (character) {
-    //TODO: Change the code so that the picture url is always correct!
     const canvas = createCanvas(1200, 900);
     const context = canvas.getContext('2d');
 

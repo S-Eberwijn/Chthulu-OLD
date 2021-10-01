@@ -16,12 +16,13 @@ module.exports.run = async (bot, message, args) => {
         });
     } else {
         await PlayerCharacter.findOne({ where: { player_id: message.author.id, server_id: message.guild.id, status: "CREATING" } })
-        .then((character) => {
-            let name = message.author.username + "-" + message.author.discriminator;
-            let tmpchannel = message.guild.channels.cache.find(channel => channel.name == name.toLowerCase());
-            if (!tmpchannel){if (character) {tmpchannel = message.guild.channels.cache.find(channel => channel.name == character.get("name"));}}
-            if(tmpchannel){tmpchannel.delete();}
-            if (character) { character.destroy();} });
+            .then((character) => {
+                let name = message.author.username + "-" + message.author.discriminator;
+                let tmpchannel = message.guild.channels.cache.find(channel => channel.name == name.toLowerCase());
+                if (!tmpchannel) { if (character) { tmpchannel = message.guild.channels.cache.find(channel => channel.name == character.get("name")); } }
+                if (tmpchannel) { tmpchannel.delete(); }
+                if (character) { character.destroy(); }
+            });
     }
     let newCharacter = await PlayerCharacter.create({
         player_id: message.author.id,
@@ -30,12 +31,12 @@ module.exports.run = async (bot, message, args) => {
     });
 
     if (!characterCreateCategory) {
-    return message.channel.send({ content: 'There is no category named \"--CHARACTER CREATION--\"!' })
-        .then(msg => { setTimeout(() => msg.delete(), 3000) })
-        .catch(err => console.log(err));
+        return message.channel.send({ content: 'There is no category named \"--CHARACTER CREATION--\"!' })
+            .then(msg => { setTimeout(() => msg.delete(), 3000) })
+            .catch(err => console.log(err));
     }
     message.guild.channels.cache.forEach(channel => {
-        if (channel.name == `${message.author.username.toLowerCase()}-${message.author.discriminator}`)  return message.channel.send({ content: 'You already created a channel before!' }).then(msg => { setTimeout(() => msg.delete(), 3000) }).catch(err => console.log(err));
+        if (channel.name == `${message.author.username.toLowerCase()}-${message.author.discriminator}`) return message.channel.send({ content: 'You already created a channel before!' }).then(msg => { setTimeout(() => msg.delete(), 3000) }).catch(err => console.log(err));
     });
 
     if (message.member.roles.cache.has(message.guild.roles.cache.find(role => role.name.includes('Dungeon Master')).id)) {
@@ -181,6 +182,11 @@ async function characterCreationQuestion(QUESTION_OBJECT, createdChannel, newCha
             let regExp = new RegExp(QUESTION_OBJECT.regex);
             const filter = response => {
                 if (response.author.id === bot.user.id) return false;
+                if (QUESTION_OBJECT.question.includes('picture')) {
+                    if (response.attachments.size > 0) {
+                        return true;
+                    }
+                }
                 if (regExp.exec(response.content) === null) {
                     createdChannel.send({ content: QUESTION_OBJECT.errorMessage });
                     return false;
@@ -193,9 +199,19 @@ async function characterCreationQuestion(QUESTION_OBJECT, createdChannel, newCha
                 time: 300000,
                 errors: ['time'],
             }).then(async (collected) => {
-                
-                newCharacter.set(QUESTION_OBJECT.databaseTable, collected.first().content)
-                newCharacter.save();
+                if (QUESTION_OBJECT.question.includes('picture')) {
+                    if (collected.first().attachments.size > 0) {
+                        await newCharacter.set(QUESTION_OBJECT.databaseTable, collected.first().attachments?.first()?.url)
+                        newCharacter.save();
+                    } else {
+                        newCharacter.set(QUESTION_OBJECT.databaseTable, collected.first().content)
+                        newCharacter.save();
+                    }
+                } else {
+                    newCharacter.set(QUESTION_OBJECT.databaseTable, collected.first().content)
+                    newCharacter.save();
+                }
+
             }).catch(function () {
                 createdChannel.delete().then(() => {
                     message.author.send({ content: 'Times up! You took too long to respond. Try again by requesting a new character creation channel.' });
