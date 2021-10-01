@@ -3,15 +3,10 @@ const Canvas = require('canvas');
 const { Image, loadImage, createCanvas } = require('canvas');
 const { getAverageColor } = require('fast-average-color-node');
 
-
-// exports.sendCharacterEmbedMessage = async function (interaction, character) {
-//     await interaction.reply({ embeds: [await getCharacterEmbed(character)], files: [await getCharacterLevelImage(character), await getCharacterPicture(character)] });
-// }
-
 exports.getCharacterEmbed = async function (character) {
     // console.log(character);
     return new MessageEmbed()
-        .setColor(await getAverageImageColor(character.get('picture_url').toLowerCase()))
+        .setColor(await getAverageImageColor(character.get('picture_url')))
         .setThumbnail(`attachment://${character.get('level')}.png`)
         .setTitle(`${await getCharacterFullName(character)} (${character.get('age')})`)
         .setImage(`attachment://img.png`)
@@ -37,7 +32,6 @@ exports.getNonPlayableCharacterEmbed = async function (npc) {
         );
 }
 
-//TODO: This sometimes doesnt show
 exports.getCharacterLevelImage = async function (character) {
     return new MessageAttachment(`./bot/images/DnD/CharacterLevel/${character.get('level')}.png`)
 }
@@ -68,27 +62,28 @@ function hasWhiteSpace(s) {
 }
 
 exports.getCharacterPicture = async function (character) {
-    const background = await loadImage(character.get('picture_url').toLowerCase().replace(`_`, `\_`));
-
+    //TODO: Change the code so that the picture url is always correct!
     const canvas = createCanvas(1200, 900);
-
     const context = canvas.getContext('2d');
 
-    // Scale and center image
-    var hRatio = canvas.width / background.width;
-    var vRatio = canvas.height / background.height;
+    const url = character.get('picture_url')
+
+    const image = await loadImage(url)
+    
+    var hRatio = canvas.width / image.width;
+    var vRatio = canvas.height / image.height;
     var ratio = Math.min(hRatio, vRatio);
-    var centerShift_x = (canvas.width - background.width * ratio) / 2;
-    var centerShift_y = (canvas.height - background.height * ratio) / 2;
+    var centerShift_x = (canvas.width - image.width * ratio) / 2;
+    var centerShift_y = (canvas.height - image.height * ratio) / 2;
     context.clearRect(0, 0, canvas.width, canvas.height);
-    context.drawImage(background, 0, 0, background.width, background.height,
-        centerShift_x, centerShift_y, background.width * ratio, background.height * ratio);
+    context.drawImage(image, 0, 0, image.width, image.height,
+        centerShift_x, centerShift_y, image.width * ratio, image.height * ratio);
 
     return new MessageAttachment(canvas.toBuffer(), 'img.png');
 }
 
 async function getAverageImageColor(imageUrl) {
+    //TODO: in the getAverageColor is something wrong with pngs
     const color = await getAverageColor(imageUrl)
     return color.hex ? color.hex : "#2C2F33";
-    
 }

@@ -3,7 +3,7 @@ const PlayerCharacter = require('../../../database/models/PlayerCharacter');
 const { MessageEmbed, MessageActionRow, MessageButton, MessageSelectMenu } = require('discord.js');
 
 const QUESTIONS_ARRAY = require('../../jsonDb/characterCreationQuestions.json');
-const { getCharacterEmbed, getCharacterLevelImage } = require('../../otherFunctions/characterEmbed')
+const { getCharacterEmbed, getCharacterLevelImage, getCharacterPicture } = require('../../otherFunctions/characterEmbed')
 
 module.exports.run = async (bot, message, args) => {
     const characterCreateCategory = message.guild.channels.cache.find(c => c.name == "--CHARACTER CREATION--" && c.type == "GUILD_CATEGORY")
@@ -61,7 +61,7 @@ module.exports.run = async (bot, message, args) => {
                         .setLabel('Decline')
                         .setStyle('DANGER')
                 );
-            createdChannel.send({ content: 'Is this correct?', embeds: [await getCharacterEmbed(newCharacter)], components: [messageComponents], files: [await getCharacterLevelImage(newCharacter)] }).then(async newCharacterEmbed => {
+            createdChannel.send({ content: 'Is this correct?', embeds: [await getCharacterEmbed(newCharacter)], components: [messageComponents], files: [await getCharacterLevelImage(newCharacter), await getCharacterPicture(newCharacter)] }).then(async newCharacterEmbed => {
                 await createdChannel.setName(newCharacter.get('name'));
             });
         });
@@ -193,7 +193,8 @@ async function characterCreationQuestion(QUESTION_OBJECT, createdChannel, newCha
                 time: 300000,
                 errors: ['time'],
             }).then(async (collected) => {
-                newCharacter.set(QUESTION_OBJECT.databaseTable, collected.first().content.charAt(0).toUpperCase() + collected.first().content.slice(1))
+                
+                newCharacter.set(QUESTION_OBJECT.databaseTable, collected.first().content)
                 newCharacter.save();
             }).catch(function () {
                 createdChannel.delete().then(() => {

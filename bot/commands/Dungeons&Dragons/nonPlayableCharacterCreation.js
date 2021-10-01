@@ -188,8 +188,7 @@ async function characterCreationQuestion(QUESTION_OBJECT, createdChannel, newCha
                 time: 300000,
                 errors: ['time'],
             }).then(async (collected) => {
-                newCharacter.set(QUESTION_OBJECT.databaseTable, collected.first().content.charAt(0).toUpperCase() + collected.first().content.slice(1))
-                newCharacter.save();
+                newCharacter.set(QUESTION_OBJECT.databaseTable, collected.first().content)
             }).catch(function () {
                 createdChannel.delete().then(() => {
                     message.author.send({ content: 'Times up! You took too long to respond. Try again by requesting a new character creation channel.' });
