@@ -3,7 +3,7 @@ const NonPlayableCharacter = require('../../../database/models/NonPlayableCharac
 const { MessageEmbed, MessageActionRow, MessageButton, MessageSelectMenu } = require('discord.js');
 
 const QUESTIONS_ARRAY = require('../../jsonDb/npcCreationQuestions.json');
-const { getCharacterEmbed, getCharacterLevelImage,getNonPlayableCharacterEmbed } = require('../../otherFunctions/characterEmbed')
+const { getCharacterEmbed, getCharacterLevelImage, getNonPlayableCharacterEmbed } = require('../../otherFunctions/characterEmbed')
 
 module.exports.run = async (bot, message, args) => {
     const characterCreateCategory = message.guild.channels.cache.find(c => c.name == "--CHARACTER CREATION--" && c.type == "GUILD_CATEGORY")
@@ -176,6 +176,11 @@ async function characterCreationQuestion(QUESTION_OBJECT, createdChannel, newCha
             let regExp = new RegExp(QUESTION_OBJECT.regex);
             const filter = response => {
                 if (response.author.id === bot.user.id) return false;
+                if (QUESTION_OBJECT.question.includes('picture')) {
+                    if (response.attachments.size > 0) {
+                        return true;
+                    }
+                }
                 if (regExp.exec(response.content) === null) {
                     createdChannel.send({ content: QUESTION_OBJECT.errorMessage });
                     return false;
@@ -188,7 +193,18 @@ async function characterCreationQuestion(QUESTION_OBJECT, createdChannel, newCha
                 time: 300000,
                 errors: ['time'],
             }).then(async (collected) => {
-                newCharacter.set(QUESTION_OBJECT.databaseTable, collected.first().content)
+                if (QUESTION_OBJECT.question.includes('picture')) {
+                    if (collected.first().attachments.size > 0) {
+                        await newCharacter.set(QUESTION_OBJECT.databaseTable, collected.first().attachments?.first()?.url)
+                        newCharacter.save();
+                    } else {
+                        newCharacter.set(QUESTION_OBJECT.databaseTable, collected.first().content)
+                        newCharacter.save();
+                    }
+                } else {
+                    newCharacter.set(QUESTION_OBJECT.databaseTable, collected.first().content)
+                    newCharacter.save();
+                }
             }).catch(function () {
                 createdChannel.delete().then(() => {
                     message.author.send({ content: 'Times up! You took too long to respond. Try again by requesting a new character creation channel.' });

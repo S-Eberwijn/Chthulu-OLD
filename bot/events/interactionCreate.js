@@ -598,6 +598,11 @@ async function npcEditTextField(interaction, charId, QUESTION_OBJECT, bot) {
         let regExp = new RegExp(QUESTION_OBJECT.regex);
         const filter = response => {
             if (response.author.id === bot.user.id) return false;
+            if (QUESTION_OBJECT.question.includes('picture')) {
+                if (response.attachments.size > 0) {
+                    return true;
+                }
+            }
             if (regExp.exec(response.content) === null) {
                 createdChannel.send({ content: QUESTION_OBJECT.errorMessage });
                 return false;
@@ -612,7 +617,15 @@ async function npcEditTextField(interaction, charId, QUESTION_OBJECT, bot) {
         }).then(async (collected) => {
             await NonPlayableCharacter.findOne({ where: { character_id: charId, server_id: interaction.guildId } }).then((character) => {
                 if (character) {
-                    character.set(QUESTION_OBJECT.databaseTable, collected.first().content.charAt(0).toUpperCase() + collected.first().content.slice(1));
+                    if (QUESTION_OBJECT.question.includes('picture')) {
+                        if (collected.first().attachments.size > 0) {
+                            character.set(QUESTION_OBJECT.databaseTable, collected.first().attachments?.first()?.url)
+                        } else {
+                            character.set(QUESTION_OBJECT.databaseTable, collected.first().content)
+                        }
+                    } else {
+                        character.set(QUESTION_OBJECT.databaseTable, collected.first().content)
+                    }
                     character.save().then(async () => {
                         // try {
                         //     interaction.channel.bulkDelete(30);
@@ -654,6 +667,11 @@ async function characterEditTextField(interaction, QUESTION_OBJECT, bot) {
         let regExp = new RegExp(QUESTION_OBJECT.regex);
         const filter = response => {
             if (response.author.id === bot.user.id) return false;
+            if (QUESTION_OBJECT.question.includes('picture')) {
+                if (response.attachments.size > 0) {
+                    return true;
+                }
+            }
             if (regExp.exec(response.content) === null) {
                 createdChannel.send({ content: QUESTION_OBJECT.errorMessage });
                 return false;
@@ -668,23 +686,30 @@ async function characterEditTextField(interaction, QUESTION_OBJECT, bot) {
         }).then(async (collected) => {
             await PlayerCharacter.findOne({ where: { player_id: interaction.user.id, alive: 1, server_id: interaction.guildId } }).then((character) => {
                 if (character) {
-                    character.set(QUESTION_OBJECT.databaseTable, collected.first().content);
+                    if (QUESTION_OBJECT.question.includes('picture')) {
+                        if (collected.first().attachments.size > 0) {
+                            character.set(QUESTION_OBJECT.databaseTable, collected.first().attachments?.first()?.url)
+                        } else {
+                            character.set(QUESTION_OBJECT.databaseTable, collected.first().content)
+                        }
+                    } else {
+                        character.set(QUESTION_OBJECT.databaseTable, collected.first().content)
+                    }
                     character.save().then(async () => {
-                        // try {
-                        //     interaction.channel.bulkDelete(30);
-                        // } catch (e) {
-                        //     console.log(e);
-                        //     console.log("problem with deleting messages");
-                        // }
+                        // // try {
+                        // //     interaction.channel.bulkDelete(30);
+                        // // } catch (e) {
+                        // //     console.log(e);
+                        // //     console.log("problem with deleting messages");
+                        // // }
                         interaction.channel.send("The " + QUESTION_OBJECT.databaseTable + " of " + character.get("name") + " has been changed to " + character.get(QUESTION_OBJECT.databaseTable) + ".")
                             .then(msg => { setTimeout(() => msg.delete(), 3000) })
                             .catch(err => console.log(err));
-                            interaction.channel.send({
-                                embeds: [await getCharacterEmbed(character)],
-                                files: [await getCharacterLevelImage(character), await getCharacterPicture(character)],
-                                components: [messageComponents1, messageComponents2, messageComponents3]
-                            })
-                            .catch(err => console.log(err));
+                        interaction.channel.send({
+                            embeds: [await getCharacterEmbed(character)],
+                            files: [await getCharacterLevelImage(character), await getCharacterPicture(character)],
+                            components: [messageComponents1, messageComponents2, messageComponents3]
+                        }).catch(err => console.log(err));
                     });
                 } else {
                     interaction.channel.send("This character has been deleted from our database.")
