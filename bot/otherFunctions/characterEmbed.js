@@ -4,35 +4,39 @@ const { Image, loadImage, createCanvas } = require('canvas');
 const { getAverageColor } = require('fast-average-color-node');
 
 
-exports.sendCharacterEmbedMessageFromInteraction = async function (interaction, character,content,components=[]) {
+exports.sendCharacterEmbedMessageFromInteraction = async function (interaction, character, content, components = []) {
     await interaction.reply({
         content: content,
-        embeds: [   await getCharacterEmbed(character)], 
-        files: [    await getCharacterLevelImage(character), 
-                    await getCharacterPicture(character)],
-        components: components});
+        embeds: [await getCharacterEmbed(character)],
+        files: [await getCharacterLevelImage(character),
+        await getCharacterPicture(character)],
+        components: components
+    });
 }
-exports.sendCharacterEmbedMessageInChannel = async function (channel, character,content,components=[]) {
-    await channel.send({ 
+exports.sendCharacterEmbedMessageInChannel = async function (channel, character, content, components = []) {
+    await channel.send({
         content: content,
-        embeds: [   await getCharacterEmbed(character)], 
-        files: [    await getCharacterLevelImage(character), 
-                    await getCharacterPicture(character)],
-        components:components});
+        embeds: [await getCharacterEmbed(character)],
+        files: [await getCharacterLevelImage(character),
+        await getCharacterPicture(character)],
+        components: components
+    });
 }
-exports.sendNPCEmbedMessageInChannel = async function (channel, character,content,components=[]) {
-    await channel.send({ 
+exports.sendNPCEmbedMessageInChannel = async function (channel, character, content, components = []) {
+    await channel.send({
         content: content,
-        embeds: [   await getNonPlayableCharacterEmbed(character)], 
-        files: [    await getCharacterPicture(character)],
-        components: components});
+        embeds: [await getNonPlayableCharacterEmbed(character)],
+        files: [await getCharacterPicture(character)],
+        components: components
+    });
 }
-exports.sendNPCCharacterEmbedMessageFromInteraction = async function (interaction, character,content,components=[]) {
+exports.sendNPCCharacterEmbedMessageFromInteraction = async function (interaction, character, content, components = []) {
     await interaction.reply({
         content: content,
-        embeds: [   await getNonPlayableCharacterEmbed(character)], 
-        files: [    await getCharacterPicture(character)],
-        components: components });
+        embeds: [await getNonPlayableCharacterEmbed(character)],
+        files: [await getCharacterPicture(character)],
+        components: components
+    });
 }
 async function getCharacterEmbed(character) {
     // console.log(character);
@@ -92,15 +96,15 @@ function hasWhiteSpace(s) {
 }
 
 async function getCharacterPicture(character) {
-    const background = await loadImage(character.get('picture_url').toLowerCase());
+    // const background = await loadImage(character.get('picture_url').toLowerCase());
 
     const canvas = createCanvas(1200, 900);
     const context = canvas.getContext('2d');
 
     const url = character.get('picture_url')
-
+    console.log(url);
     const image = await loadImage(url)
-    
+
     var hRatio = canvas.width / image.width;
     var vRatio = canvas.height / image.height;
     var ratio = Math.min(hRatio, vRatio);
