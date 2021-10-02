@@ -3,7 +3,38 @@ const Canvas = require('canvas');
 const { Image, loadImage, createCanvas } = require('canvas');
 const { getAverageColor } = require('fast-average-color-node');
 
-exports.getCharacterEmbed = async function (character) {
+
+exports.sendCharacterEmbedMessageFromInteraction = async function (interaction, character,content,components=[]) {
+    await interaction.reply({
+        content: content,
+        embeds: [   await getCharacterEmbed(character)], 
+        files: [    await getCharacterLevelImage(character), 
+                    await getCharacterPicture(character)],
+        components: components});
+}
+exports.sendCharacterEmbedMessageInChannel = async function (channel, character,content,components=[]) {
+    await channel.send({ 
+        content: content,
+        embeds: [   await getCharacterEmbed(character)], 
+        files: [    await getCharacterLevelImage(character), 
+                    await getCharacterPicture(character)],
+        components:components});
+}
+exports.sendNPCEmbedMessageInChannel = async function (channel, character,content,components=[]) {
+    await channel.send({ 
+        content: content,
+        embeds: [   await getNonPlayableCharacterEmbed(character)], 
+        files: [    await getCharacterPicture(character)],
+        components: components});
+}
+exports.sendNPCCharacterEmbedMessageFromInteraction = async function (interaction, character,content,components=[]) {
+    await interaction.reply({
+        content: content,
+        embeds: [   await getNonPlayableCharacterEmbed(character)], 
+        files: [    await getCharacterPicture(character)],
+        components: components });
+}
+async function getCharacterEmbed(character) {
     // console.log(character);
     return new MessageEmbed()
         .setColor(await getAverageImageColor(character.get('picture_url')))
@@ -18,7 +49,7 @@ exports.getCharacterEmbed = async function (character) {
         )
 }
 
-exports.getNonPlayableCharacterEmbed = async function (npc) {
+async function getNonPlayableCharacterEmbed(npc) {
     //console.log(npc);
     return new MessageEmbed()
         .setColor("#2C2F33")
@@ -32,11 +63,10 @@ exports.getNonPlayableCharacterEmbed = async function (npc) {
         );
 }
 
-exports.getCharacterLevelImage = async function (character) {
+//TODO: This sometimes doesnt show
+async function getCharacterLevelImage(character) {
     return new MessageAttachment(`./bot/images/DnD/CharacterLevel/${character.get('level')}.png`)
 }
-
-
 
 function getCharacterFullName(character) {
     let characterTitle = character.get('name');
@@ -61,7 +91,9 @@ function hasWhiteSpace(s) {
     return s.indexOf(' ') >= 0;
 }
 
-exports.getCharacterPicture = async function (character) {
+async function getCharacterPicture(character) {
+    const background = await loadImage(character.get('picture_url').toLowerCase());
+
     const canvas = createCanvas(1200, 900);
     const context = canvas.getContext('2d');
 
