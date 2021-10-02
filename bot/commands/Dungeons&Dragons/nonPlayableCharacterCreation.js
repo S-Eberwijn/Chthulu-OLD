@@ -5,6 +5,7 @@ const { MessageEmbed, MessageActionRow, MessageButton, MessageSelectMenu } = req
 const QUESTIONS_ARRAY = require('../../jsonDb/npcCreationQuestions.json');
 const {sendNPCEmbedMessageInChannel } = require('../../otherFunctions/characterEmbed')
 
+
 module.exports.run = async (bot, message, args) => {
     const characterCreateCategory = message.guild.channels.cache.find(c => c.name == "--CHARACTER CREATION--" && c.type == "GUILD_CATEGORY")
     if (!message.member.roles.cache.has(message.guild.roles.cache.find(role => role.name.includes('Dungeon Master')).id)) return message.channel.send({ content: 'You\'re not a dm, get lost kid!' }).then(msg => { setTimeout(() => msg.delete(), 5000) }).catch(err => console.log(err));
@@ -56,7 +57,8 @@ module.exports.run = async (bot, message, args) => {
                         .setLabel('Decline')
                         .setStyle('DANGER')
                 );
-            await sendNPCEmbedMessageInChannel(createdChannel,newCharacter,'Is this correct?',messageComponents).then(async () => {await createdChannel.setName(newCharacter.get("character_id") + "⼁" + newCharacter.get('name'));});
+            await sendNPCEmbedMessageInChannel(createdChannel,newCharacter,'Is this correct?',[messageComponents])
+                .then(async () => {await createdChannel.setName(newCharacter.get("character_id") + "⼁" + newCharacter.get('name'));});
         });
     });
 }
@@ -173,6 +175,11 @@ async function characterCreationQuestion(QUESTION_OBJECT, createdChannel, newCha
             let regExp = new RegExp(QUESTION_OBJECT.regex);
             const filter = response => {
                 if (response.author.id === bot.user.id) return false;
+                if (QUESTION_OBJECT.question.includes('picture')) {
+                    if (response.attachments.size > 0) {
+                        return true;
+                    }
+                }
                 if (regExp.exec(response.content) === null) {
                     createdChannel.send({ content: QUESTION_OBJECT.errorMessage });
                     return false;
@@ -185,8 +192,18 @@ async function characterCreationQuestion(QUESTION_OBJECT, createdChannel, newCha
                 time: 300000,
                 errors: ['time'],
             }).then(async (collected) => {
-                newCharacter.set(QUESTION_OBJECT.databaseTable, collected.first().content.charAt(0).toUpperCase() + collected.first().content.slice(1))
-                newCharacter.save();
+                if (QUESTION_OBJECT.question.includes('picture')) {
+                    if (collected.first().attachments.size > 0) {
+                        await newCharacter.set(QUESTION_OBJECT.databaseTable, collected.first().attachments?.first()?.url)
+                        newCharacter.save();
+                    } else {
+                        newCharacter.set(QUESTION_OBJECT.databaseTable, collected.first().content)
+                        newCharacter.save();
+                    }
+                } else {
+                    newCharacter.set(QUESTION_OBJECT.databaseTable, collected.first().content)
+                    newCharacter.save();
+                }
             }).catch(function () {
                 createdChannel.delete().then(() => {
                     message.author.send({ content: 'Times up! You took too long to respond. Try again by requesting a new character creation channel.' });

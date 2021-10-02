@@ -4,7 +4,7 @@ const { Image, loadImage, createCanvas } = require('canvas');
 const { getAverageColor } = require('fast-average-color-node');
 
 
-exports.sendCharacterEmbedMessageFromInteraction = async function (interaction, character,content=null,components=[]) {
+exports.sendCharacterEmbedMessageFromInteraction = async function (interaction, character,content,components=[]) {
     await interaction.reply({
         content: content,
         embeds: [   await getCharacterEmbed(character)], 
@@ -12,22 +12,22 @@ exports.sendCharacterEmbedMessageFromInteraction = async function (interaction, 
                     await getCharacterPicture(character)],
         components: components});
 }
-exports.sendCharacterEmbedMessageInChannel = async function (channel, character,content=null,components=[]) {
+exports.sendCharacterEmbedMessageInChannel = async function (channel, character,content,components=[]) {
     await channel.send({ 
         content: content,
         embeds: [   await getCharacterEmbed(character)], 
         files: [    await getCharacterLevelImage(character), 
                     await getCharacterPicture(character)],
-        components: components });
+        components:components});
 }
-exports.sendNPCEmbedMessageInChannel = async function (channel, character,content=null,components=[]) {
+exports.sendNPCEmbedMessageInChannel = async function (channel, character,content,components=[]) {
     await channel.send({ 
         content: content,
-        embeds: [   await getNPCEmbed(character)], 
+        embeds: [   await getNonPlayableCharacterEmbed(character)], 
         files: [    await getCharacterPicture(character)],
-        components: components });
+        components: components});
 }
-exports.sendNPCCharacterEmbedMessageFromInteraction = async function (interaction, character,content=null,components=[]) {
+exports.sendNPCCharacterEmbedMessageFromInteraction = async function (interaction, character,content,components=[]) {
     await interaction.reply({
         content: content,
         embeds: [   await getNonPlayableCharacterEmbed(character)], 
@@ -37,7 +37,7 @@ exports.sendNPCCharacterEmbedMessageFromInteraction = async function (interactio
 async function getCharacterEmbed(character) {
     // console.log(character);
     return new MessageEmbed()
-        .setColor(await getAverageImageColor(character.get('picture_url').toLowerCase()))
+        .setColor(await getAverageImageColor(character.get('picture_url')))
         .setThumbnail(`attachment://${character.get('level')}.png`)
         .setTitle(`${await getCharacterFullName(character)} (${character.get('age')})`)
         .setImage(`attachment://img.png`)
@@ -49,7 +49,7 @@ async function getCharacterEmbed(character) {
         )
 }
 
-exports.getNonPlayableCharacterEmbed = async function (npc) {
+async function getNonPlayableCharacterEmbed(npc) {
     //console.log(npc);
     return new MessageEmbed()
         .setColor("#2C2F33")
@@ -67,8 +67,6 @@ exports.getNonPlayableCharacterEmbed = async function (npc) {
 async function getCharacterLevelImage(character) {
     return new MessageAttachment(`./bot/images/DnD/CharacterLevel/${character.get('level')}.png`)
 }
-
-
 
 function getCharacterFullName(character) {
     let characterTitle = character.get('name');
@@ -97,24 +95,26 @@ async function getCharacterPicture(character) {
     const background = await loadImage(character.get('picture_url').toLowerCase());
 
     const canvas = createCanvas(1200, 900);
-
     const context = canvas.getContext('2d');
 
-    // Scale and center image
-    var hRatio = canvas.width / background.width;
-    var vRatio = canvas.height / background.height;
+    const url = character.get('picture_url')
+
+    const image = await loadImage(url)
+    
+    var hRatio = canvas.width / image.width;
+    var vRatio = canvas.height / image.height;
     var ratio = Math.min(hRatio, vRatio);
-    var centerShift_x = (canvas.width - background.width * ratio) / 2;
-    var centerShift_y = (canvas.height - background.height * ratio) / 2;
+    var centerShift_x = (canvas.width - image.width * ratio) / 2;
+    var centerShift_y = (canvas.height - image.height * ratio) / 2;
     context.clearRect(0, 0, canvas.width, canvas.height);
-    context.drawImage(background, 0, 0, background.width, background.height,
-        centerShift_x, centerShift_y, background.width * ratio, background.height * ratio);
+    context.drawImage(image, 0, 0, image.width, image.height,
+        centerShift_x, centerShift_y, image.width * ratio, image.height * ratio);
 
     return new MessageAttachment(canvas.toBuffer(), 'img.png');
 }
 
 async function getAverageImageColor(imageUrl) {
+    //TODO: in the getAverageColor is something wrong with pngs
     const color = await getAverageColor(imageUrl)
     return color.hex ? color.hex : "#2C2F33";
-
 }
