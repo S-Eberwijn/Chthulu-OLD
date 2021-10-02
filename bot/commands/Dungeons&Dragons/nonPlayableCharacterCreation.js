@@ -56,7 +56,7 @@ module.exports.run = async (bot, message, args) => {
                         .setLabel('Decline')
                         .setStyle('DANGER')
                 );
-            await sendNPCEmbedMessageInChannel(createdChannel,newCharacter,'Is this correct?').then(async () => {await createdChannel.setName(newCharacter.get("character_id") + "⼁" + newCharacter.get('name'));});
+            await sendNPCEmbedMessageInChannel(createdChannel,newCharacter,'Is this correct?',messageComponents).then(async () => {await createdChannel.setName(newCharacter.get("character_id") + "⼁" + newCharacter.get('name'));});
         });
     });
 }
