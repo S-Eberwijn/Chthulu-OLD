@@ -44,6 +44,18 @@ module.exports.createCmd = async function (bot, guildId) {
                 required: true
             }],
         },
+        // impersonate npc
+        {
+            name: 'impersonate',
+            description: 'Allows a dm to talk as if he is that npc.',
+            ephemeral: true,
+        },
+        //stopImpersonating
+        {
+            name: 'stop-impersonating',
+            description: 'The dm will stop impersonating his current npc',
+            ephemeral: true,
+        },
         {
             name: 'set-level',
             description: 'Change a characters level.',

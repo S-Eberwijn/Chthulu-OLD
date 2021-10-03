@@ -195,15 +195,13 @@ async function characterCreationQuestion(QUESTION_OBJECT, createdChannel, newCha
                 if (QUESTION_OBJECT.question.includes('picture')) {
                     if (collected.first().attachments.size > 0) {
                         await newCharacter.set(QUESTION_OBJECT.databaseTable, collected.first().attachments?.first()?.url)
-                        newCharacter.save();
                     } else {
                         newCharacter.set(QUESTION_OBJECT.databaseTable, collected.first().content)
-                        newCharacter.save();
                     }
                 } else {
                     newCharacter.set(QUESTION_OBJECT.databaseTable, collected.first().content)
-                    newCharacter.save();
                 }
+                newCharacter.save();
             }).catch(function () {
                 createdChannel.delete().then(() => {
                     message.author.send({ content: 'Times up! You took too long to respond. Try again by requesting a new character creation channel.' });
