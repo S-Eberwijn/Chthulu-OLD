@@ -6,7 +6,7 @@ const {
 } = require("discord.js");
 
 
-exports.paginationEmbed = async function (interaction, pages, buttonList, timeout = 120000) {
+exports.paginationEmbed = async function (channel, pages, buttonList, timeout = 120000) {
     //if (!msg && !msg.channel) throw new Error("Channel is inaccessible.");
     if (!pages) throw new Error("Pages are not given.");
     if (!buttonList) throw new Error("Buttons are not given.");
@@ -19,7 +19,7 @@ exports.paginationEmbed = async function (interaction, pages, buttonList, timeou
     let page = 0;
 
     const row = new MessageActionRow().addComponents(buttonList);
-    const curPage = await interaction.channel.send({
+    const curPage = await channel.send({
         embeds: [pages[page].setFooter(`Page ${page + 1} / ${pages.length}`)],
         components: [row], fetchReply: true,
     });

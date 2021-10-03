@@ -2,6 +2,7 @@ const { MessageEmbed, MessageAttachment } = require('discord.js');
 const Canvas = require('canvas');
 const { Image, loadImage, createCanvas } = require('canvas');
 const { getAverageColor } = require('fast-average-color-node');
+const { paginationEmbed } = require('../otherFunctions/paginationEmbed')
 
 
 exports.sendCharacterEmbedMessageFromInteraction = async function (interaction, character, content, components = []) {
@@ -38,6 +39,15 @@ exports.sendNPCCharacterEmbedMessageFromInteraction = async function (interactio
         components: components
     });
 }
+exports.createNPCPaginationEmbedInChannel = async function (channel,characters,components = []) {
+    let npcArray = [];
+    for (const npc of characters) {
+        npcArray.push(await getNonPlayableCharacterEmbed(npc))
+    }
+
+    await paginationEmbed(channel, npcArray, components)
+}
+
 async function getCharacterEmbed(character) {
     // console.log(character);
     return new MessageEmbed()
