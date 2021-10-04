@@ -152,7 +152,11 @@ async function characterCreationQuestion(QUESTION_OBJECT, createdChannel, newCha
                         .setMinValues(1)
                         .setMaxValues(1)
                         .setDisabled(false)
-                        .addOptions(Object.keys(QUESTION_OBJECT.answers[Object.keys(QUESTION_OBJECT.answers).filter(function (key) { return QUESTION_OBJECT.answers[key].category === response.values[0] })[0]].values).map(function (key) { return { label: `${QUESTION_OBJECT.answers[Object.keys(QUESTION_OBJECT.answers).filter(function (key) { return QUESTION_OBJECT.answers[key].category === response.values[0] })[0]].values[key]}`, value: `${QUESTION_OBJECT.answers[Object.keys(QUESTION_OBJECT.answers).filter(function (key) { return QUESTION_OBJECT.answers[key].category === response.values[0] })[0]].values[key]}` } }))
+                        .addOptions(Object.keys(QUESTION_OBJECT.answers[Object.keys(QUESTION_OBJECT.answers)
+                        .filter(function (key) { return QUESTION_OBJECT.answers[key].category === response.values[0] })[0]].values)
+                        .map(function (key) { return { label: `${QUESTION_OBJECT.answers[Object.keys(QUESTION_OBJECT.answers)
+                        .filter(function (key) { return QUESTION_OBJECT.answers[key].category === response.values[0] })[0]].values[key]}`, value: `${QUESTION_OBJECT.answers[Object.keys(QUESTION_OBJECT.answers)
+                        .filter(function (key) { return QUESTION_OBJECT.answers[key].category === response.values[0] })[0]].values[key]}` } }))
                 )
                 response.deferUpdate();
                 response.message.edit({ components: newSelectionMenu.components })

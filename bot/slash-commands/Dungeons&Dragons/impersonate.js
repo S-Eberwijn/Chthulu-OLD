@@ -27,7 +27,7 @@ module.exports.run = async (interaction) => {
             });
             return;
         }
-        else if(npcs.length <= 1)
+        else if(npcs.length <= 25)
         messageComponentsArray.push(
             new MessageActionRow().addComponents(
                 new MessageSelectMenu()
@@ -41,7 +41,7 @@ module.exports.run = async (interaction) => {
             )
         )
         else{
-            let groups = Math.ceil( npcs.length/1);
+            let groups = Math.ceil( npcs.length/25);
             let npcsObject = [];
             let npcData = [];
             let charactersGroupedByLetter = [];
@@ -69,9 +69,11 @@ module.exports.run = async (interaction) => {
                     npcgroup = npcsObject.slice(i*charsPerGroup, npcsObject.length);
                 }
                 grouplabel = npcgroup[0][0].toUpperCase().charAt(0) + " - " + npcgroup[npcgroup.length-1][0].toUpperCase().charAt(0);
-                charactersGroupedByLetter.push([grouplabel, npcgroup]);
+                charactersGroupedByLetter.push({"label":grouplabel, "characters":npcgroup});
+            
             }
-            charactersGroupedByLetter[0][1].forEach(async key => {
+            
+            charactersGroupedByLetter[0].characters[0].forEach(async key => {
                 await messageSelectMenuOptionsArray.push({
                     label: `${key}`,
                     value: `${key}`
@@ -108,15 +110,12 @@ module.exports.run = async (interaction) => {
                             .setMaxValues(1)
                             .setDisabled(false)
                             .addOptions(Object.keys(charactersGroupedByLetter[Object.keys(charactersGroupedByLetter)
-                            .filter(function (key) { return charactersGroupedByLetter[key][0] === response.values[0] })[0]].values)
+                                .filter(function (key) { return charactersGroupedByLetter[key].characters[0] === response.values[0] })[0]].values)
                                 .map(function (key) { return { label: `${charactersGroupedByLetter[Object.keys(charactersGroupedByLetter)
-                                    .filter(function (key) { return charactersGroupedByLetter[key][0] === response.values[0] })[0]].values[key]}`, value: `${charactersGroupedByLetter[Object.keys(charactersGroupedByLetter)
-                                        .filter(function (key) { return charactersGroupedByLetter[key][0] === response.values[0] })[0]].values[key]}` } 
-                                    }
-                                )
-                            )
+                                .filter(function (key) { return charactersGroupedByLetter[key].characters[0] === response.values[0] })[0]]
+                                .values[key]}`, value: `${charactersGroupedByLetter[Object.keys(charactersGroupedByLetter)
+                                .filter(function (key) { return charactersGroupedByLetter[key].characters[0] === response.values[0] })[0]].values[key]}` } }))
                     )
-                    response.deferUpdate();
                     response.message.edit({ components: newSelectionMenu.components })
                     return false;
                 }
