@@ -10,6 +10,7 @@ module.exports.run = async (interaction) => {
         });
         return
     }
+    let dm = interaction.member.user.username;
     let messageComponentsArray = [];
     let myFilter = null;
     await NonPlayableCharacter.findOne({where: { server_id: interaction.guildId, using_npc: interaction.member.user.id }})
@@ -27,7 +28,7 @@ module.exports.run = async (interaction) => {
             });
             return;
         }
-        else if(npcs.length <= 25)
+        else if(npcs.length <= 1)
         messageComponentsArray.push(
             new MessageActionRow().addComponents(
                 new MessageSelectMenu()
@@ -41,14 +42,13 @@ module.exports.run = async (interaction) => {
             )
         )
         else{
-            let groups = Math.ceil( npcs.length/25);
+            let groups = Math.ceil( npcs.length/2);
             let npcsObject = [];
             let npcData = [];
             let charactersGroupedByLetter = [];
             let charsPerGroup = Math.ceil(npcs.length/groups);
             let grouplabel = "";
             let messageSelectMenuOptionsArray = [];
-            let categorySelectionId = '';
             for (let i = 0; i < npcs.length;i++){
                 npcData = [npcs[i].name, npcs[i].character_id];
                 npcsObject.push(npcData);
@@ -73,10 +73,10 @@ module.exports.run = async (interaction) => {
             
             }
             
-            charactersGroupedByLetter[0].characters[0].forEach(async key => {
+            charactersGroupedByLetter[0].characters.forEach(async key => {
                 await messageSelectMenuOptionsArray.push({
-                    label: `${key}`,
-                    value: `${key}`
+                    label: `${key[0]}`,
+                    value: `${key[1]}`
                 })
             })
             messageComponentsArray.push(new MessageActionRow().addComponents(
@@ -86,7 +86,7 @@ module.exports.run = async (interaction) => {
                     .setMinValues(1)
                     .setMaxValues(1)
                     .setDisabled(false)
-                    .addOptions(Object.keys(charactersGroupedByLetter).map(function (key) { return { label: `${charactersGroupedByLetter[key][0]}`, value: `${charactersGroupedByLetter[key][0]}` } }))
+                    .addOptions(Object.keys(charactersGroupedByLetter).map(function (key) { return { label: `${charactersGroupedByLetter[key].label}`, value: `${charactersGroupedByLetter[key].characters}` } }))
             ))
             messageComponentsArray.push(new MessageActionRow().addComponents(
                 new MessageSelectMenu()
@@ -101,20 +101,18 @@ module.exports.run = async (interaction) => {
             myFilter = response => {
                 if (response.customId === categorySelectionId) {
                     let newSelectionMenu = response.message;
-                    newSelectionMenu.components[0].components[0].placeholder = response.values[0];
+                    newSelectionMenu.components[0].components[0].placeholder = response.values[1];
+                    let options = response.values[0].match(/[^,]+,[^,]+/g)
                     newSelectionMenu.components[1] = new MessageActionRow().addComponents(
                         new MessageSelectMenu()
-                            .setCustomId(`selectnpcFromGroup2`)
+                            .setCustomId(`SelectNpcFromGroup`)
                             .setPlaceholder('Select a value...')
                             .setMinValues(1)
                             .setMaxValues(1)
                             .setDisabled(false)
-                            .addOptions(Object.keys(charactersGroupedByLetter[Object.keys(charactersGroupedByLetter)
-                                .filter(function (key) { return charactersGroupedByLetter[key].characters[0] === response.values[0] })[0]].values)
-                                .map(function (key) { return { label: `${charactersGroupedByLetter[Object.keys(charactersGroupedByLetter)
-                                .filter(function (key) { return charactersGroupedByLetter[key].characters[0] === response.values[0] })[0]]
-                                .values[key]}`, value: `${charactersGroupedByLetter[Object.keys(charactersGroupedByLetter)
-                                .filter(function (key) { return charactersGroupedByLetter[key].characters[0] === response.values[0] })[0]].values[key]}` } }))
+                            .addOptions(Object.keys(options)
+                            .map(function (key) { return { label: `${options[key].split(',')[0]}`, value: `${options[key].split(',')[1]}` } })
+                            )
                     )
                     response.message.edit({ components: newSelectionMenu.components })
                     return false;
@@ -140,7 +138,7 @@ module.exports.run = async (interaction) => {
                     if (character) {    
                         character.set("using_npc", interaction.member.user.id)
                         character.save()
-                        interaction.channel.send({content: "Dungeon Master "+ interaction.member.username 
+                        interaction.channel.send({content: "Dungeon Master " + dm
                             + " is now impersonating " +character.name +"." }) 
                             .then(msg => { setTimeout(() => msg.delete(), 3000) })
                             .catch(err => console.log(err));
