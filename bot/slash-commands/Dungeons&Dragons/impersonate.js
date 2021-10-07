@@ -42,7 +42,7 @@ module.exports.run = async (interaction) => {
             )
         )
         else{
-            let groups = Math.ceil( npcs.length/2);
+            let groups = Math.ceil( npcs.length/25);
             let npcsObject = [];
             let npcData = [];
             let charactersGroupedByLetter = [];
@@ -111,9 +111,7 @@ module.exports.run = async (interaction) => {
                             .setMaxValues(1)
                             .setDisabled(false)
                             .addOptions(Object.keys(options)
-                            .map(function (key) { return { label: `${options[key].split(',')[0]}`, value: `${options[key].split(',')[1]}` } })
-                            )
-                    )
+                            .map(function (key) { return { label: `${options[key].split(',')[0]}`, value: `${options[key].split(',')[1]}` } })))
                     response.message.edit({ components: newSelectionMenu.components })
                     return false;
                 }
@@ -130,7 +128,7 @@ module.exports.run = async (interaction) => {
             filter: myFilter,
             max: 1,
             time: 30000,
-            errors: ['time'],
+            errors: ['time']
         }).then(async (interaction) => {
             interaction.deferUpdate();
             await NonPlayableCharacter.findOne({where: { character_id: interaction.values[0], server_id: interaction.guildId }})
