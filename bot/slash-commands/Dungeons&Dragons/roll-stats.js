@@ -1,3 +1,4 @@
+const { MessageEmbed } = require('discord.js');
 const reducer = (previousValue, currentValue) => previousValue + currentValue;
 module.exports.run = async (interaction) => {
     let statArray = [];
@@ -31,8 +32,25 @@ module.exports.run = async (interaction) => {
         singleStat = singleStat.slice(dropLowest, amountOfDice-dropHighest);
         statArray.push(singleStat.reduce(reducer)+additionalModifier);
     }
+    return interaction.reply({ embeds: [createEmbed(command, statArray.sort((a,b) => b-a))] })
+}
 
-    return interaction.reply("the command: " + command + ". gave you the following statarray: " + statArray.sort((a,b) => a-b).join()+".");
+function createEmbed(command, statArray){
+    return new MessageEmbed()
+	.setTitle(command)
+	.setDescription('The following fields are the stats that were generated for you.'+
+        ' You can assign any value you rolled to any ability score (each value only once).')
+    /*.addField('what are good stats?', 'We recomend having simular stats to your fellow partymembers.'+
+        ' For D&D 5e you should have stats that total a value between 60 and 80,' +
+        ' preferably you also have at least one or two stats above 13,'+
+        ' having all 10 and elevens might make it hard to make a unique character.')*/
+	.addField('\u200B', "**```"+statArray[0]+"```**", true)
+    .addField('\u200B', "**```"+statArray[1]+"```**", true)
+    .addField('\u200B', "**```"+statArray[2]+"```**", true)
+    .addField('\u200B', "**```"+statArray[3]+"```**", true)
+    .addField('\u200B', "**```"+statArray[4]+"```**", true)
+    .addField('\u200B', "**```"+statArray[5]+"```**", true)
+	.setTimestamp()
 }
 
 module.exports.help = {
