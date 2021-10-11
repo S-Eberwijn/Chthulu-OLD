@@ -18,9 +18,10 @@ module.exports.run = async (interaction) => {
     
     //constructing command
     let command = amountOfDice + "d" + dicekind;
+    if(additionalModifier!=0){command = command + " + " + additionalModifier;}
     if(dropLowest!=0){command = command + ", drop lowest " + dropLowest;}
     if(dropHighest!=0){command = command + ", drop highest " + dropHighest;}
-    if(additionalModifier!=0){command = command + " + " + additionalModifier;}
+
 
     //rolling the dice
     for(let i = 0; i < 6; i++){
