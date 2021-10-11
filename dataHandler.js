@@ -57,6 +57,41 @@ module.exports.createCmd = async function (bot, guildId) {
             ephemeral: true,
         },
         {
+            name: 'roll-stats',
+            description: 'create a stat array',
+            ephemeral: true,
+            options: [{
+                name: 'amount-of-dice',
+                type: 'NUMBER',
+                description: 'Amount of dice to roll',
+                required: true
+            },
+            {
+                name: 'd',
+                type: 'NUMBER',
+                description: 'type of dice to be rolled',
+                required: true
+            },
+            {
+                name: 'drop-lowest',
+                type: 'NUMBER',
+                description: 'lowest x number of dice will be dropped',
+                required: false
+            },
+            {
+                name: 'drop-highest',
+                type: 'NUMBER',
+                description: 'highest x number of dice will be dropped',
+                required: false
+            },
+            {
+                name: 'additional-modifier',
+                type: 'NUMBER',
+                description: 'add an additional modifier to the roll',
+                required: false
+            }]
+        },
+        {
             name: 'set-level',
             description: 'Change a characters level.',
             options: [{
