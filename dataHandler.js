@@ -121,6 +121,18 @@ module.exports.createCmd = async function (bot, guildId) {
                 required: true
             }]
         },
+        //conditions
+        {
+            name: 'condition',
+            description: 'look up a statuscondition',
+            ephemeral: true,
+            options: [{                
+                name: 'condition-name',
+                type: 'STRING',
+                description: 'You can chose to enter the name of the condition.',
+                required: false
+            }]
+        },
         // server cmd
         {
             name: 'server',
