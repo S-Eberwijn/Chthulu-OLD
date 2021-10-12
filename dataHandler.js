@@ -56,6 +56,7 @@ module.exports.createCmd = async function (bot, guildId) {
             description: 'The dm will stop impersonating his current npc',
             ephemeral: true,
         },
+        //roll stats
         {
             name: 'roll-stats',
             description: 'create a stat array',
@@ -91,6 +92,7 @@ module.exports.createCmd = async function (bot, guildId) {
                 required: false
             }]
         },
+        //set level
         {
             name: 'set-level',
             description: 'Change a characters level.',
@@ -106,6 +108,18 @@ module.exports.createCmd = async function (bot, guildId) {
                 description: 'The newly achieved level.',
                 required: true
             }],
+        },
+        //magic item
+        {
+            name: 'magic-item',
+            description: 'look up a magic item',
+            ephemeral: true,
+            options: [{                
+                name: 'item-name',
+                type: 'STRING',
+                description: 'Multiple words are seperated by spaces or dashes.',
+                required: true
+            }]
         },
         // server cmd
         {
