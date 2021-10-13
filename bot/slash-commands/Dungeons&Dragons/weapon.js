@@ -12,8 +12,7 @@ module.exports.run = async (interaction) => {
         
         for(let i = 0; i<data.length; i++){
             if(data[i].slug==weapon){
-                //return interaction.reply({ embeds: [createEmbed(data)]})
-                return interaction.reply(data[i].name)
+                return interaction.reply({ embeds: [createEmbed(data[i])]})
             }
         }
         return await useSelectionMenu(interaction,data);
@@ -60,12 +59,9 @@ async function useSelectionMenu(interaction,weapons){
             errors: ['time']
         }).then(async (interaction) => {
             interaction.deferUpdate();
-            console.log(interaction.values[0])
             for(let i = 0; i<weapons.length; i++){
-                
                 if(weapons[i].name==interaction.values[0]){
-                    //return interaction.channel.send({ embeds: [createEmbed(conditions[i])]})
-                    return interaction.channel.send(weapons[i].name)
+                    return interaction.channel.send({ embeds: [createEmbed(weapons[i])]})
                 }
             }
         }).catch(function () {  
@@ -75,6 +71,23 @@ async function useSelectionMenu(interaction,weapons){
             .catch(err => console.log(err));
         })
     })
+}
+
+function createEmbed(weapon){
+    let properties = weapon.properties.join("; ");
+    return new MessageEmbed()
+        .setTitle(weapon.name)
+        .setURL(api + "/" +  weapon.slug)
+        .addFields(
+            { name: 'category', value: weapon.category, inline: true  },
+            { name: 'cost', value: weapon.cost, inline: true },
+            { name: 'damage dice', value: weapon.damage_dice, inline: true },
+            { name: 'damage type', value: weapon.damage_type, inline: true },
+            { name: 'weight', value: weapon.weight, inline: true },
+            { name: 'additional properties', value: properties==""?"none":properties, inline: true },
+        )
+        .setTimestamp()
+        .setFooter(weapon.document__slug + " • " + weapon.document__title);
 }
 
 module.exports.help = {
