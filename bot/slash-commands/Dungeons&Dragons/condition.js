@@ -1,4 +1,4 @@
-const {MessageActionRow, MessageSelectMenu } = require('discord.js');
+const {MessageActionRow, MessageSelectMenu,MessageEmbed } = require('discord.js');
 const api = "https://api.open5e.com/conditions"
 const request = require('request');
 
@@ -12,7 +12,7 @@ module.exports.run = async (interaction) => {
         
         for(let i = 0; i<data.length; i++){
             if(data[i].slug==condition){
-                return interaction.reply(data[i].desc)
+                return interaction.reply({ embeds: [createEmbed(data)]})
             }
         }
         return await useSelectionMenu(interaction,data);
@@ -46,7 +46,7 @@ async function useSelectionMenu(interaction,conditions){
             interaction.deferUpdate();
             for(let i = 0; i<conditions.length; i++){
                 if(conditions[i].name==interaction.values[0]){
-                    return interaction.channel.send(conditions[i].desc)
+                    return interaction.channel.send({ embeds: [createEmbed(conditions[i])]})
                 }
             }
         }).catch(function () {  
@@ -56,6 +56,13 @@ async function useSelectionMenu(interaction,conditions){
             .catch(err => console.log(err));
         })
     })
+}
+
+function createEmbed(condition){
+    return new MessageEmbed()
+    .setTitle(condition.name)
+    .setURL(api + condition.slug)
+    .setDescription(condition.desc)
 }
 
 module.exports.help = {

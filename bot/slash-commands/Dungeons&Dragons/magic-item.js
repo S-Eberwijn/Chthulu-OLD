@@ -17,7 +17,7 @@ module.exports.run = async (interaction) => {
 function createEmbed(item){
     return new MessageEmbed()
         .setTitle(item.name)
-        .setURL(api + item.slug)
+        .setURL(api + "/" +  item.slug)
         .setDescription(item.desc)
         .addFields(
             { name: 'rarity', value: item.rarity, inline: true  },
