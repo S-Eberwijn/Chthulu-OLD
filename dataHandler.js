@@ -133,6 +133,18 @@ module.exports.createCmd = async function (bot, guildId) {
                 required: false
             }]
         },
+        //weapons
+        {
+            name: 'weapon',
+            description: 'look up a weapon',
+            ephemeral: true,
+            options: [{                
+                name: 'weapon-name',
+                type: 'STRING',
+                description: 'You can chose to enter the name of the weapon.',
+                required: false
+            }]
+        },
         // server cmd
         {
             name: 'server',
