@@ -44,55 +44,8 @@ module.exports.createCmd = async function (bot, guildId) {
                 required: true
             }],
         },
-        // impersonate npc
-        {
-            name: 'impersonate',
-            description: 'Allows a dm to talk as if he is that npc.',
-            ephemeral: true,
-        },
-        //stopImpersonating
-        {
-            name: 'stop-impersonating',
-            description: 'The dm will stop impersonating his current npc',
-            ephemeral: true,
-        },
-        //roll stats
-        {
-            name: 'roll-stats',
-            description: 'create a stat array',
-            ephemeral: true,
-            options: [{
-                name: 'amount-of-dice',
-                type: 'NUMBER',
-                description: 'Amount of dice to roll',
-                required: true
-            },
-            {
-                name: 'd',
-                type: 'NUMBER',
-                description: 'type of dice to be rolled',
-                required: true
-            },
-            {
-                name: 'drop-lowest',
-                type: 'NUMBER',
-                description: 'lowest x number of dice will be dropped',
-                required: false
-            },
-            {
-                name: 'drop-highest',
-                type: 'NUMBER',
-                description: 'highest x number of dice will be dropped',
-                required: false
-            },
-            {
-                name: 'additional-modifier',
-                type: 'NUMBER',
-                description: 'add an additional modifier to the roll',
-                required: false
-            }]
-        },
-        //set level
+        // set-level cmd
+
         {
             name: 'set-level',
             description: 'Change a characters level.',
@@ -109,46 +62,22 @@ module.exports.createCmd = async function (bot, guildId) {
                 required: true
             }],
         },
-        //magic item
+        // quests cmd
         {
-            name: 'magic-item',
-            description: 'look up a magic item',
-            ephemeral: true,
-            options: [{                
-                name: 'item-name',
-                type: 'STRING',
-                description: 'Multiple words are seperated by spaces or dashes.',
-                required: true
-            }]
-        },
-        //conditions
-        {
-            name: 'condition',
-            description: 'look up a statuscondition',
-            ephemeral: true,
-            options: [{                
-                name: 'condition-name',
-                type: 'STRING',
-                description: 'You can chose to enter the name of the condition.',
-                required: false
-            }]
-        },
-        //weapons
-        {
-            name: 'weapon',
-            description: 'look up a weapon',
-            ephemeral: true,
-            options: [{                
-                name: 'weapon-name',
-                type: 'STRING',
-                description: 'You can chose to enter the name of the weapon.',
-                required: false
-            }]
+            name: 'quests',
+            description: 'Get information of quests in this campaign (server).',
+            options: [],
         },
         // server cmd
         {
             name: 'server',
             description: 'Gives information about the server.',
+            options: [],
+        },
+        // chthulu cmd
+        {
+            name: 'chthulu',
+            description: 'Information about the bot.',
             options: [],
         },
         // avatar cmd
