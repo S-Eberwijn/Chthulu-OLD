@@ -33,6 +33,12 @@ module.exports.createCmd = async function (bot, guildId) {
                 required: false
             }],
         },
+        // quests cmd
+        {
+            name: 'quests',
+            description: 'Get information of quests in this campaign (server).',
+            options: [],
+        },
         // spell slash-command
         {
             name: 'spell',
@@ -114,7 +120,7 @@ module.exports.createCmd = async function (bot, guildId) {
             name: 'magic-item',
             description: 'look up a magic item',
             ephemeral: true,
-            options: [{                
+            options: [{
                 name: 'item-name',
                 type: 'STRING',
                 description: 'Multiple words are seperated by spaces or dashes.',
@@ -126,7 +132,7 @@ module.exports.createCmd = async function (bot, guildId) {
             name: 'condition',
             description: 'look up a statuscondition',
             ephemeral: true,
-            options: [{                
+            options: [{
                 name: 'condition-name',
                 type: 'STRING',
                 description: 'You can chose to enter the name of the condition.',
@@ -138,7 +144,7 @@ module.exports.createCmd = async function (bot, guildId) {
             name: 'weapon',
             description: 'look up a weapon',
             ephemeral: true,
-            options: [{                
+            options: [{
                 name: 'weapon-name',
                 type: 'STRING',
                 description: 'You can chose to enter the name of the weapon.',
