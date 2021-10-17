@@ -145,6 +145,24 @@ module.exports.createCmd = async function (bot, guildId) {
                 required: false
             }]
         },
+        {
+            name: 'roll-check',
+            description: 'roll check',
+            ephemeral: true,
+            options: [
+            {
+                name: 'additional-modifier',
+                type: 'NUMBER',
+                description: 'add an additional modifier to the roll',
+                required: false
+            },
+            {
+                name: 'roll-twice',
+                type: 'STRING',
+                description: 'fill in anything in this field to have 2 rolls, this can be used for advantage or disadvantage',
+                required: false
+            }]
+        },
         // server cmd
         {
             name: 'server',
