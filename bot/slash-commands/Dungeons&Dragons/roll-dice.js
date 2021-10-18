@@ -45,13 +45,29 @@ function createEmbed(command, resultSet,additionalModifier){
 
 function getResultsPerType(diceSet, additionalModifier){
     let output = [];
+    let returnvalue = "";
     diceSet.forEach((v) => {
         if(v.length>0){
             output.push(v.reduce((a, b) => a + b, 0))
         }
     });
-    output.push(additionalModifier);
-    return output.join(" + ")
+    if(additionalModifier!=0){
+        output.push(additionalModifier);
+    }
+
+    for(let i=0; i<output.length; i++){
+        if(i>0){
+            if(output[i]>0){
+                returnvalue += " + " + output[i];
+            }else{
+                returnvalue += " - " + Math.abs(output[i]);
+            }
+        }else{
+            returnvalue += output[i]
+        }
+    }
+
+    return returnvalue;
 }
 
 function rollDice(diceSet){
@@ -61,8 +77,12 @@ function rollDice(diceSet){
     for (let key of diceSet.keys()) {
         tmp =[];
         dicekind = parseInt(key.replace(/\D/g,''));//drop all non numeric characters from dicekind and keep the numbers, then parse
-        for(let i =0; i<diceSet.get(key);i++){
-            tmp.push( Math.ceil( Math.random()*dicekind));
+        for(let i =0; i<Math.abs(diceSet.get(key));i++){
+            if(diceSet.get(key)>0){
+                tmp.push( Math.ceil( Math.random()*dicekind));
+            }else if(diceSet.get(key)<0){
+                tmp.push( Math.ceil( Math.random()*dicekind)*-1);
+            }
         }
         resultSet.set(key,tmp);
     }
@@ -71,12 +91,24 @@ function rollDice(diceSet){
 
 function constructCommand(diceSet, additionalModifier){
     let command ="";
+    let counter = 0;
     for (let key of diceSet.keys()) {
-        if( diceSet.get(key)>0){
-            command += diceSet.get(key) + key + " + ";
+        if(counter == 0){
+            command += diceSet.get(key) + key;
+            counter++;
+        }else{
+            if( diceSet.get(key)>0){
+                command += " + " + diceSet.get(key) + key;
+            }
+            else if( diceSet.get(key)<0){
+                command += " - " + Math.abs(diceSet.get(key)) + key;
+            }
         }
     }
-    return command + additionalModifier+".";
+    if(additionalModifier!=0){
+        command += " + " + additionalModifier+"."
+    }
+    return command;
 }
 
 function tooManyDice(diceSet){
@@ -88,9 +120,9 @@ function tooManyDice(diceSet){
 }
 
 function showRightColourOfRolledDie(resultPerDie, typeOfDie) {
-    if (resultPerDie == 1) {
+    if (Math.abs(resultPerDie) == 1) {
         return `\`\`\`fix\n ${resultPerDie.toString()}\`\`\``;
-    } else if (resultPerDie == typeOfDie) {
+    } else if (Math.abs(resultPerDie) == typeOfDie) {
         return `\`\`\`xl\n ${resultPerDie.toString()}\`\`\``;
     } else {
         return `\`\`\`md\n ${resultPerDie.toString()}\`\`\``;
