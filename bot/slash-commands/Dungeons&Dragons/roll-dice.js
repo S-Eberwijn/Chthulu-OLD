@@ -1,3 +1,4 @@
+const { count } = require('console');
 const { MessageEmbed } = require('discord.js');
 
 module.exports.run = async (interaction) => {
@@ -19,20 +20,38 @@ module.exports.run = async (interaction) => {
     //constructing command
     let command = constructCommand(diceSet, additionalModifier)
     //rolling the dice
-    interaction.reply(createEmbed(command, resultSet));
-    //return interaction.reply({ embeds: [createEmbed(command, statArray.sort((a,b) => b-a))] })
+    return interaction.reply({ embeds: [createEmbed(command, resultSet,additionalModifier)] })
 }
 
-function createEmbed(command, resultSet){
-    let output = command +": ";
-    let total = 0;
+function createEmbed(command, resultSet,additionalModifier){ 
+    let total = 0
+    let counter = 0;
+    let embed = new MessageEmbed().setTitle(command)
     for (let key of resultSet.keys()) {
         for(let i = 0; i < resultSet.get(key).length; i++){
-            output += resultSet.get(key)[i] + " + "
+            embed.addField("**"+key+"**", `${showRightColourOfRolledDie(resultSet.get(key)[i], key.replace(/\D/g,''))}`, true)
             total += resultSet.get(key)[i]
+            counter++;
         }
     }
-    return output += " = "+ total;
+    while(counter%3 != 0){
+        embed.addField('\u200b', '\u200b', true);
+        counter++;
+    }
+    total += additionalModifier;
+    embed.addField(`RESULT`, `[${getResultsPerType(resultSet,additionalModifier)}] = **${total}**`, false);
+    return embed;
+}
+
+function getResultsPerType(diceSet, additionalModifier){
+    let output = [];
+    diceSet.forEach((v) => {
+        if(v.length>0){
+            output.push(v.reduce((a, b) => a + b, 0))
+        }
+    });
+    output.push(additionalModifier);
+    return output.join(" + ")
 }
 
 function rollDice(diceSet){
