@@ -3,8 +3,7 @@ const api = "https://api.open5e.com/weapons"
 const request = require('request');
 
 module.exports.run = async (interaction) => {
-    let weapon = interaction.options.getString('weapon-name');
-    weapon = weapon?.toLowerCase();
+    let weapon = interaction.options.getString('weapon-name')?.toLowerCase();
 
     request(api, { json: true }, async (err, res, body) => {
         if (err) { return console.log(err); }
@@ -49,7 +48,7 @@ async function useSelectionMenu(interaction,weapons){
             )
         )
     await interaction.reply({
-        content: "Pick the weapon you want to learn more about (both dropdowns contain weapons)",
+        content: "Pick the weapon you want to learn more about (both dropdowns contain weapons).",
         components: messageComponentsArray, 
         fetchReply: true,
     }).then(async () => {
@@ -67,7 +66,7 @@ async function useSelectionMenu(interaction,weapons){
         }).catch(function () {  
             interaction.channel.send({
                 content: "This poll has been open for too long, it no longer accepts answers."
-            }).then(msg => { setTimeout(() => msg.delete(), 3000) })
+            , ephemeral: true}).then(msg => { setTimeout(() => msg.delete(), 3000) })
             .catch(err => console.log(err));
         })
     })

@@ -8,12 +8,12 @@ module.exports.run = async (interaction) => {
     if (!(interaction.options.getNumber('level') <= 20 && interaction.options.getNumber('level') >= 1)) return interaction.reply({ content: 'Provide a number (1 - 20)!', ephemeral: true })
 
     PlayerCharacter.update(
-        { level: interaction.options.getNumber('level') },
-        {
-            where: { player_id: interaction.options.getUser('user').id, alive: 1, server_id: interaction.guild.id }
-        }).then(async () => {
-            return await interaction.reply({ content: `${character.get('name')}'s level changed from \*\*${character.get('level') || 0}\*\* to \*\*${interaction.options.getNumber('level')}\*\*!`, ephemeral: true });
-        });
+    { level: interaction.options.getNumber('level') },
+    {
+        where: { player_id: interaction.options.getUser('user').id, alive: 1, server_id: interaction.guild.id }
+    }).then(async () => {
+        return await interaction.reply({ content: `${character.get('name')}'s level changed from \*\*${character.get('level') || 0}\*\* to \*\*${interaction.options.getNumber('level')}\*\*!`, ephemeral: true });
+    });
 }
 
 module.exports.help = {

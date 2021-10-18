@@ -4,10 +4,8 @@ const baseURL = "https://www.dnd-spells.com/spell/"
 const { MessageEmbed } = require('discord.js');
 
 module.exports.run = async (interaction) => {
-
     let stringMessage = interaction.options.getString('spell-name');
     stringMessage = stringMessage.replace(/ /g, "-");
-
 
     let url = baseURL + stringMessage;
     request({
@@ -25,8 +23,6 @@ module.exports.run = async (interaction) => {
             interaction.reply({ embeds: [EmbedSpellInMessage(data, stringMessage)], files: [sigilImage] });
         }
     });
-
-    // return await interaction.reply({ content: text , ephemeral: true});
 }
 
 module.exports.help = {
@@ -89,7 +85,6 @@ function ritual(interaction, stringMessage) {
         }
     }, function (error, response, body) {
         let data = ProcesRequest(body)
-        /*console.log(data);*/
         if (data == "404") {
             interaction.reply({ content: "That spell was not found in the database", ephemeral: true });
         }
@@ -113,7 +108,6 @@ function EmbedSpellInMessage(data, message) {
         .setTitle(data.title)
         .setDescription(data.school)
         .setURL(baseURL + message)
-        // .attachFiles(['./bot/images/DnD/SpellSigils/' + data.school + '.png'])
         .setThumbnail('attachment://' + data.school + '.png')
         .addFields(
             { name: '\u200B', value: `Level: **${data.level}**\nCasting time: **${data.castTime}**\nRange: **${data.range}**\nComponents: **${data.comp}**\nDuration: **${data.duration}**`, inline: false },
