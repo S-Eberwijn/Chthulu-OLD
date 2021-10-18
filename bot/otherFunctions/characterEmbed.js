@@ -1,6 +1,5 @@
 const { MessageEmbed, MessageAttachment } = require('discord.js');
-const Canvas = require('canvas');
-const { Image, loadImage, createCanvas } = require('canvas');
+const { loadImage, createCanvas } = require('canvas');
 const { getAverageColor } = require('fast-average-color-node');
 const { paginationEmbed } = require('../otherFunctions/paginationEmbed')
 
@@ -112,7 +111,7 @@ async function getCharacterPicture(character) {
     const context = canvas.getContext('2d');
 
     const url = character.get('picture_url')
-    console.log(url);
+    // console.log(url);
     const image = await loadImage(url)
 
     var hRatio = canvas.width / image.width;
@@ -128,7 +127,6 @@ async function getCharacterPicture(character) {
 }
 
 async function getAverageImageColor(imageUrl) {
-    //TODO: in the getAverageColor is something wrong with pngs
     const color = await getAverageColor(imageUrl)
     return color.hex ? color.hex : "#2C2F33";
 }
