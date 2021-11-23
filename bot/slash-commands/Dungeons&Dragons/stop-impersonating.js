@@ -8,12 +8,6 @@ module.exports.run = async (interaction) => {
         });
         return
     }
-    // await NonPlayableCharacter.findAll({where:{ server_id: interaction.guildId, status:"visible"}}).then((npcs) => {
-    //     npcs.forEach(npc => {
-    //         console.log(npc.name + " " + npcs.server_id + " " + npcs.using_npc)
-    //         console.log("server " + interaction.guildId + " " + interaction.member.user.id)
-    //     });
-    // });
     try{
         await NonPlayableCharacter.findOne({where: { server_id: interaction.guildId, using_npc: interaction.member.user.id }
         }).then((character)=>{

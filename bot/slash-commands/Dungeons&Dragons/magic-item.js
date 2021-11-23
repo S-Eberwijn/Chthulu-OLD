@@ -3,13 +3,10 @@ const api = "https://api.open5e.com/magicitems/"
 const request = require('request');
 
 module.exports.run = async (interaction) => {
-    let magicItem = interaction.options.getString('item-name');
-    magicItem = magicItem.replaceAll(' ', '-');
-    magicItem = magicItem.toLowerCase();
+    let magicItem = interaction.options.getString('item-name').replaceAll(' ', '-').toLowerCase();
 
     request(api + magicItem, { json: true }, (err, res, body) => {
         if (err) { return console.log(err); }
-        //console.log(body);
         if (Object.keys(body).length<2){return interaction.reply(magicItem + " was not found in our database.");}
         return interaction.reply({ embeds: [createEmbed(body)]})
     });

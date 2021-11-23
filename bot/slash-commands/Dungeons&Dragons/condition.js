@@ -3,8 +3,7 @@ const api = "https://api.open5e.com/conditions"
 const request = require('request');
 
 module.exports.run = async (interaction) => {
-    let condition = interaction.options.getString('condition-name');
-    condition = condition?.toLowerCase();
+    let condition = interaction.options.getString('condition-name')?.toLowerCase();
 
     request(api, { json: true }, async (err, res, body) => {
         if (err) { return console.log(err); }

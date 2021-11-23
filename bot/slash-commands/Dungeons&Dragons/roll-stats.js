@@ -41,10 +41,6 @@ function createEmbed(command, statArray){
 	.setTitle(command)
 	.setDescription('The following fields are the stats that were generated for you.'+
         ' You can assign any value you rolled to any ability score (each value only once).')
-    /*.addField('what are good stats?', 'We recomend having simular stats to your fellow partymembers.'+
-        ' For D&D 5e you should have stats that total a value between 60 and 80,' +
-        ' preferably you also have at least one or two stats above 13,'+
-        ' having all 10 and elevens might make it hard to make a unique character.')*/
 	.addField('\u200B', "**```"+statArray[0]+"```**", true)
     .addField('\u200B', "**```"+statArray[1]+"```**", true)
     .addField('\u200B', "**```"+statArray[2]+"```**", true)

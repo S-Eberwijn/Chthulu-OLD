@@ -43,6 +43,7 @@ module.exports.createCmd = async function (bot, guildId) {
         {
             name: 'spell',
             description: 'Gives information about a spell.',
+            ephemeral: true,
             options: [{
                 name: 'spell-name',
                 type: 'STRING',

@@ -19,7 +19,7 @@ module.exports.run = async (interaction) => {
                 character.set("using_npc", null)
                 character.save()
             }
-    })
+        })
     await NonPlayableCharacter.findAll({where:{ server_id: interaction.guildId, status:"visible"}}).then((npcs) => {
         if(npcs.length<1){
             interaction.reply({
@@ -28,7 +28,7 @@ module.exports.run = async (interaction) => {
             });
             return;
         }
-        else if(npcs.length <= 1)
+        else if(npcs.length <= 25)
         messageComponentsArray.push(
             new MessageActionRow().addComponents(
                 new MessageSelectMenu()
@@ -44,14 +44,12 @@ module.exports.run = async (interaction) => {
         else{
             let groups = Math.ceil( npcs.length/25);
             let npcsObject = [];
-            let npcData = [];
             let charactersGroupedByLetter = [];
             let charsPerGroup = Math.ceil(npcs.length/groups);
             let grouplabel = "";
             let messageSelectMenuOptionsArray = [];
             for (let i = 0; i < npcs.length;i++){
-                npcData = [npcs[i].name, npcs[i].character_id];
-                npcsObject.push(npcData);
+                npcsObject.push([npcs[i].name, npcs[i].character_id]);
             }
             npcsObject.sort((a, b) => a[0].localeCompare(b[0]));
             let npcgroup = [];
