@@ -11,7 +11,7 @@ module.exports.run = async (interaction) => {
         
         for(let i = 0; i<data.length; i++){
             if(data[i].slug==condition){
-                return interaction.reply({ embeds: [createEmbed(data)]})
+                return interaction.reply({ embeds: [createEmbed(data[i])]})
             }
         }
         return await useSelectionMenu(interaction,data);
@@ -60,7 +60,7 @@ async function useSelectionMenu(interaction,conditions){
 function createEmbed(condition){
     return new MessageEmbed()
     .setTitle(condition.name)
-    .setURL(api + condition.slug)
+    .setURL(api + "/" + condition.slug)
     .setDescription(condition.desc)
 }
 
