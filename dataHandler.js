@@ -203,6 +203,8 @@ module.exports.createCmd = async function (bot, guildId) {
                 name: 'additional-modifier',
                 type: 'NUMBER',
                 description: 'add an additional modifier to the roll, a negative number will subtrac that amount (optional)',
+            }]
+        },
         {
             name: 'roll-check',
             description: 'roll check',
