@@ -3,7 +3,7 @@ block scripts
     script
         include ./static/theme.js
         include ./static/characterDashboard.js
-    script var characters = !{JSON.stringify(characters)}; 
+    script var npcs = !{JSON.stringify(npcs)}; 
 
 block styles 
     style 
@@ -13,15 +13,16 @@ block styles
         include ./assets/css/dashboard.css
         include ./assets/css/characterDashboard.css
 
+
 block dashboardContent
     .dashboardContent(characters=true)
-        h1 #{characters.length} Characters
-            input(placeholder="Search Character", oninput="updateInput(this.value)", spellcheck="false")
+        h1 #{npcs.length} NPC's
+            input(placeholder="Search NPC", oninput="updateInput(this.value)", spellcheck="false")
         .characterBox
             ul.arrow#leftArrow 
                 li.left
             .cardStack#characterCardStack
-                each character in characters
-                    include ./components/characterCard.pug
+                each npc in npcs
+                    include ./components/nonPlayableCharacterCard.pug
             ul.arrow#rightArrow
                 li.right

@@ -1,0 +1,13 @@
+.characterCardHolder
+    .characterCard(unselectable="on")
+        span.characterName #{npc.name} (#{npc.age})
+        span.characterDescription #{npc.description}
+        .infoBundle
+            span Race
+                span.characterRace #{npc.race}
+            span Class 
+                span.characterClass #{npc.class} 
+            span Title 
+                span.characterBackground #{npc.title}
+        .characterImageHolder 
+            img(src=npc.picture_url alt="NPC Image")

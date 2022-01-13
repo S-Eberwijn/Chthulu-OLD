@@ -1,0 +1,54 @@
+input(type="checkbox" id="modal")
+label(for="modal" class="example-label") Click here to add a new quest!
+label(for="modal" class="modal-background")
+.modal 
+    .modal-header
+        h3 Create new quest
+        label(for="modal")
+            i.fas.fa-times
+    .modal-content
+        form
+            .label-input-section
+                label.required Priority
+                .select-wrapper 
+                    .select 
+                        .select_trigger 
+                            span( id="quest_priority") Select a priority
+                            i.fas.fa-chevron-down
+                        .custom-options 
+                            span.custom-option(data-value="5") 
+                                i.fas.fa-circle(style="color: red;")
+                                | !{' | '}
+                                span.text Very high
+                            span.custom-option(data-value="4") 
+                                i.fas.fa-circle(style="color: orangered;")
+                                | !{' | '}
+                                span.text High
+                            span.custom-option(data-value="3")
+                                i.fas.fa-circle(style="color: orange;")
+                                | !{' | '}
+                                span.text Normal
+                            span.custom-option(data-value="2")
+                                i.fas.fa-circle(style="color: lightgreen;")
+                                | !{' | '}
+                                span.text Low
+                            span.custom-option(data-value="1")
+                                i.fas.fa-circle(style="color: green;")
+                                | !{' | '}
+                                span.text Very low
+            .label-input-section
+                label().required Title
+                    .charCountDiv
+                        p.characterCount 0
+                        p /
+                        p.maxCharacterCount 32
+                input(type="text" id="quest_title" oninput="updateInput(this)")
+            .label-input-section
+                label.required Description
+                    .charCountDiv
+                        p.characterCount 0
+                        p /
+                        p.maxCharacterCount 400
+                textarea(cols="5" rows="5" id="quest_description" oninput="updateInput(this)")
+            
+            input(id="create_quest" type="button" value="Create" disabled="true" onclick="handleSubmit(this)")

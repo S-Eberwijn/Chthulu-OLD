@@ -1,6 +1,6 @@
 const { DataTypes, Model } = require('sequelize');
 
-module.exports = class PlayerCharacter extends Model {
+module.exports = class NonPlayableCharacter extends Model {
     static init(sequelize) {
         return super.init({
             character_id: {

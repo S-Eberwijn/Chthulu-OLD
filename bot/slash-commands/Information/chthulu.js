@@ -3,7 +3,7 @@ const { getBotEmbed } = require('../../otherFunctions/botEmbed')
 
 module.exports.run = async (interaction) => {
     const bot = require('../../../index');
-    
+
     const messageComponents = new MessageActionRow()
         .addComponents(
             new MessageButton()

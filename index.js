@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express')
 const path = require('path');
 const favicon = require('serve-favicon');
+const bodyParser = require('body-parser');
 
 const fs = require("fs");
 
@@ -14,6 +15,7 @@ const WB_PORT = process.env.WB_PORT || 8080;
 // Initialize Webapp
 const app = express();
 app.use(favicon(path.join(__dirname, 'website', 'public', 'favicon.ico')));
+app.use(bodyParser.json());
 
 //Load View Engine
 app.set('views', path.join(__dirname, 'website', 'views'));

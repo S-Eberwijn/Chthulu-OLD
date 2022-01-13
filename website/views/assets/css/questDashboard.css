@@ -1,0 +1,372 @@
+/*QUESTS*/
+.dashboardContent[quests] {
+    display: flex;
+    align-items: left;
+    justify-content: space-between;
+}
+
+.dashboardContent[quests] h1 {
+    user-select: none;
+    width: 100%;
+    margin-bottom: 0;
+    margin: 0;
+    margin-left: 0px;
+    text-align: center;
+    display: flex;
+    position: relative;
+    align-items: center;
+}
+
+.dashboardContent[quests] h1 input {
+    position: relative;
+    /* margin-left: 40%; */
+    height: 35px;
+}
+
+/* Searchbar */
+input {
+    /* border: 2px solid var(--menu-color);*/
+    border: none;
+    box-shadow: inset 0 0 0 2px var(--menu-color);
+    color: var(--text-color);
+    background-color: var(--content-color);
+    padding-left: .8rem;
+    border-radius: 20px;
+    margin-left: 40px;
+    color: var(--placeholder-text-color);
+    transition: color 0.1s ease-out;
+    caret-color: var(--menu-color);
+}
+
+input:focus {
+    outline: 0;
+    color: var(--text-color);
+}
+
+input:hover::placeholder {
+    color: var(--text-color);
+}
+
+input:hover {
+    color: var(--text-color);
+}
+
+input::placeholder {
+    transition: color 0.1s ease-out;
+    color: var(--placeholder-text-color);
+}
+
+
+.dashboardContent[quests] .questBox {
+    height: 400px;
+    padding: 10px;
+    max-height: 340px;
+    z-index: 100;
+    width: 100%;
+    /* border: 5px dashed var(--content-color); */
+    display: flex;
+    gap: 5px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    position: relative;
+}
+
+.questBox .questDiv {
+    z-index: -10;
+    height: 50px;
+    position: relative;
+    cursor: pointer;
+    min-height: 50px;
+    border: 2px solid transparent;
+    width: 98%;
+    background-color: var(--menu-color);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    border-radius: 5px;
+    overflow: hidden;
+    -webkit-transition: min-height 0.5s;
+    -moz-transition: min-height 0.5s;
+    transition: min-height 0.5s;
+}
+
+.questDiv::before {
+    content: "";
+    height: 100%;
+    width: 5px;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.questDiv .questTitleDiv span.description {
+    display: block;
+    padding-left: 5px;
+    font-size: .9rem;
+    font-weight: 100;
+    color: darkgray;
+    text-align: justify;
+    text-overflow: ellipsis;
+}
+
+.questDiv .questTitleDiv p.title {
+    font-size: 1rem;
+    font-weight: bolder;
+    position: relative;
+    flex-wrap: nowrap;
+    display: inline-block;
+    margin: 0;
+    margin-top: 2px;
+    padding-right: 0;
+}
+
+.questDiv.quest.onlyTitle .questTitleDiv {
+    display: flex;
+    align-items: center;
+}
+
+.questDiv[quest_importance_value="1"]::before {
+    background-color: green;
+}
+
+.questDiv[quest_importance_value="2"]::before {
+    background-color: green;
+}
+
+.questDiv[quest_importance_value="3"]::before {
+    background-color: orange;
+}
+
+.questDiv[quest_importance_value="4"]::before {
+    background-color: orangered;
+}
+
+.questDiv[quest_importance_value="5"]::before {
+    background-color: orangered;
+}
+
+
+.questDiv.addNewQuest {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    cursor: pointer;
+    background-color: transparent;
+    border: 2px dashed var(--menu-color);
+    color: var(--placeholder-text-color);
+}
+
+
+.questBox.over::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 98%;
+    height: 95%;
+    border: 3px dashed var(--menu-color) !important;
+}
+
+
+
+.questBox::-webkit-scrollbar {
+    width: 15px;
+    /* width of the entire scrollbar */
+}
+
+.questBox::-webkit-scrollbar-track {
+    background: transparent;
+    /* color of the tracking area */
+}
+
+.questBox::-webkit-scrollbar-thumb {
+    background-color: var(--sidebar-color);
+    /* color of the scroll thumb */
+    border-radius: 15px;
+    /* roundness of the scroll thumb */
+    border: 5px solid transparent;
+    background-clip: padding-box;
+}
+
+.questDiv .questTitleDiv {
+    margin-left: 25px;
+    width: 80%
+}
+
+.questDiv .options {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-evenly;
+    align-items: center;
+    margin-right: 10px;
+    gap: 5px;
+    height: 50px;
+    width: 7%
+}
+
+.questDiv .options i {
+    z-index: 100;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 16px;
+    height: 16px;
+}
+
+.questDiv .options i.fa-ellipsis-v {
+    cursor: move;
+}
+
+#completedQuestsBox>.questDiv::after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: #000;
+    z-index: 2;
+    opacity: 0.5;
+}
+
+#completedQuestsBox {
+    pointer-events: none;
+}
+
+#completedQuestsBox .questDiv {
+    z-index: 1 !important;
+}
+
+#completedQuestsBox .options {
+    height: 100%;
+}
+
+#uncompletedQuestsBox {
+    z-index: 1000 !important;
+}
+
+i.fas.fa-chevron-up {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    height: 100%;
+    top: 50%;
+    right: -125px;
+    transform-origin: center center;
+    transition: all 0.3s ease-out;
+    color: var(--placeholder-text-color);
+    transform: translate(0, -50%) scale(.8) rotateX(180deg);
+}
+
+i.fas.fa-chevron-up.rotateChevron {
+    transform: translate(0, -50%) scale(.8) rotateX(0deg);
+}
+
+.questTitleDiv p.title span.createdAt {
+    height: 100%;
+    width: auto;
+    position: absolute;
+    top: 50%;
+    right: -110px;
+    transform: translate(0, -50%);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    color: var(--placeholder-text-color);
+    padding-left: 5px;
+    padding-right: 5px;
+    font-size: .65rem;
+}
+
+.questBoxTitle {
+    margin-left: 10px;
+    font-size: .6em;
+}
+
+span.questCount {
+    font-size: 1em;
+}
+
+select {
+    /* background-color: var(--dashboard-color); */
+    width: 10rem;
+    height: 100%;
+    padding: 5px;
+    /* transform: translate(250%, 0%); */
+
+    border: 2px solid var(--menu-color);
+    color: var(--text-color);
+
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    box-shadow: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background: url("") 96% / 15% no-repeat var(--content-color);
+    font-family: 'Poppins', 'FontAwesome', sans-serif;
+    outline: 0;
+    color: var(--placeholder-text-color) !important;
+    transition: color 0.1s ease-out;
+}
+
+select option:focus {
+    outline: 0;
+}
+
+select:invalid {
+    color: green !important;
+}
+
+select:hover {
+    color: var(--text-color) !important;
+}
+
+
+select>option {
+    font-family: 'Poppins', 'FontAwesome', sans-serif;
+}
+
+option {
+    position: relative;
+}
+
+.sorting-div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
+    margin-left: 40px;
+    height: 35px;
+    position: relative;
+    box-shadow: inset 0 0 0 2px var(--menu-color);
+    /* border-radius */
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    /* color: var(-placeholder-text-color) */
+
+}
+
+.sorting-div i.fas.fa-exchange-alt {
+    transform: scale(.5) rotate(-90deg);
+    cursor: pointer;
+    height: 35px;
+    color: var(--placeholder-text-color);
+    transform-origin: center center;
+    transition: transform .5s, color 0.1s ease-out;
+}
+
+.sorting-div i.fas.fa-exchange-alt.desc {
+    transform: scale(.5) rotate(-90deg) rotateY(180deg);
+}
+
+.sorting-div i.fas.fa-exchange-alt:hover {
+    color: var(--text-color);
+}
+
+option {
+    color: var(--text-color);
+}

@@ -11,6 +11,11 @@ module.exports.createCmd = async function (bot, guildId) {
                 required: true
             }],
         },
+        // chthulu cmd
+        {
+            name: 'chthulu',
+            description: 'Information about the bot!',
+        },
         // addCharacterChannel slash-command
         {
             name: 'add-character-channel',

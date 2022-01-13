@@ -1,0 +1,9 @@
+.questDiv(id=quest.quest_id quest_importance_value=quest.quest_importance_value quest_started=quest.createdAt).quest
+    .questTitleDiv
+        p.title #{quest.quest_name}
+            - var createdAt = quest.createdAt.toISOString().split('T')[0].split('-').reverse().join('/')
+            span.createdAt started #{createdAt}
+        span.description #{quest.quest_description}
+    .options 
+        i.fas.fa-trash
+        i.fas.fa-edit

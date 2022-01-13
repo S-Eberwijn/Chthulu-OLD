@@ -1,0 +1,57 @@
+extends ./template/layout.pug
+block scripts
+    script
+        include ./static/theme.js
+        include ./static/questDashboard.js
+    script var uncompletedQuests = !{JSON.stringify(uncompletedQuests)}; 
+    //-     | console.log(uncompletedQuests)
+
+block styles 
+    style 
+        include ./assets/css/main.css
+        include ./assets/css/sidebar.css
+        include ./assets/css/menu.css
+        include ./assets/css/dashboard.css
+        include ./assets/css/popup.css
+        include ./assets/css/questDashboard.css
+
+
+
+block dashboardContent
+    
+    .dashboardContent(quests=true)
+        h1 
+            span(id="uncompletedQuestsCount").questCount #{uncompletedQuests.length}
+            span.questBoxTitle Current Activities
+            .sorting-div
+                i.fas.fa-exchange-alt(id='sortingIcon').desc
+                select(onchange="sortingChanged(this)" class="sortingSelectTextColor")
+                    option(value="importance" selected="selected" class="sortingSelectTextColor")
+                        span 
+                        | !{' | '}
+                        span Importance
+                    option(value="started")
+                        span 
+                        | !{' | '}
+                        span Started
+                    option(value="alphabetical")
+                        span 
+                        | !{' | '}
+                        span Alphabetical
+            input(placeholder="Search quest", oninput="searchQuest(this)", spellcheck="false")
+        .questBox(id="uncompletedQuestsBox")
+            each quest in uncompletedQuests
+                include ./components/quest.pug
+
+            .questDiv.addNewQuest(id="addNewQuestDiv" draggable="false")
+                
+                include ./components/popup.pug
+
+                
+                
+            
+        h1 
+            span(id="completedQuestsCount").questCount #{completedQuests.length} 
+            span.questBoxTitle Past Activities
+            //- input(placeholder="Search Quest", oninput="updateInput(this.value)", spellcheck="false")
+        .questBox(id="completedQuestsBox")
