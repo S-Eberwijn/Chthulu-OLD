@@ -3,8 +3,9 @@ block scripts
     script
         include ./static/theme.js
         include ./static/questDashboard.js
-    script var uncompletedQuests = !{JSON.stringify(uncompletedQuests)}; 
-    //-     | console.log(uncompletedQuests)
+    script var uncompletedQuests = !{JSON.stringify(uncompletedQuests)};
+        | var guildID = !{JSON.stringify(selectedGuildId)};
+        | console.log(guildID)
 
 block styles 
     style 

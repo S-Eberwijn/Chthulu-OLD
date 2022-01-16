@@ -41,14 +41,15 @@ label(for="modal" class="modal-background")
                     .charCountDiv
                         p.characterCount 0
                         p /
-                        p.maxCharacterCount 32
-                input(type="text" id="quest_title" oninput="updateInput(this)")
+                        p.maxCharacterCount 30
+                input(type="text" autocomplete="off" spellcheck="false" id="quest_title" oninput="updateInput(this)" onkeydown="return event.key != 'Enter';" maxlength="30")
             .label-input-section
-                label.required Description
+                label.optional Description
                     .charCountDiv
                         p.characterCount 0
                         p /
                         p.maxCharacterCount 400
-                textarea(cols="5" rows="5" id="quest_description" oninput="updateInput(this)")
-            
-            input(id="create_quest" type="button" value="Create" disabled="true" onclick="handleSubmit(this)")
+                textarea(cols="5" rows="5" maxlength="400" spellcheck="false" autocomplete="off" id="quest_description" oninput="updateInput(this)")
+            .createButton
+                input(id="create_quest" type="button" value="Create" disabled="true" onclick="createQuest(this)")
+                i.fa.fa-spinner.fa-spin.fa-align-center

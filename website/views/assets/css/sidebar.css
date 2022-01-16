@@ -6,6 +6,7 @@
     color: var(--text-color);
     box-shadow: 1px 0px 25px 0px rgba(0, 0, 0, 0.25);
     z-index: 15;
+
 }
 
 header.sidebarHeader {
@@ -72,7 +73,7 @@ img {
 }
 
 .sidebarContent {
-    height: calc(100% - var(--header-height));
+    height: calc(100% - var(--header-height) - 70px);
     overflow-y: scroll;
     overflow-x: hidden;
     scrollbar-width: none;
@@ -86,4 +87,71 @@ img {
 
 .sidebarContent::-webkit-scrollbar {
     display: none;
+}
+
+
+
+.extendMenu {
+    height: 50px;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--sidebar-color);
+    color: var(--text-color);
+    /* transition: all 1 ease-in-out; */
+
+}
+
+.extendMenu:hover {
+    cursor: pointer;
+}
+
+.extendMenu i.fa-chevron-right {
+    transform: rotateY(0deg);
+    transform-origin: center center;
+    transition: all .3s ease;
+
+}
+
+.extendMenu i.fa-chevron-right:first-child,
+.extendMenu i.fa-chevron-right.flip:last-child {
+    transition-delay: 0s;
+}
+
+.extendMenu i.fa-chevron-right:nth-child(2),
+.extendMenu i.fa-chevron-right.flip:nth-child(2) {
+    transition-delay: .1s;
+}
+
+.extendMenu i.fa-chevron-right:last-child,
+.extendMenu i.fa-chevron-right.flip:first-child {
+    transition-delay: .2s;
+}
+
+/* .extendMenu i.fa-chevron-right.flip:first-child {
+    transition-delay: .2s;
+} */
+
+/* .extendMenu i.fa-chevron-right.flip:nth-child(2) {
+    transition-delay: .1s;
+}
+
+.extendMenu i.fa-chevron-right.flip:last-child {
+    transition-delay: 0s;
+} */
+
+
+
+.extendMenu:hover i.fa-chevron-right {
+    /* transition: all 1 ease-in-out !important; */
+
+    /* transform: scale(1.2); */
+}
+
+.extendMenu i.fa-chevron-right.flip {
+    transform: rotateY(180deg)
 }

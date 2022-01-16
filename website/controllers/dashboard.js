@@ -99,6 +99,58 @@ async function getQuests(guildId = null, status) {
 
 //CREATE QUEST POST
 exports.createQuestPost = async (req, res) => {
-    console.log(req.body);
-    res.sendStatus(200)
+    let priority_value = Math.floor(req.body.priority);
+    if (priority_value < 1) {
+        priority_value = 1;
+    } else if (priority_value > 5) {
+        priority_value = 5;
+    }
+
+    let importance = getImportanceText(priority_value);
+    let title = req.body.title?.substring(0, 30);
+    let description = req.body.description?.substring(0, 400);
+
+    await Quest.create({
+        quest_giver: 'WEBSITE',
+        quest_description: description,
+        quest_name: title,
+        quest_importance_value: priority_value,
+        quest_importance: importance,
+        quest_status: 'OPEN',
+        server_id: req.params.id
+    }).then(() => {
+        res.sendStatus(201)
+    })
+
+
+}
+
+function getImportanceText(priority_value) {
+    switch (priority_value) {
+        case 5:
+            return 'Very high'
+        case 4:
+            return 'High'
+        case 3:
+            return 'Normal'
+        case 2:
+            return 'Low'
+        case 1:
+            return 'Very low'
+    }
+}
+
+exports.deleteQuestRequest = async (req, res) => {
+    console.log()
+    let quest_id = req.body?.quest_id;
+    let server_id = req.params?.id || '0';
+    if (quest_id) {
+        await Quest.update(
+            { quest_status: 'DELETED' },
+            {
+                where: { quest_id: quest_id, server_id: server_id }
+            }).then(async () => {
+                res.sendStatus(201)
+            });
+    }
 }

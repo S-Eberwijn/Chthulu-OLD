@@ -64,35 +64,6 @@ header.dashboardHeader button:hover {
     transform: scale(1.2);
 }
 
-.dashboardContent {
-    height: calc(100% - var(--header-height));
-    padding: 20px;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    overflow: scroll;
-}
-
-.dashboardContent::-webkit-scrollbar {
-    width: 15px;
-    /* width of the entire scrollbar */
-}
-
-.dashboardContent::-webkit-scrollbar-track {
-    background: transparent;
-    /* color of the tracking area */
-}
-
-.dashboardContent::-webkit-scrollbar-thumb {
-    background-color: var(--sidebar-color);
-    /* color of the scroll thumb */
-    border-radius: 15px;
-    /* roundness of the scroll thumb */
-    border: 5px solid transparent;
-    background-clip: padding-box;
-}
-
 .dashboardContent>div {
     height: 240px;
     width: 400px;
@@ -128,7 +99,7 @@ img[alt="Construction"] {
 .dashboardContent[characters] {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: space-evenly;
     /* For the informational characters page */
 }
 

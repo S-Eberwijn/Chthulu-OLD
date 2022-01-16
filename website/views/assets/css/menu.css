@@ -1,5 +1,6 @@
 .menu {
     width: 0em;
+    /* transition: width 1s; */
 }
 
 .menu[guild] {
@@ -15,6 +16,7 @@
     position: relative;
 }
 
+
 .menu::-webkit-scrollbar {
     display: none;
 }
@@ -26,6 +28,10 @@ header.menuHeader {
     background-color: inherit;
     width: 20rem;
 }
+
+/* header.menuHeader.collapsed {
+    width: 0rem;
+} */
 
 .menuContent {
     box-sizing: border-box;
@@ -58,6 +64,8 @@ header.menuHeader {
     cursor: pointer;
     background-color: #42494c;
 }
+
 .menuCategory span a {
     text-decoration: none;
 }
+

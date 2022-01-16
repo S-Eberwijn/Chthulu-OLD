@@ -9,11 +9,51 @@
     margin-left: 5em;
     width: calc(100% - 5em);
     z-index: 20;
+    animation-fill-mode: forwards;
+    /* transition: width 1s; */
+    /* float: right; */
 }
 
-.dashboard[guild] {
-    margin-left: 25em !important;
-    width: calc(100% - 20em - 5em) !important;
+.dashboard.menuClosed {
+    animation-name: slideLeft;
+    animation-duration: .5s;
+}
+
+@keyframes slideLeft {
+    0% {
+        margin-left: 25em;
+        width: calc(100% - 20em - 5em);
+
+    }
+
+    100% {
+        margin-left: 5em;
+        width: calc(100% - 5em);
+    }
+}
+
+@keyframes slideRight {
+    0% {
+        margin-left: 5em;
+        width: calc(100% - 5em);
+    }
+
+    100% {
+        margin-left: 25em;
+        width: calc(100% - 20em - 5em)
+    }
+}
+
+/* .dashboard[guild].menuIsExtended {
+    margin-left: 5em !important;
+    width: calc(100% - 5em) !important;
+} */
+
+.dashboard[guild].menuIsExtended {
+    animation-name: slideRight;
+    animation-duration: .5s;
+    /* margin-left: 25em !important; */
+    /* width: calc(100% - 20em - 5em) !important; */
 }
 
 header.dashboardHeader {
@@ -104,5 +144,3 @@ img[alt="Construction"] {
     justify-content: center;
     align-items: center;
 }
-
-

@@ -11,7 +11,7 @@ html(lang="en")
         title Chthulu Dashboard
         block scripts 
         block styles 
-    body
+    body.preload
         .sidebar
                 header.sidebarHeader
                     .icon
@@ -27,6 +27,11 @@ html(lang="en")
                             .icon(gIcon)
                                 a.guild-icon(href=`/dashboard/${guild.id}`)
                                     img(src=guild.iconURL() alt="Server Avatar")
+                if isGuildDashboardPage
+                    .extendMenu(onclick="toggleMenu()")
+                        i.fas.fa-chevron-right
+                        i.fas.fa-chevron-right
+                        i.fas.fa-chevron-right
         .menu(guild=isGuildDashboardPage)
             header.menuHeader
                 span #{guildName}
@@ -64,7 +69,7 @@ html(lang="en")
                         a(href=`/dashboard/${selectedGuildId}/settings/miscellaneous`)   
                             .menuCategoryItem
                                 span # Miscellaneous
-        .dashboard(guild=isGuildDashboardPage)
+        .dashboard(guild=isGuildDashboardPage).menuIsExtended
             header.dashboardHeader
                 span #{headerTitle} Dashboard
                 button(onclick="window.location='/login';") Login

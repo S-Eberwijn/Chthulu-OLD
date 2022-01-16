@@ -23,6 +23,15 @@ document.addEventListener('DOMContentLoaded', (event) => {
         }
     });
 
+    document.getElementById('quest_description').addEventListener('input', () => {
+        text = document.getElementById('quest_description').value;
+        document.getElementById('quest_description').value = text.charAt(0).toUpperCase() + text.slice(1);
+    });
+
+
+
+
+
 
 
     let globalIDstorage;
@@ -264,7 +273,7 @@ function searchQuest(searchBar) {
     let correctQuestBox = searchBar.parentNode.nextSibling;
     let questsToSort = correctQuestBox.querySelectorAll('.questDiv.quest');
 
-    let filteredQuests = Array.prototype.slice.call(questsToSort).filter(quest => quest.querySelector('p.title').childNodes[0].textContent.trim().toLowerCase().includes(searchValue) || quest.querySelector('span.description').innerHTML.toLowerCase().includes(searchValue));
+    let filteredQuests = Array.prototype.slice.call(questsToSort).filter(quest => quest.querySelector('p.title').childNodes[0].textContent.trim().toLowerCase().includes(searchValue) || quest.querySelector('span.description')?.innerHTML.toLowerCase().includes(searchValue));
 
     // Hide Other Quests
     questsToSort.forEach(quest => {
@@ -276,22 +285,12 @@ function searchQuest(searchBar) {
 }
 
 function updateInput(input) {
-    // console.log(input.parentNode.parentNode.querySelector('.custom-option.selected')?.getAttribute('data-value'));
-
     let characterCountElement = input.parentNode.querySelector('p.characterCount');
-    let maxCharacterCount = parseInt(input.parentNode.querySelector('p.maxCharacterCount').innerText);
+    // let maxCharacterCount = parseInt(input.parentNode.querySelector('p.maxCharacterCount').innerText);
 
     characterCountElement.innerText = input.value.length;
 
-    if (input.value.length > maxCharacterCount) {
-        input.parentNode.classList.add('error')
-    } else {
-        if (input.parentNode.classList.contains('error')) {
-            input.parentNode.classList.remove('error')
-        }
-        checkIfFormIsReady(input.parentNode.parentNode.querySelector('.custom-option.selected'), document.getElementById('quest_title'), document.getElementById('quest_description'));
-    }
-
+    checkIfFormIsReady(input.parentNode.parentNode.querySelector('.custom-option.selected'), document.getElementById('quest_title'), document.getElementById('quest_description'));
 
 }
 
@@ -301,35 +300,57 @@ function checkIfFormIsReady(priorityElement, titleElement, descriptionElement) {
     let title = titleElement.value?.trim();
     let description = descriptionElement.value?.trim();
 
-    if ((priority != undefined && priority != null) && (title != undefined && title != null && title !== '') && (description != undefined && description != null && description !== '')) {
+    if ((priority != undefined && priority != null) && (title != undefined && title != null && title !== '')) {
         document.getElementById('create_quest').removeAttribute('disabled');
     } else {
         document.getElementById('create_quest').setAttribute('disabled', 'true');
     }
 }
 
-function handleSubmit(buttonElement) {
+function createQuest(buttonElement) {
     let priority = document.querySelector('.custom-option.selected')?.getAttribute('data-value');
     let title = document.getElementById('quest_title')?.value?.trim();
     let description = document.getElementById('quest_description')?.value?.trim();
-    // event.preventDefault();
-    console.log('test')
-    // if(this.checkValidInput()){
-    try {
-        console.log()
-        axios.post('/dashboard/532525442201026580/informational/quests', {
-            "priority": priority,
-            "title": title,
-            "description": description,
-        })
-            .then(response => {
-                console.log('complete')
-                window.location = './quests'
+
+    buttonElement.value = '';
+    document.querySelector(`.createButton>i.fa-spinner`).classList.add('active')
+    buttonElement.setAttribute('disabled', 'true')
+
+    console.log(`Clicking "Create"-button`)
+    setTimeout(() => {
+        try {
+            axios.post(`/dashboard/${guildID}/informational/quests`, {
+                "priority": priority,
+                "title": title,
+                "description": description,
+            }).then(response => {
+                if (response.status === 201) {
+                    console.log(`Creation of quest complete`)
+                    window.location = './quests'
+                } else {
+                    console.log("Something went wrong!; ERROR STATUS: " + response.status);
+                }
             })
+        } catch (error) {
+            console.log("error occured during create");
+        };
+    }, 250);
+
+}
+
+function deleteQuest(trashElement) {
+    let questElement = trashElement.parentNode.parentNode;
+    let quest_id = questElement.getAttribute('id');
+    uncompletedQuestsCount.innerText = uncompletedQuestsCount.innerText - 1
+    console.log(quest_id)
+
+    try {
+        axios.delete(`/dashboard/${guildID}/informational/quests`, { data: { 'quest_id': quest_id } }).then(response => {
+            if (response.status === 201) {
+                questElement.remove();
+            }
+        })
     } catch (error) {
-        console.log("error occured during post");
+        console.log("error occured during delete");
     };
-    // }else{
-    //     toast.error("not all fields are filled in correctly");
-    // }   
 }
