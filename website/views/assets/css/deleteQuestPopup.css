@@ -1,0 +1,194 @@
+input[type="checkbox"] {
+    display: none;
+}
+
+input[type="checkbox"]:checked~.deleteQuestModal {
+    display: flex;
+}
+
+input[type="checkbox"]:checked~.modal-background {
+    display: block;
+}
+
+.modal-background {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: none;
+    /* display: block; */
+    z-index: 9998;
+
+}
+
+.deleteQuestModal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    width: 300px;
+    height: 150px;
+    background-color: var(--content-color);
+    display: none;
+    /* display: flex; */
+    flex-direction: column;
+    cursor: default;
+    z-index: 9999;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.modal-content {
+    margin-left: 10%;
+    margin-right: 10%;
+
+    height: calc(100% - 50px);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: calc(100% - 10% - 10%);
+    justify-content: space-evenly;
+}
+
+.modal-content input {
+    margin-left: 0;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.deleteButton {
+    width: 45%;
+    height: 50%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.deleteButton>i.fa-spinner {
+    position: absolute;
+    display: none !important;
+    color: var(--content-color);
+}
+
+.deleteButton>i.fa-spinner.active {
+    display: block;
+}
+
+.deleteQuestModal .modal-content input[type="button"] {
+    padding-left: revert;
+    border-radius: 20px;
+    cursor: pointer;
+    background-color: rgb(240, 77, 77);
+    border: none;
+    color: var(--content-color);
+    font-weight: bolder;
+    outline: 0;
+    height: 100%;
+    width: 100%;
+    box-shadow: none;
+}
+
+.deleteQuestModal .modal-content .cancelButton {
+    width: 45%;
+    height: 50%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.deleteQuestModal .modal-content .cancelButton label {
+    /* padding-left: revert; */
+    border-radius: 20px;
+    cursor: pointer;
+    background-color: var(--sidebar-color);
+    border: none;
+    color: var(--text-color);
+    /* font-weight: normal; */
+    font-size: .8rem;
+    outline: 0;
+    height: 100%;
+    width: 100%;
+    box-shadow: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.deleteQuestModal .modal-content form {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header {
+    background-color: var(--menu-color);
+    color: var(--text-color);
+    /* border-bottom: 1px solid #dddddd; */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 50px;
+    user-select: none;
+}
+
+.modal-header h3 {
+    margin: 0;
+    box-sizing: border-box;
+    padding-left: 6%;
+    line-height: 50px;
+    color: var(--text-color);
+    font-size: 1.2 rem;
+    display: inline-block;
+}
+
+.modal-header label {
+    box-sizing: border-box;
+    /* border-left: 1px solid #dddddd; */
+    float: right;
+    line-height: 50px;
+    padding: 0 15px 0 15px;
+    cursor: pointer;
+}
+
+.modal-header label:hover i {
+    color: var(--placeholder-text-color);
+}
+
+.trash-label {
+    user-select: none;
+    color: var(--placeholder-text-color);
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    /* background-color: red; */
+    transition: all .2s ease;
+}
+.trash-label i {
+    transition: all .5s ease;
+}
+
+.trash-label:hover i{
+    
+    color: orangered;
+}
+
+.label-input-section label {
+    position: relative;
+}
+
+.deleteQuestModal p {
+    font-size: .8rem;
+}

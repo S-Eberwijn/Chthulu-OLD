@@ -6,5 +6,5 @@
         if (quest.quest_description)
             span.description #{quest.quest_description}
     .options 
-        i(onclick="deleteQuest(this)").fas.fa-trash
+        include ../components/deleteQuestPopup.pug
         i.fas.fa-edit

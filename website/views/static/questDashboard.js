@@ -36,6 +36,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
     let globalIDstorage;
 
+    let globalQuestID;
+
     // TESTING PURPOSES
     let count = 0;
 
@@ -339,18 +341,22 @@ function createQuest(buttonElement) {
 }
 
 function deleteQuest(trashElement) {
-    let questElement = trashElement.parentNode.parentNode;
-    let quest_id = questElement.getAttribute('id');
-    uncompletedQuestsCount.innerText = uncompletedQuestsCount.innerText - 1
-    console.log(quest_id)
-
+    let questElement = document.querySelector(`.quest[id="${globalQuestID}"]`);
     try {
-        axios.delete(`/dashboard/${guildID}/informational/quests`, { data: { 'quest_id': quest_id } }).then(response => {
+        axios.delete(`/dashboard/${guildID}/informational/quests`, { data: { 'quest_id': globalQuestID } }).then(response => {
             if (response.status === 201) {
                 questElement.remove();
+                uncompletedQuestsCount.innerText = uncompletedQuestsCount.innerText - 1;
+
+                window.location = './quests';
             }
         })
     } catch (error) {
         console.log("error occured during delete");
     };
+}
+
+function updateGlobalQuestId(trashIconElement) {
+    let questElement = trashIconElement.parentNode.parentNode;
+    globalQuestID = questElement.getAttribute('id')
 }

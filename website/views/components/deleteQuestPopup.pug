@@ -1,0 +1,16 @@
+input(type="checkbox" id="deleteQuestModal")
+label(for="deleteQuestModal" class="trash-label" onclick="updateGlobalQuestId(this)")
+    i.fas.fa-trash
+label(for="deleteQuestModal" class="modal-background")
+.deleteQuestModal 
+    .modal-header
+        h3 Are you sure?
+        label(for="deleteQuestModal")
+            i.fas.fa-times
+    .modal-content
+        form
+            .deleteButton
+                input(id="delete_quest" type="button" value="Delete" onclick="deleteQuest(this)")
+                i.fa.fa-spinner.fa-spin.fa-align-center
+            .cancelButton
+                label(for="deleteQuestModal") Cancel

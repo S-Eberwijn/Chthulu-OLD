@@ -13,7 +13,8 @@ block styles
         include ./assets/css/sidebar.css
         include ./assets/css/menu.css
         include ./assets/css/dashboard.css
-        include ./assets/css/popup.css
+        include ./assets/css/createQuestPopup.css
+        include ./assets/css/deleteQuestPopup.css
         include ./assets/css/questDashboard.css
 
 
@@ -43,14 +44,8 @@ block dashboardContent
         .questBox(id="uncompletedQuestsBox")
             each quest in uncompletedQuests
                 include ./components/quest.pug
-
             .questDiv.addNewQuest(id="addNewQuestDiv" draggable="false")
-                
-                include ./components/popup.pug
-
-                
-                
-            
+                include ./components/createQuestPopup.pug
         h1 
             span(id="completedQuestsCount").questCount #{completedQuests.length} 
             span.questBoxTitle Past Activities

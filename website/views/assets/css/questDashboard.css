@@ -63,8 +63,8 @@ input::placeholder {
     padding-left: 25px;
     padding-right: 0px;
     max-height: 290px;
-    z-index: 100;
-    width: 100%;
+    /* z-index: 100; */
+    width: calc(100% - 20px);
     /* border: 5px dashed var(--content-color); */
     display: flex;
     gap: 5px;
@@ -74,13 +74,13 @@ input::placeholder {
 }
 
 .questBox .questDiv {
-    z-index: -10;
+    /* z-index: 1; */
     height: 50px;
     position: relative;
     cursor: pointer;
     min-height: 50px;
     border: 2px solid transparent;
-    width: 100%;
+    width: calc(100% - 15px);
     background-color: var(--menu-color);
     display: flex;
     flex-direction: row;
@@ -166,8 +166,8 @@ input::placeholder {
     content: "";
     position: absolute;
     top: 0;
-    left: 0;
-    width: 98%;
+    left: 25px;
+    width: calc(100% - 40px);
     height: 95%;
     border: 3px dashed var(--menu-color) !important;
 }
@@ -210,7 +210,7 @@ input::placeholder {
 }
 
 .questDiv .options i {
-    z-index: 100;
+    /* z-index: 100; */
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -237,17 +237,19 @@ input::placeholder {
     pointer-events: none;
 }
 
+/* #uncompletedQuestsBox .questDiv,
 #completedQuestsBox .questDiv {
     z-index: 1 !important;
-}
+} */
 
 #completedQuestsBox .options {
     height: 100%;
 }
 
 #uncompletedQuestsBox {
-    z-index: 1000 !important;
+    z-index: 100 !important;
 }
+
 
 i.fas.fa-chevron-up {
     display: flex;
@@ -375,10 +377,11 @@ option {
 option {
     color: var(--text-color);
 }
-
-i.fa-trash:hover{
+/* 
+trash-label {
     transition: all .2s ease;
 }
-i.fa-trash:hover{
+
+trash-label:hover {
     color: orangered;
-}
+} */
