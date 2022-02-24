@@ -1,13 +1,12 @@
-input(type="checkbox" id="deleteQuestModal")
-label(for="deleteQuestModal" class="trash-label" onclick="updateGlobalQuestId(this)")
-    i.fas.fa-trash
-label(for="deleteQuestModal" class="modal-background")
+input(action="delete" type="checkbox" id="deleteQuestModal")
+label(for="deleteQuestModal" class="delete-modal-background")
 .deleteQuestModal 
     .modal-header
         h3 Are you sure?
         label(for="deleteQuestModal")
             i.fas.fa-times
     .modal-content
+        p.questDeleteTitle 
         form
             .deleteButton
                 input(id="delete_quest" type="button" value="Delete" onclick="deleteQuest(this)")

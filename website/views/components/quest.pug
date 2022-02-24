@@ -1,10 +1,40 @@
-.questDiv(id=quest.quest_id quest_importance_value=quest.quest_importance_value quest_started=quest.createdAt).quest
-    .questTitleDiv
-        p.title #{quest.quest_name}
-            - var createdAt = quest.createdAt.toISOString().split('T')[0].split('-').reverse().join('/')
-            span.createdAt started #{createdAt}
-        if (quest.quest_description)
-            span.description #{quest.quest_description}
-    .options 
-        include ../components/deleteQuestPopup.pug
-        i.fas.fa-edit
+if (quest.quest_description)
+    .questDiv(id=quest.quest_id quest_importance_value=quest.quest_importance_value quest_started=quest.createdAt).quest
+        .questTitleDiv
+            p.title #{quest.quest_name}
+                - var createdAt = quest.createdAt.toISOString().split('T')[0].split('-').reverse().join('/')
+                span.createdAt started #{createdAt}
+            if (quest.quest_description)
+                span.description #{quest.quest_description}
+        .options 
+            if (quest.quest_status === "OPEN")
+                label(action="delete" for="deleteQuestModal" class="trash-label" onclick="updateGlobalQuestId(this)")
+                    i.fas.fa-trash
+                label(action="edit" for="editQuestModal" class="edit-label" onclick="updateGlobalQuestId(this)")
+                    i.fas.fa-edit
+            else if (quest.quest_status === "DONE")
+                i.far.fa-check-circle(style="color: lightgreen; z-index: 100;")
+            else if (quest.quest_status === "EXPIRED")
+                i.far.fa-clock(style="color: orange; z-index: 100;")
+            else if (quest.quest_status === "FAILED")
+                i.fas.fa-times(style="color: red; z-index: 100;")
+else 
+    .questDiv(id=quest.quest_id quest_importance_value=quest.quest_importance_value quest_started=quest.createdAt).quest.onlyTitle
+        .questTitleDiv
+            p.title #{quest.quest_name}
+                - var createdAt = quest.createdAt.toISOString().split('T')[0].split('-').reverse().join('/')
+                span.createdAt started #{createdAt}
+            if (quest.quest_description)
+                span.description #{quest.quest_description}
+        .options 
+            if (quest.quest_status === "OPEN")
+                label(action="delete" for="deleteQuestModal" class="trash-label" onclick="updateGlobalQuestId(this)")
+                    i.fas.fa-trash
+                label(action="edit" for="editQuestModal" class="edit-label" onclick="updateGlobalQuestId(this)")
+                    i.fas.fa-edit
+            else if (quest.quest_status === "DONE")
+                i.far.fa-check-circle(style="color: lightgreen; z-index: 100;")
+            else if (quest.quest_status === "EXPIRED")
+                i.far.fa-clock(style="color: orange; z-index: 100;")
+            else if (quest.quest_status === "FAILED")
+                i.fas.fa-times(style="color: red; z-index: 100;")

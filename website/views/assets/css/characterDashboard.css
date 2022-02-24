@@ -1,16 +1,3 @@
-.dashboard {
-    height: 100%;
-    background-color: var(--content-color);
-    color: var(--text-color);
-    box-sizing: border-box;
-    position: absolute;
-    left: 0;
-    top: 0;
-    margin-left: 5em;
-    width: calc(100% - 5em);
-    z-index: 20;
-}
-
 /* Searchbar */
 input {
     border: 2px solid var(--sidebar-color);
@@ -29,11 +16,6 @@ input::placeholder {
     color: #ddd;
 }
 
-
-.dashboard[guild] {
-    margin-left: 25em !important;
-    width: calc(100% - 20em - 5em) !important;
-}
 
 header.dashboardHeader {
     padding: 1.3em;
@@ -105,13 +87,20 @@ img[alt="Construction"] {
 
 .dashboardContent[characters] h1 {
     width: 100%;
+    height: 70px;
     margin: 0;
     margin-left: 0px;
     text-align: center;
     display: flex;
     align-items: center;
-    justify-content: center;
+    /* justify-content: center; */
+    text-indent: 20px;
     position: relative;
+    user-select: none;
+    border: 3px solid var(--sidebar-color);
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+
 }
 
 .dashboardContent[characters] h1 input {
@@ -138,13 +127,136 @@ input::placeholder {
     color: #ddd;
 }
 
-.dashboardContent[characters] .characterBox {
-    height: 650px;
+.charactersList {
     width: 100%;
+    max-height: calc(100% - 70px);
+    border: 3px solid var(--sidebar-color);
+    border-top: 0;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    /* justify-content: center; */
+    gap: 5px;
+    /* align-items: flex-start; */
+    padding-top: 10px;
+    padding-bottom: 10px;
+
+    padding-left: 20px;
+    box-sizing: border-box;
+    overflow-y: scroll;
+}
+
+.charactersList::-webkit-scrollbar {
+    width: 15px;
+    /* width of the entire scrollbar */
+}
+
+.charactersList::-webkit-scrollbar-track {
+    background: transparent;
+    /* color of the tracking area */
+}
+
+.charactersList::-webkit-scrollbar-thumb {
+    background-color: var(--sidebar-color);
+    /* color of the scroll thumb */
+    border-radius: 15px;
+    /* roundness of the scroll thumb */
+    border: 5px solid transparent;
+    background-clip: padding-box;
+}
+
+.characterItem.selected {
+    background-color: var(--sidebar-color) !important;
+    cursor: default !important;
+}
+
+.charactersList .characterItem {
+    width: 100%;
+    min-width: 370px;
+    height: 30px;
+    background-color: var(--menu-color);
+    transition: all .275s ease;
+    display: flex;
     align-items: center;
     justify-content: space-between;
+    border-radius: 3px;
+}
+
+.charactersList .characterItem .classIcon {
+    width: 10%;
+    min-width: 40px;
+    height: 100%;
+    /* background-color: red; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.charactersList .characterItem .classIcon img {
+    height: 70%;
+    width: auto;
+}
+
+.charactersList .characterItem .characterFullName {
+    width: calc(100% - 10% - 70px);
+    min-width: 250px;
+    height: 100%;
+    /* background-color: yellow; */
+    display: flex;
+    align-items: center;
+    /* justify-content: flex-start; */
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.charactersList .characterItem .characterFullName p {
+    margin: 0;
+}
+
+.charactersList .characterItem .characterLevel {
+    width: 70px;
+    min-width: 70px;
+    height: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+    /* background-color: blue; */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.charactersList .characterItem .characterLevel p {
+    margin: 0;
+}
+
+.charactersList .characterItem:hover {
+    cursor: pointer;
+    background-color: #42494c;
+
+}
+
+.dashboardContent[characters] .characterBox {
+    height: 75%;
+    width: 60%;
+    display: flex;
+    z-index: 1;
+    /* flex-direction: row; */
+    align-items: center;
+    /* justify-content: space-between; */
+    /* For the informational characters page */
+}
+
+.dashboardContent[characters] .characterSelectionBox {
+    height: 75%;
+    width: 30%;
+    display: flex;
+    z-index: 1;
+    /* flex-direction: row; */
+    align-items: center;
+    /* justify-content: space-between; */
     /* For the informational characters page */
 }
 
@@ -161,18 +273,100 @@ input::placeholder {
     position: absolute;
     height: 100%;
     width: 400px;
+    z-index: 3;
+
+    /* transition: all .75s; */
+    /* overflow: hidden; */
 }
 
 .dashboardContent[characters] .cardStack .characterCardHolder:first-child {
-    transform: translate(-50%);
-    z-index: -5;
-    opacity: .5;
+    transition: transform;
+    transition-duration: .75s;
+    /* transition-delay: 100ms; */
+    transform: translate(-30%);
+    z-index: 2;
+}
+
+.dashboardContent[characters] .cardStack .characterCardHolder:nth-of-type(2) {
+    transform: translate(-30%);
+    z-index: 1;
+}
+
+.dashboardContent[characters] .cardStack .characterCardHolder::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    transition: all 0.5s;
+    z-index: 5;
+}
+
+.dashboardContent[characters] .cardStack .characterCardHolder:first-child::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    transform: translate(0, -50%) scale(2.5);
+    left: 0;
+    color: var(--text-color);
+    opacity: 1;
+    z-index: 6;
+    font-family: 'Poppins', 'FontAwesome', sans-serif;
+    padding-left: 5%;
+    transition: all 0.5s;
+}
+
+.dashboardContent[characters] .cardStack .characterCardHolder:first-child:hover {
+    transform: translate(-40%);
+    cursor: pointer;
+}
+
+.dashboardContent[characters] .cardStack .characterCardHolder:first-child:hover::before,
+.dashboardContent[characters] .cardStack .characterCardHolder:nth-last-child(2):hover::before {
+    transform: translate(0, -50%) scale(3);
+}
+
+.dashboardContent[characters] .cardStack .characterCardHolder:first-child:hover::after,
+.dashboardContent[characters] .cardStack .characterCardHolder:nth-last-child(2):hover::after {
+    background-color: rgba(0, 0, 0, 0.3);
+    transition-delay: 50ms;
+
 }
 
 .dashboardContent[characters] .cardStack .characterCardHolder:nth-last-child(2) {
-    transform: translate(50%);
-    z-index: -5;
-    opacity: .5;
+    transition: transform;
+    transition-duration: .75s;
+    /* transition-delay: 2s; */
+    transform: translate(30%);
+    z-index: 2;
+}
+
+.dashboardContent[characters] .cardStack .characterCardHolder:nth-last-child(3) {
+    transform: translate(30%);
+    z-index: 1;
+}
+
+.dashboardContent[characters] .cardStack .characterCardHolder:nth-last-child(2)::before,
+.dashboardContent[characters] .cardStack .characterCardHolder:nth-last-child(3)::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    transform: translate(0, -50%) scale(2.5);
+    right: 0;
+    color: var(--text-color);
+    opacity: 1;
+    z-index: 6;
+    font-family: 'Poppins', 'FontAwesome', sans-serif;
+    padding-right: 5%;
+    transition: all 0.5s;
+}
+
+.dashboardContent[characters] .cardStack .characterCardHolder:nth-last-child(2):hover {
+    transform: translate(40%);
+    cursor: pointer;
 }
 
 .dashboardContent[characters] .cardStack .characterCardHolder .characterCard {
@@ -199,6 +393,13 @@ input::placeholder {
     -o-user-select: none;
     /* The rule below is implemented in most browsers by now */
     user-select: none;
+    z-index: 10;
+    /* overflow: hidden; */
+}
+
+.dashboardContent[characters] .cardStack .characterCardHolder:not(:last-child) .characterCard {
+    z-index: 0;
+
 }
 
 .dashboardContent[characters] .cardStack .characterCard span.characterName {
@@ -313,4 +514,319 @@ li:hover::before {
 ul.arrow:active li::before {
     /* animation css */
     transform: skew(10deg, 10deg)
+}
+
+.rightCardToTopMiddle {
+    animation-name: rightCardToTopMiddle;
+    animation-duration: .75s;
+    animation-fill-mode: forwards;
+}
+
+.leftCardToTopMiddle {
+    animation-name: leftCardToTopMiddle;
+    animation-duration: .75s;
+    animation-fill-mode: forwards;
+}
+
+@keyframes leftCardToTopMiddle {
+    0% {
+        transform: translate(-40%);
+        z-index: 2;
+    }
+
+    25% {
+        transform: translate(-60%);
+    }
+
+    50% {
+        transform: translate(0%);
+        z-index: 10;
+    }
+
+    75% {
+        transform: translate(0%);
+    }
+
+    100% {
+        transform: translate(0%);
+        z-index: 10;
+    }
+}
+
+.characterCardContentVisible {
+    animation-name: characterCardContentVisible;
+    animation-duration: .75s;
+    animation-fill-mode: forwards;
+}
+
+.characterCardContentDarkened {
+    animation-name: characterCardContentDarkened;
+    animation-duration: .75s;
+    animation-fill-mode: forwards;
+}
+
+@keyframes characterCardContentVisible {
+    from {
+        z-index: 0;
+    }
+
+    to {
+        z-index: 10;
+
+
+    }
+}
+
+@keyframes characterCardContentDarkened {
+    from {
+        z-index: 10;
+    }
+
+    to {
+        z-index: 0;
+    }
+}
+
+@keyframes rightCardToTopMiddle {
+    0% {
+        transform: translate(40%);
+        z-index: 2;
+    }
+
+    25% {
+        transform: translate(60%);
+    }
+
+    50% {
+        transform: translate(0%);
+        z-index: 10;
+    }
+
+    75% {
+        transform: translate(0%);
+    }
+
+    100% {
+        transform: translate(0%);
+        z-index: 10;
+    }
+}
+
+.middleCardToBehindLeft {
+    animation-name: middleCardToBehindLeft;
+    animation-duration: .75s;
+    /* animation-delay: 400ms; */
+    animation-fill-mode: forwards;
+}
+
+
+
+@keyframes middleCardToBehindLeft {
+    0% {
+        transform: translate(0%);
+        z-index: 4;
+    }
+
+    25% {
+        transform: translate(-60%);
+    }
+
+    50% {
+        transform: translate(-30%);
+        z-index: 3;
+    }
+
+    75% {
+        transform: translate(-30%);
+    }
+
+    100% {
+        transform: translate(-30%);
+        z-index: 3;
+    }
+}
+
+.middleCardToBehindRight {
+    animation-name: middleCardToBehindRight;
+    animation-duration: .75s;
+    /* animation-delay: 400ms; */
+    animation-fill-mode: forwards;
+}
+
+
+
+@keyframes middleCardToBehindRight {
+    0% {
+        transform: translate(0%);
+        z-index: 4;
+    }
+
+    25% {
+        transform: translate(60%);
+    }
+
+    50% {
+        transform: translate(30%);
+        z-index: 3;
+    }
+
+    75% {
+        transform: translate(30%);
+    }
+
+    100% {
+        transform: translate(30%);
+        z-index: 3;
+    }
+}
+
+.leftCardToBehindMiddle {
+    animation-name: leftCardToBehindMiddle;
+    animation-duration: 1s;
+    animation-fill-mode: forwards;
+}
+
+
+
+@keyframes leftCardToBehindMiddle {
+    0% {
+        transform: translate(-30%);
+    }
+
+    25% {
+        transform: translate(-30%);
+    }
+
+    50% {
+        transform: translate(0%);
+    }
+
+    75% {
+        transform: translate(0%);
+    }
+
+    100% {
+        transform: translate(0%);
+    }
+}
+
+.rightCardToBehindMiddle {
+    animation-name: rightCardToBehindMiddle;
+    animation-duration: 1s;
+    animation-fill-mode: forwards;
+}
+
+
+
+@keyframes rightCardToBehindMiddle {
+    0% {
+        transform: translate(30%);
+    }
+
+    25% {
+        transform: translate(30%);
+    }
+
+    50% {
+        transform: translate(0%);
+    }
+
+    75% {
+        transform: translate(0%);
+    }
+
+    100% {
+        transform: translate(0%);
+    }
+}
+
+.behindMiddleCardToLeft {
+    animation-name: behindMiddleCardToLeft;
+    animation-duration: 1s;
+    animation-fill-mode: forwards;
+}
+
+@keyframes behindMiddleCardToLeft {
+    0% {
+        transform: translate(0%);
+    }
+
+    25% {
+        transform: translate(0%);
+    }
+
+    50% {
+        transform: translate(-30%);
+    }
+
+    75% {
+        transform: translate(-30%);
+    }
+
+    100% {
+        transform: translate(-30%);
+    }
+}
+
+.behindMiddleCardToRight {
+    animation-name: behindMiddleCardToRight;
+    animation-duration: 1s;
+    animation-fill-mode: forwards;
+}
+
+@keyframes behindMiddleCardToRight {
+    0% {
+        transform: translate(0%);
+    }
+
+    25% {
+        transform: translate(0%);
+    }
+
+    50% {
+        transform: translate(30%);
+    }
+
+    75% {
+        transform: translate(30%);
+    }
+
+    100% {
+        transform: translate(30%);
+    }
+}
+
+
+@keyframes characterCardContentToBlank {
+    from {
+        opacity: 1
+    }
+
+    to {
+
+
+        opacity: 0
+    }
+}
+
+@keyframes characterCardContentToContent {
+    from {
+        z-index: 10;
+    }
+
+    to {
+        z-index: 0;
+    }
+}
+
+.characterCardContentToBlank {
+    animation-name: characterCardContentToBlank;
+    animation-duration: .75s;
+    animation-fill-mode: forwards;
+}
+
+.characterCardContentToContent {
+    animation-name: characterCardContentToContent;
+    animation-duration: .75s;
+    animation-fill-mode: forwards;
 }

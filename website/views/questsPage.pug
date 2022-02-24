@@ -3,9 +3,12 @@ block scripts
     script
         include ./static/theme.js
         include ./static/questDashboard.js
-    script var uncompletedQuests = !{JSON.stringify(uncompletedQuests)};
+    script 
+        | var uncompletedQuests = !{JSON.stringify(uncompletedQuests)};
+        | var completedQuests = !{JSON.stringify(completedQuests)};
+        | console.log(completedQuests)
         | var guildID = !{JSON.stringify(selectedGuildId)};
-        | console.log(guildID)
+        
 
 block styles 
     style 
@@ -14,13 +17,16 @@ block styles
         include ./assets/css/menu.css
         include ./assets/css/dashboard.css
         include ./assets/css/createQuestPopup.css
+        include ./assets/css/editQuestPopup.css
+        include ./assets/css/statusQuestPopup.css
         include ./assets/css/deleteQuestPopup.css
         include ./assets/css/questDashboard.css
 
 
 
 block dashboardContent
-    
+    include ./components/deleteQuestPopup.pug
+    include ./components/editQuestPopup.pug
     .dashboardContent(quests=true)
         h1 
             span(id="uncompletedQuestsCount").questCount #{uncompletedQuests.length}
@@ -49,5 +55,10 @@ block dashboardContent
         h1 
             span(id="completedQuestsCount").questCount #{completedQuests.length} 
             span.questBoxTitle Past Activities
+            include ./components/statusQuestPopup.pug
             //- input(placeholder="Search Quest", oninput="updateInput(this.value)", spellcheck="false")
         .questBox(id="completedQuestsBox")
+            each quest in completedQuests
+                include ./components/quest.pug
+            
+        

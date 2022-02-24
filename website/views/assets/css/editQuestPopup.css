@@ -2,15 +2,15 @@ input[type="checkbox"] {
     display: none;
 }
 
-input[action="delete"]:checked~.deleteQuestModal {
+input[action="edit"]:checked~.editQuestModal {
     display: flex;
 }
 
-input[action="delete"]:checked~.delete-modal-background {
+input[action="edit"]:checked~.edit-modal-background {
     display: block;
 }
 
-.delete-modal-background {
+.edit-modal-background {
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.7);
@@ -23,15 +23,15 @@ input[action="delete"]:checked~.delete-modal-background {
 
 }
 
-.deleteQuestModal {
+.editQuestModal {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
     margin: auto;
-    width: 300px;
-    height: 150px;
+    width: 400px;
+    height: 500px;
     background-color: var(--content-color);
     display: none;
     /* display: flex; */
@@ -51,7 +51,7 @@ input[action="delete"]:checked~.delete-modal-background {
     flex-direction: column;
     align-items: flex-start;
     width: calc(100% - 10% - 10%);
-    justify-content: space-evenly;
+    /* justify-content: space-evenly; */
 }
 
 .modal-content input {
@@ -60,30 +60,30 @@ input[action="delete"]:checked~.delete-modal-background {
     padding: 5px;
 }
 
-.deleteButton {
-    width: 45%;
-    height: 50%;
+.editButton {
+    width: 100%;
+    height: 10%;
     position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.deleteButton>i.fa-spinner {
+.editButton>i.fa-spinner {
     position: absolute;
     display: none !important;
     color: var(--content-color);
 }
 
-.deleteButton>i.fa-spinner.active {
+.editButton>i.fa-spinner.active {
     display: block !important;
 }
 
-.deleteQuestModal .modal-content input[type="button"] {
+.editQuestModal .modal-content input[type="button"] {
     padding-left: revert;
     border-radius: 20px;
     cursor: pointer;
-    background-color: rgb(240, 77, 77);
+    background-color: rgb(51, 170, 250);
     border: none;
     color: var(--content-color);
     font-weight: bolder;
@@ -93,6 +93,11 @@ input[action="delete"]:checked~.delete-modal-background {
     box-shadow: none;
 }
 
+.editQuestModal .modal-content input[type="button"]:disabled {
+    cursor: default;
+    background-color: rgb(94, 186, 216);
+}
+/* 
 .deleteQuestModal .modal-content .cancelButton {
     width: 45%;
     height: 50%;
@@ -102,14 +107,12 @@ input[action="delete"]:checked~.delete-modal-background {
     justify-content: center;
 }
 
-.deleteQuestModal .modal-content .cancelButton label {
-    /* padding-left: revert; */
+.editQuestModal .modal-content .cancelButton label {
     border-radius: 20px;
     cursor: pointer;
     background-color: var(--sidebar-color);
     border: none;
     color: var(--text-color);
-    /* font-weight: normal; */
     font-size: .8rem;
     outline: 0;
     height: 100%;
@@ -118,16 +121,16 @@ input[action="delete"]:checked~.delete-modal-background {
     display: flex;
     justify-content: center;
     align-items: center;
-}
+} */
 
 
-.deleteQuestModal .modal-content form {
+.editQuestModal .modal-content form {
     height: 100%;
     width: 100%;
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: left;
 }
 
 .modal-header {
@@ -164,7 +167,7 @@ input[action="delete"]:checked~.delete-modal-background {
     color: var(--placeholder-text-color);
 }
 
-.trash-label {
+.edit-label {
     user-select: none;
     color: var(--placeholder-text-color);
     width: 45%;
@@ -177,23 +180,79 @@ input[action="delete"]:checked~.delete-modal-background {
     transition: all .2s ease;
 }
 
-.trash-label i {
+.edit-label i {
     transition: all .5s ease;
 }
 
-.trash-label:hover i {
+.edit-label:hover i {
 
-    color: orangered;
+    color: rgb(51, 170, 250);
 }
 
 .label-input-section label {
     position: relative;
 }
-
+/* 
 .deleteQuestModal p {
     font-size: .8rem;
-}
+} */
 
 .modal-content p.questDeleteTitle {
     margin-bottom: 0;
+}
+
+#edit_quest_description {
+    height: 200px;
+    padding: 5px;
+    resize: none;
+    border: none;
+    box-shadow: inset 0 0 0 2px var(--menu-color);
+    color: var(--text-color);
+    background-color: var(--content-color);
+
+    border-radius: 5px;
+    color: var(--placeholder-text-color);
+    transition: color 0.1s ease-out;
+    caret-color: var(--menu-color);
+}
+
+#edit_quest_description:focus {
+    outline: 0;
+    color: var(--text-color);
+}
+
+#edit_quest_description:hover::placeholder {
+    color: var(--text-color);
+}
+
+#edit_quest_description:hover {
+    color: var(--text-color);
+}
+
+#edit_quest_description::placeholder {
+    transition: color 0.1s ease-out;
+    color: var(--placeholder-text-color);
+}
+
+#edit_quest_description::first-letter {
+    text-transform: uppercase;
+}
+
+#edit_quest_description::-webkit-scrollbar {
+    width: 15px;
+    /* width of the entire scrollbar */
+}
+
+#edit_quest_description::-webkit-scrollbar-track {
+    background: transparent;
+    /* color of the tracking area */
+}
+
+#edit_quest_description::-webkit-scrollbar-thumb {
+    background-color: var(--sidebar-color);
+    /* color of the scroll thumb */
+    border-radius: 15px;
+    /* roundness of the scroll thumb */
+    border: 5px solid transparent;
+    background-clip: padding-box;
 }

@@ -1,7 +1,7 @@
 .characterCardHolder
-    .characterCard(unselectable="on")
+    .characterCard(id=`card-${character.character_id}` unselectable="on")
         span.characterName #{character.name} (#{character.age})
-        span.characterLevel #{character.level}
+        span.characterLevel #{character.level || '?'}
         span.characterDescription #{character.description}
         .infoBundle
             span Race

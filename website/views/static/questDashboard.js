@@ -1,6 +1,13 @@
-document.addEventListener('DOMContentLoaded', (event) => {
+const fadeAnimationDuration = 200;
+let globalIDstorage;
 
-    document.querySelector('.select-wrapper').addEventListener('click', function () {
+let globalQuestID;
+document.addEventListener('DOMContentLoaded', (event) => {
+    //Edit to use multiple custom select boxes
+    document.querySelector('.modal .select-wrapper').addEventListener('click', function () {
+        this.querySelector('.select').classList.toggle('open');
+    })
+    document.querySelector('.editQuestModal .select-wrapper').addEventListener('click', function () {
         this.querySelector('.select').classList.toggle('open');
     })
 
@@ -10,8 +17,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
                 this.parentNode.querySelector('.custom-option.selected')?.classList.remove('selected');
                 this.classList.add('selected');
                 this.parentNode.parentNode.querySelector('.select_trigger span').textContent = this.textContent.replace('|', '').trim();
-
-                checkIfFormIsReady(this, document.getElementById('quest_title'), document.getElementById('quest_description'));
+                checkIfFormIsReady(this, this.parentNode.parentNode.parentNode.parentNode.parentNode.querySelector('input[type="text"]'), this.parentNode.parentNode.parentNode.parentNode.parentNode.querySelector('textarea'));
             }
         })
     }
@@ -34,9 +40,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
 
 
-    let globalIDstorage;
-
-    let globalQuestID;
 
     // TESTING PURPOSES
     let count = 0;
@@ -44,49 +47,59 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
     function handleDragStart(e) {
         this.style.opacity = '0.4';
-        let quests = document.querySelectorAll('.questBox .questDiv.quest');
-        quests.forEach(quest => {
-            if (this != quest) {
-                quest.style.pointerEvents = "none";
-            }
-        })
+        // let quests = document.querySelectorAll('.questBox .questDiv.quest');
+        // quests.forEach(quest => {
+        //     if (this != quest) {
+        //         quest.style.pointerEvents = "none";
+        //     }
+        // })
         document.getElementById("completedQuestsBox").style.pointerEvents = "all";
         e.dataTransfer.effectAllowed = 'move';
         e.dataTransfer.setData('text/plain', e.target.id);
         globalIDstorage = e.target.id;
+        globalQuestID = e.target.id;
+        // console.log(globalQuestID)
     }
 
     function handleDragEnd(e) {
-        this.style.opacity = '1';
-        if (this.parentNode === document.getElementById("completedQuestsBox")) {
-            this.style.pointerEvents = "none";
-            let optionsElement = this.querySelector('.options');
-            while (optionsElement.firstChild) {
-                optionsElement.firstChild.remove()
-            }
+        // Does not get executed right now, due to new modal showing
+        // TODO add this to statusChangedQuest()
 
-            // TESTING PURPOSES
-            if (count % 3 === 0) {
-                optionsElement.appendChild(createCompleteIcon())
 
-            } else if (count % 3 === 1) {
-                optionsElement.appendChild(createFailedIcon())
+        // this.style.opacity = '1';
+        // if (this.parentNode === document.getElementById("completedQuestsBox")) {
+        //     this.style.pointerEvents = "none";
+        //     let optionsElement = this.querySelector('.options');
+        //     while (optionsElement.firstChild) {
+        //         optionsElement.firstChild.remove()
+        //     }
 
-            } else {
-                optionsElement.appendChild(createExpiredIcon())
-            }
-            count++;
-        }
+        //     document.getElementById('uncompletedQuestsCount').innerHTML = `${parseInt(document.getElementById('uncompletedQuestsCount').innerHTML) - 1}`;
+        //     document.getElementById('completedQuestsCount').innerHTML = `${parseInt(document.getElementById('completedQuestsCount').innerHTML) + 1}`;
 
-        let quests = document.querySelectorAll('#uncompletedQuestsBox .questDiv.quest');
-        quests.forEach(quest => {
-            quest.style.pointerEvents = "all";
-        })
 
-        questBoxes.forEach(function (item) {
-            item.classList.remove('over');
-        });
-        document.getElementById("completedQuestsBox").style.pointerEvents = "none";
+        //     // TESTING PURPOSES
+        //     if (count % 3 === 0) {
+        //         optionsElement.appendChild(createCompleteIcon())
+
+        //     } else if (count % 3 === 1) {
+        //         optionsElement.appendChild(createFailedIcon())
+
+        //     } else {
+        //         optionsElement.appendChild(createExpiredIcon())
+        //     }
+        //     count++;
+        // }
+
+        // let quests = document.querySelectorAll('#uncompletedQuestsBox .questDiv.quest');
+        // quests.forEach(quest => {
+        //     quest.style.pointerEvents = "all";
+        // })
+
+        // questBoxes.forEach(function (item) {
+        //     item.classList.remove('over');
+        // });
+        // document.getElementById("completedQuestsBox").style.pointerEvents = "none";
     }
 
     function handleDragOver(e) {
@@ -116,13 +129,18 @@ document.addEventListener('DOMContentLoaded', (event) => {
                 draggedElement.classList.add("quest")
                 this.insertBefore(draggedElement, document.getElementById("addNewQuestDiv"));
             } else {
-                document.getElementById('uncompletedQuestsCount').innerHTML = `${parseInt(document.getElementById('uncompletedQuestsCount').innerHTML) - 1}`;
-                document.getElementById('completedQuestsCount').innerHTML = `${parseInt(document.getElementById('completedQuestsCount').innerHTML) + 1}`;
 
                 // draggedElement.classList.remove("quest")
-                this.appendChild(draggedElement);
+                document.querySelector('input[action="status"]').checked = true;
+
+                // this.appendChild(draggedElement);
                 // draggedElement.style.pointerEvents = "none";
+
+
             }
+            questBoxes.forEach(function (item) {
+                item.classList.remove('over');
+            });
         }
         return false;
     }
@@ -164,6 +182,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     });
 
     document.getElementById('sortingIcon').addEventListener('click', function (e) {
+
         let sortingIcon = document.getElementById('sortingIcon')
         sortingIcon.classList.toggle('desc');
 
@@ -175,15 +194,24 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
         // Remove Quests
         questsToSort.forEach(quest => {
-            quest.remove();
+            quest.style.animationName = 'fadeOut';
+            setTimeout(() => {
+                quest.remove();
+            }, fadeAnimationDuration)
+
         });
+        setTimeout(() => {
+            questToSortArray.reverse();
 
-        questToSortArray.reverse();
+            // Add Sorted Quests
+            questToSortArray.forEach(quest => {
+                correctQuestBox.insertBefore(quest, correctQuestBox.querySelector('.addNewQuest'))
+            })
+            correctQuestBox.querySelectorAll('.questDiv.quest').forEach(quest => {
+                quest.style.animationName = 'fadeIn';
+            })
+        }, fadeAnimationDuration)
 
-        // Add Sorted Quests
-        questToSortArray.forEach(quest => {
-            correctQuestBox.insertBefore(quest, correctQuestBox.querySelector('.addNewQuest'))
-        })
     })
 });
 
@@ -225,6 +253,7 @@ function createChevronIcon() {
 }
 
 function sortingChanged(sortingSelector) {
+    //TODO: Apply same thing as with sortingIcon (fadeIn and Out)
     let sortingMethod = sortingSelector.value;
 
     let correctQuestBox = sortingSelector.parentNode.parentNode.nextSibling;
@@ -255,19 +284,41 @@ function sortingChanged(sortingSelector) {
         })
     }
 
-    // Remove Quests
-    questsToSort.forEach(quest => {
-        quest.remove();
-    });
+    // // Remove Quests
+    // questsToSort.forEach(quest => {
+    //     quest.remove();
+    // });
 
     if (document.getElementById('sortingIcon').classList.contains('desc')) {
         questToSortArray.reverse();
     }
 
-    // Add Sorted Quests
-    questToSortArray.forEach(quest => {
-        correctQuestBox.insertBefore(quest, correctQuestBox.querySelector('.addNewQuest'))
-    })
+    // // Add Sorted Quests
+    // questToSortArray.forEach(quest => {
+    //     correctQuestBox.insertBefore(quest, correctQuestBox.querySelector('.addNewQuest'))
+    // })
+
+
+
+    // Remove Quests
+    questsToSort.forEach(quest => {
+        quest.style.animationName = 'fadeOut';
+        setTimeout(() => {
+            quest.remove();
+        }, fadeAnimationDuration)
+
+    });
+    setTimeout(() => {
+        questToSortArray.reverse();
+
+        // Add Sorted Quests
+        questToSortArray.forEach(quest => {
+            correctQuestBox.insertBefore(quest, correctQuestBox.querySelector('.addNewQuest'))
+        })
+        correctQuestBox.querySelectorAll('.questDiv.quest').forEach(quest => {
+            quest.style.animationName = 'fadeIn';
+        })
+    }, fadeAnimationDuration)
 }
 
 function searchQuest(searchBar) {
@@ -292,25 +343,26 @@ function updateInput(input) {
 
     characterCountElement.innerText = input.value.length;
 
-    checkIfFormIsReady(input.parentNode.parentNode.querySelector('.custom-option.selected'), document.getElementById('quest_title'), document.getElementById('quest_description'));
+    checkIfFormIsReady(input.parentNode.parentNode.querySelector('.custom-option.selected'), input.parentNode.parentNode.querySelector('input[type="text"]'), input.parentNode.parentNode.querySelector('textarea'));
 
 }
 
 
 function checkIfFormIsReady(priorityElement, titleElement, descriptionElement) {
+    // console.log()
     let priority = priorityElement?.getAttribute('data-value');
     let title = titleElement.value?.trim();
     let description = descriptionElement.value?.trim();
 
     if ((priority != undefined && priority != null) && (title != undefined && title != null && title !== '')) {
-        document.getElementById('create_quest').removeAttribute('disabled');
+        titleElement.parentNode.parentNode.querySelector('input[type="button"]').removeAttribute('disabled');
     } else {
-        document.getElementById('create_quest').setAttribute('disabled', 'true');
+        titleElement.parentNode.parentNode.querySelector('input[type="button"]').setAttribute('disabled', 'true');
     }
 }
 
 function createQuest(buttonElement) {
-    let priority = document.querySelector('.custom-option.selected')?.getAttribute('data-value');
+    let priority = document.querySelector('.modal .custom-option.selected')?.getAttribute('data-value');
     let title = document.getElementById('quest_title')?.value?.trim();
     let description = document.getElementById('quest_description')?.value?.trim();
 
@@ -340,23 +392,92 @@ function createQuest(buttonElement) {
 
 }
 
-function deleteQuest(trashElement) {
+function editQuest(buttonElement) {
     let questElement = document.querySelector(`.quest[id="${globalQuestID}"]`);
-    try {
-        axios.delete(`/dashboard/${guildID}/informational/quests`, { data: { 'quest_id': globalQuestID } }).then(response => {
-            if (response.status === 201) {
-                questElement.remove();
-                uncompletedQuestsCount.innerText = uncompletedQuestsCount.innerText - 1;
 
-                window.location = './quests';
-            }
-        })
-    } catch (error) {
-        console.log("error occured during delete");
-    };
+    let priority = document.querySelector('.editQuestModal .custom-option.selected')?.getAttribute('data-value');
+    let title = document.getElementById('edit_quest_title')?.value?.trim();
+    let description = document.getElementById('edit_quest_description')?.value?.trim();
+
+    buttonElement.value = '';
+    document.querySelector(`.editButton>i.fa-spinner`).classList.add('active')
+    buttonElement.setAttribute('disabled', 'true')
+
+    setTimeout(() => {
+        try {
+            axios.put(`/dashboard/${guildID}/informational/quests`, {
+                "quest_id": questElement.getAttribute('id'),
+                "priority": priority,
+                "title": title,
+                "description": description
+            }).then(response => {
+                if (response.status === 201) {
+                    window.location = './quests';
+                }
+            })
+        } catch (error) {
+            console.log("error occured during edit");
+        };
+    }, 250);
 }
 
-function updateGlobalQuestId(trashIconElement) {
-    let questElement = trashIconElement.parentNode.parentNode;
-    globalQuestID = questElement.getAttribute('id')
+function deleteQuest(buttonElement) {
+    let questElement = document.querySelector(`.quest[id="${globalQuestID}"]`);
+
+    buttonElement.value = '';
+    document.querySelector(`.deleteButton>i.fa-spinner`).classList.add('active')
+    buttonElement.setAttribute('disabled', 'true')
+
+    setTimeout(() => {
+        try {
+            axios.delete(`/dashboard/${guildID}/informational/quests`, { data: { 'quest_id': globalQuestID } }).then(response => {
+                if (response.status === 201) {
+                    questElement.remove();
+                    uncompletedQuestsCount.innerText = uncompletedQuestsCount.innerText - 1;
+                    window.location = './quests';
+                }
+            })
+        } catch (error) {
+            console.log("error occured during delete");
+        };
+    }, 250);
+}
+
+async function statusChangeQuest(buttonValue) {
+    let possibleOutcomes = ["done", "expired", "failed"]
+    if (!possibleOutcomes.includes(buttonValue.toLowerCase())) console.log("Not in here");
+    console.log(globalQuestID)
+    setTimeout(() => {
+        try {
+            axios.put(`/dashboard/${guildID}/informational/quests`, { 'quest_id': globalQuestID, 'status': buttonValue.toUpperCase() }).then(response => {
+                if (response.status === 201) {
+                    // questElement.remove();
+                    // uncompletedQuestsCount.innerText = uncompletedQuestsCount.innerText - 1;
+                    window.location = './quests';
+                }
+            })
+        } catch (error) {
+            console.log(error)
+            console.log("error occured during status update");
+        };
+    }, 250);
+}
+
+async function updateGlobalQuestId(iconElement) {
+    let questElement = iconElement.parentNode.parentNode;
+    globalQuestID = questElement.getAttribute('id');
+    let quest_title = document.querySelector(`.quest[id="${globalQuestID}"] .questTitleDiv p.title`).textContent.split('started')[0]
+    let quest_description = document.querySelector(`.quest[id="${globalQuestID}"] .questTitleDiv span.description`)?.textContent || '';
+    // console.log(document.querySelector(`.quest[id="${globalQuestID}"] .questTitleDiv p.title span.description`))
+    if (iconElement.className.includes('trash')) {
+        console.log(`Delete "${document.querySelector(`.quest[id="${globalQuestID}"] .questTitleDiv p.title`).textContent.split('started')[0]}"?`)
+        document.querySelector('p.questDeleteTitle').textContent = `Delete "${quest_title}"?`;
+    } else if (iconElement.className.includes('edit')) {
+        document.querySelector('input[id="edit_quest_title"]').value = quest_title;
+        document.querySelector('textarea[id="edit_quest_description"]').value = quest_description;
+        document.querySelector(`.editQuestModal .custom-option[data-value="${document.querySelector(`.quest[id="${globalQuestID}"]`).getAttribute("quest_importance_value")}"]`).classList.add('selected')
+        document.querySelector('.editQuestModal .select_trigger span').textContent = document.querySelector(`.editQuestModal .custom-option[data-value="${document.querySelector(`.quest[id="${globalQuestID}"]`).getAttribute("quest_importance_value")}"]`).textContent.replace('|', '').trim();
+
+        // console.log(document.querySelector('input[id="edit_quest_title"]'))
+    }
 }

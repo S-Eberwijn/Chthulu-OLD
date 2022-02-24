@@ -1,0 +1,9 @@
+.characterItem(id=`listItem-${character.character_id}`)
+    .classIcon 
+        img(src=`../../../${character.class}.png`, alt="icon")
+    .characterFullName 
+        p #{character.name}
+    .characterLevel 
+        p Lvl.
+        | !{' '}
+        p #{character.level || '?'}

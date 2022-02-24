@@ -1,0 +1,15 @@
+input(action="status" type="checkbox" id="statusQuestModal")
+label(for="statusQuestModal" class="status-modal-background")
+.statusQuestModal 
+    .modal-header
+        h3 Change status
+        label(for="statusQuestModal")
+            i.fas.fa-times
+    .modal-content
+        form
+            input(type="button" value="Done" onclick="statusChangeQuest(this.value)")
+                //- i.far.fa-check-circle
+            input(type="button" value="Expired" onclick="statusChangeQuest(this.value)")
+                //- i.far.fa-clock
+            input(type="button" value="Failed" onclick="statusChangeQuest(this.value)")
+                //- i.fas.fa-times

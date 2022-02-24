@@ -22,6 +22,10 @@ app.set('views', path.join(__dirname, 'website', 'views'));
 app.set('view engine', 'pug');
 
 app.use(express.static(path.join(__dirname, 'website', 'public')));
+app.use(express.static(path.join(__dirname, 'bot', 'images', 'DnD', 'ClassIcons')));
+
+
+console.log(path.join(__dirname, 'bot', 'images', 'ClassIcons'))
 
 // Home Route
 app.use('/', require('./website/routes/dashboard'));

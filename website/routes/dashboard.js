@@ -1,6 +1,7 @@
 const express = require('express'),
     router = express.Router(),
-    { dashboardPage, guildDashboardPage, constructionDashboardPage, guildInformationalCharactersDashboardPage, guildInformationalNonPlayableCharactersDashboardPage, guildInformationalQuestsDashboardPage, createQuestPost, deleteQuestRequest} = require('../controllers/dashboard');
+    { dashboardPage, guildDashboardPage, constructionDashboardPage, guildInformationalCharactersDashboardPage, guildInformationalNonPlayableCharactersDashboardPage, guildInformationalQuestsDashboardPage, createQuestPost, deleteQuestRequest,editQuestRequest} = require('../controllers/dashboard');
+
 //Maybe change later
 router.get('/', function (req, res) {
     res.redirect('/dashboard');
@@ -14,6 +15,8 @@ router.get('/dashboard/:id/informational/nonplayercharacters', guildInformationa
 router.get('/dashboard/:id/informational/quests', guildInformationalQuestsDashboardPage);
 router.post('/dashboard/:id/informational/quests', createQuestPost);
 router.delete('/dashboard/:id/informational/quests', deleteQuestRequest);
+router.put('/dashboard/:id/informational/quests', editQuestRequest);
+
 // Sessions
 router.get('/dashboard/:id/sessions/overview', constructionDashboardPage);
 router.get('/dashboard/:id/sessions/request', constructionDashboardPage);

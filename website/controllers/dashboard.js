@@ -71,8 +71,8 @@ exports.guildInformationalQuestsDashboardPage = async (req, res) => {
     const guildId = req.params.id;
     const guild = bot.guilds.cache.get(guildId);
 
-    let completedQuests = await getQuests(guildId, "COMPLETED");
-    let uncompletedQuests = await getQuests(guildId, "OPEN");
+    let completedQuests = await getQuests(guildId, ["DONE", "EXPIRED", "FAILED"]);
+    let uncompletedQuests = await getQuests(guildId, ["OPEN"]);
 
     res.render('questsPage', { isGuildDashboardPage: true, bot: bot, headerTitle: `Quests`, guild: guild, selectedGuildId: guildId, guildName: guild.name, uncompletedQuests: uncompletedQuests.reverse(), completedQuests: completedQuests.reverse() });
 }
@@ -99,14 +99,15 @@ async function getQuests(guildId = null, status) {
 
 //CREATE QUEST POST
 exports.createQuestPost = async (req, res) => {
-    let priority_value = Math.floor(req.body.priority);
+    let priority_value = Math.floor(parseInt(req.body.priority));
     if (priority_value < 1) {
         priority_value = 1;
     } else if (priority_value > 5) {
         priority_value = 5;
     }
+    console.log(priority_value)
 
-    let importance = getImportanceText(priority_value);
+    let importance = await getImportanceText(priority_value);
     let title = req.body.title?.substring(0, 30);
     let description = req.body.description?.substring(0, 400);
 
@@ -125,7 +126,7 @@ exports.createQuestPost = async (req, res) => {
 
 }
 
-function getImportanceText(priority_value) {
+async function getImportanceText(priority_value) {
     switch (priority_value) {
         case 5:
             return 'Very high'
@@ -141,7 +142,6 @@ function getImportanceText(priority_value) {
 }
 
 exports.deleteQuestRequest = async (req, res) => {
-    console.log()
     let quest_id = req.body?.quest_id;
     let server_id = req.params?.id || '0';
     if (quest_id) {
@@ -152,5 +152,42 @@ exports.deleteQuestRequest = async (req, res) => {
             }).then(async () => {
                 res.sendStatus(201)
             });
+    }
+}
+
+//TODO: Add validation
+exports.editQuestRequest = async (req, res) => {
+    // console.log(req.body.status)
+    if (!req.body?.status) {
+        let quest_id = req.body?.quest_id;
+        let server_id = req.params?.id || '0';
+        if (quest_id) {
+            await Quest.update(
+                {
+                    quest_name: req.body?.title,
+                    quest_description: req.body?.description,
+                    quest_importance_value: req.body?.priority,
+                    quest_importance: await getImportanceText(parseInt(req.body?.priority))
+                },
+                {
+                    where: { quest_id: quest_id, server_id: server_id }
+                }).then(async () => {
+                    res.sendStatus(201)
+                });
+        }
+    } else if (req.body?.status) {
+        let quest_id = req.body?.quest_id;
+        let server_id = req.params?.id || '0';
+        if (quest_id) {
+            await Quest.update(
+                {
+                    quest_status: req.body?.status,
+                },
+                {
+                    where: { quest_id: quest_id, server_id: server_id }
+                }).then(async () => {
+                    res.sendStatus(201)
+                });
+        }
     }
 }

@@ -1,10 +1,9 @@
-input(type="checkbox" id="createQuestModal")
-label(for="createQuestModal" class="example-label") Click here to add a new quest!
-label(for="createQuestModal" class="modal-background")
-.modal 
+input(action="edit" type="checkbox" id="editQuestModal")
+label(for="editQuestModal" class="edit-modal-background")
+.editQuestModal 
     .modal-header
-        h3 Create new quest
-        label(for="createQuestModal")
+        h3 Edit quest
+        label(for="editQuestModal")
             i.fas.fa-times
     .modal-content
         form
@@ -16,7 +15,7 @@ label(for="createQuestModal" class="modal-background")
                             span( id="quest_priority") Select a priority
                             i.fas.fa-chevron-down
                         .custom-options 
-                            span.custom-option(data-value="5") 
+                            span.custom-option(data-value="5")
                                 i.fas.fa-circle(style="color: #DE3700;")
                                 | !{' | '}
                                 span.text Very high
@@ -37,19 +36,19 @@ label(for="createQuestModal" class="modal-background")
                                 | !{' | '}
                                 span.text Very low
             .label-input-section
-                label().required Title
+                label.required Title
                     .charCountDiv
                         p.characterCount 0
                         p /
                         p.maxCharacterCount 30
-                input(type="text" autocomplete="off" spellcheck="false" id="quest_title" oninput="updateInput(this)" onkeydown="return event.key != 'Enter';" maxlength="30")
+                input(type="text" autocomplete="off" spellcheck="false" id="edit_quest_title" oninput="updateInput(this)" onkeydown="return event.key != 'Enter';" maxlength="30")
             .label-input-section
                 label.optional Description
                     .charCountDiv
                         p.characterCount 0
                         p /
                         p.maxCharacterCount 400
-                textarea(cols="5" rows="5" maxlength="400" spellcheck="false" autocomplete="off" id="quest_description" oninput="updateInput(this)")
-            .createButton
-                input(id="create_quest" type="button" value="Create" disabled="true" onclick="createQuest(this)")
+                textarea(cols="5" rows="5" maxlength="400" spellcheck="false" autocomplete="off" id="edit_quest_description" oninput="updateInput(this)")
+            .editButton
+                input(id="edit_quest" type="button" value="Edit" onclick="editQuest(this)")
                 i.fa.fa-spinner.fa-spin.fa-align-center

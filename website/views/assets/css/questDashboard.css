@@ -90,6 +90,32 @@ input::placeholder {
     -webkit-transition: min-height 0.5s;
     -moz-transition: min-height 0.5s;
     transition: min-height 0.5s;
+    opacity: 1;
+    /* animation-delay: 1s; */
+    animation-duration: .2s;
+    animation-name: fadeIn;
+    animation-fill-mode: forwards;
+
+    /* animation: .5s fadeIn 1 forwards; */
+}
+
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
 }
 
 .questDiv::before {
@@ -130,26 +156,26 @@ input::placeholder {
     align-items: center;
 }
 
-.questDiv[quest_importance_value="1"]::before {
-    background-color: green;
-}
-
-.questDiv[quest_importance_value="2"]::before {
-    background-color: green;
-}
-
-.questDiv[quest_importance_value="3"]::before {
-    background-color: orange;
+.questDiv[quest_importance_value="5"]::before {
+    background-color: #DE3700;
 }
 
 .questDiv[quest_importance_value="4"]::before {
-    background-color: orangered;
+    background-color: #F58B00;
 }
 
-.questDiv[quest_importance_value="5"]::before {
-    background-color: orangered;
+.questDiv[quest_importance_value="3"]::before {
+    background-color: #E1FF00;
 }
 
+.questDiv[quest_importance_value="2"]::before {
+    background-color: #92E000;
+}
+
+.questDiv[quest_importance_value="1"]::before {
+    background-color: #2AA10F;
+    
+}
 
 .questDiv.addNewQuest {
     justify-content: center;
@@ -234,7 +260,12 @@ input::placeholder {
 }
 
 #completedQuestsBox {
+    user-select: none;  
+}
+
+#completedQuestsBox>.questDiv {
     pointer-events: none;
+
 }
 
 /* #uncompletedQuestsBox .questDiv,
@@ -377,6 +408,7 @@ option {
 option {
     color: var(--text-color);
 }
+
 /* 
 trash-label {
     transition: all .2s ease;
