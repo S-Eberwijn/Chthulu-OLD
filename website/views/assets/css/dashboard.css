@@ -90,10 +90,14 @@ header.dashboardHeader button:hover {
     padding: 20px;
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    /* justify-content: space-between; */
     flex-wrap: wrap;
     overflow: scroll;
+    gap: 20px;
 }
+
+/* .dashboardContent[guild]{
+} */
 
 .dashboardContent::-webkit-scrollbar {
     width: 15px;
@@ -121,17 +125,42 @@ header.dashboardHeader button:hover {
     flex-direction: column;
 }
 
-.dashboardContentItemTitle {
+.kpiItem{
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+    min-width: 400px;
+}
+
+.kpiTitle {
     color: white;
     font-size: .7rem;
     font-weight: 900;
     margin-left: 70px;
-    margin-top: 10px;
+    margin-top: 15px;
 }
 
-.dashboardContentItemContent {
+.kpiContent {
     align-self: center;
-    font-size: 8rem;
+    font-size: 7rem;
+    margin-right: 4rem;
+}
+
+section{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    height: 33%;
+    overflow: hidden;
+}
+
+.sectionContent{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    /* overflow-x: scroll;
+    overflow-y: hidden; */
 }
 
 img[alt="Construction"] {

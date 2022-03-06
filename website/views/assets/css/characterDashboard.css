@@ -279,6 +279,8 @@ input::placeholder {
     /* overflow: hidden; */
 }
 
+
+
 .dashboardContent[characters] .cardStack .characterCardHolder:first-child {
     transition: transform;
     transition-duration: .75s;
@@ -379,8 +381,9 @@ input::placeholder {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    -webkit-box-shadow: 0px 5px 2px var(--sidebar-color);
-    box-shadow: 0px 0px 5px 2px var(--sidebar-color);
+    -webkit-box-shadow: inset 0px 5px 3px var(--sidebar-color);
+    box-shadow: inset 0px 0px 5px 3px var(--sidebar-color);
+    /* inset: 10px var(--sidebar-color); */
     box-sizing: border-box;
     /* If you want to implement it in very old browser-versions */
     -webkit-user-select: none;
@@ -829,4 +832,9 @@ ul.arrow:active li::before {
     animation-name: characterCardContentToContent;
     animation-duration: .75s;
     animation-fill-mode: forwards;
+}
+
+.dashboardContent[characters] .cardStack .characterCardHolder:last-child {
+    z-index: 3;
+    transform: translate(0%);
 }

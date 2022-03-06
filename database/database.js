@@ -5,7 +5,4 @@ module.exports = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process
     port: process.env.DB_PORT,
     dialect: "mariadb",
     logging: false,
-
 });
-
-    // logging: false

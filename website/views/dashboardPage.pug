@@ -15,9 +15,27 @@ block styles
 
 block dashboardContent
     .dashboardContent
-        div(id='topFiveClasses')
-        div(id='topFiveRaces')
-        div(id='topFiveBackgrounds')
-        div.dashboardContentItem
-            span.dashboardContentItemTitle Highest Character Level
-            span.dashboardContentItemContent#highestCharacterLevel #{highestCharacterLevel}          
+        section
+            h1 Characters
+            .sectionContent
+                div.kpiItem
+                    span.kpiTitle Highest Character Level
+                    span.kpiContent#highestCharacterLevel #{highestCharacterLevel}     
+                div(id='topFiveClasses')
+                div(id='topFiveRaces')
+                div(id='topFiveBackgrounds')
+                div.kpiItem
+                    span.kpiTitle Dead Characters
+                    span.kpiContent#deadCharacters #{deadCharactersCount}
+                    
+        section
+            h1 Sessions
+
+        section
+            h1 Quests
+
+        section
+            h1 Location
+
+        section
+            h1 Interaction

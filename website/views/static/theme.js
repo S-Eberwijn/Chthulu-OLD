@@ -3,11 +3,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
     (function () {
         if (localStorage.getItem('menuState') === 'menuIsExtended') {
             setMenuState('menuIsExtended');
-            document.querySelector('.extendMenu').querySelectorAll('.fa-chevron-right').forEach(chevron => { chevron.classList.add('flip') })
+            document.querySelector('.extendMenu')?.querySelectorAll('.fa-chevron-right').forEach(chevron => { chevron.classList.add('flip') })
 
         } else {
             setMenuState('menuClosed');
-            document.querySelector('.extendMenu').querySelectorAll('.fa-chevron-right').forEach(chevron => { chevron.classList.remove('flip') })
+            document.querySelector('.extendMenu')?.querySelectorAll('.fa-chevron-right').forEach(chevron => { chevron.classList.remove('flip') })
 
         }
     })();

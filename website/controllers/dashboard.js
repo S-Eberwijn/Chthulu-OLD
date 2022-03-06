@@ -5,8 +5,8 @@ const Quest = require('../../database/models/Quest');
 exports.dashboardPage = async (req, res) => {
     const bot = require('../../index');
     let characters = await getAliveCharacters();
-
-    res.render('dashboardPage', { isDashboardPage: true, bot: bot, headerTitle: 'Chthulu', guildName: '', characters: characters });
+    let deadCharacters = await getDeadCharacters();
+    res.render('dashboardPage', { isDashboardPage: true, bot: bot, headerTitle: 'Chthulu', guildName: '', characters: characters, deadCharactersCount: deadCharacters.length });
 }
 
 exports.guildDashboardPage = async (req, res) => {
@@ -14,8 +14,9 @@ exports.guildDashboardPage = async (req, res) => {
     const guildId = req.params.id;
     const guild = bot.guilds.cache.get(guildId);
     let characters = await getAliveCharacters(guildId);
+    let deadCharacters = await getDeadCharacters(guildId);
 
-    res.render('dashboardPage', { isGuildDashboardPage: true, bot: bot, headerTitle: '', guild: guild, selectedGuildId: guildId, guildName: guild.name, characters: characters });
+    res.render('dashboardPage', { isGuildDashboardPage: true, bot: bot, headerTitle: '', guild: guild, selectedGuildId: guildId, guildName: guild.name, characters: characters, deadCharactersCount: deadCharacters.length });
 }
 
 //CONSTRUCTION PAGE
@@ -44,6 +45,14 @@ async function getAliveCharacters(guildId = null) {
         return await PlayerCharacter.findAll({ where: { alive: 1 } })
     } else {
         return await PlayerCharacter.findAll({ where: { alive: 1, server_id: guildId } })
+    }
+}
+
+async function getDeadCharacters(guildId = null) {
+    if (guildId === null) {
+        return await PlayerCharacter.findAll({ where: { alive: 0 } })
+    } else {
+        return await PlayerCharacter.findAll({ where: { alive: 0, server_id: guildId } })
     }
 }
 

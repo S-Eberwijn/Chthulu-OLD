@@ -13,16 +13,16 @@ block styles
         include ./assets/css/dashboard.css
         include ./assets/css/characterDashboard.css
 
-
 block dashboardContent
     .dashboardContent(characters=true)
-        h1 #{npcs.length} NPC's
-            input(placeholder="Search NPC", oninput="updateInput(this.value)", spellcheck="false")
         .characterBox
-            ul.arrow#leftArrow 
-                li.left
             .cardStack#characterCardStack
                 each npc in npcs
                     include ./components/nonPlayableCharacterCard.pug
-            ul.arrow#rightArrow
-                li.right
+        .characterSelectionBox
+            h1 #{npcs.length} Characters
+                //- input(placeholder="Search Character", oninput="updateInput(this.value)", spellcheck="false")
+            .charactersList
+                each character in npcs.reverse()
+                    include ./components/characterListItem.pug
+
