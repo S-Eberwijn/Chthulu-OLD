@@ -6,8 +6,41 @@ const bodyParser = require('body-parser');
 
 const fs = require("fs");
 
-const db = require('./database/database');
-const { initializeDB } = require('./database/initializeDB');
+//Firebase Database
+const admin = require("firebase-admin");
+const firebaseSequelizer = require("firestore-sequelizer");
+const serviceAccount = require(`${process.env.GOOGLE_APPLICATION_CREDENTIALS}`);
+
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+    databaseURL: `https://${process.env.DATABASE_NAME || 'null'}.firebaseio.com`
+});
+firebaseSequelizer.initializeApp(admin);
+// console.log(admin.apps[0].options)
+
+// const { GeneralInfo } = require('./database/models/GeneralInfo');
+
+// const { defineModel } = require("firestore-sequelizer");
+// const User = defineModel("users", {
+//     name: "",
+//     email: "",
+//     admin: {
+//         type: "boolean",
+//         required: true,
+//     },
+// });
+
+// createEntry();
+
+// async function createEntry() {
+//     await GeneralInfo.create({session_number: 5, in_character_channels: "1234;1111", server_id: "0000" });
+//     await GeneralInfo.findOne({ where: { session_number: 5} }).then((user) => {
+//         console.log(user.in_character_channels.split(";"))
+//     });
+// }
+// //Raspberry Pi Database
+// const db = require('./database/database');
+// const { initializeDB } = require('./database/initializeDB');
 
 const BOT_TOKEN = process.env.BOT_TOKEN || '';
 const WB_PORT = process.env.WB_PORT || 8080;
@@ -66,6 +99,7 @@ fs.readdir("./bot/commands/", async (err, dirs) => {
                 commandAlias.forEach(alias => {
                     bot.commands.set(alias.toLowerCase(), fileGet);
                 });
+                // console.log(bot.commands)
             });
         });
     });
@@ -113,10 +147,10 @@ fs.readdir('./bot/events/', (err, files) => {
 });
 
 // Make connection to the database
-db.authenticate().then(() => {
-    console.log(`Succesfully connected to database ${db.config.database}`);
-    initializeDB(db);
-}).catch(err => console.log(err));
+// db.authenticate().then(() => {
+//     console.log(`Succesfully connected to database ${db.config.database}`);
+//     initializeDB(db);
+// }).catch(err => console.log(err));
 
 // Login Discord Bot 'Chthulu'
 bot.login(BOT_TOKEN).then(() => {
@@ -126,30 +160,3 @@ bot.login(BOT_TOKEN).then(() => {
         module.exports = bot;
     })
 });
-
-// bot.on('raw', packet => {
-//     // We don't want this to run on unrelated packets
-//     if (!['MESSAGE_REACTION_ADD', 'MESSAGE_REACTION_REMOVE'].includes(packet.t)) return;
-//     // Grab the channel to check the message from
-//     const channel = client.channels.cache.get(packet.d.channel_id);
-//     // There's no need to emit if the message is cached, because the event will fire anyway for that
-//     if (channel.messages.cache.has(packet.d.message_id)) return;
-//     // Since we have confirmed the message is not cached, let's fetch it
-//     channel.messages.fetch(packet.d.message_id).then(message => {
-//         // Emojis can have identifiers of name:id format, so we have to account for that case as well
-//         const emoji = packet.d.emoji.id ? `${packet.d.emoji.name}:${packet.d.emoji.id}` : packet.d.emoji.name;
-//         // This gives us the reaction we need to emit the event properly, in top of the message object
-//         const reaction = message.reactions.cache.get(emoji);
-//         // Adds the currently reacting user to the reaction's users collection.
-//         if (reaction) reaction.users.cache.set(packet.d.user_id, client.users.cache.get(packet.d.user_id));
-//         // Check which type of event it is before emitting
-//         if (packet.t === 'MESSAGE_REACTION_ADD') {
-//             client.emit('messageReactionAdd', reaction, client.users.cache.get(packet.d.user_id));
-//         }
-//         if (packet.t === 'MESSAGE_REACTION_REMOVE') {
-//             client.emit('messageReactionRemove', reaction, client.users.cache.get(packet.d.user_id));
-//         }
-//     });
-// });
-
-//TODO: CHECK FOR PERMISSION TO REMOVE MESSAGES

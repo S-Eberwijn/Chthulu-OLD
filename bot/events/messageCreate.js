@@ -1,8 +1,8 @@
 const PREFIX = process.env.PREFIX;
 const { Op } = require("sequelize");
-const GeneralInfo = require('../../database/models/GeneralInfo.js');
-const PlayerCharacter = require('../../database/models/PlayerCharacter.js');
-const NonPlayableCharacter = require('../../database/models/NonPlayableCharacter.js');
+const { GeneralInfo } = require('../../database/models/GeneralInfo.js');
+const { PlayerCharacter } = require('../../database/models/PlayerCharacter.js');
+const { NonPlayableCharacter } = require('../../database/models/NonPlayableCharacter.js');
 const { MessageEmbed, Permissions } = require('discord.js');
 
 
@@ -19,7 +19,7 @@ module.exports = async (bot, message) => {
     var commands = bot.commands.get(command.slice(PREFIX.length));
 
     let in_character_channels;
-    await GeneralInfo.findOne({ where: { server_id: message.guild.id } }).then(info => { if (info) in_character_channels = info.get('in_character_channels') })
+    // await GeneralInfo.findOne({ where: { server_id: message.guild.id } }).then(info => { if (info) in_character_channels = info?.in_character_channels })
 
     if (messageArray[0].charAt(0) === PREFIX.charAt(0)) {
         if (commands) {
@@ -36,7 +36,8 @@ module.exports = async (bot, message) => {
             //DM must have selected a NPC in order to type messages in the 'in-character'-text channels.
             if (message.member.roles.cache.some(role => role.name.toLowerCase().includes("dungeon master"))) character = await NonPlayableCharacter.findOne({
                 where: {
-                    server_id: message.guild.id, using_npc: {
+                    server_id: message.guild.id,
+                    using_npc: {
                         [Op.substring]: message.author.id
                     }
                 }
@@ -46,7 +47,7 @@ module.exports = async (bot, message) => {
             //TODO: Maybe make a conversation implementation, so it looks like character are really speaking.
             const characterText = new MessageEmbed()
                 .setColor(`#2f3136`)
-                .setAuthor(character.get('name'), character.get('picture_url'))
+                .setAuthor(character.name, character.picture_url)
                 .setDescription(`\>\>\> ${message.content}`)
             message.channel.send({ embeds: [characterText] });
         }

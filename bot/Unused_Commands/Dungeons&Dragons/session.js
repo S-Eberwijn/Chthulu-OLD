@@ -1,6 +1,6 @@
 const { MessageEmbed } = require('discord.js');
-const SessionRequest = require('../../../database/models/SessionRequest');
-const PlayerCharacter = require('../../../database/models/PlayerCharacter');
+const { SessionRequest } = require('../../../database/models/SessionRequest');
+const { PlayerCharacter } = require('../../../database/models/PlayerCharacter');
 const fs = require("fs");
 
 const COMMAND_OPTIONS = ['request'];
@@ -139,7 +139,7 @@ module.exports.run = async (bot, message, args) => {
                                     try {
                                         sessionDate.setHours(hours);
                                         sessionDate.setMinutes(minutes);
-                                        console.log(sessionDate.toString())
+                                        // console.log(sessionDate.toString())
                                     } catch (error) {
                                         console.log(error)
                                         // TODO: Ask question again

@@ -1,5 +1,5 @@
 const {MessageActionRow, MessageSelectMenu } = require('discord.js');
-const NonPlayableCharacter = require('../../../database/models/NonPlayableCharacter');
+const {NonPlayableCharacter} = require('../../../database/models/NonPlayableCharacter');
 
 
 module.exports.run = async (interaction) => {
@@ -132,7 +132,7 @@ module.exports.run = async (interaction) => {
             await NonPlayableCharacter.findOne({where: { character_id: interaction.values[0], server_id: interaction.guildId }})
                 .then((character)=>{
                     if (character) {    
-                        character.set("using_npc", interaction.member.user.id)
+                        character.using_npc= interaction.member.user.id;
                         character.save()
                         interaction.channel.send({content: "Dungeon Master " + dm
                             + " is now impersonating " +character.name +"." }) 

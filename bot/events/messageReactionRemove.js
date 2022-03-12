@@ -1,6 +1,6 @@
 //const Player = require('../database/models/Player.js');
 //const SessionRequest = require('../database/models/SessionRequest.js');
-const SessionRequest = require('../../database/models/SessionRequest');
+const {SessionRequest} = require('../../database/models/SessionRequest');
 
 
 module.exports = async (bot, messageReaction, user) => {

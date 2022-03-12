@@ -1,4 +1,4 @@
-const NonPlayableCharacter = require('../../../database/models/NonPlayableCharacter');
+const {NonPlayableCharacter} = require('../../../database/models/NonPlayableCharacter');
 
 module.exports.run = async (interaction) => {
     if(!interaction.member.roles.cache.has(interaction.guild.roles.cache.find(role => role.name.includes('Dungeon Master')).id)){
@@ -12,7 +12,7 @@ module.exports.run = async (interaction) => {
         await NonPlayableCharacter.findOne({where: { server_id: interaction.guildId, using_npc: interaction.member.user.id }
         }).then((character)=>{
             if(character){
-                character.set("using_npc", null)
+                character.using_npc = null;
                 character.save()
             }
         }).then(()=>{

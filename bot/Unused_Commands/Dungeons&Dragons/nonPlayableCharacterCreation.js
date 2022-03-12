@@ -1,35 +1,35 @@
-const Player = require('../../../database/models/Player');
-const PlayerCharacter = require('../../../database/models/PlayerCharacter');
+const {Player} = require('../../../database/models/Player');
+const {NonPlayableCharacter} = require('../../../database/models/NonPlayableCharacter');
 const { MessageEmbed, MessageActionRow, MessageButton, MessageSelectMenu } = require('discord.js');
 
-const QUESTIONS_ARRAY = require('../../jsonDb/characterCreationQuestions.json');
-const { sendCharacterEmbedMessageInChannel } = require('../../otherFunctions/characterEmbed')
+const QUESTIONS_ARRAY = require('../../jsonDb/npcCreationQuestions.json');
+const {sendNPCEmbedMessageInChannel } = require('../../otherFunctions/characterEmbed')
+
 
 module.exports.run = async (bot, message, args) => {
     const characterCreateCategory = message.guild.channels.cache.find(c => c.name == "--CHARACTER CREATION--" && c.type == "GUILD_CATEGORY")
-    let foundPlayer = await Player.findOne({ where: { player_id: message.author.id, server_id: message.guild.id } })
-    if (!foundPlayer) {
-        await Player.create({
-            player_id: message.author.id,
-            player_name: message.author.username,
-            server_id: message.guild.id
-        });
-    } else {
-        await PlayerCharacter.findOne({ where: { player_id: message.author.id, server_id: message.guild.id, status: "CREATING" } })
-            .then((character) => {
-                let name = message.author.username + "-" + message.author.discriminator;
-                let tmpchannel = message.guild.channels.cache.find(channel => channel.name == name.toLowerCase());
-                if (!tmpchannel) { if (character) { tmpchannel = message.guild.channels.cache.find(channel => channel.name == character.get("name")); } }
-                if (tmpchannel) { tmpchannel.delete(); }
-                if (character) { character.destroy(); }
-            });
-    }
-    let newCharacter = await PlayerCharacter.create({
-        player_id: message.author.id,
+    if (!message.member.roles.cache.has(message.guild.roles.cache.find(role => role.name.includes('Dungeon Master')).id)) return message.channel.send({ content: 'You\'re not a dm, get lost kid!' }).then(msg => { setTimeout(() => msg.delete(), 5000) }).catch(err => console.log(err));
+
+    await NonPlayableCharacter.findOne({ where: { creator_id: message.author.id, server_id: message.guild.id, status: "CREATING" } }).then((character) => {
+        let name = message.author.username + "-" + message.author.discriminator;
+        let tmpchannel = message.guild.channels.cache.find(channel => channel.name == name.toLowerCase());
+        if (!tmpchannel) {
+            if (character) {
+                tmpchannel = message.guild.channels.cache.find(channel => channel.name == character.get("name"));
+            }
+        }
+        if (tmpchannel) { tmpchannel.delete(); }
+
+        if (character) {
+            character.destroy()
+        }
+    });
+
+    let newCharacter = await NonPlayableCharacter.create({
+        creator_id: message.author.id,
         server_id: message.guild.id,
         status: "CREATING"
     });
-
     if (!characterCreateCategory) {
         return message.channel.send({ content: 'There is no category named \"--CHARACTER CREATION--\"!' })
             .then(msg => { setTimeout(() => msg.delete(), 3000) })
@@ -38,12 +38,6 @@ module.exports.run = async (bot, message, args) => {
     message.guild.channels.cache.forEach(channel => {
         if (channel.name == `${message.author.username.toLowerCase()}-${message.author.discriminator}`) return message.channel.send({ content: 'You already created a channel before!' }).then(msg => { setTimeout(() => msg.delete(), 3000) }).catch(err => console.log(err));
     });
-
-    if (message.member.roles.cache.has(message.guild.roles.cache.find(role => role.name.includes('Dungeon Master')).id)) {
-        return message.channel.send({ content: 'You\'re not a player, get lost kid!' })
-            .then(msg => { setTimeout(() => msg.delete(), 5000) })
-            .catch(err => console.log(err));
-    }
     message.guild.channels.create(`${message.author.username}-${message.author.discriminator}`, "text").then(async createdChannel => {
         createdChannel.setParent(characterCreateCategory, { lockPermission: false });
         createdChannel.permissionOverwrites.set([{ id: message.author, allow: ['VIEW_CHANNEL'] }, { id: message.guild.roles.cache.find(role => role.name.includes('Dungeon Master')), allow: ['VIEW_CHANNEL'] }, { id: message.channel.guild.roles.everyone, deny: ['VIEW_CHANNEL'] }]);
@@ -51,27 +45,28 @@ module.exports.run = async (bot, message, args) => {
             for (let index = 0; index < QUESTIONS_ARRAY.length; index++) {
                 await characterCreationQuestion(QUESTIONS_ARRAY[index], createdChannel, newCharacter, message, bot, index)
             }
+
             const messageComponents = new MessageActionRow()
                 .addComponents(
                     new MessageButton()
-                        .setCustomId('approve-character-button')
+                        .setCustomId('approve-npc-button')
                         .setLabel('Approve')
                         .setStyle('SUCCESS'),
                     new MessageButton()
-                        .setCustomId('decline-character-button')
+                        .setCustomId('decline-npc-button')
                         .setLabel('Decline')
                         .setStyle('DANGER')
                 );
-            await sendCharacterEmbedMessageInChannel(createdChannel,newCharacter,'Is this correct?',[messageComponents])
-            .then(async () => {await createdChannel.setName(newCharacter.get('name'));});
+            await sendNPCEmbedMessageInChannel(createdChannel,newCharacter,'Is this correct?',[messageComponents])
+                .then(async () => {await createdChannel.setName(newCharacter.get("character_id") + "⼁" + newCharacter.get('name'));});
         });
     });
 }
 
 module.exports.help = {
-    name: "createCharacter",
-    alias: ["cc"],
-    description: "Creates a new channel with questions about your new character",
+    name: "create-npc",
+    alias: ["cNPC"],
+    description: "Creates a new channel with questions about your new NPC",
     category: "Dungeons & Dragons"
 }
 
@@ -101,7 +96,7 @@ async function characterCreationQuestion(QUESTION_OBJECT, createdChannel, newCha
                     .setMinValues(1)
                     .setMaxValues(1)
                     .setDisabled(false)
-                    .addOptions(Object.keys(QUESTION_OBJECT.answers).map(function (key) { return { label: `${QUESTION_OBJECT.answers[key].category}`, value: `${QUESTION_OBJECT.answers[key].category}` } }))
+                    .addOptions(Object.keys(QUESTION_OBJECT.answers).map(function (key, index) { return { label: `${QUESTION_OBJECT.answers[key].category}`, value: `${QUESTION_OBJECT.answers[key].category}` } }))
             ))
             messageComponentsArray.push(new MessageActionRow().addComponents(
                 new MessageSelectMenu()
@@ -116,7 +111,6 @@ async function characterCreationQuestion(QUESTION_OBJECT, createdChannel, newCha
         } else if (QUESTION_OBJECT.answers.length > 25) {
             for (let index = 0; index < Math.ceil(QUESTION_OBJECT.answers.length / 25); index++) {
                 const elements = QUESTION_OBJECT.answers.slice(index * 25, 25 * (index + 1));
-                // console.log(elements)
                 messageComponentsArray.push(new MessageActionRow().addComponents(
                     new MessageSelectMenu()
                         .setCustomId(`characterQuestion${index}`)
@@ -152,11 +146,7 @@ async function characterCreationQuestion(QUESTION_OBJECT, createdChannel, newCha
                         .setMinValues(1)
                         .setMaxValues(1)
                         .setDisabled(false)
-                        .addOptions(Object.keys(QUESTION_OBJECT.answers[Object.keys(QUESTION_OBJECT.answers)
-                        .filter(function (key) { return QUESTION_OBJECT.answers[key].category === response.values[0] })[0]].values)
-                        .map(function (key) { return { label: `${QUESTION_OBJECT.answers[Object.keys(QUESTION_OBJECT.answers)
-                        .filter(function (key) { return QUESTION_OBJECT.answers[key].category === response.values[0] })[0]].values[key]}`, value: `${QUESTION_OBJECT.answers[Object.keys(QUESTION_OBJECT.answers)
-                        .filter(function (key) { return QUESTION_OBJECT.answers[key].category === response.values[0] })[0]].values[key]}` } }))
+                        .addOptions(Object.keys(QUESTION_OBJECT.answers[Object.keys(QUESTION_OBJECT.answers).filter(function (key, index) { return QUESTION_OBJECT.answers[key].category === response.values[0] })[0]].values).map(function (key) { return { label: `${QUESTION_OBJECT.answers[Object.keys(QUESTION_OBJECT.answers).filter(function (key, index) { return QUESTION_OBJECT.answers[key].category === response.values[0] })[0]].values[key]}`, value: `${QUESTION_OBJECT.answers[Object.keys(QUESTION_OBJECT.answers).filter(function (key, index) { return QUESTION_OBJECT.answers[key].category === response.values[0] })[0]].values[key]}` } }))
                 )
                 response.deferUpdate();
                 response.message.edit({ components: newSelectionMenu.components })
@@ -205,16 +195,13 @@ async function characterCreationQuestion(QUESTION_OBJECT, createdChannel, newCha
                 if (QUESTION_OBJECT.question.includes('picture')) {
                     if (collected.first().attachments.size > 0) {
                         await newCharacter.set(QUESTION_OBJECT.databaseTable, collected.first().attachments?.first()?.url)
-                        newCharacter.save();
                     } else {
                         newCharacter.set(QUESTION_OBJECT.databaseTable, collected.first().content)
-                        newCharacter.save();
                     }
                 } else {
                     newCharacter.set(QUESTION_OBJECT.databaseTable, collected.first().content)
-                    newCharacter.save();
                 }
-
+                newCharacter.save();
             }).catch(function () {
                 createdChannel.delete().then(() => {
                     message.author.send({ content: 'Times up! You took too long to respond. Try again by requesting a new character creation channel.' });

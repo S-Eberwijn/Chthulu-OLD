@@ -1,6 +1,7 @@
-const PlayerCharacter = require('../../database/models/PlayerCharacter');
-const NonPlayableCharacter = require('../../database/models/NonPlayableCharacter');
-const Quest = require('../../database/models/Quest');
+const { PlayerCharacter } = require('../../database/models/PlayerCharacter');
+const { NonPlayableCharacter } = require('../../database/models/NonPlayableCharacter');
+const { Quest } = require('../../database/models/Quest');
+// let count = 0;
 
 exports.dashboardPage = async (req, res) => {
     const bot = require('../../index');
@@ -76,10 +77,21 @@ async function getNonPlayableCharacters(guildId = null) {
 
 //QUESTS PAGE
 exports.guildInformationalQuestsDashboardPage = async (req, res) => {
+
+    // count++
+    // console.log('test ' + count)
     const bot = require('../../index');
     const guildId = req.params.id;
     const guild = bot.guilds.cache.get(guildId);
 
+
+    // await Quest.update(
+    //     { quest_status: 'MAYBE' },
+    //     {
+    //         where: { id: 'Q1646813744043', server_id: guildId }
+    //     }).then(async () => {
+    //         console.log('changed')
+    //     });
     let completedQuests = await getQuests(guildId, ["DONE", "EXPIRED", "FAILED"]);
     let uncompletedQuests = await getQuests(guildId, ["OPEN"]);
 
@@ -90,19 +102,28 @@ async function getQuests(guildId = null, status) {
     if (guildId === null) {
         let quests = await Quest.findAll();
         quests.sort(function (a, b) {
-            a = a.get('quest_importance_value')
-            b = b.get('quest_importance_value')
+            a = a.quest_importance_value
+            b = b.quest_importance_value
             return a - b;
         })
         return quests;
     } else {
-        let quests = await Quest.findAll({ where: { quest_status: status, server_id: guildId } });
-        quests.sort(function (a, b) {
-            a = a.get('quest_importance_value')
-            b = b.get('quest_importance_value')
-            return a - b;
-        })
-        return quests;
+        let quests = [];
+        // TODO new ORM cant handle arrays; fix this
+        for (let index = 0; index < status.length; index++) {
+            const element = status[index];
+            quests = quests.concat(await Quest.findAll({ where: { quest_status: element, server_id: guildId } }))
+            // console.log(await Quest.findAll({ where: { quest_status: element, server_id: guildId } }))
+
+            if (index === status.length - 1) {
+                quests.sort(function (a, b) {
+                    a = a.quest_importance_value
+                    b = b.quest_importance_value
+                    return a - b;
+                })
+                return quests;
+            }
+        }
     }
 }
 
@@ -114,13 +135,14 @@ exports.createQuestPost = async (req, res) => {
     } else if (priority_value > 5) {
         priority_value = 5;
     }
-    console.log(priority_value)
-
     let importance = await getImportanceText(priority_value);
     let title = req.body.title?.substring(0, 30);
     let description = req.body.description?.substring(0, 400);
 
+    let timestamp = Date.now();
     await Quest.create({
+        id: `Q${timestamp}`,
+        quest_id: `Q${timestamp}`,
         quest_giver: 'WEBSITE',
         quest_description: description,
         quest_name: title,
@@ -154,13 +176,22 @@ exports.deleteQuestRequest = async (req, res) => {
     let quest_id = req.body?.quest_id;
     let server_id = req.params?.id || '0';
     if (quest_id) {
-        await Quest.update(
-            { quest_status: 'DELETED' },
-            {
-                where: { quest_id: quest_id, server_id: server_id }
-            }).then(async () => {
+
+        await Quest.findOne({ where: { id: quest_id, quest_id: quest_id, server_id: server_id } }).then(async quest => {
+            // console.log(quest);
+            if (quest) {
+                quest.quest_status = 'DELETED';
+                await quest.save();
                 res.sendStatus(201)
-            });
+            }
+        });
+        // await Quest.update(
+        //     { quest_status: 'DELETED' },
+        //     {
+        //         where: { quest_id: quest_id, server_id: server_id }
+        //     }).then(async () => {
+        //         res.sendStatus(201)
+        //     });
     }
 }
 
@@ -170,33 +201,54 @@ exports.editQuestRequest = async (req, res) => {
     if (!req.body?.status) {
         let quest_id = req.body?.quest_id;
         let server_id = req.params?.id || '0';
+        console.log(quest_id)
         if (quest_id) {
-            await Quest.update(
-                {
-                    quest_name: req.body?.title,
-                    quest_description: req.body?.description,
-                    quest_importance_value: req.body?.priority,
-                    quest_importance: await getImportanceText(parseInt(req.body?.priority))
-                },
-                {
-                    where: { quest_id: quest_id, server_id: server_id }
-                }).then(async () => {
+            await Quest.findOne({ where: { id: quest_id, quest_id: quest_id, server_id: server_id } }).then(async quest => {
+                console.log(quest);
+                if (quest) {
+                    quest.quest_name = req.body?.title;
+                    quest.quest_description = req.body?.description;
+                    quest.quest_importance_value = req.body?.priority;
+                    quest.quest_importance = await getImportanceText(parseInt(req.body?.priority))
+                    await quest.save();
                     res.sendStatus(201)
-                });
+                }
+            });
+            // await Quest.update(
+            //     {
+            //         quest_name: req.body?.title,
+            //         quest_description: req.body?.description,
+            //         quest_importance_value: req.body?.priority,
+            //         quest_importance: await getImportanceText(parseInt(req.body?.priority))
+            //     },
+            //     {
+            //         where: { id: quest_id, server_id: server_id }
+            //     }).then(async () => {
+            //         res.sendStatus(201)
+            //     });
         }
     } else if (req.body?.status) {
         let quest_id = req.body?.quest_id;
         let server_id = req.params?.id || '0';
         if (quest_id) {
-            await Quest.update(
-                {
-                    quest_status: req.body?.status,
-                },
-                {
-                    where: { quest_id: quest_id, server_id: server_id }
-                }).then(async () => {
+
+            await Quest.findOne({ where: { id: quest_id, quest_id: quest_id, server_id: server_id } }).then(async quest => {
+                console.log(quest);
+                if (quest) {
+                    quest.quest_status = req.body?.status;
+                    await quest.save();
                     res.sendStatus(201)
-                });
+                }
+            });
+            // await Quest.update(
+            //     {
+            //         quest_status: req.body?.status,
+            //     },
+            //     {
+            //         where: { quest_id: quest_id, server_id: server_id }
+            //     }).then(async () => {
+            //         res.sendStatus(201)
+            //     });
         }
     }
 }

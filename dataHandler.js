@@ -11,6 +11,12 @@ module.exports.createCmd = async function (bot, guildId) {
                 required: true
             }],
         },
+        // server cmd
+        {
+            name: 'cc',
+            description: 'Create a new character!',
+            options: [],
+        },
         // chthulu cmd
         {
             name: 'chthulu',
@@ -215,18 +221,18 @@ module.exports.createCmd = async function (bot, guildId) {
             description: 'roll check',
             ephemeral: true,
             options: [
-            {
-                name: 'additional-modifier',
-                type: 'NUMBER',
-                description: 'add an additional modifier to the roll',
-                required: false
-            },
-            {
-                name: 'roll-twice',
-                type: 'STRING',
-                description: 'fill in anything in this field to have 2 rolls, this can be used for advantage or disadvantage',
-                required: false
-            }]
+                {
+                    name: 'additional-modifier',
+                    type: 'NUMBER',
+                    description: 'add an additional modifier to the roll',
+                    required: false
+                },
+                {
+                    name: 'roll-twice',
+                    type: 'STRING',
+                    description: 'fill in anything in this field to have 2 rolls, this can be used for advantage or disadvantage',
+                    required: false
+                }]
         },
         // server cmd
         {
@@ -245,6 +251,73 @@ module.exports.createCmd = async function (bot, guildId) {
                 required: false
             }],
         },
+        // help cmd
+        {
+            name: "help",
+            // alias: ["hlp"],
+            description: "Gives all possible commands",
+            options: [{
+                name: 'command',
+                type: 'STRING',
+                description: 'Command name',
+                required: false
+            }],
+        },
+        // server cmd
+        {
+            name: "clear",
+            // alias: [],
+            description: "Clears n-number of messages",
+            options: [{
+                name: 'number',
+                type: 'NUMBER',
+                description: 'Amount of messages you want to delete',
+                required: true
+            }],
+
+
+
+        },
+        {
+            name: "npc",
+            // alias: [],
+            description: "Displays your character!",
+            options: [{
+                name: 'name',
+                type: 'STRING',
+                description: `Name of the NPC you're trying to find`,
+                required: false
+            }],
+        },
+        // // magicItemList cmd
+        {
+            name: "magic-item-list",
+            // alias: [],
+            description: "gives a list of all default magic items.",
+            options: [],
+        },
+        // // create npc cmd
+        {
+            name: "create-npc",
+            // alias: [],
+            description: "Creates a new channel with questions about your new NPC",
+            options: [],
+        },
+        // // session cmd
+        {
+            name: "session",
+            // alias: [],
+            description: "Handles actions around sessions",
+            options: [{
+                name: 'action',
+                type: 'STRING',
+                description: `Type of action you want to do: "request"`,
+                required: true
+            }],
+        },
+
+
+
     ]
     await bot.guilds.cache.get(guildId)?.commands.set(data)
 }

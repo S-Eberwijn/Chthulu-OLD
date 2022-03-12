@@ -17,6 +17,8 @@
     "enmap": "^5.8.7",
     "express": "^4.17.1",
     "fast-average-color-node": "^1.0.3",
+    "firebase-admin": "^10.0.2",
+    "firestore-sequelizer": "^0.2.5",
     "https": "^1.0.0",
     "mariadb": "^2.5.4",
     "moment": "^2.29.1",

@@ -1,4 +1,4 @@
-const Quest = require('../../../database/models/Quest');
+const {Quest} = require('../../../database/models/Quest');
 const { MessageEmbed } = require('discord.js');
 
 module.exports.run = async (interaction) => {
@@ -14,9 +14,9 @@ module.exports.run = async (interaction) => {
         // .setThumbnail(`https://images.squarespace-cdn.com/content/v1/5cabfe148dfc8c07a688849e/1599878650736-K68SBTX8CQOTZJ2TRR9W/The+Quest+Board+1.png`)
         // .setTimestamp()
         ALL_SERVER_QUESTS.forEach((QUEST) => {
-            questEmbed.addField(`${getRightEmoji(QUEST.get(`quest_importance_value`))} - ${QUEST.get(`quest_name`)}`, `\>\>\> \`\`\`${QUEST.get(`quest_description`)}\`\`\``, false)
+            questEmbed.addField(`${getRightEmoji(QUEST.quest_importance_value)} - ${QUEST.quest_name}`, `\>\>\> \`\`\`${QUEST.quest_description}\`\`\``, false)
         })
-        questEmbed.setFooter(`${ALL_SERVER_QUESTS.length} quests`)
+        questEmbed.setFooter(`Create new quests on the Chthulu website!`)
 
     })
     return await interaction.reply({ embeds: [questEmbed] })

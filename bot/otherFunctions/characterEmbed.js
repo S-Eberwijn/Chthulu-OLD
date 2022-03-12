@@ -5,7 +5,7 @@ const { paginationEmbed } = require('../otherFunctions/paginationEmbed')
 
 
 exports.sendCharacterEmbedMessageFromInteraction = async function (interaction, character, content, components = []) {
-    await interaction.reply({
+    await interaction.editReply({
         content: content,
         embeds: [await getCharacterEmbed(character)],
         files: [await getCharacterLevelImage(character),
@@ -50,15 +50,15 @@ exports.createNPCPaginationEmbedInChannel = async function (channel,characters,c
 async function getCharacterEmbed(character) {
     // console.log(character);
     return new MessageEmbed()
-        .setColor(await getAverageImageColor(character.get('picture_url')))
-        .setThumbnail(`attachment://${character.get('level')}.png`)
-        .setTitle(`${await getCharacterFullName(character)} (${character.get('age')})`)
+        .setColor(await getAverageImageColor(character.picture_url))
+        .setThumbnail(`attachment://${character.level}.png`)
+        .setTitle(`${await getCharacterFullName(character)} (${character.age})`)
         .setImage(`attachment://img.png`)
-        .setDescription(character.get('description'))
+        .setDescription(character.description)
         .addFields(
-            { name: '\*\*RACE\*\*', value: `${character.get('race')}`, inline: true },
-            { name: '\*\*CLASS\*\*', value: `${character.get('class')}`, inline: true },
-            { name: '\*\*BACKGROUND\*\*', value: `${character.get('background')}`, inline: true }
+            { name: '\*\*RACE\*\*', value: `${character.race}`, inline: true },
+            { name: '\*\*CLASS\*\*', value: `${character.class}`, inline: true },
+            { name: '\*\*BACKGROUND\*\*', value: `${character.background}`, inline: true }
         )
 }
 
@@ -66,35 +66,35 @@ async function getNonPlayableCharacterEmbed(npc) {
     //console.log(npc);
     return new MessageEmbed()
         .setColor("#2C2F33")
-        .setTitle(`${npc.get('name')} (${npc.get('age') || '?'})`)
-        .setImage(npc.get('picture_url'))
-        .setDescription(npc.get('description'))
+        .setTitle(`${npc.name} (${npc.age || '?'})`)
+        .setImage(npc.picture_url)
+        .setDescription(npc.description)
         .addFields(
-            { name: '\*\*RACE\*\*', value: `${npc.get('race')}`, inline: true },
-            { name: '\*\*CLASS\*\*', value: `${npc.get('class')}`, inline: true },
-            { name: '\*\*OCCUPATION\*\*', value: `${npc.get('title')}`, inline: true }
+            { name: '\*\*RACE\*\*', value: `${npc.race}`, inline: true },
+            { name: '\*\*CLASS\*\*', value: `${npc.class}`, inline: true },
+            { name: '\*\*OCCUPATION\*\*', value: `${npc.title}`, inline: true }
         );
 }
 
 //TODO: This sometimes doesnt show
 async function getCharacterLevelImage(character) {
-    return new MessageAttachment(`./bot/images/DnD/CharacterLevel/${character.get('level')}.png`)
+    return new MessageAttachment(`./bot/images/DnD/CharacterLevel/${character.level}.png`)
 }
 
 function getCharacterFullName(character) {
-    let characterTitle = character.get('name');
-    if (character.get('title')) {
+    let characterTitle = character.name;
+    if (character.title) {
         characterTitle = '';
-        if (hasWhiteSpace(character.get('name'))) {
-            let temporaryNameHolder = character.get('name').split(' ');
+        if (hasWhiteSpace(character.name)) {
+            let temporaryNameHolder = character.name.split(' ');
             for (let i = 0; i < temporaryNameHolder.length; i++) {
                 characterTitle += temporaryNameHolder[i] + ' ';
                 if (i === 0) {
-                    characterTitle += `\"${character.get('title')}\" `;
+                    characterTitle += `\"${character.title}\" `;
                 }
             }
         } else {
-            characterTitle = `${character.get('name')} \"${character.get('title')}\"`;
+            characterTitle = `${character.name} \"${character.title}\"`;
         }
     }
     return characterTitle;
@@ -110,7 +110,7 @@ async function getCharacterPicture(character) {
     const canvas = createCanvas(1200, 900);
     const context = canvas.getContext('2d');
 
-    const url = character.get('picture_url')
+    const url = character.picture_url
     // console.log(url);
     const image = await loadImage(url)
 

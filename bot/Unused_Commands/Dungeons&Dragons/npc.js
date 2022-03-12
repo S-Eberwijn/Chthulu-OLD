@@ -1,4 +1,4 @@
-const NonPlayableCharacter = require('../../../database/models/NonPlayableCharacter');
+const {NonPlayableCharacter} = require('../../../database/models/NonPlayableCharacter');
 const { getNonPlayableCharacterEmbed } = require('../../otherFunctions/characterEmbed')
 
 const { MessageEmbed, MessageButton } = require('discord.js');

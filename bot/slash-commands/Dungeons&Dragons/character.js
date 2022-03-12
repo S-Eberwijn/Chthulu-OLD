@@ -1,8 +1,9 @@
-const PlayerCharacter = require('../../../database/models/PlayerCharacter');
+const { PlayerCharacter } = require('../../../database/models/PlayerCharacter');
 const { getCharacterEmbed, getCharacterLevelImage, getCharacterPicture } = require('../../otherFunctions/characterEmbed')
-const {sendCharacterEmbedMessageFromInteraction }  = require('../../otherFunctions/characterEmbed');
+const { sendCharacterEmbedMessageFromInteraction,sendCharacterEmbedMessageInChannel } = require('../../otherFunctions/characterEmbed');
 
 module.exports.run = async (interaction) => {
+    interaction.deferReply();
     //Returns the character of the message author or the mentioned user
     const user = interaction.options.getUser('user') || interaction.user;
     //Searches the database for a valid character

@@ -1,4 +1,5 @@
-const GeneralInfo = require('../../../database/models/GeneralInfo');
+//Firestore change done
+const {GeneralInfo} = require('../../../database/models/GeneralInfo');
 
 module.exports.run = async (interaction) => {
     if (!interaction.guild.channels.cache.find(channel => channel.name === `${interaction.options.getString('channel-name')}`)) return interaction.reply({ content: "**ERROR**: There is no such channel. Maybe you made a typo?" });
@@ -7,12 +8,12 @@ module.exports.run = async (interaction) => {
     if (!foundServer) return interaction.reply({ content: "**ERROR**: Could not find server in the database!" });
 
     if (foundServer.in_character_channels != null) {
-        let inCharacterChannels = foundServer.get('in_character_channels');
+        let inCharacterChannels = foundServer.in_character_channels;
         inCharacterChannels.push(channelID)
         foundServer.in_character_channels = inCharacterChannels;
         foundServer.save();
     } else {
-        foundServer.in_character_channels = channelID;
+        foundServer.in_character_channels = [channelID];
         foundServer.save();
     }
 

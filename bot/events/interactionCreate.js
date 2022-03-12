@@ -1,12 +1,11 @@
 const { writeToJsonDb } = require('../otherFunctions/writeToJsonDb')
 const { getBotEmbed } = require('../otherFunctions/botEmbed')
-const PlayerCharacter = require('../../database/models/PlayerCharacter');
-const NonPlayableCharacter = require('../../database/models/NonPlayableCharacter');
+const { PlayerCharacter } = require('../../database/models/PlayerCharacter');
+const { NonPlayableCharacter } = require('../../database/models/NonPlayableCharacter');
 const QUESTIONS_ARRAY = require('../jsonDb/npcCreationQuestions.json');
 const CHARACTER_QUESTIONS_ARRAY = require('../jsonDb/characterCreationQuestions.json');
-const {sendNPCEmbedMessageInChannel, sendNPCCharacterEmbedMessageFromInteraction, sendCharacterEmbedMessageInChannel }  = require('../otherFunctions/characterEmbed');
+const { sendNPCEmbedMessageInChannel, sendNPCCharacterEmbedMessageFromInteraction, sendCharacterEmbedMessageInChannel } = require('../otherFunctions/characterEmbed');
 const { MessageEmbed, MessageActionRow, MessageButton, MessageSelectMenu } = require('discord.js');
-const { cp } = require('fs/promises');
 
 //characterbuttons
 const messageComponents1 = new MessageActionRow().addComponents(
@@ -125,11 +124,11 @@ module.exports = async (bot, interaction) => {
         //!createCharacter
         switch (interaction.customId) {
             case 'approve-character-button':
-                await PlayerCharacter.findOne({ where: { player_id: interaction.user.id, server_id: interaction.guildId, alive: 1, status: "CREATED" } }).then((character) => { if (character) { character['alive'] = 0; character.save() } });
+                await PlayerCharacter.findOne({ where: { player_id: interaction.user.id, server_id: interaction.guildId, alive: 1, status: "CREATED" } }).then((character) => { if (character) { character.alive = 0; character.save() } });
                 await PlayerCharacter.findOne({ where: { player_id: interaction.user.id, server_id: interaction.guildId, status: "CREATING" } }).then((character) => {
                     if (character) {
-                        character['status'] = 'CREATED';
-                        character['alive'] = 1;
+                        character.status = 'CREATED';
+                        character.alive = 1;
                         character.save().then(() => interaction.message.edit({ content: null, components: [messageComponents1, messageComponents2, messageComponents3] }))
                     }
                 });
@@ -143,7 +142,7 @@ module.exports = async (bot, interaction) => {
                 //await NonPlayableCharacter.findOne({ where: { creator_id: interaction.guild.roles.cache.find(role => role.name === "Dungeon Master").id, server_id: interaction.guildId, status: "CREATED" } });
                 await NonPlayableCharacter.findOne({ where: { creator_id: interaction.user.id, server_id: interaction.guildId, status: "CREATING" } }).then((character) => {
                     if (character) {
-                        character.set("status",'INVISIBLE');
+                        character.status = 'INVISIBLE';
                         character.save().then(() => interaction.message.edit({ content: null, components: [messageComponents4, messageComponents5, messageComponents6] }))
                     }
                 });
@@ -157,46 +156,46 @@ module.exports = async (bot, interaction) => {
         // interaction.deferUpdate();
     }
     //edit npc buttons
-    try{
+    try {
         let charId = "";
-            switch (interaction.customId) {
+        switch (interaction.customId) {
             case 'change-npc-visibility-button':
                 interaction.deferUpdate();
-                if(!interaction.member.roles.cache.has(interaction.guild.roles.cache.find(role => role.name.includes('Dungeon Master')).id)){
+                if (!interaction.member.roles.cache.has(interaction.guild.roles.cache.find(role => role.name.includes('Dungeon Master')).id)) {
                     interaction.channel.send("Only Dm's can set NPC's to visible").then(msg => { setTimeout(() => msg.delete(), 3000) }).catch(err => console.log(err));
                     return;
                 }
                 charId = interaction.channel.name.split("⼁")[0];
                 await NonPlayableCharacter.findOne({ where: { character_id: charId, server_id: interaction.guildId } }).then((character) => {
                     if (character) {
-                        if(character.get("status")=="VISIBLE"){ 
-                            character.set("status",'INVISIBLE');
+                        if (character.status == "VISIBLE") {
+                            character.status = 'INVISIBLE';
                             character.save()
-                        } else if(character.get("status")=="INVISIBLE"){ 
-                            character.set("status",'VISIBLE');
+                        } else if (character.status == "INVISIBLE") {
+                            character.status = 'VISIBLE';
                             character.save()
                         }
-                        interaction.channel.send(character.get("name")+" is now " + character.get("status").toLowerCase( ) + " for all players")
+                        interaction.channel.send(`${character.name} is now  ${character.status.toLowerCase()} for all players`)
                             .then(msg => { setTimeout(() => msg.delete(), 3000) }).catch(err => console.log(err));
                     }
                 });
                 return;
             case 'change-npc-name-button':
-                await npcEditTextField(interaction,interaction.channel.name.split("⼁")[0], QUESTIONS_ARRAY[0],bot)
+                await npcEditTextField(interaction, interaction.channel.name.split("⼁")[0], QUESTIONS_ARRAY[0], bot)
                 await NonPlayableCharacter.findOne({ where: { character_id: interaction.channel.name.split("⼁")[0], server_id: interaction.guildId } }).then((character) => {
-                    if (character){
-                        interaction.channel.setName(character.get("character_id") + "⼁" + character.get('name'))
+                    if (character) {
+                        interaction.channel.setName("NPC-" + character.name)
                     }
                 });
                 return;
             case 'change-npc-race-button':
-                await npcEditTextField(interaction,interaction.channel.name.split("⼁")[0], QUESTIONS_ARRAY[1],bot)
+                await npcEditTextField(interaction, interaction.channel.name.split("⼁")[0], QUESTIONS_ARRAY[1], bot)
                 return;
             case 'change-npc-class-button':
-                if(!interaction.member.roles.cache.has(interaction.guild.roles.cache.find(role => role.name.includes('Dungeon Master')).id)){
+                if (!interaction.member.roles.cache.has(interaction.guild.roles.cache.find(role => role.name.includes('Dungeon Master')).id)) {
                     interaction.channel.send("How did you even get here? regardless you need the Dungeon Master role to edit npcs")
-                    .then(msg => { setTimeout(() => msg.delete(), 3000) })
-                    .catch(err => console.log(err));
+                        .then(msg => { setTimeout(() => msg.delete(), 3000) })
+                        .catch(err => console.log(err));
                     return;
                 }
                 charId = interaction.channel.name.split("⼁")[0];
@@ -223,22 +222,22 @@ module.exports = async (bot, interaction) => {
                         errors: ['time'],
                     }).then(async (interaction) => {
                         interaction.deferUpdate();
-                        await NonPlayableCharacter.findOne({ where: { character_id: charId, server_id: interaction.guildId } }).then((character) =>{
+                        await NonPlayableCharacter.findOne({ where: { character_id: charId, server_id: interaction.guildId } }).then((character) => {
                             if (character) {
-                                character.set(QUESTIONS_ARRAY[2].databaseTable, interaction.values[0])
+                                character[`${QUESTIONS_ARRAY[2].databaseTable}`] = interaction.values[0];
                                 character.save().then(async () => {
-                                    try{
-                                    interaction.channel.bulkDelete(30);
-                                    }catch(e){
+                                    try {
+                                        interaction.channel.bulkDelete(30);
+                                    } catch (e) {
                                         console.log(e);
                                         console.log("problem with deleting messages");
                                     }
-                                    interaction.channel.send("The " + QUESTIONS_ARRAY[2].databaseTable + " of " + character.get("name") + " has been changed to " + character.get(QUESTIONS_ARRAY[2].databaseTable) + ".")
+                                    interaction.channel.send("The " + QUESTIONS_ARRAY[2].databaseTable + " of " + character.name + " has been changed.")
                                         .then(msg => { setTimeout(() => msg.delete(), 3000) })
                                         .catch(err => console.log(err));
-                                    sendNPCEmbedMessageInChannel(interaction.channel,character," ",[messageComponents4, messageComponents5, messageComponents6]).catch(err => console.log(err));
+                                    sendNPCEmbedMessageInChannel(interaction.channel, character, " ", [messageComponents4, messageComponents5, messageComponents6]).catch(err => console.log(err));
                                 });
-                            }else {
+                            } else {
                                 interaction.channel.send("This character has been deleted from our database.")
                                     .then(msg => { setTimeout(() => msg.delete(), 3000) })
                                     .catch(err => console.log(err));
@@ -246,64 +245,67 @@ module.exports = async (bot, interaction) => {
                         });
                     }).catch(function () {
                         interaction.channel.send("Times up! You took too long to respond. Field remains unchanged.")
-                        .then(msg => { setTimeout(() => msg.delete(), 3000) })
-                        .catch(err => console.log(err));
-                    });  
+                            .then(msg => { setTimeout(() => msg.delete(), 3000) })
+                            .catch(err => console.log(err));
+                    });
                 });
                 return;
             case 'change-npc-title-button':
-                await npcEditTextField(interaction,interaction.channel.name.split("⼁")[0], QUESTIONS_ARRAY[3],bot)
+                await npcEditTextField(interaction, interaction.channel.name.split("⼁")[0], QUESTIONS_ARRAY[3], bot)
                 return;
             case 'change-npc-age-button':
-                await npcEditTextField(interaction,interaction.channel.name.split("⼁")[0], QUESTIONS_ARRAY[4],bot)
+                await npcEditTextField(interaction, interaction.channel.name.split("⼁")[0], QUESTIONS_ARRAY[4], bot)
                 return;
             case 'change-npc-description-button':
-                await npcEditTextField(interaction,interaction.channel.name.split("⼁")[0], QUESTIONS_ARRAY[5],bot)
+                await npcEditTextField(interaction, interaction.channel.name.split("⼁")[0], QUESTIONS_ARRAY[5], bot)
+                return;
+            case 'change-npc-picture-button':
+                await npcEditTextField(interaction, interaction.channel.name.split("⼁")[0], QUESTIONS_ARRAY[6], bot)
                 return;
             case 'delete-npc-button':
                 interaction.deferUpdate();
-                if(!interaction.member.roles.cache.has(interaction.guild.roles.cache.find(role => role.name.includes('Dungeon Master')).id)){
+                if (!interaction.member.roles.cache.has(interaction.guild.roles.cache.find(role => role.name.includes('Dungeon Master')).id)) {
                     interaction.channel.send("How did you even get here? regardless you need the Dungeon Master role to edit npcs")
-                    .then(msg => { setTimeout(() => msg.delete(), 3000) })
-                    .catch(err => console.log(err));
+                        .then(msg => { setTimeout(() => msg.delete(), 3000) })
+                        .catch(err => console.log(err));
                     return;
                 }
                 charId = interaction.channel.name.split("⼁")[0];
-                await NonPlayableCharacter.findOne({ where: { character_id: charId, server_id: interaction.guildId } }).then((character) =>{
-                    try{
+                await NonPlayableCharacter.findOne({ where: { character_id: charId, server_id: interaction.guildId } }).then((character) => {
+                    try {
                         character.destroy().then(async () => {
                             interaction.channel.delete().then(() => {
                                 interaction.user.send({ content: 'Times up! You took too long to respond. Try again by requesting a new character creation channel.' });
                             });
                         });
-                    }catch(err ){
+                    } catch (err) {
                         console.log(err);
                     }
                 });
                 return;
-            }
-    }catch (error) {
+        }
+    } catch (error) {
         console.log(error)
     }
     //edit character buttons
-    try{
+    try {
         let questionEmbed;
         let messageComponentsArray = [];
         let createdChannel = interaction.channel;
-        switch (interaction.customId){
+        switch (interaction.customId) {
             case 'change-character-name-button':
-                await characterEditTextField(interaction, CHARACTER_QUESTIONS_ARRAY[0],bot)
-                await PlayerCharacter.findOne({ where: {  player_id: interaction.user.id, alive: 1, server_id: interaction.guildId } }).then((character) => {
-                    if (character){
-                        interaction.channel.setName(character.get('name'))
+                await characterEditTextField(interaction, CHARACTER_QUESTIONS_ARRAY[0], bot)
+                await PlayerCharacter.findOne({ where: { player_id: interaction.user.id, alive: 1, server_id: interaction.guildId } }).then((character) => {
+                    if (character) {
+                        interaction.channel.setName(character.name)
                     }
                 });
                 return;
             case 'change-character-age-button':
-                await characterEditTextField(interaction, CHARACTER_QUESTIONS_ARRAY[4],bot)
+                await characterEditTextField(interaction, CHARACTER_QUESTIONS_ARRAY[4], bot)
                 return;
             case 'change-character-short-story-button':
-                await characterEditTextField(interaction, CHARACTER_QUESTIONS_ARRAY[5],bot)
+                await characterEditTextField(interaction, CHARACTER_QUESTIONS_ARRAY[5], bot)
                 return;
             case 'change-character-race-button':
                 interaction.deferUpdate();
@@ -326,9 +328,12 @@ module.exports = async (bot, interaction) => {
                         .setMaxValues(1)
                         .setDisabled(false)
                         .addOptions(Object.keys(CHARACTER_QUESTIONS_ARRAY[1].answers)
-                        .map(function (key) {
-                            return { label: `${CHARACTER_QUESTIONS_ARRAY[1].answers[key].category}`, 
-                            value: `${CHARACTER_QUESTIONS_ARRAY[1].answers[key].category}` } }))
+                            .map(function (key) {
+                                return {
+                                    label: `${CHARACTER_QUESTIONS_ARRAY[1].answers[key].category}`,
+                                    value: `${CHARACTER_QUESTIONS_ARRAY[1].answers[key].category}`
+                                }
+                            }))
                 ))
                 messageComponentsArray.push(new MessageActionRow().addComponents(
                     new MessageSelectMenu()
@@ -353,24 +358,23 @@ module.exports = async (bot, interaction) => {
                                 .setMaxValues(1)
                                 .setDisabled(false)
                                 .addOptions(Object.keys(CHARACTER_QUESTIONS_ARRAY[1].answers[Object.keys(CHARACTER_QUESTIONS_ARRAY[1].answers)
-                                    .filter(function (key) 
-                                        { 
-                                            return CHARACTER_QUESTIONS_ARRAY[1].answers[key].category === response.values[0] 
-                                        })[0]].values)
-                                    .map(function (key) { 
-                                        return { 
+                                    .filter(function (key) {
+                                        return CHARACTER_QUESTIONS_ARRAY[1].answers[key].category === response.values[0]
+                                    })[0]].values)
+                                    .map(function (key) {
+                                        return {
                                             label: `${CHARACTER_QUESTIONS_ARRAY[1]
-                                            .answers[Object.keys(CHARACTER_QUESTIONS_ARRAY[1].answers)
-                                            .filter(function (key) { 
-                                                return CHARACTER_QUESTIONS_ARRAY[1].answers[key].category === response.values[0] })[0]]
-                                                    .values[key]}`, value: `${CHARACTER_QUESTIONS_ARRAY[1].answers[Object.keys(CHARACTER_QUESTIONS_ARRAY[1].answers)
-                                                    .filter(function (key) 
-                                                    { 
-                                                        return CHARACTER_QUESTIONS_ARRAY[1].answers[key].category === response.values[0] 
-                                                    })[0]].values[key]}` 
-                                                } 
-                                            })
-                                        )
+                                                .answers[Object.keys(CHARACTER_QUESTIONS_ARRAY[1].answers)
+                                                    .filter(function (key) {
+                                                        return CHARACTER_QUESTIONS_ARRAY[1].answers[key].category === response.values[0]
+                                                    })[0]]
+                                                .values[key]}`, value: `${CHARACTER_QUESTIONS_ARRAY[1].answers[Object.keys(CHARACTER_QUESTIONS_ARRAY[1].answers)
+                                                    .filter(function (key) {
+                                                        return CHARACTER_QUESTIONS_ARRAY[1].answers[key].category === response.values[0]
+                                                    })[0]].values[key]}`
+                                        }
+                                    })
+                                )
                         )
                         response.deferUpdate();
                         response.message.edit({ components: newSelectionMenu.components })
@@ -386,22 +390,22 @@ module.exports = async (bot, interaction) => {
                         errors: ['time'],
                     }).then(async (interaction) => {
                         interaction.deferUpdate();
-                        await PlayerCharacter.findOne({ where: { player_id: interaction.user.id, alive: 1, server_id: interaction.guildId } }).then((character) =>{
+                        await PlayerCharacter.findOne({ where: { player_id: interaction.user.id, alive: 1, server_id: interaction.guildId } }).then((character) => {
                             if (character) {
-                                character.set(CHARACTER_QUESTIONS_ARRAY[1].databaseTable, interaction.values[0])
+                                character[`${CHARACTER_QUESTIONS_ARRAY[1].databaseTable}`] = interaction.values[0];
                                 character.save().then(async () => {
-                                    try{
-                                    interaction.channel.bulkDelete(30);
-                                    }catch(e){
+                                    try {
+                                        interaction.channel.bulkDelete(30);
+                                    } catch (e) {
                                         console.log(e);
                                         console.log("problem with deleting messages");
                                     }
-                                    interaction.channel.send("The " + CHARACTER_QUESTIONS_ARRAY[1].databaseTable + " of " + character.get("name") + " has been changed to " + character.get(CHARACTER_QUESTIONS_ARRAY[1].databaseTable) + ".")
+                                    interaction.channel.send("The " + CHARACTER_QUESTIONS_ARRAY[1].databaseTable + " of " + interaction.values[0] + " has been changed.")
                                         .then(msg => { setTimeout(() => msg.delete(), 3000) })
                                         .catch(err => console.log(err));
-                                    sendCharacterEmbedMessageInChannel(interaction.channel,character," ",[messageComponents1, messageComponents2, messageComponents3]).catch(err => console.log(err));
+                                    sendCharacterEmbedMessageInChannel(interaction.channel, character, " ", [messageComponents1, messageComponents2, messageComponents3]).catch(err => console.log(err));
                                 });
-                            }else {
+                            } else {
                                 interaction.channel.send("This character has been deleted from our database.")
                                     .then(msg => { setTimeout(() => msg.delete(), 3000) })
                                     .catch(err => console.log(err));
@@ -409,9 +413,9 @@ module.exports = async (bot, interaction) => {
                         });
                     }).catch(function () {
                         interaction.channel.send("Times up! You took too long to respond. Field remains unchanged.")
-                        .then(msg => { setTimeout(() => msg.delete(), 3000) })
-                        .catch(err => console.log(err));
-                    });  
+                            .then(msg => { setTimeout(() => msg.delete(), 3000) })
+                            .catch(err => console.log(err));
+                    });
                 });
                 return;
             case 'change-character-class-button':
@@ -436,22 +440,22 @@ module.exports = async (bot, interaction) => {
                         errors: ['time'],
                     }).then(async (interaction) => {
                         interaction.deferUpdate();
-                        await PlayerCharacter.findOne({ where: { player_id: interaction.user.id, alive: 1, server_id: interaction.guildId } }).then((character) =>{
+                        await PlayerCharacter.findOne({ where: { player_id: interaction.user.id, alive: 1, server_id: interaction.guildId } }).then((character) => {
                             if (character) {
-                                character.set(CHARACTER_QUESTIONS_ARRAY[2].databaseTable, interaction.values[0])
+                                character[`${CHARACTER_QUESTIONS_ARRAY[2].databaseTable}`] = interaction.values[0];
                                 character.save().then(async () => {
-                                    try{
-                                    interaction.channel.bulkDelete(30);
-                                    }catch(e){
+                                    try {
+                                        interaction.channel.bulkDelete(30);
+                                    } catch (e) {
                                         console.log(e);
                                         console.log("problem with deleting messages");
                                     }
-                                    interaction.channel.send("The " + CHARACTER_QUESTIONS_ARRAY[2].databaseTable + " of " + character.get("name") + " has been changed to " + character.get(CHARACTER_QUESTIONS_ARRAY[2].databaseTable) + ".")
+                                    interaction.channel.send("The " + CHARACTER_QUESTIONS_ARRAY[2].databaseTable + " of " + character.name + " has been changed.")
                                         .then(msg => { setTimeout(() => msg.delete(), 3000) })
                                         .catch(err => console.log(err));
-                                    sendCharacterEmbedMessageInChannel(interaction.channel,character," ",components=[messageComponents1, messageComponents2, messageComponents3]).catch(err => console.log(err));
+                                    sendCharacterEmbedMessageInChannel(interaction.channel, character, " ", components = [messageComponents1, messageComponents2, messageComponents3]).catch(err => console.log(err));
                                 });
-                            }else {
+                            } else {
                                 interaction.channel.send("This character has been deleted from our database.")
                                     .then(msg => { setTimeout(() => msg.delete(), 3000) })
                                     .catch(err => console.log(err));
@@ -459,9 +463,9 @@ module.exports = async (bot, interaction) => {
                         });
                     }).catch(function () {
                         interaction.channel.send("Times up! You took too long to respond. Field remains unchanged.")
-                        .then(msg => { setTimeout(() => msg.delete(), 3000) })
-                        .catch(err => console.log(err));
-                    });  
+                            .then(msg => { setTimeout(() => msg.delete(), 3000) })
+                            .catch(err => console.log(err));
+                    });
                 });
                 return;
             case 'change-character-background-button':
@@ -481,7 +485,7 @@ module.exports = async (bot, interaction) => {
                             .setMaxValues(1)
                             .setDisabled(false)
                             .addOptions(Object.keys(elements)
-                            .map(function (key) { return { label: `${elements[key]}`, value: `${elements[key]}` } }))
+                                .map(function (key) { return { label: `${elements[key]}`, value: `${elements[key]}` } }))
                     ))
                 }
                 await createdChannel.send({ embeds: [questionEmbed], components: messageComponentsArray, fetchReply: true }).then(async () => {
@@ -491,22 +495,22 @@ module.exports = async (bot, interaction) => {
                         errors: ['time'],
                     }).then(async (interaction) => {
                         interaction.deferUpdate();
-                        await PlayerCharacter.findOne({ where: { player_id: interaction.user.id, alive: 1, server_id: interaction.guildId } }).then((character) =>{
+                        await PlayerCharacter.findOne({ where: { player_id: interaction.user.id, alive: 1, server_id: interaction.guildId } }).then((character) => {
                             if (character) {
-                                character.set(CHARACTER_QUESTIONS_ARRAY[3].databaseTable, interaction.values[0])
+                                character[`${CHARACTER_QUESTIONS_ARRAY[3].databaseTable}`] = interaction.values[0];
                                 character.save().then(async () => {
-                                    try{
-                                    interaction.channel.bulkDelete(30);
-                                    }catch(e){
+                                    try {
+                                        interaction.channel.bulkDelete(30);
+                                    } catch (e) {
                                         console.log(e);
                                         console.log("problem with deleting messages");
                                     }
-                                    interaction.channel.send("The " + CHARACTER_QUESTIONS_ARRAY[3].databaseTable + " of " + character.get("name") + " has been changed to " + character.get(CHARACTER_QUESTIONS_ARRAY[3].databaseTable) + ".")
+                                    interaction.channel.send("The " + CHARACTER_QUESTIONS_ARRAY[3].databaseTable + " of " + character.name + " has been changed.")
                                         .then(msg => { setTimeout(() => msg.delete(), 3000) })
                                         .catch(err => console.log(err));
-                                    sendCharacterEmbedMessageInChannel(interaction.channel,character," ",[messageComponents1, messageComponents2, messageComponents3]).catch(err => console.log(err));
+                                    sendCharacterEmbedMessageInChannel(interaction.channel, character, " ", [messageComponents1, messageComponents2, messageComponents3]).catch(err => console.log(err));
                                 });
-                            }else {
+                            } else {
                                 interaction.channel.send("This character has been deleted from our database.")
                                     .then(msg => { setTimeout(() => msg.delete(), 3000) })
                                     .catch(err => console.log(err));
@@ -514,30 +518,30 @@ module.exports = async (bot, interaction) => {
                         });
                     }).catch(function () {
                         interaction.channel.send("Times up! You took too long to respond. Field remains unchanged.")
-                        .then(msg => { setTimeout(() => msg.delete(), 3000) })
-                        .catch(err => console.log(err));
-                    });  
+                            .then(msg => { setTimeout(() => msg.delete(), 3000) })
+                            .catch(err => console.log(err));
+                    });
                 });
                 return;
             case 'change-character-picture-button':
-                await characterEditTextField(interaction, CHARACTER_QUESTIONS_ARRAY[6],bot)
+                await characterEditTextField(interaction, CHARACTER_QUESTIONS_ARRAY[6], bot)
                 return;
             case 'delete-character-button':
-                await PlayerCharacter.findOne({ where: {  player_id: interaction.user.id, alive: 1, server_id: interaction.guildId } }).then((character) =>{
+                await PlayerCharacter.findOne({ where: { player_id: interaction.user.id, alive: 1, server_id: interaction.guildId } }).then((character) => {
                     if (character) {
-                        character.set("alive",0);
-                        character.set("status","DELETED");
+                        character.alive = 0;
+                        character.status = "DELETED";
                         character.save().then(async () => {
-                            try{
-                            interaction.channel.bulkDelete(30);
-                            }catch(e){
+                            try {
+                                interaction.channel.bulkDelete(30);
+                            } catch (e) {
                                 console.log(e);
                                 console.log("problem with deleting messages");
                             }
-                            interaction.channel.send(character.get("name") + " has been deleted, the character is no longer editable.")
-                            sendCharacterEmbedMessageInChannel(interaction.channel,character).catch(err => console.log(err));
+                            interaction.channel.send(`${character.name} has been deleted, the character is no longer editable.`)
+                            sendCharacterEmbedMessageInChannel(interaction.channel, character).catch(err => console.log(err));
                         });
-                    }else {
+                    } else {
                         interaction.channel.send("This character has been deleted from our database.")
                             .then(msg => { setTimeout(() => msg.delete(), 3000) })
                             .catch(err => console.log(err));
@@ -545,17 +549,17 @@ module.exports = async (bot, interaction) => {
                 })
                 return;
         }
-    }catch(err) {console.log(err)}
+    } catch (err) { console.log(err) }
 
-    
+
 };
 
-async function npcEditTextField(interaction,charId, QUESTION_OBJECT,bot){
+async function npcEditTextField(interaction, charId, QUESTION_OBJECT, bot) {
     interaction.deferUpdate();
-    if(!interaction.member.roles.cache.has(interaction.guild.roles.cache.find(role => role.name.includes('Dungeon Master')).id)){
+    if (!interaction.member.roles.cache.has(interaction.guild.roles.cache.find(role => role.name.includes('Dungeon Master')).id)) {
         interaction.channel.send("How did you even get here? regardless you need the Dungeon Master role to edit npcs")
-        .then(msg => { setTimeout(() => msg.delete(), 3000) })
-        .catch(err => console.log(err));
+            .then(msg => { setTimeout(() => msg.delete(), 3000) })
+            .catch(err => console.log(err));
         return;
     }
     let questionEmbed = new MessageEmbed()
@@ -584,30 +588,30 @@ async function npcEditTextField(interaction,charId, QUESTION_OBJECT,bot){
             time: 300000,
             errors: ['time'],
         }).then(async (collected) => {
-            await NonPlayableCharacter.findOne({ where: { character_id: charId, server_id: interaction.guildId } }).then((character) =>{
+            await NonPlayableCharacter.findOne({ where: { character_id: charId, server_id: interaction.guildId } }).then((character) => {
                 if (character) {
                     if (QUESTION_OBJECT.question.includes('picture')) {
                         if (collected.first().attachments.size > 0) {
-                            character.set(QUESTION_OBJECT.databaseTable, collected.first().attachments?.first()?.url)
+                            character[`${QUESTION_OBJECT.databaseTable}`] = collected.first().attachments?.first()?.url;
                         } else {
-                            character.set(QUESTION_OBJECT.databaseTable, collected.first().content)
+                            character[`${QUESTION_OBJECT.databaseTable}`] = collected.first().content;
                         }
                     } else {
-                        character.set(QUESTION_OBJECT.databaseTable, collected.first().content)
+                        character[`${QUESTION_OBJECT.databaseTable}`] = collected.first().content;
                     }
                     character.save().then(async () => {
-                        try{
-                        interaction.channel.bulkDelete(30);
-                        }catch(e){
+                        try {
+                            interaction.channel.bulkDelete(30);
+                        } catch (e) {
                             console.log(e);
                             console.log("problem with deleting messages");
                         }
-                        interaction.channel.send("The " + QUESTION_OBJECT.databaseTable + " of " + character.get("name") + " has been changed to " + character.get(QUESTION_OBJECT.databaseTable) + ".")
+                        interaction.channel.send("The " + QUESTION_OBJECT.databaseTable + " of " + character.name + " has been changed to.")
                             .then(msg => { setTimeout(() => msg.delete(), 3000) })
                             .catch(err => console.log(err));
-                        sendNPCEmbedMessageInChannel(interaction.channel,character,"NPC", [messageComponents4, messageComponents5, messageComponents6]).catch(err => console.log(err));
+                        sendNPCEmbedMessageInChannel(interaction.channel, character, "NPC", [messageComponents4, messageComponents5, messageComponents6]).catch(err => console.log(err));
                     });
-                }else {
+                } else {
                     interaction.channel.send("This character has been deleted from our database.")
                         .then(msg => { setTimeout(() => msg.delete(), 3000) })
                         .catch(err => console.log(err));
@@ -617,10 +621,10 @@ async function npcEditTextField(interaction,charId, QUESTION_OBJECT,bot){
             interaction.channel.send("Times up! You took too long to respond. Field remains unchanged.")
                 .then(msg => { setTimeout(() => msg.delete(), 3000) })
                 .catch(err => console.log(err));
-        });                  
+        });
     });
 }
-async function characterEditTextField(interaction, QUESTION_OBJECT,bot){
+async function characterEditTextField(interaction, QUESTION_OBJECT, bot) {
     interaction.deferUpdate();
     let questionEmbed = new MessageEmbed()
         .setAuthor(`${bot.user.username}`, bot.user.displayAvatarURL())
@@ -648,30 +652,30 @@ async function characterEditTextField(interaction, QUESTION_OBJECT,bot){
             time: 300000,
             errors: ['time'],
         }).then(async (collected) => {
-            await PlayerCharacter.findOne({ where: {  player_id: interaction.user.id, alive: 1, server_id: interaction.guildId } }).then((character) =>{
+            await PlayerCharacter.findOne({ where: { player_id: interaction.user.id, alive: 1, server_id: interaction.guildId } }).then((character) => {
                 if (character) {
                     if (QUESTION_OBJECT.question.includes('picture')) {
                         if (collected.first().attachments.size > 0) {
-                            character.set(QUESTION_OBJECT.databaseTable, collected.first().attachments?.first()?.url)
+                            character[`${QUESTION_OBJECT.databaseTable}`] = collected.first().attachments?.first()?.url;
                         } else {
-                            character.set(QUESTION_OBJECT.databaseTable, collected.first().content)
+                            character[`${QUESTION_OBJECT.databaseTable}`] = collected.first().content;
                         }
                     } else {
-                        character.set(QUESTION_OBJECT.databaseTable, collected.first().content)
+                        character[`${QUESTION_OBJECT.databaseTable}`] = collected.first().content;
                     }
                     character.save().then(async () => {
-                        // // try {
+                        // // try {character[`${CHARACTER_QUESTIONS_ARRAY[1].databaseTable}`]
                         // //     interaction.channel.bulkDelete(30);
                         // // } catch (e) {
                         // //     console.log(e);
                         // //     console.log("problem with deleting messages");
                         // // }
-                        interaction.channel.send("The " + QUESTION_OBJECT.databaseTable + " of " + character.get("name") + " has been changed to " + character.get(QUESTION_OBJECT.databaseTable) + ".")
+                        interaction.channel.send("The " + QUESTION_OBJECT.databaseTable + " of " + character.name + " has been changed")
                             .then(msg => { setTimeout(() => msg.delete(), 3000) })
                             .catch(err => console.log(err));
-                        sendCharacterEmbedMessageInChannel(interaction.channel,character," ",[messageComponents1, messageComponents2, messageComponents3]).catch(err => console.log(err));
+                        sendCharacterEmbedMessageInChannel(interaction.channel, character, " ", [messageComponents1, messageComponents2, messageComponents3]).catch(err => console.log(err));
                     });
-                }else {
+                } else {
                     interaction.channel.send("This character has been deleted from our database.")
                         .then(msg => { setTimeout(() => msg.delete(), 3000) })
                         .catch(err => console.log(err));
@@ -681,6 +685,6 @@ async function characterEditTextField(interaction, QUESTION_OBJECT,bot){
             interaction.channel.send("Times up! You took too long to respond. Field remains unchanged.")
                 .then(msg => { setTimeout(() => msg.delete(), 3000) })
                 .catch(err => console.log(err));
-        });                  
+        });
     });
 }
