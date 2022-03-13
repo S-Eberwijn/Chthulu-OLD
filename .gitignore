@@ -2,3 +2,5 @@ node_modules/
 .env
 .eslintrc.json
 Unused_Methods/
+Unused_Commands/
+database/service-account.json

@@ -10,34 +10,24 @@ const fs = require("fs");
 const admin = require("firebase-admin");
 const firebaseSequelizer = require("firestore-sequelizer");
 const serviceAccount = require(`${process.env.GOOGLE_APPLICATION_CREDENTIALS}`);
-
+// const serviceAccount = {
+//     "type": "service_account",
+//     "project_id": process.env.FS_PROJECT_ID || "",
+//     "private_key_id": process.env.FS_PRIVATE_KEY_ID || "",
+//     "private_key": process.env.FS_PRIVATE_KEY || "",
+//     "client_email": process.env.FS_CLIENT_EMAIL || "",
+//     "client_id": process.env.FS_CLIENT_ID || "",
+//     "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+//     "token_uri": "https://oauth2.googleapis.com/token",
+//     "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+//     "client_x509_cert_url": process.env.FS_CERT_URL || ""
+// };
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
     databaseURL: `https://${process.env.DATABASE_NAME || 'null'}.firebaseio.com`
 });
 firebaseSequelizer.initializeApp(admin);
-// console.log(admin.apps[0].options)
 
-// const { GeneralInfo } = require('./database/models/GeneralInfo');
-
-// const { defineModel } = require("firestore-sequelizer");
-// const User = defineModel("users", {
-//     name: "",
-//     email: "",
-//     admin: {
-//         type: "boolean",
-//         required: true,
-//     },
-// });
-
-// createEntry();
-
-// async function createEntry() {
-//     await GeneralInfo.create({session_number: 5, in_character_channels: "1234;1111", server_id: "0000" });
-//     await GeneralInfo.findOne({ where: { session_number: 5} }).then((user) => {
-//         console.log(user.in_character_channels.split(";"))
-//     });
-// }
 // //Raspberry Pi Database
 // const db = require('./database/database');
 // const { initializeDB } = require('./database/initializeDB');
