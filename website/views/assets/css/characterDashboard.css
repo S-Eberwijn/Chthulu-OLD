@@ -281,7 +281,7 @@ input::placeholder {
 
 
 
-.dashboardContent[characters] .cardStack .characterCardHolder:first-child {
+.dashboardContent[characters] .cardStack .characterCardHolder:first-child:not(:last-child) {
     transition: transform;
     transition-duration: .75s;
     /* transition-delay: 100ms; */
@@ -307,7 +307,7 @@ input::placeholder {
     z-index: 5;
 }
 
-.dashboardContent[characters] .cardStack .characterCardHolder:first-child::before {
+.dashboardContent[characters] .cardStack .characterCardHolder:first-child:not(:last-child)::before {
     content: '';
     position: absolute;
     top: 50%;
@@ -321,17 +321,17 @@ input::placeholder {
     transition: all 0.5s;
 }
 
-.dashboardContent[characters] .cardStack .characterCardHolder:first-child:hover {
+.dashboardContent[characters] .cardStack .characterCardHolder:first-child:not(:last-child):hover {
     transform: translate(-40%);
     cursor: pointer;
 }
 
-.dashboardContent[characters] .cardStack .characterCardHolder:first-child:hover::before,
+.dashboardContent[characters] .cardStack .characterCardHolder:first-child:not(:last-child):hover::before,
 .dashboardContent[characters] .cardStack .characterCardHolder:nth-last-child(2):hover::before {
     transform: translate(0, -50%) scale(3);
 }
 
-.dashboardContent[characters] .cardStack .characterCardHolder:first-child:hover::after,
+.dashboardContent[characters] .cardStack .characterCardHolder:first-child:not(:last-child):hover::after,
 .dashboardContent[characters] .cardStack .characterCardHolder:nth-last-child(2):hover::after {
     background-color: rgba(0, 0, 0, 0.3);
     transition-delay: 50ms;
@@ -351,8 +351,8 @@ input::placeholder {
     z-index: 1;
 }
 
-.dashboardContent[characters] .cardStack .characterCardHolder:nth-last-child(2)::before,
-.dashboardContent[characters] .cardStack .characterCardHolder:nth-last-child(3)::before {
+.dashboardContent[characters] .cardStack .characterCardHolder:nth-last-child(2):not(:first-child):before,
+.dashboardContent[characters] .cardStack .characterCardHolder:nth-last-child(3):not(:first-child)::before {
     content: '';
     position: absolute;
     top: 50%;
