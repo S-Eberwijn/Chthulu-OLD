@@ -252,3 +252,12 @@ exports.editQuestRequest = async (req, res) => {
         }
     }
 }
+
+exports.guildInformationalMapDashboardPage = async (req, res) => {
+    const bot = require('../../index');
+    const guildId = req.params.id;
+    const guild = bot.guilds.cache.get(guildId);
+
+
+    res.render('mapPage', { isGuildDashboardPage: true, bot: bot, headerTitle: `Map`, guild: guild, selectedGuildId: guildId, guildName: guild.name});
+}

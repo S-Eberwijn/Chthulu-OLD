@@ -10,6 +10,7 @@
     width: calc(100% - 5em);
     z-index: 20;
     animation-fill-mode: forwards;
+    box-sizing: border-box;
     /* transition: width 1s; */
     /* float: right; */
 }
@@ -125,7 +126,7 @@ header.dashboardHeader button:hover {
     flex-direction: column;
 }
 
-.kpiItem{
+.kpiItem {
     display: flex;
     flex-direction: column;
     width: 400px;
@@ -146,7 +147,7 @@ header.dashboardHeader button:hover {
     margin-right: 4rem;
 }
 
-section{
+section {
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -155,7 +156,7 @@ section{
     overflow: hidden;
 }
 
-.sectionContent{
+.sectionContent {
     display: flex;
     flex-direction: row;
     justify-content: space-between;

@@ -9,8 +9,9 @@ html(lang="en")
         //- script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js")
 
         title Chthulu Dashboard
-        block scripts 
         block styles 
+        block scripts 
+        
     body.preload
         .sidebar
                 header.sidebarHeader
@@ -47,6 +48,9 @@ html(lang="en")
                         a(href=`/dashboard/${selectedGuildId}/informational/quests`)   
                             .menuCategoryItem
                                 span # Quests
+                        a(href=`/dashboard/${selectedGuildId}/informational/map`)   
+                            .menuCategoryItem
+                                span # Map
                 .menuCategory 
                     span Sessions
                         a(href=`/dashboard/${selectedGuildId}/sessions/overview`)   
