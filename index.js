@@ -98,14 +98,14 @@ bot.slashCommands = new Enmap();
 // });
 // console.log(bot.guilds.cache.map(guild => guild.id))
 // Read and log slash command files
-fs.readdir("./bot/slash-commands/", async (err, dirs) => {
+fs.readdir("./bot/commands/", async (err, dirs) => {
     if (err) console.log(err);
     if (dirs.length <= 0) {
         console.log("Found no dirs files!");
         return;
     }
     dirs.forEach((d, i) => {
-        fs.readdir(`./bot/slash-commands/${d}`, async (err, files) => {
+        fs.readdir(`./bot/commands/${d}`, async (err, files) => {
             if (err) console.log(err);
             var jsFiles = files.filter(f => f.split(".").pop() === "js");
             if (dirs.length <= 0) {
@@ -113,7 +113,7 @@ fs.readdir("./bot/slash-commands/", async (err, dirs) => {
                 return;
             }
             jsFiles.forEach((f, i) => {
-                var fileGet = require(`./bot/slash-commands/${d}/${f}`);
+                var fileGet = require(`./bot/commands/${d}/${f}`);
                 console.log(`--{ Slash Command ${f} is loaded }--`);
                 var commandName = fileGet.help.name;
                 var commandAlias = fileGet.help.alias;

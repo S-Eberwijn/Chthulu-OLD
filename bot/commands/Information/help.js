@@ -1,7 +1,8 @@
 const { MessageEmbed, MessageActionRow, MessageSelectMenu } = require('discord.js');
 const { sendHelpEmbedFunction } = require('../../otherFunctions/sendHelpEmbedFunction.js')
 module.exports.run = async (interaction) => {
-    interaction.reply('works');
+    interaction.deferReply().then(() => { interaction.deleteReply(); })
+
     const bot = require('../../../index');
 
     if (!interaction.options?.get('command')) {
