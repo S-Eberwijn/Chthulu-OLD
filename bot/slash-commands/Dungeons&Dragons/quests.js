@@ -8,7 +8,7 @@ module.exports.run = async (interaction) => {
         .setAuthor(`${bot.user.username}#${bot.user.discriminator} `, bot.user.avatarURL())
         .setColor("GREEN")
         .setFooter(`0 quests`)
-    await Quest.findAll({ where: { server_id: interaction.guild.id, quest_status: 'OPEN' } }).then(ALL_SERVER_QUESTS => {
+    await Quest.findAll({ where: { server: interaction.guild.id, quest_status: 'OPEN' } }).then(ALL_SERVER_QUESTS => {
         if (!ALL_SERVER_QUESTS) return;
         ALL_SERVER_QUESTS.sort((a, b) => b.get('quest_importance_value') - a.get('quest_importance_value'))
         // .setThumbnail(`https://images.squarespace-cdn.com/content/v1/5cabfe148dfc8c07a688849e/1599878650736-K68SBTX8CQOTZJ2TRR9W/The+Quest+Board+1.png`)

@@ -4,7 +4,7 @@ const DungeonMaster = defineModel("dungeon_masters", {
         type: 'string',
         required: true,
     },
-    dungeon_master_id: {
+    dungeon_master_id_discord: {
         type: 'string',
         required: true,
     },
@@ -12,7 +12,7 @@ const DungeonMaster = defineModel("dungeon_masters", {
         type: 'string',
         required: true,
     },
-    server_id: {
+    server: {
         type: 'string',
         required: true,
     },

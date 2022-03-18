@@ -1,15 +1,16 @@
 const { MessageEmbed, MessageActionRow, MessageSelectMenu } = require('discord.js');
 const { sendHelpEmbedFunction } = require('../../otherFunctions/sendHelpEmbedFunction.js')
 module.exports.run = async (interaction) => {
+    interaction.reply('works');
     const bot = require('../../../index');
 
-    if (!interaction.options.get('command')) {
+    if (!interaction.options?.get('command')) {
         sendHelpEmbedFunction(bot, interaction.guild.id, interaction.channel.id, interaction.user.id)
     } else {
         let commandName = interaction.options.get('command').value;
         console.log(commandName.name)
         if (commandName.includes('!')) commandName = commandName.slice(1)
-        if (!bot.commands.has(commandName)) return interaction.channel.send({ content: 'I do not posses that command...' })
+        if (!bot.slashCommands.has(commandName)) return interaction.channel.send({ content: 'I do not posses that command...' })
 
         let command = bot.commands.get(commandName);
 

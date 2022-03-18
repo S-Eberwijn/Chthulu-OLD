@@ -124,8 +124,8 @@ module.exports = async (bot, interaction) => {
         //!createCharacter
         switch (interaction.customId) {
             case 'approve-character-button':
-                await PlayerCharacter.findOne({ where: { player_id: interaction.user.id, server_id: interaction.guildId, alive: 1, status: "CREATED" } }).then((character) => { if (character) { character.alive = 0; character.save() } });
-                await PlayerCharacter.findOne({ where: { player_id: interaction.user.id, server_id: interaction.guildId, status: "CREATING" } }).then((character) => {
+                await PlayerCharacter.findOne({ where: { player_id_discord: interaction.user.id, server: interaction.guildId, alive: 1, status: "CREATED" } }).then((character) => { if (character) { character.alive = 0; character.save() } });
+                await PlayerCharacter.findOne({ where: { player_id_discord: interaction.user.id, server: interaction.guildId, status: "CREATING" } }).then((character) => {
                     if (character) {
                         character.status = 'CREATED';
                         character.alive = 1;
@@ -140,7 +140,7 @@ module.exports = async (bot, interaction) => {
         switch (interaction.customId) {
             case 'approve-npc-button':
                 //await NonPlayableCharacter.findOne({ where: { creator_id: interaction.guild.roles.cache.find(role => role.name === "Dungeon Master").id, server_id: interaction.guildId, status: "CREATED" } });
-                await NonPlayableCharacter.findOne({ where: { creator_id: interaction.user.id, server_id: interaction.guildId, status: "CREATING" } }).then((character) => {
+                await NonPlayableCharacter.findOne({ where: { creator: interaction.user.id, server: interaction.guildId, status: "CREATING" } }).then((character) => {
                     if (character) {
                         character.status = 'INVISIBLE';
                         character.save().then(() => interaction.message.edit({ content: null, components: [messageComponents4, messageComponents5, messageComponents6] }))
@@ -165,8 +165,9 @@ module.exports = async (bot, interaction) => {
                     interaction.channel.send("Only Dm's can set NPC's to visible").then(msg => { setTimeout(() => msg.delete(), 3000) }).catch(err => console.log(err));
                     return;
                 }
+                //TODO may need some revision
                 charId = interaction.channel.name.split("⼁")[0];
-                await NonPlayableCharacter.findOne({ where: { character_id: charId, server_id: interaction.guildId } }).then((character) => {
+                await NonPlayableCharacter.findOne({ where: { id: charId, server: interaction.guildId } }).then((character) => {
                     if (character) {
                         if (character.status == "VISIBLE") {
                             character.status = 'INVISIBLE';
@@ -182,7 +183,7 @@ module.exports = async (bot, interaction) => {
                 return;
             case 'change-npc-name-button':
                 await npcEditTextField(interaction, interaction.channel.name.split("⼁")[0], QUESTIONS_ARRAY[0], bot)
-                await NonPlayableCharacter.findOne({ where: { character_id: interaction.channel.name.split("⼁")[0], server_id: interaction.guildId } }).then((character) => {
+                await NonPlayableCharacter.findOne({ where: { id: interaction.channel.name.split("⼁")[0], server: interaction.guildId } }).then((character) => {
                     if (character) {
                         interaction.channel.setName("NPC-" + character.name)
                     }
@@ -222,7 +223,7 @@ module.exports = async (bot, interaction) => {
                         errors: ['time'],
                     }).then(async (interaction) => {
                         interaction.deferUpdate();
-                        await NonPlayableCharacter.findOne({ where: { character_id: charId, server_id: interaction.guildId } }).then((character) => {
+                        await NonPlayableCharacter.findOne({ where: { id: charId, server: interaction.guildId } }).then((character) => {
                             if (character) {
                                 character[`${QUESTIONS_ARRAY[2].databaseTable}`] = interaction.values[0];
                                 character.save().then(async () => {
@@ -271,7 +272,7 @@ module.exports = async (bot, interaction) => {
                     return;
                 }
                 charId = interaction.channel.name.split("⼁")[0];
-                await NonPlayableCharacter.findOne({ where: { character_id: charId, server_id: interaction.guildId } }).then((character) => {
+                await NonPlayableCharacter.findOne({ where: { id: charId, server: interaction.guildId } }).then((character) => {
                     try {
                         character.destroy().then(async () => {
                             interaction.channel.delete().then(() => {
@@ -295,7 +296,7 @@ module.exports = async (bot, interaction) => {
         switch (interaction.customId) {
             case 'change-character-name-button':
                 await characterEditTextField(interaction, CHARACTER_QUESTIONS_ARRAY[0], bot)
-                await PlayerCharacter.findOne({ where: { player_id: interaction.user.id, alive: 1, server_id: interaction.guildId } }).then((character) => {
+                await PlayerCharacter.findOne({ where: { player_discord: interaction.user.id, alive: 1, server: interaction.guildId } }).then((character) => {
                     if (character) {
                         interaction.channel.setName(character.name)
                     }
@@ -390,7 +391,7 @@ module.exports = async (bot, interaction) => {
                         errors: ['time'],
                     }).then(async (interaction) => {
                         interaction.deferUpdate();
-                        await PlayerCharacter.findOne({ where: { player_id: interaction.user.id, alive: 1, server_id: interaction.guildId } }).then((character) => {
+                        await PlayerCharacter.findOne({ where: { player_id_discord: interaction.user.id, alive: 1, server: interaction.guildId } }).then((character) => {
                             if (character) {
                                 character[`${CHARACTER_QUESTIONS_ARRAY[1].databaseTable}`] = interaction.values[0];
                                 character.save().then(async () => {
@@ -440,7 +441,7 @@ module.exports = async (bot, interaction) => {
                         errors: ['time'],
                     }).then(async (interaction) => {
                         interaction.deferUpdate();
-                        await PlayerCharacter.findOne({ where: { player_id: interaction.user.id, alive: 1, server_id: interaction.guildId } }).then((character) => {
+                        await PlayerCharacter.findOne({ where: { player_id_discord: interaction.user.id, alive: 1, server: interaction.guildId } }).then((character) => {
                             if (character) {
                                 character[`${CHARACTER_QUESTIONS_ARRAY[2].databaseTable}`] = interaction.values[0];
                                 character.save().then(async () => {
@@ -495,7 +496,7 @@ module.exports = async (bot, interaction) => {
                         errors: ['time'],
                     }).then(async (interaction) => {
                         interaction.deferUpdate();
-                        await PlayerCharacter.findOne({ where: { player_id: interaction.user.id, alive: 1, server_id: interaction.guildId } }).then((character) => {
+                        await PlayerCharacter.findOne({ where: { player_id_discord: interaction.user.id, alive: 1, server: interaction.guildId } }).then((character) => {
                             if (character) {
                                 character[`${CHARACTER_QUESTIONS_ARRAY[3].databaseTable}`] = interaction.values[0];
                                 character.save().then(async () => {
@@ -527,7 +528,7 @@ module.exports = async (bot, interaction) => {
                 await characterEditTextField(interaction, CHARACTER_QUESTIONS_ARRAY[6], bot)
                 return;
             case 'delete-character-button':
-                await PlayerCharacter.findOne({ where: { player_id: interaction.user.id, alive: 1, server_id: interaction.guildId } }).then((character) => {
+                await PlayerCharacter.findOne({ where: { player_id_discord: interaction.user.id, alive: 1, server: interaction.guildId } }).then((character) => {
                     if (character) {
                         character.alive = 0;
                         character.status = "DELETED";
@@ -588,7 +589,7 @@ async function npcEditTextField(interaction, charId, QUESTION_OBJECT, bot) {
             time: 300000,
             errors: ['time'],
         }).then(async (collected) => {
-            await NonPlayableCharacter.findOne({ where: { character_id: charId, server_id: interaction.guildId } }).then((character) => {
+            await NonPlayableCharacter.findOne({ where: { id: charId, server: interaction.guildId } }).then((character) => {
                 if (character) {
                     if (QUESTION_OBJECT.question.includes('picture')) {
                         if (collected.first().attachments.size > 0) {
@@ -652,7 +653,7 @@ async function characterEditTextField(interaction, QUESTION_OBJECT, bot) {
             time: 300000,
             errors: ['time'],
         }).then(async (collected) => {
-            await PlayerCharacter.findOne({ where: { player_id: interaction.user.id, alive: 1, server_id: interaction.guildId } }).then((character) => {
+            await PlayerCharacter.findOne({ where: { player_id_discord: interaction.user.id, alive: 1, server: interaction.guildId } }).then((character) => {
                 if (character) {
                     if (QUESTION_OBJECT.question.includes('picture')) {
                         if (collected.first().attachments.size > 0) {

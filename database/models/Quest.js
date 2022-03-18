@@ -77,7 +77,7 @@ const Quest = defineModel("quests", {
         type: 'string',
         required: true
     },
-    server_id: {
+    server: {
         type: 'string',
         required: true,
     }

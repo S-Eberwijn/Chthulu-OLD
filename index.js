@@ -48,7 +48,7 @@ app.use(express.static(path.join(__dirname, 'website', 'public')));
 app.use(express.static(path.join(__dirname, 'bot', 'images', 'DnD', 'ClassIcons')));
 
 
-console.log(path.join(__dirname, 'bot', 'images', 'ClassIcons'))
+// console.log(path.join(__dirname, 'bot', 'images', 'ClassIcons'))
 
 // Home Route
 app.use('/', require('./website/routes/dashboard'));
@@ -64,36 +64,38 @@ const Enmap = require('enmap');
 bot.commands = new Enmap();
 bot.slashCommands = new Enmap();
 
+// const {PlayerCharacter} = require('./database/models/PlayerCharacter')
+// PlayerCharacter.findOne({where: {id: 'C1647626995287'}}).then((char) => {console.log(char)})
 
-// Read and log command files
-fs.readdir("./bot/commands/", async (err, dirs) => {
-    if (err) console.log(err);
-    if (dirs.length <= 0) {
-        console.log("Found no dirs files!");
-        return;
-    }
-    dirs.forEach((d, i) => {
-        fs.readdir(`./bot/commands/${d}`, async (err, files) => {
-            if (err) console.log(err);
-            var jsFiles = files.filter(f => f.split(".").pop() === "js");
-            if (dirs.length <= 0) {
-                console.log("Found no dirs files!");
-                return;
-            }
-            jsFiles.forEach((f, i) => {
-                var fileGet = require(`./bot/commands/${d}/${f}`);
-                console.log(`--{ Command ${f} is loaded }--`);
-                var commandName = fileGet.help.name;
-                var commandAlias = fileGet.help.alias;
-                bot.commands.set(commandName.toLowerCase(), fileGet);
-                commandAlias.forEach(alias => {
-                    bot.commands.set(alias.toLowerCase(), fileGet);
-                });
-                // console.log(bot.commands)
-            });
-        });
-    });
-});
+// // Read and log command files
+// fs.readdir("./bot/commands/", async (err, dirs) => {
+//     if (err) console.log(err);
+//     if (dirs.length <= 0) {
+//         console.log("Found no dirs files!");
+//         return;
+//     }
+//     dirs.forEach((d, i) => {
+//         fs.readdir(`./bot/commands/${d}`, async (err, files) => {
+//             if (err) console.log(err);
+//             var jsFiles = files.filter(f => f.split(".").pop() === "js");
+//             if (dirs.length <= 0) {
+//                 console.log("Found no dirs files!");
+//                 return;
+//             }
+//             jsFiles.forEach((f, i) => {
+//                 var fileGet = require(`./bot/commands/${d}/${f}`);
+//                 console.log(`--{ Command ${f} is loaded }--`);
+//                 var commandName = fileGet.help.name;
+//                 var commandAlias = fileGet.help.alias;
+//                 bot.commands.set(commandName.toLowerCase(), fileGet);
+//                 commandAlias.forEach(alias => {
+//                     bot.commands.set(alias.toLowerCase(), fileGet);
+//                 });
+//                 // console.log(bot.commands)
+//             });
+//         });
+//     });
+// });
 
 // Read and log slash command files
 fs.readdir("./bot/slash-commands/", async (err, dirs) => {

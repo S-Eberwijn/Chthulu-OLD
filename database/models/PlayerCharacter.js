@@ -84,7 +84,7 @@ const PlayerCharacter = defineModel("player_characters", {
         type: 'string',
         required: true,
     },
-    player_id: {
+    player_id_discord: {
         type: 'string',
         required: true,
     },
@@ -120,11 +120,11 @@ const PlayerCharacter = defineModel("player_characters", {
         type: 'number',
         required: false,
     },
-    next_session_id: {
+    next_session: {
         type: 'string',
         required: false,
     },
-    last_session_id: {
+    last_session: {
         type: 'string',
         required: false,
     },
@@ -136,7 +136,7 @@ const PlayerCharacter = defineModel("player_characters", {
         type: 'number',
         required: false,
     },
-    server_id: {
+    server: {
         type: 'string',
         required: true,
     },

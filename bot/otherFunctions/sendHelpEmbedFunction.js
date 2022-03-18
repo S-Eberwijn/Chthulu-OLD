@@ -6,7 +6,7 @@ exports.sendHelpEmbedFunction = async function (bot, guildId, messageChannelId, 
     
     const messageChannel = bot.guilds.cache.get(guildId).channels.cache.get(messageChannelId)
     // bot.guilds.get(message.guild.id).id
-    const categorizedCommands = bot.commands.reduce((r, a) => {
+    const categorizedCommands = bot.slashCommands.reduce((r, a) => {
         r[a.help.category] = [...r[a.help.category] || [], a];
         return r;
     }, {})
@@ -83,7 +83,7 @@ exports.sendHelpEmbedFunction = async function (bot, guildId, messageChannelId, 
         })
     })
     collector.on('end', (interaction) => {
-        initialMessage.edit({ content: `Times up! In order to select the category of commands again, use !help`, embeds: [], components: [] }).then(msg => { setTimeout(() => msg.delete(), 3000) }).catch(err => console.log(err))
+        initialMessage.edit({ content: `Times up! In order to select the category of commands again, use /help`, embeds: [], components: [] }).then(msg => { setTimeout(() => msg.delete(), 3000) }).catch(err => console.log(err))
     })
 
 

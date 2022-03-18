@@ -45,7 +45,7 @@ async function getAliveCharacters(guildId = null) {
     if (guildId === null) {
         return await PlayerCharacter.findAll({ where: { alive: 1 } })
     } else {
-        return await PlayerCharacter.findAll({ where: { alive: 1, server_id: guildId } })
+        return await PlayerCharacter.findAll({ where: { alive: 1, server: guildId } })
     }
 }
 
@@ -53,7 +53,7 @@ async function getDeadCharacters(guildId = null) {
     if (guildId === null) {
         return await PlayerCharacter.findAll({ where: { alive: 0 } })
     } else {
-        return await PlayerCharacter.findAll({ where: { alive: 0, server_id: guildId } })
+        return await PlayerCharacter.findAll({ where: { alive: 0, server: guildId } })
     }
 }
 
@@ -71,7 +71,7 @@ async function getNonPlayableCharacters(guildId = null) {
     if (guildId === null) {
         return await NonPlayableCharacter.findAll({ where: { status: "VISIBLE" } })
     } else {
-        return await NonPlayableCharacter.findAll({ where: { status: "VISIBLE", server_id: guildId } })
+        return await NonPlayableCharacter.findAll({ where: { status: "VISIBLE", server: guildId } })
     }
 }
 
@@ -112,7 +112,7 @@ async function getQuests(guildId = null, status) {
         // TODO new ORM cant handle arrays; fix this
         for (let index = 0; index < status.length; index++) {
             const element = status[index];
-            quests = quests.concat(await Quest.findAll({ where: { quest_status: element, server_id: guildId } }))
+            quests = quests.concat(await Quest.findAll({ where: { quest_status: element, server: guildId } }))
             // console.log(await Quest.findAll({ where: { quest_status: element, server_id: guildId } }))
 
             if (index === status.length - 1) {
@@ -149,7 +149,7 @@ exports.createQuestPost = async (req, res) => {
         quest_importance_value: priority_value,
         quest_importance: importance,
         quest_status: 'OPEN',
-        server_id: req.params.id
+        server: req.params.id
     }).then(() => {
         res.sendStatus(201)
     })
@@ -177,7 +177,7 @@ exports.deleteQuestRequest = async (req, res) => {
     let server_id = req.params?.id || '0';
     if (quest_id) {
 
-        await Quest.findOne({ where: { id: quest_id, quest_id: quest_id, server_id: server_id } }).then(async quest => {
+        await Quest.findOne({ where: { id: quest_id, server: server_id } }).then(async quest => {
             // console.log(quest);
             if (quest) {
                 quest.quest_status = 'DELETED';
@@ -203,7 +203,7 @@ exports.editQuestRequest = async (req, res) => {
         let server_id = req.params?.id || '0';
         console.log(quest_id)
         if (quest_id) {
-            await Quest.findOne({ where: { id: quest_id, quest_id: quest_id, server_id: server_id } }).then(async quest => {
+            await Quest.findOne({ where: { id: quest_id, server: server_id } }).then(async quest => {
                 console.log(quest);
                 if (quest) {
                     quest.quest_name = req.body?.title;
@@ -232,7 +232,7 @@ exports.editQuestRequest = async (req, res) => {
         let server_id = req.params?.id || '0';
         if (quest_id) {
 
-            await Quest.findOne({ where: { id: quest_id, quest_id: quest_id, server_id: server_id } }).then(async quest => {
+            await Quest.findOne({ where: { id: quest_id, server: server_id } }).then(async quest => {
                 console.log(quest);
                 if (quest) {
                     quest.quest_status = req.body?.status;

@@ -13,7 +13,7 @@ module.exports.run = async (interaction) => {
     // VARIABLES
     const SESSIONS_CATEGORY = interaction.member.guild.channels.cache.find(c => c.name == "--SESSIONS--" && c.type == "GUILD_CATEGORY");
     const SESSION_REQUEST_CHANNEL = interaction.member.guild.channels.cache.find(c => c.name.includes("session-request") && c.type == "GUILD_TEXT");
-    let messageAuthorCharacter = await PlayerCharacter.findOne({ where: { player_id: interaction.user.id, alive: 1, server_id: interaction.guild.id } });
+    let messageAuthorCharacter = await PlayerCharacter.findOne({ where: { player_id_discord: interaction.user.id, alive: 1, server: interaction.guild.id } });
     if (!messageAuthorCharacter) return interaction.reply({ content: `You do not have a character in the database!\nCreate one by using the "!createcharacter" command.` }).then(() => { setTimeout(() => interaction.deleteReply(), 3000) }).catch(err => console.log(err));
     if (!SESSIONS_CATEGORY) return interaction.reply({ content: `There is no category named \"--SESSIONS--\"!` }).then(() => { setTimeout(() => interaction.deleteReply(), 3000) }).catch(err => console.log(err));
     if (!interaction.options.get('action').value) return interaction.channel.send({ content: "Not enough valid arguments\nCorrect format: !session [request]" });
@@ -241,13 +241,13 @@ function createSessionRequestDatabaseEntry(sessionRequestEmbedId, sessionDate, s
     let timestamp = Date.now();
     SessionRequest.create({
         id: `S${timestamp}`,
-        message_id: sessionRequestEmbedId,
-        session_channel_id: sessionChannelId,
-        session_commander_id: sessionParticipants[0],
+        message_id_discord: sessionRequestEmbedId,
+        session_channel: sessionChannelId,
+        session_commander: sessionParticipants[0],
         session_party: sessionParticipants,
         date: sessionDate.toString(),
         objective: sessionObjective,
-        server_id: serverId
+        server: serverId
     });
 }
 

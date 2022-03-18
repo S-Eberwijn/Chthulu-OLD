@@ -9,7 +9,7 @@ module.exports.run = async (interaction) => {
         return
     }
     try{
-        await NonPlayableCharacter.findOne({where: { server_id: interaction.guildId, using_npc: interaction.member.user.id }
+        await NonPlayableCharacter.findOne({where: { server: interaction.guildId, using_npc: interaction.member.user.id }
         }).then((character)=>{
             if(character){
                 character.using_npc = null;

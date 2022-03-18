@@ -4,11 +4,11 @@ const PastSession = defineModel("past_sessions", {
         type: 'string',
         required: true,
     },
-    message_id: {
+    message_id_discord: {
         type: 'string',
         required: true,
     },
-    session_commander_id: {
+    session_commander: {
         type: 'string',
         required: true,
     },
@@ -20,7 +20,7 @@ const PastSession = defineModel("past_sessions", {
         type: 'string',
         required: true,
     },
-    dungeon_master_id: {
+    dungeon_master_id_discord: {
         type: 'string',
         required: true,
     },
@@ -36,7 +36,7 @@ const PastSession = defineModel("past_sessions", {
         type: 'string',
         required: false,
     },
-    server_id: {
+    server: {
         type: 'string',
         required: true,
     }

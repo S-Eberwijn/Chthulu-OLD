@@ -256,12 +256,14 @@ module.exports.createCmd = async function (bot, guildId) {
             name: "help",
             // alias: ["hlp"],
             description: "Gives all possible commands",
-            options: [{
-                name: 'command',
-                type: 'STRING',
-                description: 'Command name',
-                required: false
-            }],
+            options: [
+                //     {
+                //     name: 'command',
+                //     type: 'STRING',
+                //     description: 'Command name',
+                //     required: false
+                // }
+            ],
         },
         // server cmd
         {

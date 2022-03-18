@@ -1,9 +1,9 @@
-const {MessageActionRow, MessageSelectMenu } = require('discord.js');
-const {NonPlayableCharacter} = require('../../../database/models/NonPlayableCharacter');
+const { MessageActionRow, MessageSelectMenu } = require('discord.js');
+const { NonPlayableCharacter } = require('../../../database/models/NonPlayableCharacter');
 
 
 module.exports.run = async (interaction) => {
-    if(!interaction.member.roles.cache.has(interaction.guild.roles.cache.find(role => role.name.includes('Dungeon Master')).id)){
+    if (!interaction.member.roles.cache.has(interaction.guild.roles.cache.find(role => role.name.includes('Dungeon Master')).id)) {
         await interaction.reply({
             content: "Only Dungeon Masters can use this command",
             ephemeral: true,
@@ -13,64 +13,64 @@ module.exports.run = async (interaction) => {
     let dm = interaction.member.user.username;
     let messageComponentsArray = [];
     let myFilter = null;
-    await NonPlayableCharacter.findOne({where: { server_id: interaction.guildId, using_npc: interaction.member.user.id }})
-        .then((character)=>{
-            if(character){
+    await NonPlayableCharacter.findOne({ where: { server: interaction.guildId, using_npc: interaction.member.user.id } })
+        .then((character) => {
+            if (character) {
                 character.set("using_npc", null)
                 character.save()
             }
         })
-    await NonPlayableCharacter.findAll({where:{ server_id: interaction.guildId, status:"visible"}}).then((npcs) => {
-        if(npcs.length<1){
+    await NonPlayableCharacter.findAll({ where: { server: interaction.guildId, status: "visible" } }).then((npcs) => {
+        if (npcs.length < 1) {
             interaction.reply({
                 content: "Your server has no visible npcs, add a new ncp using the !cnpc command and set it to visible.",
                 ephemeral: true,
             });
             return;
         }
-        else if(npcs.length <= 25)
-        messageComponentsArray.push(
-            new MessageActionRow().addComponents(
-                new MessageSelectMenu()
-                    .setCustomId(`SelectNpcDropdown`)
-                    .setPlaceholder('Select a value...')
-                    .setMinValues(1)
-                    .setMaxValues(1)
-                    .setDisabled(false)
-                    .addOptions(Object.keys(npcs)
-                    .map(function (key) { return { label: `${npcs[key].name}`, value: `${npcs[key].character_id}` } }))
+        else if (npcs.length <= 25)
+            messageComponentsArray.push(
+                new MessageActionRow().addComponents(
+                    new MessageSelectMenu()
+                        .setCustomId(`SelectNpcDropdown`)
+                        .setPlaceholder('Select a value...')
+                        .setMinValues(1)
+                        .setMaxValues(1)
+                        .setDisabled(false)
+                        .addOptions(Object.keys(npcs)
+                            .map(function (key) { return { label: `${npcs[key].name}`, value: `${npcs[key].character_id}` } }))
+                )
             )
-        )
-        else{
-            let groups = Math.ceil( npcs.length/25);
+        else {
+            let groups = Math.ceil(npcs.length / 25);
             let npcsObject = [];
             let charactersGroupedByLetter = [];
-            let charsPerGroup = Math.ceil(npcs.length/groups);
+            let charsPerGroup = Math.ceil(npcs.length / groups);
             let grouplabel = "";
             let messageSelectMenuOptionsArray = [];
-            for (let i = 0; i < npcs.length;i++){
+            for (let i = 0; i < npcs.length; i++) {
                 npcsObject.push([npcs[i].name, npcs[i].character_id]);
             }
             npcsObject.sort((a, b) => a[0].localeCompare(b[0]));
             let npcgroup = [];
-            for (let i = 0; i < groups;i++){
-                if(i>25){
+            for (let i = 0; i < groups; i++) {
+                if (i > 25) {
                     interaction.channel.send({
                         content: "You have too many visible NPCS only the first 625 characters will be shown."
                     }).then(msg => { setTimeout(() => msg.delete(), 3000) })
                         .catch(err => console.log(err));
                     break;
                 }
-                if(i+1*charsPerGroup<npcsObject.length){
-                    npcgroup = npcsObject.slice(i*charsPerGroup, i+1*charsPerGroup);
-                }else{
-                    npcgroup = npcsObject.slice(i*charsPerGroup, npcsObject.length);
+                if (i + 1 * charsPerGroup < npcsObject.length) {
+                    npcgroup = npcsObject.slice(i * charsPerGroup, i + 1 * charsPerGroup);
+                } else {
+                    npcgroup = npcsObject.slice(i * charsPerGroup, npcsObject.length);
                 }
-                grouplabel = npcgroup[0][0].toUpperCase().charAt(0) + " - " + npcgroup[npcgroup.length-1][0].toUpperCase().charAt(0);
-                charactersGroupedByLetter.push({"label":grouplabel, "characters":npcgroup});
-            
+                grouplabel = npcgroup[0][0].toUpperCase().charAt(0) + " - " + npcgroup[npcgroup.length - 1][0].toUpperCase().charAt(0);
+                charactersGroupedByLetter.push({ "label": grouplabel, "characters": npcgroup });
+
             }
-            
+
             charactersGroupedByLetter[0].characters.forEach(async key => {
                 await messageSelectMenuOptionsArray.push({
                     label: `${key[0]}`,
@@ -109,7 +109,7 @@ module.exports.run = async (interaction) => {
                             .setMaxValues(1)
                             .setDisabled(false)
                             .addOptions(Object.keys(options)
-                            .map(function (key) { return { label: `${options[key].split(',')[0]}`, value: `${options[key].split(',')[1]}` } })))
+                                .map(function (key) { return { label: `${options[key].split(',')[0]}`, value: `${options[key].split(',')[1]}` } })))
                     response.message.edit({ components: newSelectionMenu.components })
                     return false;
                 }
@@ -117,9 +117,11 @@ module.exports.run = async (interaction) => {
             };
         }
     });
+    //TODO revision this since id can't be used to call fro mdatabase
+
     await interaction.reply({
         content: "chose an npc to impersonate",
-        components: messageComponentsArray, 
+        components: messageComponentsArray,
         fetchReply: true,
     }).then(async () => {
         await interaction.channel.awaitMessageComponent({
@@ -129,22 +131,24 @@ module.exports.run = async (interaction) => {
             errors: ['time']
         }).then(async (interaction) => {
             interaction.deferUpdate();
-            await NonPlayableCharacter.findOne({where: { character_id: interaction.values[0], server_id: interaction.guildId }})
-                .then((character)=>{
-                    if (character) {    
-                        character.using_npc= interaction.member.user.id;
+            await NonPlayableCharacter.findOne({ where: { id: interaction.values[0], server: interaction.guildId } })
+                .then((character) => {
+                    if (character) {
+                        character.using_npc = interaction.member.user.id;
                         character.save()
-                        interaction.channel.send({content: "Dungeon Master " + dm
-                            + " is now impersonating " +character.name +"." }) 
+                        interaction.channel.send({
+                            content: "Dungeon Master " + dm
+                                + " is now impersonating " + character.name + "."
+                        })
                             .then(msg => { setTimeout(() => msg.delete(), 3000) })
                             .catch(err => console.log(err));
                     }
                 })
-        }).catch(function () {  
+        }).catch(function () {
             interaction.channel.send({
                 content: "This poll has been open for too long, it no longer accepts answers."
             }).then(msg => { setTimeout(() => msg.delete(), 3000) })
-            .catch(err => console.log(err));
+                .catch(err => console.log(err));
         })
     })
 }

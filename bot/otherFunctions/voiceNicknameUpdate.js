@@ -22,7 +22,7 @@ exports.renameNickname = async function (oldState, newState) {
 
     let isInCharacterChannel = false;
     //TODO: FIX null reference of .get
-    await GeneralInfo.findOne({ where: { server_id: newState.guild.id } }).then((foundServer) => {
+    await GeneralInfo.findOne({ where: { server: newState.guild.id } }).then((foundServer) => {
         foundServer.in_character_channels.forEach(channel => {
             if (channel === newState.channelID) {
                 isInCharacterChannel = true;
@@ -31,7 +31,7 @@ exports.renameNickname = async function (oldState, newState) {
     });
 
     if (isInCharacterChannel) {
-        let player = await PlayerCharacter.findOne({ where: { player_id: newState.member.id, alive: 1, server_id: newState.guild.id } })
+        let player = await PlayerCharacter.findOne({ where: { player_id_discord: newState.member.id, alive: 1, server: newState.guild.id } })
         if (player) {
             if ((newState.guild.me.hasPermission('MANAGE_NICKNAMES'))) {
                 if (!inDatabase) {

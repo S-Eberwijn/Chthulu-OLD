@@ -12,16 +12,16 @@ module.exports.run = async (interaction) => {
     // return await interaction.reply( 'test', {ephemeral: true} );
 
     const characterCreateCategory = interaction.guild.channels.cache.find(c => c.name == "--CHARACTER CREATION--" && c.type == "GUILD_CATEGORY")
-    let foundPlayer = await Player.findOne({ where: { player_id: interaction.user.id, server_id: interaction.guild.id } })
+    let foundPlayer = await Player.findOne({ where: { player_id_discord: interaction.user.id, server: interaction.guild.id } })
     if (!foundPlayer) {
         await Player.create({
             id: interaction.user.id,
-            player_id: interaction.user.id,
+            player_id_discord: interaction.user.id,
             player_name: interaction.user.username,
-            server_id: interaction.guild.id
+            server: interaction.guild.id
         });
     } else {
-        await PlayerCharacter.findOne({ where: { player_id: interaction.user.id, server_id: interaction.guild.id, status: "CREATING" } })
+        await PlayerCharacter.findOne({ where: { player_id_discord: interaction.user.id, server: interaction.guild.id, status: "CREATING" } })
             .then((character) => {
                 let name = interaction.user.username + "-" + interaction.user.discriminator;
                 let tmpchannel = interaction.guild.channels.cache.find(channel => channel.name == name.toLowerCase());
@@ -52,11 +52,11 @@ module.exports.run = async (interaction) => {
     await PlayerCharacter.create({
         id: `C${timestamp}`,
         character_id: `C${timestamp}`,
-        player_id: interaction.user.id,
-        server_id: interaction.guild.id,
+        player_id_discord: interaction.user.id,
+        server: interaction.guild.id,
         status: "CREATING"
     }).then(async () => {
-        let newCharacter = await PlayerCharacter.findOne({ where: { id: `C${timestamp}`, server_id: interaction.guild.id, player_id: interaction.user.id } });
+        let newCharacter = await PlayerCharacter.findOne({ where: { id: `C${timestamp}`, server: interaction.guild.id, player_id_discord: interaction.user.id } });
         interaction.guild.channels.create(`${interaction.user.username}-${interaction.user.discriminator}`, "text").then(async createdChannel => {
             createdChannel.setParent(characterCreateCategory, { lockPermission: false });
             createdChannel.permissionOverwrites.set([{ id: interaction.user, allow: ['VIEW_CHANNEL'] }, { id: interaction.guild.roles.cache.find(role => role.name.includes('Dungeon Master')), allow: ['VIEW_CHANNEL'] }, { id: interaction.channel.guild.roles.everyone, deny: ['VIEW_CHANNEL'] }]);

@@ -70,11 +70,11 @@ const PlannedSession = defineModel("planned_sessions", {
         type: 'string',
         required: true,
     },
-    message_id: {
+    message_id_discord: {
         type: 'string',
         required: true,
     },
-    session_commander_id: {
+    session_commander: {
         type: 'string',
         required: true,
     },
@@ -86,7 +86,7 @@ const PlannedSession = defineModel("planned_sessions", {
         type: 'string',
         required: true,
     },
-    dungeon_master_id: {
+    dungeon_master_id_discord: {
         type: 'string',
         required: true,
     },
@@ -98,7 +98,7 @@ const PlannedSession = defineModel("planned_sessions", {
         type: 'number',
         required: false,
     },
-    session_channel_id: {
+    session_channel: {
         type: 'string',
         required: false,
     },
@@ -106,7 +106,7 @@ const PlannedSession = defineModel("planned_sessions", {
         type: 'string',
         required: false,
     },
-    server_id: {
+    server: {
         type: 'string',
         required: true,
     }

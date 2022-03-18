@@ -26,12 +26,12 @@ module.exports = async (bot, messageReaction, user) => {
         if (message.channel.id === SESSION_REQUEST_CHANNEL.id) {
             // Return if the message is not an embed.
             if (!message.embeds[0]) return;
-            let FOUND_SESSION_REQUEST = await SessionRequest.findOne({ where: { message_id: message.id } });
+            let FOUND_SESSION_REQUEST = await SessionRequest.findOne({ where: { message_id_discord: message.id } });
             if (!FOUND_SESSION_REQUEST) return;
             try {
                 switch (emoji.name) {
                     case '🙋‍♂️':
-                        if (user.id === FOUND_SESSION_REQUEST.get('session_commander_id')) return message.channel.send({ content: 'Session commanders can not leave their own session!' }).then(msg => { setTimeout(() => msg.delete(), 3000) }).catch(err => console.log(err));
+                        if (user.id === FOUND_SESSION_REQUEST.session_commander) return message.channel.send({ content: 'Session commanders can not leave their own session!' }).then(msg => { setTimeout(() => msg.delete(), 3000) }).catch(err => console.log(err));
                         if (!FOUND_SESSION_REQUEST.get('session_party').includes(user.id)) return;
                         await removePlayerFromDatabaseSessionParty(FOUND_SESSION_REQUEST, user.id);
                         message.edit(updateSessionEmbedParty(message, FOUND_SESSION_REQUEST.get('session_party')).embeds[0]);

@@ -1,6 +1,6 @@
 const { defineModel } = require("firestore-sequelizer");
 const GeneralInfo = defineModel("general_info", {
-    server_id: {
+    server: {
         type: 'string',
         required: true,
     },

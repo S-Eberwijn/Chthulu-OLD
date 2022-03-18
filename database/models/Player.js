@@ -35,7 +35,7 @@ const Player = defineModel("players", {
         type: 'string',
         required: true,
     },
-    player_id: {
+    player_id_discord: {
         type: 'string',
         required: false
     },
@@ -43,7 +43,7 @@ const Player = defineModel("players", {
         type: 'string',
         required: false
     },
-    server_id: {
+    server: {
         type: 'string',
         required: false,
     }

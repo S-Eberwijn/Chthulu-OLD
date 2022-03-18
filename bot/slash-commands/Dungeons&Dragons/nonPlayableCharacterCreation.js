@@ -12,7 +12,7 @@ module.exports.run = async (interaction) => {
     const characterCreateCategory = interaction.guild.channels.cache.find(c => c.name == "--CHARACTER CREATION--" && c.type == "GUILD_CATEGORY")
     if (!interaction.member.roles.cache.has(interaction.guild.roles.cache.find(role => role.name.includes('Dungeon Master')).id)) return interaction.reply({ content: 'You\'re not a dm, get lost kid!' }).then(() => { setTimeout(() => interaction.deleteReply(), 5000) }).catch(err => console.log(err));
 
-    await NonPlayableCharacter.findOne({ where: { creator_id: interaction.user.id, server_id: interaction.guild.id, status: "CREATING" } }).then((character) => {
+    await NonPlayableCharacter.findOne({ where: { creator: interaction.user.id, server: interaction.guild.id, status: "CREATING" } }).then((character) => {
         let name = interaction.user.username + "-" + interaction.user.discriminator;
         let tmpchannel = interaction.guild.channels.cache.find(channel => channel.name == name.toLowerCase());
         if (!tmpchannel) {
@@ -34,11 +34,11 @@ module.exports.run = async (interaction) => {
     await NonPlayableCharacter.create({
         id: `N${timestamp}`,
         character_id: `N${timestamp}`,
-        creator_id: interaction.user.id,
-        server_id: interaction.guild.id,
+        creator: interaction.user.id,
+        server: interaction.guild.id,
         status: "CREATING"
     }).then(async () => {
-        let newCharacter = await NonPlayableCharacter.findOne({ where: { id: `N${timestamp}`, server_id: interaction.guild.id, creator_id: interaction.user.id } });;
+        let newCharacter = await NonPlayableCharacter.findOne({ where: { id: `N${timestamp}`, server: interaction.guild.id, creator: interaction.user.id } });;
 
         interaction.guild.channels.create(`${interaction.user.username}-${interaction.user.discriminator}`, "text").then(async createdChannel => {
             createdChannel.setParent(characterCreateCategory, { lockPermission: false });

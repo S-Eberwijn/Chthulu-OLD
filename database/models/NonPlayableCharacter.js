@@ -71,7 +71,7 @@ const NonPlayableCharacter = defineModel("non_playable_characters", {
         type: 'string',
         required: true,
     },
-    creator_id: {
+    creator: {
         type: 'string',
         allowNull: true,
     },
@@ -115,7 +115,7 @@ const NonPlayableCharacter = defineModel("non_playable_characters", {
         type: 'string',
         required: false,
     },
-    server_id: {
+    server: {
         type: 'string',
         required: true,   
     }
