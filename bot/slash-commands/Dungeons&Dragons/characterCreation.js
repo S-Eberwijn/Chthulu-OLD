@@ -87,10 +87,13 @@ module.exports.run = async (interaction) => {
 }
 
 module.exports.help = {
-    name: "cc",
-    alias: ["cc"],
-    description: "Creates a new channel with questions about your new character",
-    category: "Dungeons & Dragons"
+    // name: "cc",
+    // alias: ["cc"],
+    // description: "Creates a new channel with questions about your new character",
+    category: "Dungeons & Dragons",
+    name: 'cc',
+    description: 'Create a new character!',
+    options: [],
 }
 
 async function characterCreationQuestion(QUESTION_OBJECT, createdChannel, newCharacter, interaction, bot, index) {

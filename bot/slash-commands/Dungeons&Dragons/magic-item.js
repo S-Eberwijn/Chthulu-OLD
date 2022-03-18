@@ -7,27 +7,36 @@ module.exports.run = async (interaction) => {
 
     request(api + magicItem, { json: true }, (err, res, body) => {
         if (err) { return console.log(err); }
-        if (Object.keys(body).length<2){return interaction.reply(magicItem + " was not found in our database.");}
-        return interaction.reply({ embeds: [createEmbed(body)]})
+        if (Object.keys(body).length < 2) { return interaction.reply(magicItem + " was not found in our database."); }
+        return interaction.reply({ embeds: [createEmbed(body)] })
     });
 }
-function createEmbed(item){
+function createEmbed(item) {
     return new MessageEmbed()
         .setTitle(item.name)
-        .setURL(api + "/" +  item.slug)
+        .setURL(api + "/" + item.slug)
         .setDescription(item.desc)
         .addFields(
-            { name: 'rarity', value: item.rarity, inline: true  },
+            { name: 'rarity', value: item.rarity, inline: true },
             { name: 'type', value: item.type, inline: true },
-            { name: 'requires atunement', value: item.requires_attunement==''? "no" : "yes", inline: true },
+            { name: 'requires atunement', value: item.requires_attunement == '' ? "no" : "yes", inline: true },
         )
         .setTimestamp()
         .setFooter(item.document__slug);
 }
 
 module.exports.help = {
+    // name: 'magic-item',
+    // permission: [],
+    // alias: [],
+    category: "Dungeons & Dragons",
     name: 'magic-item',
-    permission: [],
-    alias: [],
-    category: "Dungeons & Dragons"
+    description: 'look up a magic item',
+    ephemeral: true,
+    options: [{
+        name: 'item-name',
+        type: 'STRING',
+        description: 'Multiple words are seperated by spaces or dashes.',
+        required: true
+    }]
 }

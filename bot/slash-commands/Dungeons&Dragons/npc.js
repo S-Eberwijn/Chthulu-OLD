@@ -1,8 +1,8 @@
-const {NonPlayableCharacter} = require('../../../database/models/NonPlayableCharacter');
+const { NonPlayableCharacter } = require('../../../database/models/NonPlayableCharacter');
 const { getNonPlayableCharacterEmbed } = require('../../otherFunctions/characterEmbed')
 
 const { MessageEmbed, MessageButton } = require('discord.js');
-const {createNPCPaginationEmbedInChannel} = require('../../otherFunctions/characterEmbed')
+const { createNPCPaginationEmbedInChannel } = require('../../otherFunctions/characterEmbed')
 const { paginationEmbed } = require('../../otherFunctions/paginationEmbed')
 
 
@@ -25,15 +25,24 @@ module.exports.run = async (interaction) => {
         const nonPlayerCharacters = await NonPlayableCharacter.findAll({ where: { server: interaction.guild.id } })
         // console.log(nonPlayerCharacters)
         if (nonPlayerCharacters.length <= 0) return interaction.reply({ content: 'There are no NPC\'s to be found.' }).then(() => { setTimeout(() => interaction.deleteReply(), 3000) }).catch(err => console.log(err));
-        
-        await createNPCPaginationEmbedInChannel(interaction.channel,nonPlayerCharacters,buttonList)
+
+        await createNPCPaginationEmbedInChannel(interaction.channel, nonPlayerCharacters, buttonList)
     }
 
 }
 
 module.exports.help = {
+    // name: "npc",
+    // alias: [],
+    // description: "Displays your character!",
+    category: "Dungeons & Dragons",
     name: "npc",
-    alias: [],
+    // alias: [],
     description: "Displays your character!",
-    category: "Dungeons & Dragons"
+    options: [{
+        name: 'name',
+        type: 'STRING',
+        description: `Name of the NPC you're trying to find`,
+        required: false
+    }],
 }

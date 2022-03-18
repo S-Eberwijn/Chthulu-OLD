@@ -1,5 +1,5 @@
 //Firestore change done
-const {GeneralInfo} = require('../../../database/models/GeneralInfo');
+const { GeneralInfo } = require('../../../database/models/GeneralInfo');
 
 module.exports.run = async (interaction) => {
     if (!interaction.guild.channels.cache.find(channel => channel.name === `${interaction.options.getString('channel-name')}`)) return interaction.reply({ content: "**ERROR**: There is no such channel. Maybe you made a typo?" });
@@ -21,8 +21,16 @@ module.exports.run = async (interaction) => {
 }
 
 module.exports.help = {
+    // name: 'add-character-channel',
+    // permission: [],
+    // alias: [],
+    category: "Dungeons & Dragons",
     name: 'add-character-channel',
-    permission: [],
-    alias: [],
-    category: "Dungeons & Dragons"
+    description: 'Add in-character channel',
+    options: [{
+        name: 'channel-name',
+        type: 'STRING',
+        description: 'Name of the designated channel',
+        required: true
+    }],
 }

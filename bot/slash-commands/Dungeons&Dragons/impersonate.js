@@ -154,8 +154,11 @@ module.exports.run = async (interaction) => {
 }
 
 module.exports.help = {
+    // name: 'impersonate',
+    // permission: [],
+    // alias: [],
+    category: "Dungeons & Dragons",
     name: 'impersonate',
-    permission: [],
-    alias: [],
-    category: "Dungeons & Dragons"
+    description: 'Allows a dm to talk as if he is that npc.',
+    ephemeral: true,
 }

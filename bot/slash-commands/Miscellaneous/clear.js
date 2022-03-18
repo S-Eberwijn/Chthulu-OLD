@@ -19,8 +19,17 @@ module.exports.run = async (interaction) => {
 }
 
 module.exports.help = {
+    // name: "clear",
+    // alias: [],
+    // description: "Clears n-number of messages",
+    category: "General",
     name: "clear",
-    alias: [],
+    // alias: [],
     description: "Clears n-number of messages",
-    category: "General"
+    options: [{
+        name: 'number',
+        type: 'NUMBER',
+        description: 'Amount of messages you want to delete',
+        required: true
+    }],
 }

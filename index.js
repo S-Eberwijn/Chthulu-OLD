@@ -96,7 +96,7 @@ bot.slashCommands = new Enmap();
 //         });
 //     });
 // });
-
+// console.log(bot.guilds.cache.map(guild => guild.id))
 // Read and log slash command files
 fs.readdir("./bot/slash-commands/", async (err, dirs) => {
     if (err) console.log(err);
@@ -118,7 +118,7 @@ fs.readdir("./bot/slash-commands/", async (err, dirs) => {
                 var commandName = fileGet.help.name;
                 var commandAlias = fileGet.help.alias;
                 bot.slashCommands.set(commandName.toLowerCase(), fileGet);
-                commandAlias.forEach(alias => {
+                commandAlias?.forEach(alias => {
                     bot.slashCommands.set(alias.toLowerCase(), fileGet);
                 });
             });

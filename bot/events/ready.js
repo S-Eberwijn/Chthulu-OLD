@@ -1,5 +1,5 @@
 const fs = require("fs");
-const { createCmd } = require("../../dataHandler")
+// const { createCmd } = require("../../dataHandler")
 
 module.exports = async bot => {
     // Check to see if bot is ready
@@ -25,8 +25,8 @@ module.exports = async bot => {
     });
 
     //setting slash command for all guilds
-    bot.guilds.cache.forEach(guild => {
-        createCmd(bot, guild.id)
+    bot.guilds.cache.forEach(async guild => {
+        await bot.guilds.cache.get(guild.id)?.commands.set(bot.slashCommands.map(cmd => cmd.help))
     });
 
 

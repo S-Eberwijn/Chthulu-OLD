@@ -28,8 +28,11 @@ module.exports.run = async (interaction) => {
 }
 
 module.exports.help = {
+    // name: 'server',
+    // permission: [],
+    // alias: [],
+    category: "Information",
     name: 'server',
-    permission: [],
-    alias: [],
-    category: "Information"
+    description: 'Gives information about the server.',
+    options: [],
 }

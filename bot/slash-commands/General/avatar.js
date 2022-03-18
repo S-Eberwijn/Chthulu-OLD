@@ -13,8 +13,16 @@ module.exports.run = async (interaction) => {
 }
 
 module.exports.help = {
+    // name: 'avatar',
+    // permission: [],
+    // alias: [],
+    category: "General",
     name: 'avatar',
-    permission: [],
-    alias: [],
-    category: "General"
+    description: 'Shows the avatar of an user.',
+    options: [{
+        name: 'user',
+        type: 'USER',
+        description: 'User from whom the character is.',
+        required: false
+    }],
 }

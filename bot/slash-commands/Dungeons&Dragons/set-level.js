@@ -1,4 +1,4 @@
-const {PlayerCharacter} = require('../../../database/models/PlayerCharacter');
+const { PlayerCharacter } = require('../../../database/models/PlayerCharacter');
 
 module.exports.run = async (interaction) => {
     if (!interaction.guild.members.cache.get(interaction.user.id).roles.cache.find(role => role.name.includes('Dungeon Master'))) return interaction.reply({ content: 'You shall not be setting ones level!', ephemeral: true })
@@ -10,7 +10,7 @@ module.exports.run = async (interaction) => {
 
     character.level = interaction.options.getNumber('level');
     character.save();
-    
+
     return await interaction.reply({ content: `${character.name}'s level changed from \*\*${oldCharacterLevel}\*\* to \*\*${interaction.options.getNumber('level')}\*\*!`, ephemeral: true });
 
     // PlayerCharacter.update(
@@ -23,8 +23,22 @@ module.exports.run = async (interaction) => {
 }
 
 module.exports.help = {
+    // name: 'set-level',
+    // permission: [],
+    // alias: [],
+    category: "Dungeons & Dragons",
     name: 'set-level',
-    permission: [],
-    alias: [],
-    category: "Dungeons & Dragons"
+    description: 'Change a characters level.',
+    options: [{
+        name: 'user',
+        type: 'USER',
+        description: 'User from whom the character is.',
+        required: true
+    },
+    {
+        name: 'level',
+        type: 'NUMBER',
+        description: 'The newly achieved level.',
+        required: true
+    }],
 }

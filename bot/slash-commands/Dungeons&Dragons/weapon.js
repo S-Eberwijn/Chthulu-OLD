@@ -1,4 +1,4 @@
-const {MessageActionRow, MessageSelectMenu,MessageEmbed } = require('discord.js');
+const { MessageActionRow, MessageSelectMenu, MessageEmbed } = require('discord.js');
 const api = "https://api.open5e.com/weapons"
 const request = require('request');
 
@@ -8,19 +8,19 @@ module.exports.run = async (interaction) => {
     request(api, { json: true }, async (err, res, body) => {
         if (err) { return console.log(err); }
         let data = body.results
-        
-        for(let i = 0; i<data.length; i++){
-            if(data[i].slug==weapon){
-                return interaction.reply({ embeds: [createEmbed(data[i])]})
+
+        for (let i = 0; i < data.length; i++) {
+            if (data[i].slug == weapon) {
+                return interaction.reply({ embeds: [createEmbed(data[i])] })
             }
         }
-        return await useSelectionMenu(interaction,data);
+        return await useSelectionMenu(interaction, data);
     });
 }
 
-async function useSelectionMenu(interaction,weapons){
-    let half = Math.ceil(weapons.length / 2);   
-    let weapons1 = weapons.slice(0,half)
+async function useSelectionMenu(interaction, weapons) {
+    let half = Math.ceil(weapons.length / 2);
+    let weapons1 = weapons.slice(0, half)
     let weapons2 = weapons.slice(-half)
     let messageComponentsArray = [];
     messageComponentsArray.push(
@@ -32,9 +32,9 @@ async function useSelectionMenu(interaction,weapons){
                 .setMaxValues(1)
                 .setDisabled(false)
                 .addOptions(Object.keys(weapons1)
-                .map(function (key) { return { label: `${weapons1[key].name}`, value: `${weapons1[key].name}` } }))
-            )
+                    .map(function (key) { return { label: `${weapons1[key].name}`, value: `${weapons1[key].name}` } }))
         )
+    )
     messageComponentsArray.push(
         new MessageActionRow().addComponents(
             new MessageSelectMenu()
@@ -44,12 +44,12 @@ async function useSelectionMenu(interaction,weapons){
                 .setMaxValues(1)
                 .setDisabled(false)
                 .addOptions(Object.keys(weapons2)
-                .map(function (key) { return { label: `${weapons2[key].name}`, value: `${weapons2[key].name}` } }))
-            )
+                    .map(function (key) { return { label: `${weapons2[key].name}`, value: `${weapons2[key].name}` } }))
         )
+    )
     await interaction.reply({
         content: "Pick the weapon you want to learn more about (both dropdowns contain weapons).",
-        components: messageComponentsArray, 
+        components: messageComponentsArray,
         fetchReply: true,
     }).then(async () => {
         await interaction.channel.awaitMessageComponent({
@@ -58,40 +58,50 @@ async function useSelectionMenu(interaction,weapons){
             errors: ['time']
         }).then(async (interaction) => {
             interaction.deferUpdate();
-            for(let i = 0; i<weapons.length; i++){
-                if(weapons[i].name==interaction.values[0]){
-                    return interaction.channel.send({ embeds: [createEmbed(weapons[i])]})
+            for (let i = 0; i < weapons.length; i++) {
+                if (weapons[i].name == interaction.values[0]) {
+                    return interaction.channel.send({ embeds: [createEmbed(weapons[i])] })
                 }
             }
-        }).catch(function () {  
+        }).catch(function () {
             interaction.channel.send({
                 content: "This poll has been open for too long, it no longer accepts answers."
-            , ephemeral: true}).then(msg => { setTimeout(() => msg.delete(), 3000) })
-            .catch(err => console.log(err));
+                , ephemeral: true
+            }).then(msg => { setTimeout(() => msg.delete(), 3000) })
+                .catch(err => console.log(err));
         })
     })
 }
 
-function createEmbed(weapon){
+function createEmbed(weapon) {
     let properties = weapon.properties.join("; ");
     return new MessageEmbed()
         .setTitle(weapon.name)
-        .setURL(api + "/" +  weapon.slug)
+        .setURL(api + "/" + weapon.slug)
         .addFields(
             { name: 'damage dice', value: weapon.damage_dice, inline: true },
             { name: 'cost', value: weapon.cost, inline: true },
-            { name: 'category', value: weapon.category, inline: true  },
+            { name: 'category', value: weapon.category, inline: true },
             { name: 'damage type', value: weapon.damage_type, inline: true },
             { name: 'weight', value: weapon.weight, inline: true },
-            { name: 'additional properties', value: properties==""?"none":properties, inline: true },
+            { name: 'additional properties', value: properties == "" ? "none" : properties, inline: true },
         )
         .setTimestamp()
         .setFooter(weapon.document__slug + " • " + weapon.document__title);
 }
 
 module.exports.help = {
+    // name: 'weapon',
+    // permission: [],
+    // alias: [],
+    category: "Dungeons & Dragons",
     name: 'weapon',
-    permission: [],
-    alias: [],
-    category: "Dungeons & Dragons"
+    description: 'look up a weapon',
+    ephemeral: true,
+    options: [{
+        name: 'weapon-name',
+        type: 'STRING',
+        description: 'You can chose to enter the name of the weapon.',
+        required: false
+    }],
 }

@@ -1,4 +1,4 @@
-const {Quest} = require('../../../database/models/Quest');
+const { Quest } = require('../../../database/models/Quest');
 const { MessageEmbed } = require('discord.js');
 
 module.exports.run = async (interaction) => {
@@ -23,10 +23,13 @@ module.exports.run = async (interaction) => {
 }
 
 module.exports.help = {
+    // name: 'quests',
+    // permission: [],
+    // alias: [],
+    category: "Dungeons & Dragons",
     name: 'quests',
-    permission: [],
-    alias: [],
-    category: "Dungeons & Dragons"
+    description: 'Get information of quests in this campaign (server).',
+    options: [],
 }
 
 function getRightEmoji(quest_importance_value) {

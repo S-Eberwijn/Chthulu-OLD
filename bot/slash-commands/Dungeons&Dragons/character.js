@@ -1,6 +1,6 @@
 const { PlayerCharacter } = require('../../../database/models/PlayerCharacter');
 const { getCharacterEmbed, getCharacterLevelImage, getCharacterPicture } = require('../../otherFunctions/characterEmbed')
-const { sendCharacterEmbedMessageFromInteraction,sendCharacterEmbedMessageInChannel } = require('../../otherFunctions/characterEmbed');
+const { sendCharacterEmbedMessageFromInteraction, sendCharacterEmbedMessageInChannel } = require('../../otherFunctions/characterEmbed');
 
 module.exports.run = async (interaction) => {
     interaction.deferReply();
@@ -17,8 +17,16 @@ module.exports.run = async (interaction) => {
 }
 
 module.exports.help = {
+    // name: 'character',
+    // permission: [],
+    // alias: [],
+    category: "Dungeons & Dragons",
     name: 'character',
-    permission: [],
-    alias: [],
-    category: "Dungeons & Dragons"
+    description: 'Show an user character.',
+    options: [{
+        name: 'user',
+        type: 'USER',
+        description: 'User to look character',
+        required: false
+    }],
 }

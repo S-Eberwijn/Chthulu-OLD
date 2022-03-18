@@ -26,10 +26,19 @@ module.exports.run = async (interaction) => {
 }
 
 module.exports.help = {
+    // name: 'spell',
+    // permission: [],
+    // alias: [],
+    category: "Dungeons & Dragons",
     name: 'spell',
-    permission: [],
-    alias: [],
-    category: "Dungeons & Dragons"
+    description: 'Gives information about a spell.',
+    ephemeral: true,
+    options: [{
+        name: 'spell-name',
+        type: 'STRING',
+        description: 'Give the name of the spell',
+        required: true
+    }],
 }
 
 function ProcesRequest(body) {

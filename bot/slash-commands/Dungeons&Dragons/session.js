@@ -214,10 +214,19 @@ module.exports.run = async (interaction) => {
 
 
 module.exports.help = {
+    // name: "session",
+    // alias: [],
+    // description: "Handles actions around sessions",
+    category: "Dungeons & Dragons",
     name: "session",
-    alias: [],
+    // alias: [],
     description: "Handles actions around sessions",
-    category: "Dungeons & Dragons"
+    options: [{
+        name: 'action',
+        type: 'STRING',
+        description: `Type of action you want to do: "request"`,
+        required: true
+    }],
 }
 
 function createSessionChannelEmbed(messageAuthor, sessionDate, sessionParticipants, sessionObjective, sessionCommanderAvatar) {

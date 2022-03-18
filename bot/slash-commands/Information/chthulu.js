@@ -31,8 +31,10 @@ module.exports.run = async (interaction) => {
 }
 
 module.exports.help = {
+    // name: 'chthulu',
+    // permission: [],
+    // alias: [],
+    category: "Information",
     name: 'chthulu',
-    permission: [],
-    alias: [],
-    category: "Information"
+    description: 'Information about the bot!',
 }
