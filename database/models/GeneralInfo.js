@@ -13,7 +13,7 @@ const GeneralInfo = defineModel("general_info", {
         required: true,
     },
     in_character_channels: {
-        type: 'string',
+        type: 'array',
         required: true,
     },
 });

@@ -1,5 +1,5 @@
 const PREFIX = process.env.PREFIX;
-const { Op } = require("sequelize");
+// const { Op } = require("sequelize");
 const { GeneralInfo } = require('../../database/models/GeneralInfo.js');
 const { PlayerCharacter } = require('../../database/models/PlayerCharacter.js');
 const { NonPlayableCharacter } = require('../../database/models/NonPlayableCharacter.js');
@@ -38,7 +38,7 @@ module.exports = async (bot, message) => {
                 where: {
                     server: message.guild.id,
                     using_npc: {
-                        [Op.substring]: message.author.id
+                        'in': message.author.id
                     }
                 }
             });
