@@ -13,7 +13,7 @@
     margin-left: 5em;
     overflow: scroll;
     scrollbar-width: none;
-    position: relative;
+    position: relative; 
 }
 
 
@@ -45,6 +45,21 @@ header.menuHeader {
     font-weight: bold;
 }
 
+
+
+.menuCategoryItem span.menuIcon{
+    font-family: 'Poppins', 'FontAwesome', sans-serif;
+    width: .5em;
+    display: block;
+    padding-left: 30px;
+    padding-right: 20px;
+}
+
+.menuCategoryItem span:not(span.menuIcon){
+    padding: 0;
+}
+
+
 .menuCategory:nth-child(2) {
     margin: 1.3em 0px;
 }
@@ -58,6 +73,8 @@ header.menuHeader {
     font-weight: lighter;
     padding: 0.1em 0px;
     transition: 200ms background-color;
+    display: flex;
+    flex-direction: row;
 }
 
 .menuCategoryItem:hover {

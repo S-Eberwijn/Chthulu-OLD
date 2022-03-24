@@ -1,0 +1,32 @@
+extends ./template/layout.pug
+block scripts
+    script
+        include ./static/theme.js
+        include ./static/settingsDashboard.js
+    script var commands = !{JSON.stringify(commands)};
+        | var guildID = !{JSON.stringify(selectedGuildId)};
+        | var disabled_cmd = !{JSON.stringify(disabled_commands)};
+
+
+
+block styles 
+    style 
+        include ./assets/css/main.css
+        include ./assets/css/sidebar.css
+        include ./assets/css/menu.css
+        include ./assets/css/dashboard.css
+        include ./assets/css/settingsDashboard.css
+
+block dashboardContent
+    .dashboardContent(settings=true)
+    
+        .settingsCollection 
+            each command in commands 
+                include ./components/commandSetting.pug
+
+        .operationButtons
+            .saveButton
+                input(type="button" id='save_settings' value="Save changes")
+            .resetButton 
+                span.resetAction Reset changes
+

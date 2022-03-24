@@ -10,7 +10,7 @@
     --header-height: 100px;
     --content-padding: 20px 0px;
     --clr-border: #202225;
-}
+} 
 
 /* .theme-light {
     --text-color: #272727;
@@ -31,6 +31,7 @@ body, html {
     height: 100%;
     width: 100%;
     overflow: hidden;
+    scroll-behavior: smooth;
 }
 
 body.preload * {

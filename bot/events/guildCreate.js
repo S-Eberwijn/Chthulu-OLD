@@ -7,6 +7,7 @@ module.exports = async (client, guild) => {
         server_name: guild.name,
         server: guild.id,
         session_number: 1,
-        in_character_channels: ''
+        in_character_channels: [], 
+        disabled_commands: [],
     })
 };
