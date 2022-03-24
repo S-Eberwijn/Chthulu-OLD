@@ -16,6 +16,10 @@ const GeneralInfo = defineModel("general_info", {
         type: 'array',
         required: true,
     },
+    disabled_commands: {
+        type: 'array',
+        required: true,
+    },
 });
 
 module.exports = { GeneralInfo };

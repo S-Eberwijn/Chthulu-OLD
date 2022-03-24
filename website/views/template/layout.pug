@@ -41,38 +41,48 @@ html(lang="en")
                     span Informational
                         a(href=`/dashboard/${selectedGuildId}/informational/characters`)
                             .menuCategoryItem          
-                                span # Characters
+                                span.menuIcon  
+                                span Characters
                         a(href=`/dashboard/${selectedGuildId}/informational/nonplayercharacters`)   
                             .menuCategoryItem
-                                span # NPC's
+                                span.menuIcon  
+                                span NPC's
                         a(href=`/dashboard/${selectedGuildId}/informational/quests`)   
                             .menuCategoryItem
-                                span # Quests
+                                span.menuIcon  
+                                span Quests
                         a(href=`/dashboard/${selectedGuildId}/informational/map`)   
                             .menuCategoryItem
-                                span # Map
+                                span.menuIcon  
+                                span Map
                 .menuCategory 
                     span Sessions
                         a(href=`/dashboard/${selectedGuildId}/sessions/overview`)   
                             .menuCategoryItem
-                                span # Overview
+                                span.menuIcon # 
+                                span Overview
                         a(href=`/dashboard/${selectedGuildId}/sessions/request`)   
                             .menuCategoryItem  
-                                span # Request Session
+                                span.menuIcon # 
+                                span Request Session
                 .menuCategory 
                     span Settings
                         a(href=`/dashboard/${selectedGuildId}/settings/dnd`)   
                             .menuCategoryItem
-                                span # Dungeons & Dragons
+                                span.menuIcon  
+                                span Dungeons & Dragons
                         a(href=`/dashboard/${selectedGuildId}/settings/general`)   
                             .menuCategoryItem
-                                span # General
+                                span.menuIcon  
+                                span General
                         a(href=`/dashboard/${selectedGuildId}/settings/information`)   
                             .menuCategoryItem
-                                span # Information
+                                span.menuIcon  
+                                span Information
                         a(href=`/dashboard/${selectedGuildId}/settings/miscellaneous`)   
                             .menuCategoryItem
-                                span # Miscellaneous
+                                span.menuIcon  
+                                span Miscellaneous
         .dashboard(guild=isGuildDashboardPage).menuIsExtended
             header.dashboardHeader
                 span #{headerTitle} Dashboard

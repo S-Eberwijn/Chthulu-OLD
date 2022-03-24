@@ -22,7 +22,7 @@ module.exports.help = {
     // name: "clear",
     // alias: [],
     // description: "Clears n-number of messages",
-    category: "General",
+    category: "Miscellaneous",
     name: "clear",
     // alias: [],
     description: "Clears n-number of messages",

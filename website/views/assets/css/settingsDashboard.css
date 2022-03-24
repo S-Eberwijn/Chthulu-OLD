@@ -1,0 +1,198 @@
+.dashboardContent[settings] {
+    padding: 0 !important;
+    overflow: unset;
+}
+
+.settingsCollection {
+    /* background-color: aqua; */
+    box-sizing: border-box;
+    padding: 20px;
+    padding-right: 30px;
+    width: 100% !important;
+    height: 85% !important;
+    max-height: 85% !important;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.settingsCollection::-webkit-scrollbar {
+    width: 15px;
+    /* width of the entire scrollbar */
+}
+
+.settingsCollection::-webkit-scrollbar-track {
+    background: transparent;
+    /* color of the tracking area */
+}
+
+.settingsCollection::-webkit-scrollbar-thumb {
+    background-color: var(--sidebar-color);
+    /* color of the scroll thumb */
+    border-radius: 15px;
+    /* roundness of the scroll thumb */
+    border: 5px solid transparent;
+    background-clip: padding-box;
+}
+
+.settingsCollection .setting {
+    padding: 10px;
+    width: 100%;
+    height: auto;
+    position: relative;
+    border-radius: 5px;
+    background-color: transparent;
+    -webkit-transition: background-color 200ms linear;
+    -ms-transition: background-color 200ms linear;
+    transition: background-color 200ms linear;
+    /* transition: all 0.4 ; */
+    /* background-color: red; */
+}
+
+.settingsCollection .setting:hover {
+    background-color: var(--menu-color);
+
+    /* background-color: red; */
+}
+
+.setting span.commandName {
+    color: var(--navbar-text-color);
+    font-size: 1.2em;
+    /* width: calc(100% - 80px); */
+}
+
+.setting span.commandDescription {
+    color: var(--placeholder-text-color);
+    font-size: .8;
+    padding: 0 10px;
+    /* width: calc(100% - 80px); */
+
+}
+
+.switch {
+    display: inline-block;
+    height: 34px;
+    position: relative;
+    width: 60px;
+}
+
+.switch input {
+    display: none;
+}
+
+.slider {
+    /* border: 2px solid  var(--menu-color); */
+    background-color: var(--placeholder-text-color);
+    bottom: 0;
+    cursor: pointer;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transition: .4s;
+}
+
+.slider:before {
+    background-color: var(--navbar-text-color);
+    bottom: 4px;
+    content: "";
+    height: 26px;
+    left: 4px;
+    position: absolute;
+    transition: .4s;
+    width: 26px;
+}
+
+input:checked+.slider {
+    background-color: #66bb6a;
+}
+
+input:checked+.slider:before {
+    transform: translateX(26px);
+}
+
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+.settingCheckBox {
+    position: absolute;
+    top: 50%;
+    right: 0%;
+    transform: translate(-50%, -50%);
+}
+
+.operationButtons {
+    /* background-color: yellow; */
+    margin: 0 auto;
+    width: 30% !important;
+    height: 15% !important;
+    opacity: 0;
+    transform: translateY(100%);
+    transition: transform 0.5s, opacity 0.5s;
+
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: space-evenly;
+    align-items: center;
+
+    /* position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translate(-50%,-25%) */
+
+
+}
+
+.operationButtons .saveButton {
+    height: 3em;
+    width: 10em;
+    /* background-color: lightgreen; */
+
+}
+
+.operationButtons .saveButton input {
+    /* padding-left: revert; */
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: rgb(145, 238, 145, 1);
+    border: none;
+    color: var(--content-color);
+    font-weight: bolder;
+    outline: 0;
+    height: 100%;
+    width: 100%;
+    box-shadow: none;
+
+}
+
+
+
+.operationButtons .resetButton {
+    height: 4em;
+    width: 15em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* background-color: blue; */
+
+}
+
+.operationButtons .resetButton span.resetAction{
+    /* text-decoration: underline; */
+    border-bottom: 1px solid #fff;
+    cursor: pointer;
+
+}
+
+.operationButtons.show {
+    opacity: 1;
+    transform: translateY(0);
+
+}

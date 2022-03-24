@@ -1,0 +1,9 @@
+.setting 
+    .settingName 
+        span.commandName /#{command.name}
+    .settingDescription 
+        span.commandDescription #{command.description}
+    .settingCheckBox
+        label.switch(for=`${command.name}-checkbox`)
+            input(type="checkbox" id=`${command.name}-checkbox` checked=true)
+            .slider.round

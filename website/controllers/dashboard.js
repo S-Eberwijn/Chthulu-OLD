@@ -1,6 +1,8 @@
 const { PlayerCharacter } = require('../../database/models/PlayerCharacter');
 const { NonPlayableCharacter } = require('../../database/models/NonPlayableCharacter');
 const { Quest } = require('../../database/models/Quest');
+const { GeneralInfo } = require('../../database/models/GeneralInfo');
+
 // let count = 0;
 
 exports.dashboardPage = async (req, res) => {
@@ -97,6 +99,8 @@ exports.guildInformationalQuestsDashboardPage = async (req, res) => {
 
     res.render('questsPage', { isGuildDashboardPage: true, bot: bot, headerTitle: `Quests`, guild: guild, selectedGuildId: guildId, guildName: guild.name, uncompletedQuests: uncompletedQuests.reverse(), completedQuests: completedQuests.reverse() });
 }
+
+
 
 async function getQuests(guildId = null, status) {
     if (guildId === null) {
@@ -258,6 +262,74 @@ exports.guildInformationalMapDashboardPage = async (req, res) => {
     const guildId = req.params.id;
     const guild = bot.guilds.cache.get(guildId);
 
-
-    res.render('mapPage', { isGuildDashboardPage: true, bot: bot, headerTitle: `Map`, guild: guild, selectedGuildId: guildId, guildName: guild.name});
+    res.render('mapPage', { isGuildDashboardPage: true, bot: bot, headerTitle: `Map`, guild: guild, selectedGuildId: guildId, guildName: guild.name });
 }
+
+//SETTINGS PAGE
+exports.guildSettingsPage = async (req, res) => {
+    const bot = require('../../index');
+    const guildId = req.params.id;
+    const guild = bot.guilds.cache.get(guildId);
+
+    let category = '';
+    switch (req.url.split('/')[req.url.split('/').length - 1]) {
+        case 'information':
+            category = 'Information';
+            break;
+        case 'dnd':
+            category = 'Dungeons & Dragons';
+            break;
+        case 'general':
+            category = 'General';
+            break;
+        case 'miscellaneous':
+            category = 'Miscellaneous';
+            break;
+        default:
+            break;
+    }
+
+    const guildCommands = await guild.commands.cache.map(command => command.name)
+    const possibleCommands = bot.slashCommands.filter(cmd => guildCommands.includes(cmd.help.name) && cmd.help.category == category).map(cmd => cmd.help)
+    const allCommands = bot.slashCommands.filter(cmd => cmd.help.category == category).map(cmd => cmd.help)
+    const server = await GeneralInfo.findOne({ where: { id: guildId } })
+    res.render('settingsPage', { isGuildDashboardPage: true, bot: bot, headerTitle: `Settings`, guild: guild, selectedGuildId: guildId, guildName: guild.name, commands: allCommands, disabled_commands: server.disabled_commands });
+}
+
+exports.editSettingsRequest = async (req, res) => {
+    const bot = require('../../index');
+
+    const guildId = req.params.id;
+
+    // console.log(req.body?.disabled_commands_array)
+    // console.log(req.body?.enabled_commands_array)
+    await GeneralInfo.findOne({ where: { id: guildId } }).then(async server => {
+        try {
+            if (server) {
+                server.disabled_commands = server.disabled_commands.concat(req.body?.disabled_commands_array).filter(cmd => !req.body?.enabled_commands_array.includes(cmd)).filter(onlyUnique);
+                server.save().then(() => {
+                    // Takes a few seconds to adjust this before users can use the command in the server
+                    bot.guilds.cache.get(guildId)?.commands.set(bot.slashCommands.filter(cmd => !server.disabled_commands.includes(cmd.help.name)).map(cmd => cmd.help))
+                    res.sendStatus(201)
+
+                });
+                // server.disabled_commands.forEach(cmd_name => {
+                //     bot.guilds.cache.get(guildId).commands.cache.find(c => c.name === `${cmd_name}`)?.delete()
+                // })
+
+            }
+        } catch (error) {
+            console.log(error)
+        }
+
+
+    })
+
+
+}
+
+function onlyUnique(value, index, self) {
+    return self.indexOf(value) === index;
+}
+
+

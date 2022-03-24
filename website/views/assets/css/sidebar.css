@@ -36,6 +36,8 @@ header.sidebarHeader {
 }
 
 .bot-icon {
+    height: 3.75em !important;
+    width: 3.75 em !important;
     border-radius: 50%;
     overflow: hidden;
     transition: border-radius 150ms linear;

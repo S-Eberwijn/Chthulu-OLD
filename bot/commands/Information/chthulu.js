@@ -1,4 +1,3 @@
-//TODO: Missing access when trying to press button
 const { MessageActionRow, MessageButton } = require('discord.js');
 const { getBotEmbed } = require('../../otherFunctions/botEmbed')
 
