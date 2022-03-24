@@ -26,8 +26,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
         // zoomOffset: 2,
     }).addTo(map);
     // map.setView(0, 0, 2)
-    let myx = 75
-    let myy = -75
     map.addControl(new L.Control.Fullscreen());
     //L.marker([map.getBounds().getNorth()-7,0]).addTo(map).bindPopup(`NorthPole ` + map.getBounds().getNorth())
     //L.marker([map.getBounds().getSouth(),0]).addTo(map).bindPopup(`Southpole `+ map.getBounds().getSouth())
@@ -56,9 +54,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
         let y = popLocation.lat / map.getBounds().getNorth()
         L.popup()
             .setLatLng(popLocation)
-            .setContent(createForm())
+            .setContent(createForm(x,y))
             .openOn(map);
-        console.log("lat:", y, "lng:", x);
     });
 });
 
@@ -83,13 +80,21 @@ function getKnownLocations() {
     return knownLocations;
 }
 
-function createForm() {
-    /*<form>
-        <h1>new location</h1>
-        <label>veld1: </label><input type="text"/>
-        <label>veld2: </label><input type="text"/>
-        <button type="submit">submit</button>
-    </form>*/
-    return ("<form><h1>new location</h1><label>veld1: </label><input type='text'/><br/><label>veld2: </label><input type='text'/>"+
-    "<br/><button type='submit'>submit</button></form>")
+function createForm(x,y) {
+    x = Math.round(x*100_000_000_000)/100_000_000_000;
+    y = Math.round(y*100_000_000_000)/100_000_000_000;
+    let form=
+    "<form class='mapPopUpForm'>"+
+    "<h1>new location</h1>"+
+    "<label class='mapPopUplabel'>Lat : </label>"+
+    "<input class='mapPopUpinput' type='number' step='0.000001' disabled value="+y+"><br/>"+
+    "<label class='mapPopUplabel'>Long: </label>"+
+    "<input class='mapPopUpinput' type='number' step='0.000001' disabled value="+x+"><br/>"+
+    "<label class='mapPopUplabel'>Location name: </label>"+    
+    "<input class='mapPopUpinput' type='text'/><br/>"+
+    "<label class='mapPopUplabel'>Description: </label>"+    
+    "<textarea class='mapPopUpinput' type='text' rows='4' cols='50'></textarea><br/>"+
+    "<button class='mapPopUpinput' type='submit'>submit</button>"+
+    "</form>"
+    return form;
 }
