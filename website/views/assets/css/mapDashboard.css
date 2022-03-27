@@ -47,3 +47,5 @@
     align-items: center;
     flex-direction: unset;
 }
+
+img.huechange { filter: hue-rotate(150deg); }

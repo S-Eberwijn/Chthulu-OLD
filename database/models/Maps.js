@@ -1,21 +1,21 @@
 const { defineModel } = require("firestore-sequelizer");
-const Player = defineModel("players", {
+const Map = defineModel("maps", {
     id: {
         type: 'string',
         required: true,
     },
-    player_id_discord: {
+    map_url: {
         type: 'string',
-        required: false
+        required: true,
     },
-    player_name: {
-        type: 'string',
-        required: false
+    locations: {
+        type: 'array',
+        required: false,
     },
     server: {
         type: 'string',
-        required: false,
+        required: true,
     }
 });
 
-module.exports = { Player };
+module.exports = { Map };

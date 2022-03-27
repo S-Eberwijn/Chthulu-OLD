@@ -2,6 +2,7 @@ const { PlayerCharacter } = require('../../database/models/PlayerCharacter');
 const { NonPlayableCharacter } = require('../../database/models/NonPlayableCharacter');
 const { Quest } = require('../../database/models/Quest');
 const { GeneralInfo } = require('../../database/models/GeneralInfo');
+const { Map } = require('../../database/models/Maps');
 
 // let count = 0;
 
@@ -9,7 +10,9 @@ exports.dashboardPage = async (req, res) => {
     const bot = require('../../index');
     let characters = await getAliveCharacters();
     let deadCharacters = await getDeadCharacters();
-    res.render('dashboardPage', { isDashboardPage: true, bot: bot, headerTitle: 'Chthulu', guildName: '', characters: characters, deadCharactersCount: deadCharacters.length });
+    const allQuests = await getQuests();
+
+    res.render('dashboardPage', { isDashboardPage: true, bot: bot, headerTitle: 'Chthulu', guildName: '', characters: characters, deadCharactersCount: deadCharacters.length, allQuests: allQuests });
 }
 
 exports.guildDashboardPage = async (req, res) => {
@@ -18,8 +21,9 @@ exports.guildDashboardPage = async (req, res) => {
     const guild = bot.guilds.cache.get(guildId);
     let characters = await getAliveCharacters(guildId);
     let deadCharacters = await getDeadCharacters(guildId);
+    const allGuildQuests = await getQuests(guildId, ["OPEN","DONE", "EXPIRED", "FAILED"]);
 
-    res.render('dashboardPage', { isGuildDashboardPage: true, bot: bot, headerTitle: '', guild: guild, selectedGuildId: guildId, guildName: guild.name, characters: characters, deadCharactersCount: deadCharacters.length });
+    res.render('dashboardPage', { isGuildDashboardPage: true, bot: bot, headerTitle: '', guild: guild, selectedGuildId: guildId, guildName: guild.name, characters: characters, deadCharactersCount: deadCharacters.length, allQuests: allGuildQuests });
 }
 
 //CONSTRUCTION PAGE
@@ -79,21 +83,10 @@ async function getNonPlayableCharacters(guildId = null) {
 
 //QUESTS PAGE
 exports.guildInformationalQuestsDashboardPage = async (req, res) => {
-
-    // count++
-    // console.log('test ' + count)
     const bot = require('../../index');
     const guildId = req.params.id;
     const guild = bot.guilds.cache.get(guildId);
 
-
-    // await Quest.update(
-    //     { quest_status: 'MAYBE' },
-    //     {
-    //         where: { id: 'Q1646813744043', server_id: guildId }
-    //     }).then(async () => {
-    //         console.log('changed')
-    //     });
     let completedQuests = await getQuests(guildId, ["DONE", "EXPIRED", "FAILED"]);
     let uncompletedQuests = await getQuests(guildId, ["OPEN"]);
 
@@ -189,13 +182,6 @@ exports.deleteQuestRequest = async (req, res) => {
                 res.sendStatus(201)
             }
         });
-        // await Quest.update(
-        //     { quest_status: 'DELETED' },
-        //     {
-        //         where: { quest_id: quest_id, server_id: server_id }
-        //     }).then(async () => {
-        //         res.sendStatus(201)
-        //     });
     }
 }
 
@@ -218,18 +204,6 @@ exports.editQuestRequest = async (req, res) => {
                     res.sendStatus(201)
                 }
             });
-            // await Quest.update(
-            //     {
-            //         quest_name: req.body?.title,
-            //         quest_description: req.body?.description,
-            //         quest_importance_value: req.body?.priority,
-            //         quest_importance: await getImportanceText(parseInt(req.body?.priority))
-            //     },
-            //     {
-            //         where: { id: quest_id, server_id: server_id }
-            //     }).then(async () => {
-            //         res.sendStatus(201)
-            //     });
         }
     } else if (req.body?.status) {
         let quest_id = req.body?.quest_id;
@@ -244,15 +218,6 @@ exports.editQuestRequest = async (req, res) => {
                     res.sendStatus(201)
                 }
             });
-            // await Quest.update(
-            //     {
-            //         quest_status: req.body?.status,
-            //     },
-            //     {
-            //         where: { quest_id: quest_id, server_id: server_id }
-            //     }).then(async () => {
-            //         res.sendStatus(201)
-            //     });
         }
     }
 }
@@ -262,7 +227,10 @@ exports.guildInformationalMapDashboardPage = async (req, res) => {
     const guildId = req.params.id;
     const guild = bot.guilds.cache.get(guildId);
 
-    res.render('mapPage', { isGuildDashboardPage: true, bot: bot, headerTitle: `Map`, guild: guild, selectedGuildId: guildId, guildName: guild.name });
+    const map = await Map.findOne({where: { id: guildId}});
+    console.log(map)
+
+    res.render('mapPage', { isGuildDashboardPage: true, bot: bot, headerTitle: `Map`, guild: guild, selectedGuildId: guildId, guildName: guild.name, databaseMap: map });
 }
 
 //SETTINGS PAGE
@@ -301,8 +269,6 @@ exports.editSettingsRequest = async (req, res) => {
 
     const guildId = req.params.id;
 
-    // console.log(req.body?.disabled_commands_array)
-    // console.log(req.body?.enabled_commands_array)
     await GeneralInfo.findOne({ where: { id: guildId } }).then(async server => {
         try {
             if (server) {
@@ -314,18 +280,14 @@ exports.editSettingsRequest = async (req, res) => {
 
                 });
                 // server.disabled_commands.forEach(cmd_name => {
-                //     bot.guilds.cache.get(guildId).commands.cache.find(c => c.name === `${cmd_name}`)?.delete()
+                //     bot.guilds.cache.get(guildId).commands.cache.find(c => c.name === `${cmd_name}`)?.delete() 
                 // })
 
             }
         } catch (error) {
             console.log(error)
         }
-
-
     })
-
-
 }
 
 function onlyUnique(value, index, self) {

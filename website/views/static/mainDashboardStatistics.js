@@ -2,13 +2,20 @@ google.load("visualization", "1", { packages: ["corechart"] });
 var timeout;
 
 document.addEventListener("DOMContentLoaded", function () {
-    console.log(characters)
+    console.log(characters);
+    console.log(allQuests.filter(quest => quest.status === 'OPEN'));
+
     timeout = setInterval(function () {
         if (google.visualization != undefined) {
             google.charts.setOnLoadCallback(drawChart('topFiveClasses', 'Top 5 Character Classes', getAllCharactersValues(characters, 'class'), ['Class', 'Amount']));
             google.charts.setOnLoadCallback(drawChart('topFiveRaces', 'Top 5 Character Races', getAllCharactersValues(characters, 'race'), ['Race', 'Amount']));
             google.charts.setOnLoadCallback(drawChart('topFiveBackgrounds', 'Top 5 Character Backgrounds', getAllCharactersValues(characters, 'background'), ['Background', 'Amount']));
             document.getElementById('highestCharacterLevel').innerHTML = getHighestCharacterLevel(characters);
+            document.getElementById('OPEN-quests').innerHTML = allQuests.filter(quest => quest.data.quest_status === 'OPEN').length;
+            document.getElementById('EXPIRED-quests').innerHTML = allQuests.filter(quest => quest.data.quest_status === 'EXPIRED').length;
+            document.getElementById('DONE-quests').innerHTML = allQuests.filter(quest => quest.data.quest_status === 'DONE').length;
+            document.getElementById('total-quests').innerHTML = allQuests.length;
+
             clearInterval(timeout);
         }
     }, 300);
@@ -63,7 +70,7 @@ function uniqueArrayValues(array) {
 function getAllCharactersValues(characters, value) {
     let characterValues = [];
     characters.forEach(character => {
-        characterValues.push(getCharacterValue(character, value));
+        characterValues.push(getCharacterValue(character.data, value));
     });
     let uniqueCharacterValues = uniqueArrayValues(characterValues);
     let valuesWithAmount = getValuesWithAmountOfEntries(uniqueCharacterValues, characterValues);
@@ -96,9 +103,9 @@ function compareSecondColumn(a, b) {
     }
 }
 function getHighestCharacterLevel(characters) {
-    let levelsArray = [];
+    let levelsArray = [0];
     characters.forEach(character => {
-        levelsArray.push(character['level']);
+        levelsArray.push(character.data['level']);
     });
     return Math.max(...levelsArray);
 }

@@ -1,6 +1,5 @@
 
 window.addEventListener('DOMContentLoaded', (event) => {
-    console.log('DOM fully loaded and parsed');
     var mapCenter = [-33.8650, 151.2094];
     var map = L.map('map').setView(mapCenter, 2);
     map.setMaxBounds(map.getBounds());
@@ -9,8 +8,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
         northEast = L.latLng(13.026849183135116, 80.23797690868378),
         bounds = L.latLngBounds(southWest, northEast);
 
-    console.log(map.getBounds().getSouthWest().toString());
-    console.log(map.getBounds().getNorthEast().toString());
+    // console.log(map.getBounds().getSouthWest().toString());
+    // console.log(map.getBounds().getNorthEast().toString());
 
     L.tileLayer(
         'http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', {
@@ -19,7 +18,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
         // attribution: 'Data © <a href="http://osm.org/copyright">OpenStreetMap</a>',
         fullscreenControl: true,
         minZoom: 2,
-        maxZoom: 4,
+        maxZoom: 5,
         bounds: bounds,
         continuousWorld: false,
         noWrap: true,
@@ -27,19 +26,55 @@ window.addEventListener('DOMContentLoaded', (event) => {
         // zoomOffset: 2,
     }).addTo(map);
     // map.setView(0, 0, 2)
+
     map.addControl(new L.Control.Fullscreen());
 
 
+    databaseMap.data.locations.forEach(location => {
+        console.log(location)
 
+        let icon;
+        let marker;
+        switch (location.type) {
+            case 'town':
+                icon =
+                    L.icon({
+                        iconUrl: `/images/mapIcons/${location.type}.png`,
+                        iconSize: [34, 30],
+                        iconAnchor: [15, 15],
+                        popupAnchor: [0, -15],
+                        shadowUrl: `/images/mapIcons/${location.type}.png`,
+                        shadowSize: [34, 30],
+                        shadowAnchor: [15, 15],
+                    });
+                break;
+            case 'city':
+                icon =
+                    L.icon({
+                        iconUrl: '/images/mapIcons/city.png',
+                        iconSize: [80, 50],
+                        iconAnchor: [40, 25],
+                        popupAnchor: [0, -50],
+                        shadowUrl: '/images/mapIcons/city.png',
+                        shadowSize: [80, 50],
+                        shadowAnchor: [40, 25],
+                    });
+                break;
+            default:
+                break;
+        }
+        if (!icon) {
+            marker = L.marker(mapCenter, { draggable: true }).addTo(map)
+                .bindPopup(`${location.description}`);
+        } else {
+            marker = L.marker(mapCenter, { icon: icon }).addTo(map)
+                .bindPopup(`${location.description}`);
+        }
+        if (location.visited === true) marker._icon.classList.add('huechange');
 
-    L.marker(mapCenter).addTo(map)
-        .bindPopup(`Party's current location`)
-    // .openPopup();
-    // L.marker(mapCenter).addTo(map);
-    // L.marker([-35.8650, 154.2094]).addTo(map);
+    })
 
-
-    var imageUrl = 'https://cdn.discordapp.com/attachments/711689970456461372/953023259044098058/The_Homebrew_Campaign.jpg',
+    var imageUrl = databaseMap.data.map_url,
         imageBounds = [map.getBounds().getNorthEast(), map.getBounds().getSouthWest()];
 
     L.imageOverlay(imageUrl, imageBounds, {
