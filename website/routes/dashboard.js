@@ -20,9 +20,15 @@ router.put('/dashboard/:id/informational/quests', editQuestRequest);
 
 router.get('/dashboard/:id/informational/map', guildInformationalMapDashboardPage);
 
-// Sessions
-router.get('/dashboard/:id/sessions/overview', constructionDashboardPage);
-router.get('/dashboard/:id/sessions/request', constructionDashboardPage);
+router.get('/dashboard/:id/informational/sessions', constructionDashboardPage);
+// router.get('/dashboard/:id/sessions/request', constructionDashboardPage);
+
+//Lookup
+router.get('/dashboard/:id/lookup/item', constructionDashboardPage);
+router.get('/dashboard/:id/lookup/condition', constructionDashboardPage);
+router.get('/dashboard/:id/lookup/spell', constructionDashboardPage);
+
+// href=`/dashboard/${selectedGuildId}/lookup/condition`
 // Settings
 router.get('/dashboard/:id/settings/dnd', guildSettingsPage);
 router.get('/dashboard/:id/settings/general', guildSettingsPage);

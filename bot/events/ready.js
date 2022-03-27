@@ -1,5 +1,6 @@
 const fs = require("fs");
 const { GeneralInfo } = require('../../database/models/GeneralInfo');
+const { Map } = require('../../database/models/Maps');
 
 // const { createCmd } = require("../../dataHandler")
 
@@ -43,4 +44,22 @@ module.exports = async bot => {
 
 
     })
+
+    // let timestamp = Date.now();
+    // await Map.create({
+    //     id: `532525442201026580`,
+    //     map_url: `https://cdn.discordapp.com/attachments/711689970456461372/953023259044098058/The_Homebrew_Campaign.jpg`,
+    //     locations: [
+    //         {
+    //             id: `L${timestamp}`,
+    //             type: 'players',
+    //             description: 'Testing purpose',
+    //             visited: false,
+    //             x: 0,
+    //             y: 0,
+    //             status: 'idk'
+    //         }
+    //     ],
+    //     server: `532525442201026580`
+    // })
 }

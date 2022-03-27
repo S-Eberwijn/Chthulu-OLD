@@ -4,7 +4,9 @@ block scripts
     script
         include ./static/theme.js
         include ./static/mainDashboardStatistics.js
-    script var characters = !{JSON.stringify(characters)}; 
+    script. 
+        var characters = !{JSON.stringify(characters)}; 
+        var allQuests = !{JSON.stringify(allQuests)}; 
 
 block styles 
     style 
@@ -33,7 +35,19 @@ block dashboardContent
 
         section
             h1 Quests
-
+            .sectionContent
+                div.kpiItem
+                    span.kpiTitle Active quests
+                    span.kpiContent#OPEN-quests 0
+                div.kpiItem
+                    span.kpiTitle Expired quests
+                    span.kpiContent#EXPIRED-quests 0
+                div.kpiItem
+                    span.kpiTitle Completed quests
+                    span.kpiContent#DONE-quests 0
+                div.kpiItem
+                    span.kpiTitle Total quests
+                    span.kpiContent#total-quests 0
         section
             h1 Location
 

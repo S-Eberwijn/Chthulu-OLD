@@ -93,3 +93,4 @@ function setMenuState(menuState) {
     document.querySelector('.dashboard').classList = `dashboard ${menuState}`;
     // document.documentElement.className = menuState;
 }
+
