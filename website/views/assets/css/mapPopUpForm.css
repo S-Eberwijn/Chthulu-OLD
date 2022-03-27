@@ -1,0 +1,16 @@
+.mapPopUplabel{
+    color: black;
+
+}
+
+.mapPopUpinput{
+    color: black;
+    width: auto;
+    resize: none;
+}
+
+.mapPopUpForm{
+    display: flex;
+    text-align: justify;
+    flex-direction: column;
+}
