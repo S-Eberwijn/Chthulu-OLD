@@ -2,8 +2,8 @@
 window.addEventListener('DOMContentLoaded', (event) => {
     console.log('DOM fully loaded and parsed');
     var mapCenter = [0, 0];
-    let knownLocations = getKnownLocations();
-  
+    // let knownLocations = getKnownLocations();
+
     var map = L.map('map').setView(mapCenter, 2);
     map.setMaxBounds(map.getBounds());
 
@@ -29,22 +29,18 @@ window.addEventListener('DOMContentLoaded', (event) => {
     // map.setView(0, 0, 2)
 
     map.addControl(new L.Control.Fullscreen());
-    //L.marker([map.getBounds().getNorth()-7,0]).addTo(map).bindPopup(`NorthPole ` + map.getBounds().getNorth())
-    //L.marker([map.getBounds().getSouth(),0]).addTo(map).bindPopup(`Southpole `+ map.getBounds().getSouth())
-    for (let i = 0; i < knownLocations.length; i++) {
-        L.marker([knownLocations[i].y * map.getBounds().getNorth(), knownLocations[i].x * map.getBounds().getEast()]).addTo(map).bindPopup(knownLocations[i].markerName)
-    }
 
-    L.marker(mapCenter).addTo(map).bindPopup(`Party's current location`)
+    // for (let i = 0; i < knownLocations.length; i++) {
+    //     L.marker([knownLocations[i].y * map.getBounds().getNorth(), knownLocations[i].x * map.getBounds().getEast()]).addTo(map).bindPopup(knownLocations[i].markerName)
+    // }
+
+    // L.marker(mapCenter).addTo(map).bindPopup(`Party's current location`)
 
     // .openPopup();
     // L.marker(mapCenter).addTo(map);
     // L.marker([-35.8650, 154.2094]).addTo(map);
 
-    var imageUrl = 'https://cdn.discordapp.com/attachments/711689970456461372/953023259044098058/The_Homebrew_Campaign.jpg',
-
-
-    map.addControl(new L.Control.Fullscreen());
+    // map.addControl(new L.Control.Fullscreen());
 
 
     databaseMap.data.locations.forEach(location => {
@@ -111,26 +107,21 @@ window.addEventListener('DOMContentLoaded', (event) => {
     });
 });
 
-function getKnownLocations() {
-    let knownLocations = [
-        {
-            markerName: "Tsurugi's woonplaats",
-            x: .60,
-            y: -.80
-        },
-        {
-            markerName: "Phoens's home",
-            x: .90,
-            y: -.90
-        },
-        {
-            markerName: "start",
-            x: -.79,
-            y: -.36
-        },
-    ]
-    return knownLocations;
-}
+// function getKnownLocations() {
+//     let knownLocations = [
+//         {
+//             markerName: "Tsurugi's woonplaats",
+//             x: .60,
+//             y: -.80
+//         },
+//         {
+//             markerName: "Phoens's home",
+//             x: .90,
+//             y: -.90
+//         },
+//     ]
+//     return knownLocations;
+// }
 
 function createForm(x,y) {
     x = Math.round(x*100_000_000_000)/100_000_000_000;
