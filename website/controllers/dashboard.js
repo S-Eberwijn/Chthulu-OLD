@@ -228,7 +228,7 @@ exports.guildInformationalMapDashboardPage = async (req, res) => {
     const guild = bot.guilds.cache.get(guildId);
 
     const map = await Map.findOne({where: { id: guildId}});
-    console.log(map)
+    // console.log(map)
 
     res.render('mapPage', { isGuildDashboardPage: true, bot: bot, headerTitle: `Map`, guild: guild, selectedGuildId: guildId, guildName: guild.name, databaseMap: map });
 }

@@ -46,17 +46,32 @@ module.exports = async bot => {
     })
 
     // let timestamp = Date.now();
+    // await Map.findOne({ where: { id: '532525442201026580' } }).then((map) => {
+    //     if (!map) return;
+    //     map.locations.push({
+    //         id: `L${timestamp}`,
+    //         type: 'players',
+    //         description: 'Players',
+    //         visited: false,
+    //         x: 0,
+    //         y: 0,
+    //         status: 'idk'
+    //     })
+    //     map.save()
+    // })
+
+
     // await Map.create({
     //     id: `532525442201026580`,
     //     map_url: `https://cdn.discordapp.com/attachments/711689970456461372/953023259044098058/The_Homebrew_Campaign.jpg`,
     //     locations: [
     //         {
     //             id: `L${timestamp}`,
-    //             type: 'players',
+    //             type: 'city',
     //             description: 'Testing purpose',
     //             visited: false,
-    //             x: 0,
-    //             y: 0,
+    //             x: -0.7984395318595578 ,
+    //             y: -0.23737466794266943,
     //             status: 'idk'
     //         }
     //     ],
