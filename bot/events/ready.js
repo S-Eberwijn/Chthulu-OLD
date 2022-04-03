@@ -50,11 +50,11 @@ module.exports = async bot => {
     //     if (!map) return;
     //     map.locations.push({
     //         id: `L${timestamp}`,
-    //         type: 'players',
-    //         description: 'Players',
-    //         visited: false,
-    //         x: 0,
-    //         y: 0,
+    //         type: 'town',
+    //         description: 'Bolder Sprongs',
+    //         visited: true,
+    //         x: -420,
+    //         y: 86,
     //         status: 'idk'
     //     })
     //     map.save()
