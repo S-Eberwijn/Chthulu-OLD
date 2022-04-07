@@ -29,7 +29,7 @@ window.addEventListener('DOMContentLoaded', async (event) => {
 
     const uniqueTypes = [...new Set(databaseMap.data.locations.map(location => location.type))]
 
-    console.log('')
+    // console.log('')
     // Add location from database to map
     databaseMap.data.locations.forEach(location => {
         // console.log(location)
@@ -51,7 +51,8 @@ window.addEventListener('DOMContentLoaded', async (event) => {
                         shadowSize: [34, 30],
                         shadowAnchor: [17, 15],
                     }),
-                    id: location.id
+                    id: location.id,
+                    type: location.type,
                 }).bindPopup(location.description).addTo(map);
 
                 break;
@@ -66,12 +67,16 @@ window.addEventListener('DOMContentLoaded', async (event) => {
                         shadowSize: [80, 50],
                         shadowAnchor: [40, 50],
                     }),
-                    id: location.id
+                    id: location.id,
+                    type: location.type,
+
                 }).bindPopup(location.description).addTo(map);
                 break;
             default:
                 marker = L.marker([lng, lan], {
-                    id: location.id
+                    id: location.id,
+                    type: location.type,
+
                 }
                 ).bindPopup(location.description).addTo(map);
                 break;
@@ -112,6 +117,14 @@ window.addEventListener('DOMContentLoaded', async (event) => {
         position: 'top'                  // optional vertical alignment, defaults to 'top'
     };
     mapSidebar.addPanel(locationContent);
+    var filterContent = {
+        id: 'filterPanel',                     // UID, used to access the panel
+        tab: '<i class="fas fa-filter"></i>',  // content can be passed as HTML string,
+        pane: `${uniqueTypes.filter(type => type != 'players').map(type => { return `<div class="filter"><span>${type.charAt(0).toUpperCase() + type.slice(1)}</span><label class="switch" for="${type}-checkbox"><input type="checkbox" action="filter" id="${type}-checkbox" checked=true> </input><div class="slider round"></div></label></div>` }).join('')}`,
+        title: 'Filters',              // an optional pane header
+        position: 'top'                  // optional vertical alignment, defaults to 'top'
+    };
+    mapSidebar.addPanel(filterContent);
     var fullscreenContent = {
         id: 'click',
         tab: '<i class="fas fa-expand"></i>',
@@ -140,7 +153,7 @@ window.addEventListener('DOMContentLoaded', async (event) => {
     mapSidebar.addPanel(settingsContent);
 
     // mapSidebar.open('welcomePanel');
-    mapSidebar.open('locationPanel');
+    mapSidebar.open('filterPanel');
 
 
 
@@ -214,30 +227,10 @@ window.addEventListener('DOMContentLoaded', async (event) => {
 
 
     imgOv.on('click', async (e) => {
-        // var x = e.containerPoint.x;
-        // var y = e.containerPoint.y;
         var latLng = e.latlng;
         var x = e.latlng.lat;
         var y = e.latlng.lng;
         console.log(latLng);
-        // console.log(
-        //     map.layerPointToLatLng(map.containerPointToLayerPoint([x, y]))
-        // )
-        console.log(
-            map.layerPointToContainerPoint(map.latLngToLayerPoint([x, y]))
-        )
-        // console.log(y);
-
-        // console.log(map.containerPointToLatLng([x, y]));
-        // var lat = map.layerPointToLatLng([x, y]).lat;
-        // var lng = map.layerPointToLatLng([x, y]).lng;
-        // // console.log(lat);
-        // // console.log(lng);
-
-        // let marker = L.marker([lat, lng], {
-        //     id: 'test'
-        // }).addTo(map)
-
 
         mapSidebar.close()
 
@@ -258,29 +251,33 @@ window.addEventListener('DOMContentLoaded', async (event) => {
             if (!marker) return;
             // map.setView(marker.getLatLng(), 1);
 
-            console.log(marker.getLatLng())
+            console.log(marker.options.type)
             map.setView(marker.getLatLng(), 5);
             // marker.openPopup()
             mapSidebar.close()
         })
     })
-});
 
-// function getKnownLocations() {
-//     let knownLocations = [
-//         {
-//             markerName: "Tsurugi's woonplaats",
-//             x: .60,
-//             y: -.80
-//         },
-//         {
-//             markerName: "Phoens's home",
-//             x: .90,
-//             y: -.90
-//         },
-//     ]
-//     return knownLocations;
-// }
+    document.querySelectorAll('input[action="filter"]').forEach(filter => {
+        // console.log('location')
+        // console.log()
+        filter.addEventListener('click', function (e) {
+            // markers = map.getMarkersByType(filter.id.split('-')[0]); // returns marker instances
+            document.querySelectorAll(`img[src*="${filter.id.split('-')[0]}"]`).forEach(img => {
+                // console.log(img)
+                img.classList.toggle('hidden');
+            })
+            // console.log(markers)
+            // if (!marker) return;
+            // // map.setView(marker.getLatLng(), 1);
+
+            // console.log(marker.options.type)
+            // map.setView(marker.getLatLng(), 5);
+            // // marker.openPopup()
+            // mapSidebar.close()
+        })
+    })
+});
 
 // function createForm(x, y) {
 //     x = Math.round(x * 100_000_000_000) / 100_000_000_000;
@@ -312,6 +309,20 @@ L.Map.include({
             }
         });
         return marker;
+    }
+});
+
+L.Map.include({
+    getMarkersByType: function (type) {
+        var markers = [];
+        this.eachLayer(function (layer) {
+            if (layer instanceof L.Marker) {
+                if (layer.options.type === type) {
+                    markers.push(layer);
+                }
+            }
+        });
+        return markers;
     }
 });
 

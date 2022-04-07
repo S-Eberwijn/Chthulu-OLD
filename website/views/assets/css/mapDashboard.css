@@ -154,3 +154,89 @@ img.huechange {
     transform: rotate(90deg);
     background-color: var(--content-color) !important;
 } */
+
+
+
+.leaflet-sidebar-pane.active#filterPanel {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    
+}
+
+.leaflet-sidebar-pane.active#filterPanel .filter {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-sizing: border-box;
+    padding: 0 20px;
+    width: 100%;
+    height: 30px;
+    background-color: #fff;
+}
+
+.leaflet-sidebar-pane.active#filterPanel span{
+    color: #000;
+    font-weight: bold;
+}
+
+
+
+/* CHECKBOX SLIDERS */
+.filter .switch {
+    display: inline-block;
+    height: 17px;
+    position: relative;
+    width: 30px;
+}
+
+.filter .switch input {
+    display: none;
+}
+
+.filter .slider {
+    /* border: 2px solid  var(--menu-color); */
+    background-color: var(--placeholder-text-color);
+    bottom: 0;
+    cursor: pointer;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transition: .4s;
+}
+
+.filter .slider:before {
+    background-color: var(--navbar-text-color);
+    bottom: 2px;
+    content: "";
+    height: 13px;
+    left: 2px;
+    position: absolute;
+    transition: .4s;
+    width: 13px;
+}
+
+.filter input:checked+.slider {
+    background-color: #66bb6a;
+}
+
+.filter input:checked+.slider:before {
+    transform: translateX(13px);
+}
+
+.filter .slider.round {
+    border-radius: 17px;
+}
+
+.filter .slider.round:before {
+    border-radius: 50%;
+}
+
+/* CHECKBOX SLIDER ACTIONS */
+/* #cities-checkbox[checked=false] ~ img[src*="cities"] {
+    display: none;
+} */
+img.hidden{
+    display: none !important;
+}
