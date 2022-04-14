@@ -19,7 +19,7 @@ module.exports = async (bot, messageReaction, user) => {
     if (message.guild === null) return;
 
     // CHANNELS
-    const SESSION_REQUEST_CHANNEL = message.member.guild.channels.cache.find(c => c.name.includes("session-request") && c.type == "text");
+    const SESSION_REQUEST_CHANNEL = message.member?.guild.channels.cache.find(c => c.name.includes("session-request") && c.type == "text");
 
     if (SESSION_REQUEST_CHANNEL) {
         // Enter when the message is in the "session-request" channel.

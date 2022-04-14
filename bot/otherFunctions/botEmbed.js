@@ -29,7 +29,7 @@ exports.getBotEmbed = async function (bot) {
             🗄️ \*\*Servers:\*\* \`${bot.guilds.cache.size}\`
             👤 \*\*Users:\*\* \`${bot.guilds.cache.reduce((a, g) => a + g.memberCount, 0)}\`
             🗣️ \*\*Channels:\*\* \`${bot.channels.cache.size}\`
-            🤖 \*\*Commands:\*\* \`${[... new Set(bot.commands.map((o) => o.help.name))].length}\`
+            🤖 \*\*Commands:\*\* \`${[... new Set(bot.slashCommands.map((o) => o.help.name))].length}\`
             `, inline: true
             }
         )

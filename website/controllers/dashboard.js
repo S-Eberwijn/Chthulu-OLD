@@ -31,8 +31,14 @@ exports.guildDashboardPage = async (req, res) => {
 
     const bot = require('../../index');
     const guildId = req.params.id;
-    // console.log(guildId);
+    // console.log(req.user?.id);
+
+    // console.log(bot.guilds.cache.get(guildId).members.cache.get(req.user?.id)) 
+
     const guild = bot.guilds.cache.get(guildId);
+
+    console.log() 
+
     let characters = await getAliveCharacters(guildId);
     let deadCharacters = await getDeadCharacters(guildId);
     const allGuildQuests = await getQuests(guildId, ["OPEN", "DONE", "EXPIRED", "FAILED"]);
@@ -50,6 +56,7 @@ exports.guildDashboardPage = async (req, res) => {
         deadCharactersCount: deadCharacters.length,
         allQuests: allGuildQuests,
         userLoggedIn: req.user ? true : false,
+        isAdmin: await (await guild.members.fetch(req.user?.id)).permissions.has('ADMINISTRATOR'),
     });
 }
 
@@ -72,6 +79,7 @@ exports.constructionDashboardPage = async (req, res) => {
         selectedGuildId: guildId,
         guildName: guild?.name || '',
         userLoggedIn: req.user ? true : false,
+        isAdmin: await (await guild.members.fetch(req.user?.id)).permissions.has('ADMINISTRATOR'),
     });
 }
 
@@ -98,6 +106,7 @@ exports.guildInformationalCharactersDashboardPage = async (req, res) => {
         guildName: guild.name,
         characters: characters.reverse(),
         userLoggedIn: req.user ? true : false,
+        isAdmin: await (await guild.members.fetch(req.user?.id)).permissions.has('ADMINISTRATOR'),
     });
 }
 
@@ -139,6 +148,8 @@ exports.guildInformationalNonPlayableCharactersDashboardPage = async (req, res) 
         guildName: guild.name,
         npcs: npcs.reverse(),
         userLoggedIn: req.user ? true : false,
+        isAdmin: await (await guild.members.fetch(req.user?.id)).permissions.has('ADMINISTRATOR'),
+
     });
 }
 
@@ -175,6 +186,8 @@ exports.guildInformationalQuestsDashboardPage = async (req, res) => {
         uncompletedQuests: uncompletedQuests.reverse(),
         completedQuests: completedQuests.reverse(),
         userLoggedIn: req.user ? true : false,
+        isAdmin: await (await guild.members.fetch(req.user?.id)).permissions.has('ADMINISTRATOR'),
+
     });
 }
 
@@ -326,6 +339,8 @@ exports.guildInformationalMapDashboardPage = async (req, res) => {
         guildName: guild.name,
         databaseMap: map,
         userLoggedIn: req.user ? true : false,
+        isAdmin: await (await guild.members.fetch(req.user?.id)).permissions.has('ADMINISTRATOR'),
+
     });
 }
 
@@ -374,6 +389,8 @@ exports.guildSettingsPage = async (req, res) => {
         commands: allCommands,
         disabled_commands: server.disabled_commands,
         userLoggedIn: req.user ? true : false,
+        isAdmin: await (await guild.members.fetch(req.user?.id)).permissions.has('ADMINISTRATOR'),
+
     });
 }
 

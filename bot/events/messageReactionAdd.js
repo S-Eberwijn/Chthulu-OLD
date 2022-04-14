@@ -1,9 +1,9 @@
 // const { MessageEmbed } = require('discord.js');
-const {SessionRequest} = require('../../database/models/SessionRequest');
-const {PlannedSession} = require('../../database/models/PlannedSession');
-const {PlayerCharacter} = require('../../database/models/PlayerCharacter.js');
-const {GeneralInfo} = require('../../database/models/GeneralInfo.js');
-const {PastSession} = require('../../database/models/PastSession.js');
+const { SessionRequest } = require('../../database/models/SessionRequest');
+const { PlannedSession } = require('../../database/models/PlannedSession');
+const { PlayerCharacter } = require('../../database/models/PlayerCharacter.js');
+const { GeneralInfo } = require('../../database/models/GeneralInfo.js');
+const { PastSession } = require('../../database/models/PastSession.js');
 const fs = require("fs");
 
 module.exports = async (bot, messageReaction, user) => {
@@ -22,10 +22,10 @@ module.exports = async (bot, messageReaction, user) => {
     if (message.guild === null) return;
 
     // CHANNELS
-    const SESSION_REQUEST_CHANNEL_ID = message.guild.channels.cache.find(c => c.name.includes("session-request") && c.type == "GUILD_TEXT") ? message.guild.channels.cache.find(c => c.name.includes("session-request") && c.type == "GUILD_TEXT").id : '';
-    const PLANNED_SESSIONS_CHANNEL = message.guild.channels.cache.find(c => c.name.includes("planned-session") && c.type == "GUILD_TEXT");
-    const PLANNED_SESSIONS_CHANNEL_ID = message.guild.channels.cache.find(c => c.name.includes("planned-session") && c.type == "GUILD_TEXT") ? message.guild.channels.cache.find(c => c.name.includes("planned-session") && c.type == "GUILD_TEXT").id : '';
-    const PAST_SESSIONS_CHANNEL = message.guild.channels.cache.find(c => c.name.includes("past-session") && c.type == "GUILD_TEXT");
+    const SESSION_REQUEST_CHANNEL_ID = message.guild?.channels.cache.find(c => c.name.includes("session-request") && c.type == "GUILD_TEXT") ? message.guild.channels.cache.find(c => c.name.includes("session-request") && c.type == "GUILD_TEXT").id : '';
+    const PLANNED_SESSIONS_CHANNEL = message.guild?.channels.cache.find(c => c.name.includes("planned-session") && c.type == "GUILD_TEXT");
+    const PLANNED_SESSIONS_CHANNEL_ID = message.guild?.channels.cache.find(c => c.name.includes("planned-session") && c.type == "GUILD_TEXT") ? message.guild.channels.cache.find(c => c.name.includes("planned-session") && c.type == "GUILD_TEXT").id : '';
+    const PAST_SESSIONS_CHANNEL = message.guild?.channels.cache.find(c => c.name.includes("past-session") && c.type == "GUILD_TEXT");
 
     // ROLES
     const DUNGEON_MASTER_ROLE = messageReaction.message.guild.roles.cache.find(role => role.name.includes('Dungeon Master'));
@@ -380,8 +380,9 @@ function createPlannedSessionDatabaseEntry(sessionId, foundSessionRequest, gener
 }
 function updatePartyNextSessionId(party, next_session_id, serverId) {
     party.forEach(async player => {
-        await PlayerCharacter.findOne( { where: { player_id_discord: player, alive: 1, server: serverId } }).then(character => { setTimeout
-            character.next_session= next_session_id;
+        await PlayerCharacter.findOne({ where: { player_id_discord: player, alive: 1, server: serverId } }).then(character => {
+            setTimeout
+            character.next_session = next_session_id;
             character.save();
         });
     });
@@ -491,7 +492,7 @@ function writeToJsonDb(location, data) {
 
 function giveUserRequestedStatus(bot, FOUND_SESSION_REQUEST, user) {
     for (let i = 0; i < bot.sessionAddUserRequest['sessions'].length; i++) {
-        if (bot.sessionAddUserRequest['sessions'][i].session_channel=== FOUND_SESSION_REQUEST.session_channel) {
+        if (bot.sessionAddUserRequest['sessions'][i].session_channel === FOUND_SESSION_REQUEST.session_channel) {
             bot.sessionAddUserRequest['sessions'][i].requested[bot.sessionAddUserRequest['sessions'][i].requested.length] = { "user_id": `${user.id}` };
             break;
         }

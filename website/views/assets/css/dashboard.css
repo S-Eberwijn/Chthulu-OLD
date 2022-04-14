@@ -81,10 +81,10 @@ header.dashboardHeader button {
     border-radius: 20px;
     transition: all 200ms ease;
 }
-
+/* 
 header.dashboardHeader button:hover {
     transform: scale(1.2);
-}
+} */
 
 .dashboardContent {
     height: calc(100% - var(--header-height));
