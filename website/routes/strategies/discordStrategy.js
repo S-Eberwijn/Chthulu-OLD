@@ -2,12 +2,10 @@ const DiscordStrategy = require('passport-discord').Strategy;
 const passport = require('passport');
 
 passport.serializeUser(function (user, done) {
-    // console.log('Serializing user.')
     done(null, user);
 })
 
 passport.deserializeUser(function (user, done) {
-    // console.log('Deserializing user.')
     done(null, user);
 })
 
@@ -22,6 +20,4 @@ passport.use(new DiscordStrategy({
     } else {
         done('Error during authentication', null)
     }
-    // console.log(profile)
-    // console.log(profile.id)
 }))

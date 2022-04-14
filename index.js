@@ -1,25 +1,22 @@
 require('dotenv').config();
+require('./website/routes/strategies/discordStrategy');
 const express = require('express')
-const app = express();
 
 const path = require('path');
 const favicon = require('serve-favicon');
 const bodyParser = require('body-parser');
 
-// app.use(cookieParser('My secret'));
-
-// var cookieParser = require('cookie-parser');
 const session = require('express-session')
 const passport = require('passport');
-const discordStrategy = require('./website/routes/strategies/discordStrategy')
 const FirestoreStore = require("firestore-store")(session);
 
 const fs = require("fs");
 
-//Firebase Database
+//Firebase database modules
 const admin = require("firebase-admin");
 const firebaseSequelizer = require("firestore-sequelizer");
 
+//Initialize Firebase database
 const firebase = admin.initializeApp({
     credential: admin.credential.cert({
         "type": "service_account",
@@ -36,29 +33,12 @@ const firebase = admin.initializeApp({
     databaseURL: `https://${process.env.FS_DATABASE_NAME}.firebaseio.com`
 });
 firebaseSequelizer.initializeApp(admin);
-const database = firebase.firestore();
-
-// app.use(
-//         session({
-//             store: new FirestoreStore({
-//                 database: database,
-//                 kind: 'express-sessions'
-//             }),
-
-//             name: "__session", // ← required for Cloud Functions / Cloud Run
-//             secret: "keyboard cat",
-//             resave: true,
-//             saveUninitialized: true,
-//         })
-//     );
-
-
-
 
 const BOT_TOKEN = process.env.BOT_TOKEN || '';
 const WB_PORT = process.env.WB_PORT || 8080;
 
 // Initialize Webapp
+const app = express();
 app.use(favicon(path.join(__dirname, 'website', 'public', 'favicon.ico')));
 app.use(bodyParser.json());
 
@@ -66,14 +46,14 @@ app.use(bodyParser.json());
 app.set('views', path.join(__dirname, 'website', 'views'));
 app.set('view engine', 'pug');
 
+// Set-up paths for static images
 app.use(express.static(path.join(__dirname, 'website', 'public')));
 app.use(express.static(path.join(__dirname, 'bot', 'images', 'DnD', 'ClassIcons')));
 
-// // Set-up Express Session
+// Set-up Express Session (in combination with Firestore database)
 app.use(session({
     store: new FirestoreStore({
-        database: database,
-        kind: 'express-sessions'
+        database: firebase.firestore(),
     }),
     name: '__session',
     resave: true,
@@ -84,7 +64,7 @@ app.use(session({
 app.use(passport.initialize())
 app.use(passport.session())
 
-// Home Route
+// Routes
 app.use('/', require('./website/routes/home'));
 app.use('/dashboard/', require('./website/routes/dashboard'));
 app.use('/auth', require('./website/routes/auth'));

@@ -6,7 +6,6 @@ const { Map } = require('../../database/models/Maps');
 
 exports.dashboardPage = async (req, res) => {
     req.session.lastVisitedPage = req.url;
-    // console.log(req.user)
 
     const bot = require('../../index');
     let characters = await getAliveCharacters();
@@ -17,14 +16,7 @@ exports.dashboardPage = async (req, res) => {
     res.render('dashboardPage', {
         isDashboardPage: true,
         bot: bot,
-        guilds:
-            userGuilds || [],
-        // await bot.guilds.cache.filter(async (guild) => {
-        //     foundUser = await guild.members.fetch(req.session.loggedInUserID)
-        //     if (foundUser) {
-        //         return guild.members.cache.has(req.session.loggedInUserID);
-        //     }
-        // }),
+        guilds: userGuilds || [],
         headerTitle: 'Chthulu',
         guildName: '',
         characters: characters,
@@ -74,14 +66,7 @@ exports.constructionDashboardPage = async (req, res) => {
     res.render('constructionPage', {
         isGuildDashboardPage: true,
         bot: bot,
-        guilds:
-            userGuilds || [],
-        // await bot.guilds.cache.filter(async (guild) => {
-        //     foundUser = await guild.members.fetch(req.session.loggedInUserID)
-        //     if (foundUser) {
-        //         return guild.members.cache.has(req.session.loggedInUserID);
-        //     }
-        // }),
+        guilds: userGuilds || [],
         headerTitle: '',
         guild: guild,
         selectedGuildId: guildId,
@@ -100,17 +85,13 @@ exports.guildInformationalCharactersDashboardPage = async (req, res) => {
     const guild = bot.guilds.cache.get(guildId);
 
     let characters = await getAliveCharacters(guildId);
-    console.log(req.session.isLoggedIn)
+    const userGuilds = bot.guilds.cache.filter(guild => req.user?.guilds.map(guild => guild.id).includes(guild.id))
+
 
     res.render('charactersPage', {
         isGuildDashboardPage: true,
         bot: bot,
-        guilds: await bot.guilds.cache.filter(async (guild) => {
-            foundUser = await guild.members.fetch(req.session.loggedInUserID)
-            if (foundUser) {
-                return guild.members.cache.has(req.session.loggedInUserID);
-            }
-        }),
+        guilds: userGuilds || [],
         headerTitle: `Characters`,
         guild: guild,
         selectedGuildId: guildId,
@@ -145,15 +126,13 @@ exports.guildInformationalNonPlayableCharactersDashboardPage = async (req, res) 
     const guild = bot.guilds.cache.get(guildId);
 
     let npcs = await getNonPlayableCharacters(guildId);
+
+    const userGuilds = bot.guilds.cache.filter(guild => req.user?.guilds.map(guild => guild.id).includes(guild.id))
+
     res.render('nonPlayableCharactersPage', {
         isGuildDashboardPage: true,
         bot: bot,
-        guilds: await bot.guilds.cache.filter(async (guild) => {
-            foundUser = await guild.members.fetch(req.session.loggedInUserID)
-            if (foundUser) {
-                return guild.members.cache.has(req.session.loggedInUserID);
-            }
-        }),
+        guilds: userGuilds || [],
         headerTitle: `NPC's`,
         guild: guild,
         selectedGuildId: guildId,
@@ -182,15 +161,13 @@ exports.guildInformationalQuestsDashboardPage = async (req, res) => {
     let completedQuests = await getQuests(guildId, ["DONE", "EXPIRED", "FAILED"]);
     let uncompletedQuests = await getQuests(guildId, ["OPEN"]);
 
+    const userGuilds = bot.guilds.cache.filter(guild => req.user?.guilds.map(guild => guild.id).includes(guild.id))
+
+
     res.render('questsPage', {
         isGuildDashboardPage: true,
         bot: bot,
-        guilds: await bot.guilds.cache.filter(async (guild) => {
-            foundUser = await guild.members.fetch(req.session.loggedInUserID)
-            if (foundUser) {
-                return guild.members.cache.has(req.session.loggedInUserID);
-            }
-        }),
+        guilds: userGuilds || [],
         headerTitle: `Quests`,
         guild: guild,
         selectedGuildId: guildId,
@@ -283,7 +260,6 @@ exports.deleteQuestRequest = async (req, res) => {
     if (quest_id) {
 
         await Quest.findOne({ where: { id: quest_id, server: server_id } }).then(async quest => {
-            // console.log(quest);
             if (quest) {
                 quest.quest_status = 'DELETED';
                 await quest.save();
@@ -295,11 +271,9 @@ exports.deleteQuestRequest = async (req, res) => {
 
 //TODO: Add validation
 exports.editQuestRequest = async (req, res) => {
-    // console.log(req.body.status)
     if (!req.body?.status) {
         let quest_id = req.body?.quest_id;
         let server_id = req.params?.id || '0';
-        console.log(quest_id)
         if (quest_id) {
             await Quest.findOne({ where: { id: quest_id, server: server_id } }).then(async quest => {
                 console.log(quest);
@@ -338,17 +312,14 @@ exports.guildInformationalMapDashboardPage = async (req, res) => {
     const guild = bot.guilds.cache.get(guildId);
 
     const map = await Map.findOne({ where: { id: guildId } });
-    // console.log(map)
+
+    const userGuilds = bot.guilds.cache.filter(guild => req.user?.guilds.map(guild => guild.id).includes(guild.id))
+
 
     res.render('mapPage', {
         isGuildDashboardPage: true,
         bot: bot,
-        guilds: await bot.guilds.cache.filter(async (guild) => {
-            foundUser = await guild.members.fetch(req.session.loggedInUserID)
-            if (foundUser) {
-                return guild.members.cache.has(req.session.loggedInUserID);
-            }
-        }),
+        guilds: userGuilds || [],
         headerTitle: `Map`,
         guild: guild,
         selectedGuildId: guildId,
@@ -388,15 +359,14 @@ exports.guildSettingsPage = async (req, res) => {
     const possibleCommands = bot.slashCommands.filter(cmd => guildCommands.includes(cmd.help.name) && cmd.help.category == category).map(cmd => cmd.help)
     const allCommands = bot.slashCommands.filter(cmd => cmd.help.category == category).map(cmd => cmd.help)
     const server = await GeneralInfo.findOne({ where: { id: guildId } })
+
+    const userGuilds = bot.guilds.cache.filter(guild => req.user?.guilds.map(guild => guild.id).includes(guild.id))
+
+
     res.render('settingsPage', {
         isGuildDashboardPage: true,
         bot: bot,
-        guilds: await bot.guilds.cache.filter(async (guild) => {
-            foundUser = await guild.members.fetch(req.session.loggedInUserID)
-            if (foundUser) {
-                return guild.members.cache.has(req.session.loggedInUserID);
-            }
-        }),
+        guilds: userGuilds || [],
         headerTitle: `Settings`,
         guild: guild,
         selectedGuildId: guildId,
