@@ -95,5 +95,10 @@ html(lang="en")
         .dashboard(guild=isGuildDashboardPage).menuIsExtended
             header.dashboardHeader
                 span #{headerTitle} Dashboard
-                button(onclick="window.location='http://localhost:8080/login';") Login
+                if (userLoggedIn === true)
+                    button(onclick="window.location='http://localhost:8080/auth/logout';") Logout
+                else 
+                    button(onclick="window.location='http://localhost:8080/auth/login';") Login
+
+
             block dashboardContent

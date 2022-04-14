@@ -29,7 +29,8 @@ exports.dashboardPage = async (req, res) => {
         guildName: '',
         characters: characters,
         deadCharactersCount: deadCharacters.length,
-        allQuests: allQuests
+        allQuests: allQuests,
+        userLoggedIn: req.user ? true : false,
     });
 }
 
@@ -55,7 +56,8 @@ exports.guildDashboardPage = async (req, res) => {
         guildName: guild?.name,
         characters: characters,
         deadCharactersCount: deadCharacters.length,
-        allQuests: allGuildQuests
+        allQuests: allGuildQuests,
+        userLoggedIn: req.user ? true : false,
     });
 }
 
@@ -83,7 +85,8 @@ exports.constructionDashboardPage = async (req, res) => {
         headerTitle: '',
         guild: guild,
         selectedGuildId: guildId,
-        guildName: guild?.name || ''
+        guildName: guild?.name || '',
+        userLoggedIn: req.user ? true : false,
     });
 }
 
@@ -112,7 +115,8 @@ exports.guildInformationalCharactersDashboardPage = async (req, res) => {
         guild: guild,
         selectedGuildId: guildId,
         guildName: guild.name,
-        characters: characters.reverse()
+        characters: characters.reverse(),
+        userLoggedIn: req.user ? true : false,
     });
 }
 
@@ -154,7 +158,8 @@ exports.guildInformationalNonPlayableCharactersDashboardPage = async (req, res) 
         guild: guild,
         selectedGuildId: guildId,
         guildName: guild.name,
-        npcs: npcs.reverse()
+        npcs: npcs.reverse(),
+        userLoggedIn: req.user ? true : false,
     });
 }
 
@@ -191,7 +196,8 @@ exports.guildInformationalQuestsDashboardPage = async (req, res) => {
         selectedGuildId: guildId,
         guildName: guild.name,
         uncompletedQuests: uncompletedQuests.reverse(),
-        completedQuests: completedQuests.reverse()
+        completedQuests: completedQuests.reverse(),
+        userLoggedIn: req.user ? true : false,
     });
 }
 
@@ -347,7 +353,8 @@ exports.guildInformationalMapDashboardPage = async (req, res) => {
         guild: guild,
         selectedGuildId: guildId,
         guildName: guild.name,
-        databaseMap: map
+        databaseMap: map,
+        userLoggedIn: req.user ? true : false,
     });
 }
 
@@ -395,7 +402,8 @@ exports.guildSettingsPage = async (req, res) => {
         selectedGuildId: guildId,
         guildName: guild.name,
         commands: allCommands,
-        disabled_commands: server.disabled_commands
+        disabled_commands: server.disabled_commands,
+        userLoggedIn: req.user ? true : false,
     });
 }
 

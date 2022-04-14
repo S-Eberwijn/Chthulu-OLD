@@ -12,7 +12,7 @@ const bodyParser = require('body-parser');
 const session = require('express-session')
 const passport = require('passport');
 const discordStrategy = require('./website/routes/strategies/discordStrategy')
-// const FirebaseStore = require('connect-session-firebase')(session);
+const FirestoreStore = require("firestore-store")(session);
 
 const fs = require("fs");
 
@@ -20,7 +20,7 @@ const fs = require("fs");
 const admin = require("firebase-admin");
 const firebaseSequelizer = require("firestore-sequelizer");
 
-const ref = admin.initializeApp({
+const firebase = admin.initializeApp({
     credential: admin.credential.cert({
         "type": "service_account",
         "project_id": process.env.FS_PROJECT_ID,
@@ -36,31 +36,23 @@ const ref = admin.initializeApp({
     databaseURL: `https://${process.env.FS_DATABASE_NAME}.firebaseio.com`
 });
 firebaseSequelizer.initializeApp(admin);
+const database = firebase.firestore();
+
+// app.use(
+//         session({
+//             store: new FirestoreStore({
+//                 database: database,
+//                 kind: 'express-sessions'
+//             }),
+
+//             name: "__session", // ← required for Cloud Functions / Cloud Run
+//             secret: "keyboard cat",
+//             resave: true,
+//             saveUninitialized: true,
+//         })
+//     );
 
 
-// express()
-//     .use(session({
-//         store: new FirebaseStore({
-//             database: ref.database()
-//         }),
-//         secret: 'keyboard cat',
-//         name: '__session',
-//         resave: true,
-//         saveUninitialized: true
-//     }));
-// app.use(session({
-//     store: new FirestoreStore({
-//         database: ref.firestore()
-//     }),
-//     secret: 'Change later',
-//     resave: true,
-//     saveUninitialized: true,
-//     cookie: {
-//         maxAge: 60000 * 60 * 24,
-//         // secure: false,
-//         // httpOnly: false
-//     }
-// }));
 
 
 const BOT_TOKEN = process.env.BOT_TOKEN || '';
@@ -78,20 +70,25 @@ app.use(express.static(path.join(__dirname, 'website', 'public')));
 app.use(express.static(path.join(__dirname, 'bot', 'images', 'DnD', 'ClassIcons')));
 
 // // Set-up Express Session
-app.use(session({ name: 'discord.oath2', resave: false, saveUninitialized: false, secret: 'XCR3rsasa%RDHHH', cookie: { maxAge: 60000 * 60 * 24 } }));
+app.use(session({
+    store: new FirestoreStore({
+        database: database,
+        kind: 'express-sessions'
+    }),
+    name: '__session',
+    resave: true,
+    saveUninitialized: true,
+    secret: 'XCR3rsasa%RDHHH',
+    cookie: { maxAge: 60000 * 60 * 24 }
+}));
 app.use(passport.initialize())
 app.use(passport.session())
 
 // Home Route
 app.use('/', require('./website/routes/home'));
 app.use('/dashboard/', require('./website/routes/dashboard'));
-app.use('/login', require('./website/routes/login'));
+app.use('/auth', require('./website/routes/auth'));
 
-
-
-// app.use(cookieParser());
-// app.use(session({secret: "Test"}));
-// //TODO: ADJUST THE SECRET
 
 // Initialize Discord Bot
 const { Client, Intents } = require('discord.js');
