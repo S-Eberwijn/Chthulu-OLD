@@ -12,7 +12,7 @@ const bodyParser = require('body-parser');
 const session = require('express-session')
 const passport = require('passport');
 const discordStrategy = require('./website/routes/strategies/discordStrategy')
-const FirebaseStore = require('connect-session-firebase')(session);
+// const FirebaseStore = require('connect-session-firebase')(session);
 
 const fs = require("fs");
 
@@ -38,16 +38,16 @@ const ref = admin.initializeApp({
 firebaseSequelizer.initializeApp(admin);
 
 
-express()
-    .use(session({
-        store: new FirebaseStore({
-            database: ref.database()
-        }),
-        secret: 'keyboard cat',
-        name: '__session',
-        resave: true,
-        saveUninitialized: true
-    }));
+// express()
+//     .use(session({
+//         store: new FirebaseStore({
+//             database: ref.database()
+//         }),
+//         secret: 'keyboard cat',
+//         name: '__session',
+//         resave: true,
+//         saveUninitialized: true
+//     }));
 // app.use(session({
 //     store: new FirestoreStore({
 //         database: ref.firestore()

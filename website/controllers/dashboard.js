@@ -38,7 +38,7 @@ exports.guildDashboardPage = async (req, res) => {
 
     const bot = require('../../index');
     const guildId = req.params.id;
-    console.log(guildId);
+    // console.log(guildId);
     const guild = bot.guilds.cache.get(guildId);
     let characters = await getAliveCharacters(guildId);
     let deadCharacters = await getDeadCharacters(guildId);
