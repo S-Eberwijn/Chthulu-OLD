@@ -1,0 +1,20 @@
+extends ./template/layout.pug
+block scripts
+    script
+        include ./static/theme.js
+        include ./static/login.js
+
+block styles 
+    style 
+        include ./assets/css/main.css
+        include ./assets/css/sidebar.css
+        include ./assets/css/menu.css
+        include ./assets/css/dashboard.css
+        include ./assets/css/login.css
+block dashboardContent
+    .dashboardContent(login=true)
+        #info Hoi!
+        a#login(href="https://discord.com/api/oauth2/authorize?client_id=532524817740464138&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Flogin&response_type=code&scope=identify" style="display: none;") Identify Yourself
+        //- <a id="login" style="display: none;" href="your-oauth2-URL-here">Identify Yourself</a>
+
+

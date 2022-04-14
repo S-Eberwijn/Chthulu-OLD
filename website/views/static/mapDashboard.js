@@ -29,12 +29,8 @@ window.addEventListener('DOMContentLoaded', async (event) => {
 
     const uniqueTypes = [...new Set(databaseMap.data.locations.map(location => location.type))]
 
-    // console.log('')
     // Add location from database to map
     databaseMap.data.locations.forEach(location => {
-        // console.log(location)
-
-
         let marker;
         let lan = location.y;
         let lng = location.x;
@@ -259,22 +255,11 @@ window.addEventListener('DOMContentLoaded', async (event) => {
     })
 
     document.querySelectorAll('input[action="filter"]').forEach(filter => {
-        // console.log('location')
-        // console.log()
         filter.addEventListener('click', function (e) {
             // markers = map.getMarkersByType(filter.id.split('-')[0]); // returns marker instances
             document.querySelectorAll(`img[src*="${filter.id.split('-')[0]}"]`).forEach(img => {
-                // console.log(img)
                 img.classList.toggle('hidden');
             })
-            // console.log(markers)
-            // if (!marker) return;
-            // // map.setView(marker.getLatLng(), 1);
-
-            // console.log(marker.options.type)
-            // map.setView(marker.getLatLng(), 5);
-            // // marker.openPopup()
-            // mapSidebar.close()
         })
     })
 });

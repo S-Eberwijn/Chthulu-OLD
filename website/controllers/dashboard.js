@@ -4,47 +4,116 @@ const { Quest } = require('../../database/models/Quest');
 const { GeneralInfo } = require('../../database/models/GeneralInfo');
 const { Map } = require('../../database/models/Maps');
 
-// let count = 0;
-
 exports.dashboardPage = async (req, res) => {
+    req.session.lastVisitedPage = req.url;
+    // console.log(req.user)
+
     const bot = require('../../index');
     let characters = await getAliveCharacters();
     let deadCharacters = await getDeadCharacters();
     const allQuests = await getQuests();
+    const userGuilds = bot.guilds.cache.filter(guild => req.user?.guilds.map(guild => guild.id).includes(guild.id))
 
-    res.render('dashboardPage', { isDashboardPage: true, bot: bot, headerTitle: 'Chthulu', guildName: '', characters: characters, deadCharactersCount: deadCharacters.length, allQuests: allQuests });
+    res.render('dashboardPage', {
+        isDashboardPage: true,
+        bot: bot,
+        guilds:
+            userGuilds || [],
+        // await bot.guilds.cache.filter(async (guild) => {
+        //     foundUser = await guild.members.fetch(req.session.loggedInUserID)
+        //     if (foundUser) {
+        //         return guild.members.cache.has(req.session.loggedInUserID);
+        //     }
+        // }),
+        headerTitle: 'Chthulu',
+        guildName: '',
+        characters: characters,
+        deadCharactersCount: deadCharacters.length,
+        allQuests: allQuests
+    });
 }
 
 exports.guildDashboardPage = async (req, res) => {
+    req.session.lastVisitedPage = req.url;
+
     const bot = require('../../index');
     const guildId = req.params.id;
+    console.log(guildId);
     const guild = bot.guilds.cache.get(guildId);
     let characters = await getAliveCharacters(guildId);
     let deadCharacters = await getDeadCharacters(guildId);
-    const allGuildQuests = await getQuests(guildId, ["OPEN","DONE", "EXPIRED", "FAILED"]);
+    const allGuildQuests = await getQuests(guildId, ["OPEN", "DONE", "EXPIRED", "FAILED"]);
+    const userGuilds = bot.guilds.cache.filter(guild => req.user?.guilds.map(guild => guild.id).includes(guild.id))
 
-    res.render('dashboardPage', { isGuildDashboardPage: true, bot: bot, headerTitle: '', guild: guild, selectedGuildId: guildId, guildName: guild.name, characters: characters, deadCharactersCount: deadCharacters.length, allQuests: allGuildQuests });
+    res.render('dashboardPage', {
+        isGuildDashboardPage: true,
+        bot: bot,
+        guilds: userGuilds || [],
+        headerTitle: '',
+        guild: guild,
+        selectedGuildId: guildId,
+        guildName: guild?.name,
+        characters: characters,
+        deadCharactersCount: deadCharacters.length,
+        allQuests: allGuildQuests
+    });
 }
 
 //CONSTRUCTION PAGE
 exports.constructionDashboardPage = async (req, res) => {
+    req.session.lastVisitedPage = req.url;
+
     const bot = require('../../index');
-    const guildId = req.params.id;
+    const guildId = req.params.id || '';
     const guild = bot.guilds.cache.get(guildId);
+    // req.user?.guilds.filter(guild => bot.guilds.cache.has(guild.id))
+    const userGuilds = bot.guilds.cache.filter(guild => req.user?.guilds.map(guild => guild.id).includes(guild.id))
 
-
-    res.render('constructionPage', { isGuildDashboardPage: true, bot: bot, headerTitle: '', guild: guild, selectedGuildId: guildId, guildName: guild.name });
+    res.render('constructionPage', {
+        isGuildDashboardPage: true,
+        bot: bot,
+        guilds:
+            userGuilds || [],
+        // await bot.guilds.cache.filter(async (guild) => {
+        //     foundUser = await guild.members.fetch(req.session.loggedInUserID)
+        //     if (foundUser) {
+        //         return guild.members.cache.has(req.session.loggedInUserID);
+        //     }
+        // }),
+        headerTitle: '',
+        guild: guild,
+        selectedGuildId: guildId,
+        guildName: guild?.name || ''
+    });
 }
+
 
 //CHARACTERS PAGE
 exports.guildInformationalCharactersDashboardPage = async (req, res) => {
+    req.session.lastVisitedPage = req.url;
+
     const bot = require('../../index');
     const guildId = req.params.id;
     const guild = bot.guilds.cache.get(guildId);
 
     let characters = await getAliveCharacters(guildId);
+    console.log(req.session.isLoggedIn)
 
-    res.render('charactersPage', { isGuildDashboardPage: true, bot: bot, headerTitle: `Characters`, guild: guild, selectedGuildId: guildId, guildName: guild.name, characters: characters.reverse() });
+    res.render('charactersPage', {
+        isGuildDashboardPage: true,
+        bot: bot,
+        guilds: await bot.guilds.cache.filter(async (guild) => {
+            foundUser = await guild.members.fetch(req.session.loggedInUserID)
+            if (foundUser) {
+                return guild.members.cache.has(req.session.loggedInUserID);
+            }
+        }),
+        headerTitle: `Characters`,
+        guild: guild,
+        selectedGuildId: guildId,
+        guildName: guild.name,
+        characters: characters.reverse()
+    });
 }
 
 async function getAliveCharacters(guildId = null) {
@@ -65,12 +134,28 @@ async function getDeadCharacters(guildId = null) {
 
 //NPC'S PAGE
 exports.guildInformationalNonPlayableCharactersDashboardPage = async (req, res) => {
+    req.session.lastVisitedPage = req.url;
+
     const bot = require('../../index');
     const guildId = req.params.id;
     const guild = bot.guilds.cache.get(guildId);
 
     let npcs = await getNonPlayableCharacters(guildId);
-    res.render('nonPlayableCharactersPage', { isGuildDashboardPage: true, bot: bot, headerTitle: `NPC's`, guild: guild, selectedGuildId: guildId, guildName: guild.name, npcs: npcs.reverse() });
+    res.render('nonPlayableCharactersPage', {
+        isGuildDashboardPage: true,
+        bot: bot,
+        guilds: await bot.guilds.cache.filter(async (guild) => {
+            foundUser = await guild.members.fetch(req.session.loggedInUserID)
+            if (foundUser) {
+                return guild.members.cache.has(req.session.loggedInUserID);
+            }
+        }),
+        headerTitle: `NPC's`,
+        guild: guild,
+        selectedGuildId: guildId,
+        guildName: guild.name,
+        npcs: npcs.reverse()
+    });
 }
 
 async function getNonPlayableCharacters(guildId = null) {
@@ -83,6 +168,8 @@ async function getNonPlayableCharacters(guildId = null) {
 
 //QUESTS PAGE
 exports.guildInformationalQuestsDashboardPage = async (req, res) => {
+    req.session.lastVisitedPage = req.url;
+
     const bot = require('../../index');
     const guildId = req.params.id;
     const guild = bot.guilds.cache.get(guildId);
@@ -90,7 +177,22 @@ exports.guildInformationalQuestsDashboardPage = async (req, res) => {
     let completedQuests = await getQuests(guildId, ["DONE", "EXPIRED", "FAILED"]);
     let uncompletedQuests = await getQuests(guildId, ["OPEN"]);
 
-    res.render('questsPage', { isGuildDashboardPage: true, bot: bot, headerTitle: `Quests`, guild: guild, selectedGuildId: guildId, guildName: guild.name, uncompletedQuests: uncompletedQuests.reverse(), completedQuests: completedQuests.reverse() });
+    res.render('questsPage', {
+        isGuildDashboardPage: true,
+        bot: bot,
+        guilds: await bot.guilds.cache.filter(async (guild) => {
+            foundUser = await guild.members.fetch(req.session.loggedInUserID)
+            if (foundUser) {
+                return guild.members.cache.has(req.session.loggedInUserID);
+            }
+        }),
+        headerTitle: `Quests`,
+        guild: guild,
+        selectedGuildId: guildId,
+        guildName: guild.name,
+        uncompletedQuests: uncompletedQuests.reverse(),
+        completedQuests: completedQuests.reverse()
+    });
 }
 
 
@@ -223,18 +325,36 @@ exports.editQuestRequest = async (req, res) => {
 }
 
 exports.guildInformationalMapDashboardPage = async (req, res) => {
+    req.session.lastVisitedPage = req.url;
+
     const bot = require('../../index');
     const guildId = req.params.id;
     const guild = bot.guilds.cache.get(guildId);
 
-    const map = await Map.findOne({where: { id: guildId}});
+    const map = await Map.findOne({ where: { id: guildId } });
     // console.log(map)
 
-    res.render('mapPage', { isGuildDashboardPage: true, bot: bot, headerTitle: `Map`, guild: guild, selectedGuildId: guildId, guildName: guild.name, databaseMap: map });
+    res.render('mapPage', {
+        isGuildDashboardPage: true,
+        bot: bot,
+        guilds: await bot.guilds.cache.filter(async (guild) => {
+            foundUser = await guild.members.fetch(req.session.loggedInUserID)
+            if (foundUser) {
+                return guild.members.cache.has(req.session.loggedInUserID);
+            }
+        }),
+        headerTitle: `Map`,
+        guild: guild,
+        selectedGuildId: guildId,
+        guildName: guild.name,
+        databaseMap: map
+    });
 }
 
 //SETTINGS PAGE
 exports.guildSettingsPage = async (req, res) => {
+    req.session.lastVisitedPage = req.url;
+
     const bot = require('../../index');
     const guildId = req.params.id;
     const guild = bot.guilds.cache.get(guildId);
@@ -261,7 +381,22 @@ exports.guildSettingsPage = async (req, res) => {
     const possibleCommands = bot.slashCommands.filter(cmd => guildCommands.includes(cmd.help.name) && cmd.help.category == category).map(cmd => cmd.help)
     const allCommands = bot.slashCommands.filter(cmd => cmd.help.category == category).map(cmd => cmd.help)
     const server = await GeneralInfo.findOne({ where: { id: guildId } })
-    res.render('settingsPage', { isGuildDashboardPage: true, bot: bot, headerTitle: `Settings`, guild: guild, selectedGuildId: guildId, guildName: guild.name, commands: allCommands, disabled_commands: server.disabled_commands });
+    res.render('settingsPage', {
+        isGuildDashboardPage: true,
+        bot: bot,
+        guilds: await bot.guilds.cache.filter(async (guild) => {
+            foundUser = await guild.members.fetch(req.session.loggedInUserID)
+            if (foundUser) {
+                return guild.members.cache.has(req.session.loggedInUserID);
+            }
+        }),
+        headerTitle: `Settings`,
+        guild: guild,
+        selectedGuildId: guildId,
+        guildName: guild.name,
+        commands: allCommands,
+        disabled_commands: server.disabled_commands
+    });
 }
 
 exports.editSettingsRequest = async (req, res) => {
