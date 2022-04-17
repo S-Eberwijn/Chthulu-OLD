@@ -58,7 +58,7 @@ app.use(session({
     name: '__session',
     resave: true,
     saveUninitialized: true,
-    secret: 'XCR3rsasa%RDHHH',
+    secret: process.env.SECRET_KEY || '',
     cookie: { maxAge: 100 * 365 * 24 * 60 * 60000 }
 }));
 app.use(passport.initialize())
@@ -75,6 +75,7 @@ const { Client, Intents } = require('discord.js');
 const bot = new Client({ restTimeOffset: 0, partials: ['MESSAGE', 'CHANNEL', 'REACTION'], intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS, Intents.FLAGS.GUILD_MEMBERS] });
 
 const Enmap = require('enmap');
+const { getBotGuilds } = require('./functions/api');
 bot.commands = new Enmap();
 bot.slashCommands = new Enmap();
 
@@ -107,6 +108,7 @@ fs.readdir("./bot/commands/", async (err, dirs) => {
     });
 });
 
+
 // Read and log event files
 fs.readdir('./bot/events/', (err, files) => {
     if (err) console.log(err);
@@ -125,5 +127,6 @@ bot.login(BOT_TOKEN).then(() => {
     app.listen(WB_PORT, () => {
         console.log(`App listening at http://localhost:${WB_PORT || 8080}`)
         module.exports = bot;
+
     })
 });

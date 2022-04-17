@@ -22,8 +22,8 @@
 
 @keyframes slideLeft {
     0% {
-        margin-left: 25em;
-        width: calc(100% - 20em - 5em);
+        margin-left: calc(var(--menu-width) + 5em);
+        width: calc(100% - var(--menu-width) - 5em);
 
     }
 
@@ -40,8 +40,8 @@
     }
 
     100% {
-        margin-left: 25em;
-        width: calc(100% - 20em - 5em)
+        margin-left: calc(var(--menu-width) + 5em);
+        width: calc(100% - var(--menu-width) - 5em)
     }
 }
 

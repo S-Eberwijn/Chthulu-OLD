@@ -4,7 +4,7 @@
 }
 
 .menu[guild] {
-    width: 20em;
+    width: var(--menu-width);
     background-color: var(--menu-color);
     color: var(--text-color);
     height: 100%;
@@ -21,12 +21,12 @@
     display: none;
 }
 
-header.menuHeader {
+header.menuHeader { 
     padding: 1.3em;
     position: fixed;
     z-index: 10;
     background-color: inherit;
-    width: 20rem;
+    width: var(--menu-width);
 }
 
 /* header.menuHeader.collapsed {

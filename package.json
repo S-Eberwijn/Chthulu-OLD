@@ -8,6 +8,7 @@
     "body-parser": "^1.19.0",
     "canvas": "^2.8.0",
     "cheerio": "^1.0.0-rc.10",
+    "crypto-js": "^4.1.1",
     "discord-buttons": "^4.0.0",
     "discord.io": "https://github.com/woor/discord.io/tarball/gateway_v6",
     "discord.js": "^13.1.0",
