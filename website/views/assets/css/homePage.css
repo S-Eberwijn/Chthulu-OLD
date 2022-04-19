@@ -1,0 +1,124 @@
+.container-wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--menu-color);
+}
+
+.container-wrapper .container {
+    width: 70%;
+    height: 70%;
+    max-width: 1200px;
+    max-height: 600px !important;
+    min-width: 600px;
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    position: relative;
+    background-color: var(--sidebar-color);
+    border-radius: 10px;
+    box-sizing: border-box;
+    padding: 100px;
+    /* -webkit-box-shadow: inset 0px 1px 1px var(--text-color);
+    box-shadow: inset 0px 0px 1px 1px var(--placeholder-text-color); */
+}
+
+.container .bot-icon {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 200px;
+    height: 200px;
+    aspect-ratio: 1;
+    /* height: 128px; */
+    border-radius: 50%;
+    background-color: var(--sidebar-color);
+    transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    /* border: 2px solid var(--placeholder-text-color);
+    border-bottom: 0; */
+
+}
+
+.container-title {
+width: 100%;
+}
+.container-text p{
+    text-align: justify;
+    color: var(--placeholder-text-color);
+}
+
+.container-text span.bold {
+    font-weight: bold;
+}
+
+.container-text span.bigger {
+    font-size: 1.2rem;
+}
+
+.container-buttons {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.container-buttons .login-button {
+    height: 3em;
+    width: 12em;
+    /* background-color: lightgreen; */
+
+}
+
+.container-buttons .login-button button {
+    /* padding-left: revert; */
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: rgb(145, 238, 145, 1);
+    border: none;
+    color: var(--content-color);
+    font-weight: bolder;
+    outline: 0;
+    height: 100%;
+    width: 100%;
+    box-shadow: none;
+
+}
+
+.container-buttons .back-button {
+    height: 4em;
+    width: 15em;
+    font-size: .7rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* background-color: blue; */
+
+}
+
+.container-buttons .back-button span.back-action {
+    color: var(--placeholder-text-color);
+    /* text-decoration: underline; */
+    border-bottom: 1px solid var(--placeholder-text-color);
+    cursor: pointer;
+
+}
+
+#background{
+    position: absolute;
+    color: red;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}

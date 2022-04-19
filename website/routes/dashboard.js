@@ -3,8 +3,7 @@
 const router = require('express').Router(),
     { dashboardPage, guildDashboardPage, constructionDashboardPage, guildInformationalCharactersDashboardPage, guildInformationalNonPlayableCharactersDashboardPage, guildInformationalQuestsDashboardPage, guildInformationalMapDashboardPage, createQuestPost, deleteQuestRequest, editQuestRequest, guildSettingsPage, editSettingsRequest } = require('../controllers/dashboard');
 
-//TODO add this to the routes like this
-// router.get('/:id', isAuthorized, guildDashboardPage);
+
 
 function isAuthorized(req, res, next) {
     if (req.user) {
@@ -21,6 +20,13 @@ function isAuthorized(req, res, next) {
 // });
 
 // router.get('/', constructionDashboardPage)
+router.get('/auth/logout', (req, res) => {
+    if (req.session) {
+        req.session.destroy(err => err ? res.redirect('/') : res.redirect('/'));
+    } else {
+        res.redirect('/')
+    }
+})
 
 router.get('/:id', isAuthorized, guildDashboardPage);
 

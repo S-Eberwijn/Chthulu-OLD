@@ -9,7 +9,7 @@ exports.dashboardPage = async (req, res) => {
     const bot = require('../../index');
 
     // TODO: Rate limiter is activated when I move from login to this screen.
-    console.log(req.user?.accT);
+    // console.log(req.user?.accT);
     //TODO Maybe in stead of using discord api, use the existing bot to find the guilds the user is in.
     //await (await guild.members.fetch(req.user?.id)).permissions.has('ADMINISTRATOR'),
 
@@ -20,26 +20,28 @@ exports.dashboardPage = async (req, res) => {
     const userGuilds = await getUserGuilds(req.user?.accT);
     const botGuilds = getBotGuilds();
     const mutualGuilds = getMutualGuilds(userGuilds, botGuilds)
+    const loggedInUser = req.user ? { username, discriminator, avatar } = req.user : undefined;
     // const mutualGuilds = await getMutualGuilds(req.user?.discordID)
 
 
     res.render('dashboardPage', {
         isDashboardPage: true,
-        bot: bot,
+        bot_icon: bot.user.avatarURL(),
         guilds: mutualGuilds,
         headerTitle: 'Chthulu',
         guildName: '',
         characters: characters,
-        deadCharactersCount: deadCharacters.length,
+        // deadCharactersCount: deadCharacters.length,
         allQuests: allQuests,
         userLoggedIn: req.user ? true : false,
+        loggedInUser: loggedInUser
     });
 }
 
 exports.guildDashboardPage = async (req, res) => {
     const bot = require('../../index');
     const selectedGuildID = req.params.id;
-    console.log(req.user);
+    // console.log(req.user);
 
     // console.log(bot.guilds.cache.get(guildId).members.cache.get(req.user?.id)) 
 
@@ -56,12 +58,13 @@ exports.guildDashboardPage = async (req, res) => {
     // const mutualGuilds = getMutualGuilds(botGuilds, userGuilds)
     // const mutualGuilds = await getMutualGuilds(req.user?.discordID)
     const mutualGuilds = getMutualGuilds(userGuilds, botGuilds)
+    const loggedInUser = req.user ? { username, discriminator, avatar } = req.user : undefined;
 
 
 
     res.render('dashboardPage', {
         isGuildDashboardPage: true,
-        bot: bot,
+        bot_icon: bot.user.avatarURL(),
         guilds: mutualGuilds,
         headerTitle: '',
         guild: guild,
@@ -71,7 +74,8 @@ exports.guildDashboardPage = async (req, res) => {
         deadCharactersCount: deadCharacters.length,
         allQuests: allGuildQuests,
         userLoggedIn: req.user ? true : false,
-        isAdmin: true
+        isAdmin: true,
+        loggedInUser: loggedInUser,
         // await (await guild.members.fetch(req.user?.id)).permissions.has('ADMINISTRATOR'),
     });
 }
@@ -87,18 +91,20 @@ exports.constructionDashboardPage = async (req, res) => {
     const userGuilds = await getUserGuilds(req.user?.accT);
     const botGuilds = getBotGuilds();
     const mutualGuilds = getMutualGuilds(userGuilds, botGuilds)
+    const loggedInUser = req.user ? { username, discriminator, avatar } = req.user : undefined;
 
 
     res.render('constructionPage', {
         isGuildDashboardPage: true,
-        bot: bot,
+        bot_icon: bot.user.avatarURL(),
         guilds: mutualGuilds,
         headerTitle: '',
         guild: guild,
         selectedGuildId: guildId,
         guildName: guild?.name || '',
         userLoggedIn: req.user ? true : false,
-        isAdmin: true
+        isAdmin: true,
+        loggedInUser: loggedInUser,
         // await (await guild.members.fetch(req.user?.id)).permissions.has('ADMINISTRATOR'),
     });
 }
@@ -115,11 +121,12 @@ exports.guildInformationalCharactersDashboardPage = async (req, res) => {
     const userGuilds = await getUserGuilds(req.user?.accT);
     const botGuilds = getBotGuilds();
     const mutualGuilds = getMutualGuilds(userGuilds, botGuilds)
+    const loggedInUser = req.user ? { username, discriminator, avatar } = req.user : undefined;
 
 
     res.render('charactersPage', {
         isGuildDashboardPage: true,
-        bot: bot,
+        bot_icon: bot.user.avatarURL(),
         guilds: mutualGuilds,
         headerTitle: `Characters`,
         guild: guild,
@@ -127,7 +134,8 @@ exports.guildInformationalCharactersDashboardPage = async (req, res) => {
         guildName: guild.name,
         characters: characters.reverse(),
         userLoggedIn: req.user ? true : false,
-        isAdmin: true
+        isAdmin: true,
+        loggedInUser: loggedInUser,
     });
 }
 
@@ -160,10 +168,11 @@ exports.guildInformationalNonPlayableCharactersDashboardPage = async (req, res) 
     const userGuilds = await getUserGuilds(req.user?.accT);
     const botGuilds = getBotGuilds();
     const mutualGuilds = getMutualGuilds(userGuilds, botGuilds)
+    const loggedInUser = req.user ? { username, discriminator, avatar } = req.user : undefined;
 
     res.render('nonPlayableCharactersPage', {
         isGuildDashboardPage: true,
-        bot: bot,
+        bot_icon: bot.user.avatarURL(),
         guilds: mutualGuilds,
         headerTitle: `NPC's`,
         guild: guild,
@@ -171,7 +180,8 @@ exports.guildInformationalNonPlayableCharactersDashboardPage = async (req, res) 
         guildName: guild.name,
         npcs: npcs.reverse(),
         userLoggedIn: req.user ? true : false,
-        isAdmin: true
+        isAdmin: true,
+        loggedInUser: loggedInUser,
 
     });
 }
@@ -197,11 +207,12 @@ exports.guildInformationalQuestsDashboardPage = async (req, res) => {
     const userGuilds = await getUserGuilds(req.user?.accT);
     const botGuilds = getBotGuilds();
     const mutualGuilds = getMutualGuilds(userGuilds, botGuilds)
+    const loggedInUser = req.user ? { username, discriminator, avatar } = req.user : undefined;
 
 
     res.render('questsPage', {
         isGuildDashboardPage: true,
-        bot: bot,
+        bot_icon: bot.user.avatarURL(),
         guilds: mutualGuilds,
         headerTitle: `Quests`,
         guild: guild,
@@ -210,7 +221,8 @@ exports.guildInformationalQuestsDashboardPage = async (req, res) => {
         uncompletedQuests: uncompletedQuests.reverse(),
         completedQuests: completedQuests.reverse(),
         userLoggedIn: req.user ? true : false,
-        isAdmin: true
+        isAdmin: true,
+        loggedInUser: loggedInUser,
 
     });
 }
@@ -272,8 +284,6 @@ exports.createQuestPost = async (req, res) => {
     }).then(() => {
         res.sendStatus(201)
     })
-
-
 }
 
 async function getImportanceText(priority_value) {
@@ -338,7 +348,7 @@ exports.editQuestRequest = async (req, res) => {
                 }
             });
         }
-    }
+    } 
 }
 
 exports.guildInformationalMapDashboardPage = async (req, res) => {
@@ -352,11 +362,12 @@ exports.guildInformationalMapDashboardPage = async (req, res) => {
     const userGuilds = await getUserGuilds(req.user?.accT);
     const botGuilds = getBotGuilds();
     const mutualGuilds = getMutualGuilds(userGuilds, botGuilds)
+    const loggedInUser = req.user ? { username, discriminator, avatar } = req.user : undefined;
 
 
     res.render('mapPage', {
         isGuildDashboardPage: true,
-        bot: bot,
+        bot_icon: bot.user.avatarURL(),
         guilds: mutualGuilds,
         headerTitle: `Map`,
         guild: guild,
@@ -364,7 +375,8 @@ exports.guildInformationalMapDashboardPage = async (req, res) => {
         guildName: guild.name,
         databaseMap: map,
         userLoggedIn: req.user ? true : false,
-        isAdmin: true
+        isAdmin: true,
+        loggedInUser: loggedInUser,
     });
 }
 
@@ -401,11 +413,12 @@ exports.guildSettingsPage = async (req, res) => {
     const userGuilds = await getUserGuilds(req.user?.accT);
     const botGuilds = getBotGuilds();
     const mutualGuilds = getMutualGuilds(userGuilds, botGuilds)
+    const loggedInUser = req.user ? { username, discriminator, avatar } = req.user : undefined;
 
 
     res.render('settingsPage', {
         isGuildDashboardPage: true,
-        bot: bot,
+        bot_icon: bot.user.avatarURL(),
         guilds: mutualGuilds,
         headerTitle: `Settings`,
         guild: guild,
@@ -414,7 +427,8 @@ exports.guildSettingsPage = async (req, res) => {
         commands: allCommands,
         disabled_commands: server.disabled_commands,
         userLoggedIn: req.user ? true : false,
-        isAdmin: true
+        isAdmin: true,
+        loggedInUser: loggedInUser,
 
     });
 }

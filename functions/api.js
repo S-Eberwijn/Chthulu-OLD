@@ -36,7 +36,7 @@ async function getUserGuilds(token) {
 
 
 function getMutualGuilds(userGuilds, botGuilds) {
-    console.log(userGuilds);
+    // console.log(userGuilds);
     if (userGuilds.message) {
         console.log('No user guilds provided to get mutual guilds. Returning empty array.');
         return [];

@@ -90,7 +90,15 @@ function setMenuState(menuState) {
         toggleMenuSwitch()
     } catch (error) { }
     localStorage.setItem('menuState', menuState);
-    document.querySelector('.dashboard').classList = `dashboard ${menuState}`;
+    const element = document.querySelector('.dashboard')
+
+    if (element) element.classList = `dashboard ${menuState}`;
     // document.documentElement.className = menuState;
+}
+
+
+function profileMenuToggle() {
+    const toggleProfileMenu = document.querySelector('.action .profileMenu');
+    toggleProfileMenu.classList.toggle('active');
 }
 

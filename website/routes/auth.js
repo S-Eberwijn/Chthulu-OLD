@@ -1,5 +1,5 @@
 const router = require('express').Router(),
-    { loginPage, } = require('../controllers/login');
+    { loginPage, } = require('../controllers/home');
 const passport = require('passport');
 
 //TODO: Handle error route (e.g. when a user presses twice on authorize in discord oath2 link)
@@ -11,7 +11,7 @@ router.get('/login/redirect', passport.authenticate('discord', {
 });
 router.get('/logout', (req, res) => {
     if (req.session) {
-        req.session.destroy(err => err ? res.redirect('/') : res.redirect('/chthulu'));
+        req.session.destroy(err => err ? res.redirect('/') : res.redirect('/'));
     } else {
         res.redirect('/')
     }

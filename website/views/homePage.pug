@@ -1,0 +1,44 @@
+extends ./template/layout.pug
+block scripts
+    //- script(src="https://cdnjs.cloudflare.com/ajax/libs/particlesjs/2.2.3/particles.min.js")
+
+    script
+        include ./static/theme.js
+        include ./static/particles.min.js
+
+        include ./static/homePage.js
+block styles 
+    style 
+        include ./assets/css/main.css
+        include ./assets/css/homePage.css
+
+block bodyContent
+    #background
+    .container-wrapper
+        .container
+            .bot-icon
+                img(src=bot_icon alt="Bot Image")
+            .container-tite 
+                h1.title Welcome adventurer!
+            .container-text
+                p 
+                    span.bold.bigger Chthulu 
+                    | is a Great Old One of great power who lies in a death-like slumber beneath the 
+                    span.bold.bigger Pacific Ocean 
+                    | in his sunken city of 
+                    span.bold.bigger R'lyeh
+                    |. He remains a dominant presence in the eldrich dealings on our world. From his cave he rules over the fantasies of many 
+                    span.bold.bigger D&D players
+                    |, guiding them on their adventure through this website. Here he will provide 
+                    span.bold.bigger information 
+                    | over the party you are traveling with, the 
+                    span.bold.bigger powers  
+                    | one can gain, and 
+                    span.bold.bigger plan 
+                    | your party's next move.
+            .container-buttons 
+                .login-button
+                    button(onclick="window.location='http://localhost:8080/auth/login';")#login Login with Discord
+                .back-button 
+                    span.back-action Return to common world
+            

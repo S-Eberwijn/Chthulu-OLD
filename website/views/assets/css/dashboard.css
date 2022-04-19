@@ -81,6 +81,7 @@ header.dashboardHeader button {
     border-radius: 20px;
     transition: all 200ms ease;
 }
+
 /* 
 header.dashboardHeader button:hover {
     transform: scale(1.2);
@@ -130,7 +131,17 @@ header.dashboardHeader button:hover {
     display: flex;
     flex-direction: column;
     width: 400px;
+    height: 240px;
     min-width: 400px;
+    position: relative;
+}
+
+.chart{
+    width: 400px;
+    height: 240px;
+    min-width: 400px;
+    position: relative;
+
 }
 
 .kpiTitle {
@@ -173,4 +184,35 @@ img[alt="Construction"] {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+
+.dashboardContent section .sectionContent>div.kpiItem::after,
+.dashboardContent section .sectionContent>div.chart::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -30px;
+    margin-left: -30px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50px;
+    border: 5px solid var(--menu-color);
+    border-top-color: var(--sidebar-color);
+    animation: loading 2s linear infinite;
+}
+
+@keyframes loading {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.no-after::after {
+    content: none !important;
 }

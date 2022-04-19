@@ -1,20 +1,39 @@
 google.load("visualization", "1", { packages: ["corechart"] });
 var timeout;
 
+function addValueToElement(elementID, value) {
+    return new Promise((resolve, reject) => {
+        document.getElementById(elementID).innerHTML = value;
+        resolve(document.getElementById(elementID));
+    });
+}
+
+function addChartToElement(chartID, chartTitle, values, axisLabels) {
+    return new Promise((resolve, reject) => {
+        google.charts.setOnLoadCallback(drawChart(chartID, chartTitle, values, axisLabels));
+        resolve(document.getElementById(chartID));
+    });
+}
+
+
 document.addEventListener("DOMContentLoaded", function () {
-    console.log(characters);
-    console.log(allQuests.filter(quest => quest.status === 'OPEN'));
+    // console.log(getDeadCharacters(characters));
+    // console.log(allQuests.filter(quest => quest.status === 'OPEN'));
 
     timeout = setInterval(function () {
         if (google.visualization != undefined) {
-            google.charts.setOnLoadCallback(drawChart('topFiveClasses', 'Top 5 Character Classes', getAllCharactersValues(characters, 'class'), ['Class', 'Amount']));
-            google.charts.setOnLoadCallback(drawChart('topFiveRaces', 'Top 5 Character Races', getAllCharactersValues(characters, 'race'), ['Race', 'Amount']));
-            google.charts.setOnLoadCallback(drawChart('topFiveBackgrounds', 'Top 5 Character Backgrounds', getAllCharactersValues(characters, 'background'), ['Background', 'Amount']));
-            document.getElementById('highestCharacterLevel').innerHTML = getHighestCharacterLevel(characters);
-            document.getElementById('OPEN-quests').innerHTML = allQuests.filter(quest => quest.data.quest_status === 'OPEN').length;
-            document.getElementById('EXPIRED-quests').innerHTML = allQuests.filter(quest => quest.data.quest_status === 'EXPIRED').length;
-            document.getElementById('DONE-quests').innerHTML = allQuests.filter(quest => quest.data.quest_status === 'DONE').length;
-            document.getElementById('total-quests').innerHTML = allQuests.length;
+            // Add Google charts to page
+            addChartToElement('topFiveClasses', 'Top 5 Character Classes', getAllCharactersValues(characters, 'class'), ['Class', 'Amount']).then(element => { return element.classList.add('no-after'); });
+            addChartToElement('topFiveRaces', 'Top 5 Character Races', getAllCharactersValues(characters, 'race'), ['Race', 'Amount']).then(element => { return element.classList.add('no-after'); });
+            addChartToElement('topFiveBackgrounds', 'Top 5 Character Backgrounds', getAllCharactersValues(characters, 'background'), ['Background', 'Amount']).then(element => { return element.classList.add('no-after'); });
+
+            // Add KPI indicators to page
+            addValueToElement('highestCharacterLevel', getHighestCharacterLevel(characters)).then(element => { return element.parentNode.classList.add('no-after'); });
+            addValueToElement('deadCharacters', getDeadCharacters(characters).length).then(element => { return element.parentNode.classList.add('no-after'); });
+            addValueToElement('OPEN-quests', allQuests.filter(quest => quest.data.quest_status === 'OPEN').length).then(element => { return element.parentNode.classList.add('no-after'); });
+            addValueToElement('EXPIRED-quests', allQuests.filter(quest => quest.data.quest_status === 'EXPIRED').length).then(element => { return element.parentNode.classList.add('no-after'); });
+            addValueToElement('DONE-quests', allQuests.filter(quest => quest.data.quest_status === 'DONE').length).then(element => { return element.parentNode.classList.add('no-after'); });
+            addValueToElement('total-quests', allQuests.length).then(element => { return element.parentNode.classList.add('no-after'); });
 
             clearInterval(timeout);
         }
@@ -109,3 +128,8 @@ function getHighestCharacterLevel(characters) {
     });
     return Math.max(...levelsArray);
 }
+
+function getDeadCharacters(characters) {
+    return characters.filter(character => character.data.alive === 0);
+}
+

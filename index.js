@@ -127,6 +127,5 @@ bot.login(BOT_TOKEN).then(() => {
     app.listen(WB_PORT, () => {
         console.log(`App listening at http://localhost:${WB_PORT || 8080}`)
         module.exports = bot;
-
     })
 });

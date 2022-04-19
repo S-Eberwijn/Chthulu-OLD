@@ -1,4 +1,4 @@
-extends ./template/layout.pug
+extends ./template/baseDashboard.pug
 block scripts
     script(type='text/javascript', src='https://www.gstatic.com/charts/loader.js')
     script
@@ -22,15 +22,15 @@ block dashboardContent
             .sectionContent
                 div.kpiItem
                     span.kpiTitle Highest Character Level
-                    span.kpiContent#highestCharacterLevel #{highestCharacterLevel}     
-                div(id='topFiveClasses')
-                div(id='topFiveRaces')
-                div(id='topFiveBackgrounds')
+                    span.kpiContent#highestCharacterLevel #{''}     
+                div(id='topFiveClasses').chart
+                div(id='topFiveRaces').chart
+                div(id='topFiveBackgrounds').chart
                 div.kpiItem
                     span.kpiTitle Dead Characters
-                    span.kpiContent#deadCharacters #{deadCharactersCount}
+                    span.kpiContent#deadCharacters #{''}
                     
-        section
+        section 
             h1 Sessions
 
         section
@@ -38,16 +38,16 @@ block dashboardContent
             .sectionContent
                 div.kpiItem
                     span.kpiTitle Active quests
-                    span.kpiContent#OPEN-quests 0
+                    span.kpiContent#OPEN-quests 
                 div.kpiItem
                     span.kpiTitle Expired quests
-                    span.kpiContent#EXPIRED-quests 0
+                    span.kpiContent#EXPIRED-quests 
                 div.kpiItem
                     span.kpiTitle Completed quests
-                    span.kpiContent#DONE-quests 0
+                    span.kpiContent#DONE-quests 
                 div.kpiItem
                     span.kpiTitle Total quests
-                    span.kpiContent#total-quests 0
+                    span.kpiContent#total-quests 
         section
             h1 Location
 

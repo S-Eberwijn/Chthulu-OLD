@@ -56,7 +56,7 @@ header.sidebarHeader {
     border-radius: 15px;
 }
 
-.icon[gIcon]:hover:before {
+.icon:hover:before {
     content: '';
     position: absolute;
     top: 50%;

@@ -1,0 +1,96 @@
+extends ./layout.pug
+
+block bodyContent
+    .sidebar
+            header.sidebarHeader
+                .icon
+                    if (!selectedGuildId)
+                        .icon.selected
+                            a.bot-icon(href=`/chthulu`)
+                                img(src=bot_icon alt="Chthulu Avatar")
+                    else 
+                        a.bot-icon(href=`/chthulu`)
+                            img(src=bot_icon alt="Chthulu Avatar")
+            .sidebarContent 
+                if guilds
+                    each guild in guilds.map(guild => guild)
+                        if (guild.id === selectedGuildId)
+                            .icon.selected
+                                a.guild-icon(href=`/dashboard/${guild.id}`)
+                                    img(src=guild.iconURL() alt="Server Avatar")
+                        else 
+                            .icon(gIcon)
+                                a.guild-icon(href=`/dashboard/${guild.id}`)
+                                    img(src=guild.iconURL() alt="Server Avatar")
+            if isGuildDashboardPage
+                .extendMenu(onclick="toggleMenu()")
+                    i.fas.fa-chevron-right
+                    i.fas.fa-chevron-right
+                    i.fas.fa-chevron-right
+    .menu(guild=isGuildDashboardPage)
+        header.menuHeader
+            span #{guildName}
+        .menuContent 
+            .menuCategory 
+                span Campaign
+                    a(href=`/dashboard/${selectedGuildId}/informational/characters`)
+                        .menuCategoryItem          
+                            span.menuIcon  
+                            span Characters
+                    a(href=`/dashboard/${selectedGuildId}/informational/nonplayercharacters`)   
+                        .menuCategoryItem
+                            span.menuIcon  
+                            span NPC's
+                    a(href=`/dashboard/${selectedGuildId}/informational/quests`)   
+                        .menuCategoryItem
+                            span.menuIcon  
+                            span Quests
+                    a(href=`/dashboard/${selectedGuildId}/informational/map`)   
+                        .menuCategoryItem
+                            span.menuIcon  
+                            span Map
+                    a(href=`/dashboard/${selectedGuildId}/informational/sessions`)   
+                        .menuCategoryItem
+                            span.menuIcon 
+                            span Sessions
+            .menuCategory 
+                span Lookup
+                    a(href=`/dashboard/${selectedGuildId}/lookup/item`)   
+                        .menuCategoryItem
+                            span.menuIcon 
+                            span Item
+                    a(href=`/dashboard/${selectedGuildId}/lookup/condition`)   
+                        .menuCategoryItem  
+                            span.menuIcon  
+                            span Condition
+                    a(href=`/dashboard/${selectedGuildId}/lookup/spell`)   
+                        .menuCategoryItem  
+                            span.menuIcon  
+                            span Spell
+            if (isAdmin === true)
+                .menuCategory 
+                    span Settings
+                        a(href=`/dashboard/${selectedGuildId}/settings/dnd`)   
+                            .menuCategoryItem
+                                span.menuIcon  
+                                span Dungeons & Dragons
+                        a(href=`/dashboard/${selectedGuildId}/settings/general`)   
+                            .menuCategoryItem
+                                span.menuIcon  
+                                span General
+                        a(href=`/dashboard/${selectedGuildId}/settings/information`)   
+                            .menuCategoryItem
+                                span.menuIcon  
+                                span Information
+                        a(href=`/dashboard/${selectedGuildId}/settings/miscellaneous`)   
+                            .menuCategoryItem
+                                span.menuIcon  
+                                span Miscellaneous
+    .dashboard(guild=isGuildDashboardPage).menuIsExtended
+        header.dashboardHeader
+            span #{headerTitle} Dashboard
+            if (loggedInUser)
+                include ../components/profileMenu.pug
+            else 
+                button(onclick="window.location='http://localhost:8080/auth/login';")#login Login
+        block dashboardContent
