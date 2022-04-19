@@ -6,16 +6,16 @@ window.onload = function () {
             shape: {
                 type: "circle",
                 stroke: { width: 0, color: "#ddd" },
-                polygon: { nb_sides: 5 },
+                polygon: { nb_sides: 0 },
                 image: { src: "img/github.svg", width: 100, height: 100 }
             },
             opacity: {
-                value: 0.5,
-                random: false,
+                value: 0.7,
+                random: true,
                 anim: { enable: false, speed: 1, opacity_min: 0.1, sync: false }
             },
             size: {
-                value: 3,
+                value: 4,
                 random: true,
                 anim: { enable: false, speed: 40, size_min: 0.1, sync: false }
             },
@@ -30,7 +30,7 @@ window.onload = function () {
                 enable: true,
                 speed: 1    ,
                 direction: "none",
-                random: false,
+                random: true,
                 straight: false,
                 out_mode: "out",
                 bounce: false,
