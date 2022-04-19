@@ -31,6 +31,8 @@ module.exports = async bot => {
     bot.guilds.cache.forEach(async guild => {
         await GeneralInfo.findOne({ where: { id: guild.id } }).then(async server => {
             try {
+                //For buffering the user cache (takes some time on start-up)
+                await guild.members.fetch();
                 if (server) {
                     await bot.guilds.cache.get(guild.id)?.commands.set(bot.slashCommands.filter(cmd => !server?.disabled_commands?.includes(cmd.help.name)).map(cmd => cmd.help))
                 }

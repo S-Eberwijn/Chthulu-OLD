@@ -2,20 +2,12 @@
 const router = require('express').Router(),
     { constructionDashboardPage, dashboardPage, } = require('../controllers/dashboard'),
     { homePage } = require('../controllers/home');
+const { isAlreadyLoggedIn } = require('./middleware/middleware');
 
-function isAuthorized(req, res, next) {
-    if (req.user) {
-        // console.log('User is logged in.')
-        res.redirect('/chthulu');
-    } else {
-        // console.log('User is not logged in.');
-        next();
-    }
-}
 
-router.get('/',isAuthorized, homePage);
+router.get('/',isAlreadyLoggedIn, homePage);
 //TODO: adjust page below
-router.get('/chthulu', dashboardPage);
+// router.get('/chthulu', dashboardPage);
 
 
 module.exports = router;

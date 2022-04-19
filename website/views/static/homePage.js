@@ -40,7 +40,7 @@ window.onload = function () {
         interactivity: {
             detect_on: "canvas",
             events: {
-                onhover: { enable: true, mode: "repulse" },
+                onhover: { enable: false, mode: "repulse" },
                 onclick: { enable: false, mode: "push" },
                 resize: true
             },

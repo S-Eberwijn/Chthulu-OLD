@@ -1,5 +1,4 @@
 const fetch = require('node-fetch');
-const { user } = require('../index');
 const DISCORD_API = 'https://discord.com/api/v6';
 const { decrypt } = require('./cryptography');
 
@@ -30,19 +29,29 @@ async function getUserGuilds(token) {
             'Authorization': `Bearer ${decrypt(token)}`,
         }
     })
+
+    // for (const [key, value] of getBotGuilds().entries()) {
+    //     const members =  await (await value.members.fetch()).map(member => member.id).includes('134738835362807808');
+    //     console.log(`${members}`);
+    // }
+    console.log(getBotGuilds().filter(guild => guild.members.cache.has('134738835362807808')).map(guild => guild));
     // console.log(await response.json())
     return await response.json();
 }
 
 
-function getMutualGuilds(userGuilds, botGuilds) {
-    // console.log(userGuilds);
-    if (userGuilds.message) {
-        console.log('No user guilds provided to get mutual guilds. Returning empty array.');
-        return [];
-    }
-    return botGuilds.filter(guild => userGuilds.map(guild => guild.id).includes(guild.id)).map(guild => guild);
+function getMutualGuilds(userID) {
+    return getBotGuilds().filter(guild => guild.members.cache.has(userID));
 }
+
+// function getMutualGuilds(userGuilds, botGuilds) {
+//     // console.log(userGuilds);
+//     if (userGuilds.message) {
+//         console.log('No user guilds provided to get mutual guilds. Returning empty array.');
+//         return [];
+//     }
+//     return botGuilds.filter(guild => userGuilds.map(guild => guild.id).includes(guild.id)).map(guild => guild);
+// }
 
 
 // async function getMutualGuilds(userID) {

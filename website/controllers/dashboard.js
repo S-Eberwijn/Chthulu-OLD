@@ -3,139 +3,63 @@ const { NonPlayableCharacter } = require('../../database/models/NonPlayableChara
 const { Quest } = require('../../database/models/Quest');
 const { GeneralInfo } = require('../../database/models/GeneralInfo');
 const { Map } = require('../../database/models/Maps');
-const { getBotGuilds, getUserGuilds, getMutualGuilds, getGuildFromBot } = require('../../functions/api');
 
 exports.dashboardPage = async (req, res) => {
-    const bot = require('../../index');
-
     // TODO: Rate limiter is activated when I move from login to this screen.
-    // console.log(req.user?.accT);
-    //TODO Maybe in stead of using discord api, use the existing bot to find the guilds the user is in.
-    //await (await guild.members.fetch(req.user?.id)).permissions.has('ADMINISTRATOR'),
+    // TODO Maybe in stead of using discord api, use the existing bot to find the guilds the user is in.
 
     let characters = await getAliveCharacters();
-    let deadCharacters = await getDeadCharacters();
     const allQuests = await getQuests();
 
-    const userGuilds = await getUserGuilds(req.user?.accT);
-    const botGuilds = getBotGuilds();
-    const mutualGuilds = getMutualGuilds(userGuilds, botGuilds)
-    const loggedInUser = req.user ? { username, discriminator, avatar } = req.user : undefined;
-    // const mutualGuilds = await getMutualGuilds(req.user?.discordID)
-
-
     res.render('dashboardPage', {
-        isDashboardPage: true,
-        bot_icon: bot.user.avatarURL(),
-        guilds: mutualGuilds,
-        headerTitle: 'Chthulu',
-        guildName: '',
-        characters: characters,
-        // deadCharactersCount: deadCharacters.length,
-        allQuests: allQuests,
-        userLoggedIn: req.user ? true : false,
-        loggedInUser: loggedInUser
+        ...res.locals.renderData,
+        ...{
+            isDashboardPage: true,
+            headerTitle: 'Chthulu',
+            characters: characters,
+            allQuests: allQuests,
+        }
     });
 }
 
 exports.guildDashboardPage = async (req, res) => {
-    const bot = require('../../index');
-    const selectedGuildID = req.params.id;
-    // console.log(req.user);
-
-    // console.log(bot.guilds.cache.get(guildId).members.cache.get(req.user?.id)) 
-
-    const guild = getGuildFromBot(selectedGuildID);
-
-    let characters = await getAliveCharacters(selectedGuildID);
-    let deadCharacters = await getDeadCharacters(selectedGuildID);
-    const allGuildQuests = await getQuests(selectedGuildID, ["OPEN", "DONE", "EXPIRED", "FAILED"]);
-
-
-
-    const userGuilds = await getUserGuilds(req.user?.accT);
-    const botGuilds = getBotGuilds();
-    // const mutualGuilds = getMutualGuilds(botGuilds, userGuilds)
-    // const mutualGuilds = await getMutualGuilds(req.user?.discordID)
-    const mutualGuilds = getMutualGuilds(userGuilds, botGuilds)
-    const loggedInUser = req.user ? { username, discriminator, avatar } = req.user : undefined;
-
-
+    const characters = await getAliveCharacters(res.locals.renderData?.selectedGuildId);
+    const allGuildQuests = await getQuests(res.locals.renderData?.selectedGuildId, ["OPEN", "DONE", "EXPIRED", "FAILED"]);
 
     res.render('dashboardPage', {
-        isGuildDashboardPage: true,
-        bot_icon: bot.user.avatarURL(),
-        guilds: mutualGuilds,
-        headerTitle: '',
-        guild: guild,
-        selectedGuildId: selectedGuildID,
-        guildName: guild?.name,
-        characters: characters,
-        deadCharactersCount: deadCharacters.length,
-        allQuests: allGuildQuests,
-        userLoggedIn: req.user ? true : false,
-        isAdmin: true,
-        loggedInUser: loggedInUser,
-        // await (await guild.members.fetch(req.user?.id)).permissions.has('ADMINISTRATOR'),
+        ...res.locals.renderData,
+        ...{
+            isGuildDashboardPage: true,
+            headerTitle: '',
+            characters: characters,
+            allQuests: allGuildQuests,
+        }
     });
 }
 
 //CONSTRUCTION PAGE
 exports.constructionDashboardPage = async (req, res) => {
-    const bot = require('../../index');
-    const guildId = req.params.id || '';
-    const guild = bot.guilds.cache.get(guildId);
-    // req.user?.guilds.filter(guild => bot.guilds.cache.has(guild.id))
-    // const userGuilds = []
-    // const mutualGuilds = await getMutualGuilds(req.user?.discordID)
-    const userGuilds = await getUserGuilds(req.user?.accT);
-    const botGuilds = getBotGuilds();
-    const mutualGuilds = getMutualGuilds(userGuilds, botGuilds)
-    const loggedInUser = req.user ? { username, discriminator, avatar } = req.user : undefined;
-
-
     res.render('constructionPage', {
-        isGuildDashboardPage: true,
-        bot_icon: bot.user.avatarURL(),
-        guilds: mutualGuilds,
-        headerTitle: '',
-        guild: guild,
-        selectedGuildId: guildId,
-        guildName: guild?.name || '',
-        userLoggedIn: req.user ? true : false,
-        isAdmin: true,
-        loggedInUser: loggedInUser,
-        // await (await guild.members.fetch(req.user?.id)).permissions.has('ADMINISTRATOR'),
+        ...res.locals.renderData,
+        ...{
+            isGuildDashboardPage: true,
+            headerTitle: '',
+        }
     });
 }
 
 
 //CHARACTERS PAGE
 exports.guildInformationalCharactersDashboardPage = async (req, res) => {
-    const bot = require('../../index');
-    const guildId = req.params.id;
-    const guild = bot.guilds.cache.get(guildId);
-
-    let characters = await getAliveCharacters(guildId);
-    // const userGuilds = bot.guilds.cache.filter(guild => req.user?.guilds.map(guild => guild.id).includes(guild.id))
-    const userGuilds = await getUserGuilds(req.user?.accT);
-    const botGuilds = getBotGuilds();
-    const mutualGuilds = getMutualGuilds(userGuilds, botGuilds)
-    const loggedInUser = req.user ? { username, discriminator, avatar } = req.user : undefined;
-
+    let characters = await getAliveCharacters(res.locals.renderData?.selectedGuildId);
 
     res.render('charactersPage', {
-        isGuildDashboardPage: true,
-        bot_icon: bot.user.avatarURL(),
-        guilds: mutualGuilds,
-        headerTitle: `Characters`,
-        guild: guild,
-        selectedGuildId: guildId,
-        guildName: guild.name,
-        characters: characters.reverse(),
-        userLoggedIn: req.user ? true : false,
-        isAdmin: true,
-        loggedInUser: loggedInUser,
+        ...res.locals.renderData,
+        ...{
+            isGuildDashboardPage: true,
+            headerTitle: `Characters`,
+            characters: characters.reverse(),
+        }
     });
 }
 
@@ -157,32 +81,15 @@ async function getDeadCharacters(guildId = null) {
 
 //NPC'S PAGE
 exports.guildInformationalNonPlayableCharactersDashboardPage = async (req, res) => {
-    const bot = require('../../index');
-    const guildId = req.params.id;
-    const guild = bot.guilds.cache.get(guildId);
-
-    let npcs = await getNonPlayableCharacters(guildId);
-
-    // const userGuilds = bot.guilds.cache.filter(guild => req.user?.guilds.map(guild => guild.id).includes(guild.id))
-
-    const userGuilds = await getUserGuilds(req.user?.accT);
-    const botGuilds = getBotGuilds();
-    const mutualGuilds = getMutualGuilds(userGuilds, botGuilds)
-    const loggedInUser = req.user ? { username, discriminator, avatar } = req.user : undefined;
+    let npcs = await getNonPlayableCharacters(res.locals.renderData?.selectedGuildId);
 
     res.render('nonPlayableCharactersPage', {
-        isGuildDashboardPage: true,
-        bot_icon: bot.user.avatarURL(),
-        guilds: mutualGuilds,
-        headerTitle: `NPC's`,
-        guild: guild,
-        selectedGuildId: guildId,
-        guildName: guild.name,
-        npcs: npcs.reverse(),
-        userLoggedIn: req.user ? true : false,
-        isAdmin: true,
-        loggedInUser: loggedInUser,
-
+        ...res.locals.renderData,
+        ...{
+            isGuildDashboardPage: true,
+            headerTitle: `NPC's`,
+            npcs: npcs.reverse(),
+        }
     });
 }
 
@@ -196,38 +103,19 @@ async function getNonPlayableCharacters(guildId = null) {
 
 //QUESTS PAGE
 exports.guildInformationalQuestsDashboardPage = async (req, res) => {
-    const bot = require('../../index');
-    const guildId = req.params.id;
-    const guild = bot.guilds.cache.get(guildId);
-
-    let completedQuests = await getQuests(guildId, ["DONE", "EXPIRED", "FAILED"]);
-    let uncompletedQuests = await getQuests(guildId, ["OPEN"]);
-
-    // const userGuilds = bot.guilds.cache.filter(guild => req.user?.guilds.map(guild => guild.id).includes(guild.id))
-    const userGuilds = await getUserGuilds(req.user?.accT);
-    const botGuilds = getBotGuilds();
-    const mutualGuilds = getMutualGuilds(userGuilds, botGuilds)
-    const loggedInUser = req.user ? { username, discriminator, avatar } = req.user : undefined;
-
+    let completedQuests = await getQuests(res.locals.renderData?.selectedGuildId, ["DONE", "EXPIRED", "FAILED"]);
+    let uncompletedQuests = await getQuests(res.locals.renderData?.selectedGuildId, ["OPEN"]);
 
     res.render('questsPage', {
-        isGuildDashboardPage: true,
-        bot_icon: bot.user.avatarURL(),
-        guilds: mutualGuilds,
-        headerTitle: `Quests`,
-        guild: guild,
-        selectedGuildId: guildId,
-        guildName: guild.name,
-        uncompletedQuests: uncompletedQuests.reverse(),
-        completedQuests: completedQuests.reverse(),
-        userLoggedIn: req.user ? true : false,
-        isAdmin: true,
-        loggedInUser: loggedInUser,
-
+        ...res.locals.renderData,
+        ...{
+            isGuildDashboardPage: true,
+            headerTitle: `Quests`,
+            uncompletedQuests: uncompletedQuests.reverse(),
+            completedQuests: completedQuests.reverse(),
+        }
     });
 }
-
-
 
 async function getQuests(guildId = null, status) {
     if (guildId === null) {
@@ -244,8 +132,6 @@ async function getQuests(guildId = null, status) {
         for (let index = 0; index < status.length; index++) {
             const element = status[index];
             quests = quests.concat(await Quest.findAll({ where: { quest_status: element, server: guildId } }))
-            // console.log(await Quest.findAll({ where: { quest_status: element, server_id: guildId } }))
-
             if (index === status.length - 1) {
                 quests.sort(function (a, b) {
                     a = a.quest_importance_value
@@ -260,6 +146,7 @@ async function getQuests(guildId = null, status) {
 
 //CREATE QUEST POST
 exports.createQuestPost = async (req, res) => {
+    // TODO add validator on backend level
     let priority_value = Math.floor(parseInt(req.body.priority));
     if (priority_value < 1) {
         priority_value = 1;
@@ -338,7 +225,6 @@ exports.editQuestRequest = async (req, res) => {
         let quest_id = req.body?.quest_id;
         let server_id = req.params?.id || '0';
         if (quest_id) {
-
             await Quest.findOne({ where: { id: quest_id, server: server_id } }).then(async quest => {
                 console.log(quest);
                 if (quest) {
@@ -348,43 +234,25 @@ exports.editQuestRequest = async (req, res) => {
                 }
             });
         }
-    } 
+    }
 }
 
 exports.guildInformationalMapDashboardPage = async (req, res) => {
-    const bot = require('../../index');
-    const guildId = req.params.id;
-    const guild = bot.guilds.cache.get(guildId);
-
-    const map = await Map.findOne({ where: { id: guildId } });
-
-    // const userGuilds = bot.guilds.cache.filter(guild => req.user?.guilds.map(guild => guild.id).includes(guild.id))
-    const userGuilds = await getUserGuilds(req.user?.accT);
-    const botGuilds = getBotGuilds();
-    const mutualGuilds = getMutualGuilds(userGuilds, botGuilds)
-    const loggedInUser = req.user ? { username, discriminator, avatar } = req.user : undefined;
-
+    const map = await Map.findOne({ where: { id: res.locals.renderData?.selectedGuildId } });
 
     res.render('mapPage', {
-        isGuildDashboardPage: true,
-        bot_icon: bot.user.avatarURL(),
-        guilds: mutualGuilds,
-        headerTitle: `Map`,
-        guild: guild,
-        selectedGuildId: guildId,
-        guildName: guild.name,
-        databaseMap: map,
-        userLoggedIn: req.user ? true : false,
-        isAdmin: true,
-        loggedInUser: loggedInUser,
+        ...res.locals.renderData,
+        ...{
+            isGuildDashboardPage: true,
+            headerTitle: `Map`,
+            databaseMap: map,
+        }
     });
 }
 
 //SETTINGS PAGE
 exports.guildSettingsPage = async (req, res) => {
     const bot = require('../../index');
-    const guildId = req.params.id;
-    const guild = bot.guilds.cache.get(guildId);
 
     let category = '';
     switch (req.url.split('/')[req.url.split('/').length - 1]) {
@@ -404,54 +272,41 @@ exports.guildSettingsPage = async (req, res) => {
             break;
     }
 
-    const guildCommands = await guild.commands.cache.map(command => command.name)
+    const guildCommands = await res.locals.renderData?.guild.commands.cache.map(command => command.name)
     const possibleCommands = bot.slashCommands.filter(cmd => guildCommands.includes(cmd.help.name) && cmd.help.category == category).map(cmd => cmd.help)
     const allCommands = bot.slashCommands.filter(cmd => cmd.help.category == category).map(cmd => cmd.help)
-    const server = await GeneralInfo.findOne({ where: { id: guildId } })
+    const server = await GeneralInfo.findOne({ where: { id: res.locals.renderData?.selectedGuildId } })
 
     // const userGuilds = bot.guilds.cache.filter(guild => req.user?.guilds.map(guild => guild.id).includes(guild.id))
-    const userGuilds = await getUserGuilds(req.user?.accT);
-    const botGuilds = getBotGuilds();
-    const mutualGuilds = getMutualGuilds(userGuilds, botGuilds)
-    const loggedInUser = req.user ? { username, discriminator, avatar } = req.user : undefined;
+    // const userGuilds = await getUserGuilds(req.user?.accT);
+    // const botGuilds = getBotGuilds();
+    // const mutualGuilds = getMutualGuilds(userGuilds, botGuilds)
+    // const loggedInUser = req.user ? { username, discriminator, avatar } = req.user : undefined;
 
 
     res.render('settingsPage', {
-        isGuildDashboardPage: true,
-        bot_icon: bot.user.avatarURL(),
-        guilds: mutualGuilds,
-        headerTitle: `Settings`,
-        guild: guild,
-        selectedGuildId: guildId,
-        guildName: guild.name,
-        commands: allCommands,
-        disabled_commands: server.disabled_commands,
-        userLoggedIn: req.user ? true : false,
-        isAdmin: true,
-        loggedInUser: loggedInUser,
-
+        ...res.locals.renderData,
+        ...{
+            isGuildDashboardPage: true,
+            headerTitle: `Settings`,
+            commands: allCommands,
+            disabled_commands: server.disabled_commands,
+        }
     });
 }
 
 exports.editSettingsRequest = async (req, res) => {
     const bot = require('../../index');
 
-    const guildId = req.params.id;
-
-    await GeneralInfo.findOne({ where: { id: guildId } }).then(async server => {
+    await GeneralInfo.findOne({ where: { id: res.locals.renderData?.selectedGuildId } }).then(async server => {
         try {
             if (server) {
                 server.disabled_commands = server.disabled_commands.concat(req.body?.disabled_commands_array).filter(cmd => !req.body?.enabled_commands_array.includes(cmd)).filter(onlyUnique);
                 server.save().then(() => {
                     // Takes a few seconds to adjust this before users can use the command in the server
-                    bot.guilds.cache.get(guildId)?.commands.set(bot.slashCommands.filter(cmd => !server.disabled_commands.includes(cmd.help.name)).map(cmd => cmd.help))
+                    bot.guilds.cache.get(res.locals.renderData?.selectedGuildId)?.commands.set(bot.slashCommands.filter(cmd => !server.disabled_commands.includes(cmd.help.name)).map(cmd => cmd.help))
                     res.sendStatus(201)
-
                 });
-                // server.disabled_commands.forEach(cmd_name => {
-                //     bot.guilds.cache.get(guildId).commands.cache.find(c => c.name === `${cmd_name}`)?.delete() 
-                // })
-
             }
         } catch (error) {
             console.log(error)
