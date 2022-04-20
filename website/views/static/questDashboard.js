@@ -64,42 +64,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
     function handleDragEnd(e) {
         // Does not get executed right now, due to new modal showing
         // TODO add this to statusChangedQuest()
-
-
-        // this.style.opacity = '1';
-        // if (this.parentNode === document.getElementById("completedQuestsBox")) {
-        //     this.style.pointerEvents = "none";
-        //     let optionsElement = this.querySelector('.options');
-        //     while (optionsElement.firstChild) {
-        //         optionsElement.firstChild.remove()
-        //     }
-
-        //     document.getElementById('uncompletedQuestsCount').innerHTML = `${parseInt(document.getElementById('uncompletedQuestsCount').innerHTML) - 1}`;
-        //     document.getElementById('completedQuestsCount').innerHTML = `${parseInt(document.getElementById('completedQuestsCount').innerHTML) + 1}`;
-
-
-        //     // TESTING PURPOSES
-        //     if (count % 3 === 0) {
-        //         optionsElement.appendChild(createCompleteIcon())
-
-        //     } else if (count % 3 === 1) {
-        //         optionsElement.appendChild(createFailedIcon())
-
-        //     } else {
-        //         optionsElement.appendChild(createExpiredIcon())
-        //     }
-        //     count++;
-        // }
-
-        // let quests = document.querySelectorAll('#uncompletedQuestsBox .questDiv.quest');
-        // quests.forEach(quest => {
-        //     quest.style.pointerEvents = "all";
-        // })
-
-        // questBoxes.forEach(function (item) {
-        //     item.classList.remove('over');
-        // });
-        // document.getElementById("completedQuestsBox").style.pointerEvents = "none";
     }
 
     function handleDragOver(e) {
@@ -129,14 +93,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
                 draggedElement.classList.add("quest")
                 this.insertBefore(draggedElement, document.getElementById("addNewQuestDiv"));
             } else {
-
-                // draggedElement.classList.remove("quest")
                 document.querySelector('input[action="status"]').checked = true;
-
-                // this.appendChild(draggedElement);
-                // draggedElement.style.pointerEvents = "none";
-
-
             }
             questBoxes.forEach(function (item) {
                 item.classList.remove('over');

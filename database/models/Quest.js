@@ -49,7 +49,7 @@
 
 const { defineModel } = require("firestore-sequelizer");
 const Quest = defineModel("quests", {
-    quest_id: {
+    quest_identifier: {
         type: 'string',
         required: true,
     },
