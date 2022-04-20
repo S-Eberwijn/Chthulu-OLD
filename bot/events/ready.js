@@ -1,12 +1,11 @@
 const fs = require("fs");
 const { GeneralInfo } = require('../../database/models/GeneralInfo');
-const { Map } = require('../../database/models/Maps');
 
 // const { createCmd } = require("../../dataHandler")
 
 module.exports = async bot => {
     // Check to see if bot is ready
-    console.log(`\n${bot.user.username} is online!\n`);
+    console.log(`\n${bot.user.username} bot is online!\n`);
 
     // Set activity status of the bot
     bot.user.setActivity(`Khthonios`, { type: "LISTENING" });
@@ -31,52 +30,13 @@ module.exports = async bot => {
     bot.guilds.cache.forEach(async guild => {
         await GeneralInfo.findOne({ where: { id: guild.id } }).then(async server => {
             try {
-                //For buffering the user cache (takes some time on start-up)
-                await guild.members.fetch();
-                if (server) {
-                    await bot.guilds.cache.get(guild.id)?.commands.set(bot.slashCommands.filter(cmd => !server?.disabled_commands?.includes(cmd.help.name)).map(cmd => cmd.help))
-                }
+                if (server) await bot.guilds.cache.get(guild.id)?.commands.set(bot.slashCommands.filter(cmd => !server?.disabled_commands?.includes(cmd.help.name)).map(cmd => cmd.help))
             } catch (error) {
                 console.log(error)
             }
-            // await bot.guilds.cache.get(guild.id)?.commands.set(bot.slashCommands.map(cmd => cmd.help))
-            // await bot.guilds.cache.get(guild.id)?.commands.set(bot.slashCommands.filter(cmd => !server.disabled_commands.includes(cmd.help.name)).map(cmd => cmd.help))
-
         });
-
-
     })
 
-    // let timestamp = Date.now();
-    // await Map.findOne({ where: { id: '532525442201026580' } }).then((map) => {
-    //     if (!map) return;
-    //     map.locations.push({
-    //         id: `L${timestamp}`,
-    //         type: 'town',
-    //         description: 'Bolder Sprongs',
-    //         visited: true,
-    //         x: -420,
-    //         y: 86,
-    //         status: 'idk'
-    //     })
-    //     map.save()
-    // })
-
-
-    // await Map.create({
-    //     id: `532525442201026580`,
-    //     map_url: `https://cdn.discordapp.com/attachments/711689970456461372/953023259044098058/The_Homebrew_Campaign.jpg`,
-    //     locations: [
-    //         {
-    //             id: `L${timestamp}`,
-    //             type: 'city',
-    //             description: 'Testing purpose',
-    //             visited: false,
-    //             x: -0.7984395318595578 ,
-    //             y: -0.23737466794266943,
-    //             status: 'idk'
-    //         }
-    //     ],
-    //     server: `532525442201026580`
-    // })
 }
+
+

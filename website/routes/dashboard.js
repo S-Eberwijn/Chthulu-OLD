@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const { dashboardPage, guildDashboardPage, constructionDashboardPage, guildInformationalCharactersDashboardPage, guildInformationalNonPlayableCharactersDashboardPage, guildInformationalQuestsDashboardPage, guildInformationalMapDashboardPage, createQuestPost, deleteQuestRequest, editQuestRequest, guildSettingsPage, editSettingsRequest } = require('../controllers/dashboard');
-const {isAuthorized, centralizedData} = require('./middleware/middleware');
+const { isAuthorized, centralizedData } = require('./middleware/middleware');
 
 router.get('/chthulu', isAuthorized, centralizedData, dashboardPage);
 router.get('/:id', isAuthorized, centralizedData, guildDashboardPage);

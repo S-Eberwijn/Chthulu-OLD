@@ -1,4 +1,4 @@
-const { getBotGuilds, getUserGuilds, getMutualGuilds, getGuildFromBot } = require('../../../functions/api');
+const { getMutualGuilds, getGuildFromBot, isUserAdminInGuild } = require('../../../functions/api');
 
 function isAlreadyLoggedIn(req, res, next) {
     if (req.user) return res.redirect('/dashboard/chthulu');
@@ -15,10 +15,6 @@ async function centralizedData(req, res, next) {
     const selectedGuildID = req.params.id || '';
     const guild = getGuildFromBot(selectedGuildID);
 
-    // const userGuilds = await getUserGuilds(req.user?.accT);
-    // const botGuilds = getBotGuilds();
-
-    // const mutualGuilds = getMutualGuilds(await getUserGuilds(req.user?.accT), getBotGuilds());
     const mutualGuilds = getMutualGuilds(req.user?.discordID);
 
     const loggedInUser = req.user ? { username, discriminator, avatar } = req.user : undefined;
@@ -30,9 +26,8 @@ async function centralizedData(req, res, next) {
         guildName: guild?.name || '',
         guilds: mutualGuilds,
         loggedInUser: loggedInUser,
-        isAdmin: true,
+        isAdmin: isUserAdminInGuild(req.user?.discordID, guild),
     }
-    // console.log(await (await guild.members.fetch(req.user?.id)).permissions.has('ADMINISTRATOR'))
     next();
 }
 

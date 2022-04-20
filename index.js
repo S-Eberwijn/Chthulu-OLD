@@ -11,6 +11,7 @@ const passport = require('passport');
 const FirestoreStore = require("firestore-store")(session);
 
 const fs = require("fs");
+const { cacheAllUsers } = require('./functions/api');
 
 //Firebase database modules
 const admin = require("firebase-admin");
@@ -122,10 +123,12 @@ fs.readdir('./bot/events/', (err, files) => {
 });
 
 // Login Discord Bot 'Chthulu'
-bot.login(BOT_TOKEN).then(() => {
+bot.login(BOT_TOKEN).then(async () => {
+    await cacheAllUsers(bot);
+
     // Start Webserver
     app.listen(WB_PORT, () => {
-        console.log(`App listening at http://localhost:${WB_PORT || 8080}`)
+        console.log(`\nApp listening at http://localhost:${WB_PORT || 8080}\n`)
         module.exports = bot;
     })
 });

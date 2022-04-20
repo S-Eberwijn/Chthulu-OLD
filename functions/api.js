@@ -1,6 +1,3 @@
-// const fetch = require('node-fetch');
-// const DISCORD_API = 'https://discord.com/api/v6';
-// const { decrypt } = require('./cryptography');
 const { PlayerCharacter } = require('../database/models/PlayerCharacter');
 const { NonPlayableCharacter } = require('../database/models/NonPlayableCharacter');
 const { Map } = require('../database/models/Maps');
@@ -34,6 +31,15 @@ function getGuildFromBot(guildID) {
     return getBot().guilds.cache.get(guildID);
 }
 
+// For buffering the user cache (takes some time on start-up)
+// IMPORTANT: It needs the bot directly since the export is not done yet before this function is called.
+async function cacheAllUsers(bot) {
+    for (const guild of bot.guilds.cache.map(guild => guild)) {
+        await guild.members.fetch();
+        console.log(`Users from guild "${guild.name}" are loaded.`)
+    }
+}
+
 function getUserFromBot(userID) {
     return getBot().users.cache.get(userID);
 }
@@ -45,6 +51,10 @@ function getMutualGuilds(userID) {
 
 async function isUserInGuild(userID, guild) {
     return guild.members.cache.has(userID);
+}
+
+function isUserAdminInGuild(userID, guild) {
+    return guild?.members.cache.get(userID).permissions.has('ADMINISTRATOR') || false;
 }
 
 async function getAliveCharacters(guildId = null) {
@@ -164,11 +174,9 @@ function sortByImportanceValue(a, b) {
     return a - b;
 }
 
-
-
 module.exports = {
     getBotGuilds, getMutualGuilds, getGuildFromBot, getBotCommandsByCategory,
-    isUserInGuild,
+    isUserInGuild, isUserAdminInGuild, cacheAllUsers,
     getAliveCharacters, getNonPlayableCharacters, getDeadCharacters,
     getServerMap,
     getServerQuestsByStatuses, getQuestsByStatuses, createQuest, deleteQuest, updateQuest,
