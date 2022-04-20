@@ -1,6 +1,7 @@
 require('dotenv').config();
 require('./website/routes/strategies/discordStrategy');
 const express = require('express')
+const utf8 = require('utf8');
 
 const path = require('path');
 const favicon = require('serve-favicon');
@@ -23,7 +24,7 @@ const firebase = admin.initializeApp({
         "type": "service_account",
         "project_id": process.env.FS_PROJECT_ID,
         "private_key_id": process.env.FS_PRIVATE_KEY_ID,
-        "private_key": process.env.FS_PRIVATE_KEY,
+        "private_key": process.env.FS_PRIVATE_KEY ? JSON.parse(process.env.FS_PRIVATE_KEY).replace(/\n/gm, '\n') : undefined,
         "client_email": process.env.FS_CLIENT_EMAIL,
         "client_id": process.env.FS_CLIENT_ID,
         "auth_uri": "https://accounts.google.com/o/oauth2/auth",
