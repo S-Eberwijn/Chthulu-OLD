@@ -20,8 +20,7 @@ async function centralizedData(req, res, next) {
     const loggedInUser = req.user ? { username, discriminator, avatar } = req.user : undefined;
 
     res.locals.renderData = {
-        baseURL: process.env.WB_BASE_URL,
-        port: process.env.WB_PORT,
+        baseURL: process.env.APP_ENV === 'PROD' ? process.env.WB_BASE_URL : `${process.env.WB_BASE_URL}:${process.env.WB_PORT}`,
         bot_icon: bot.user.avatarURL(),
         selectedGuildId: selectedGuildID,
         guild: guild,
