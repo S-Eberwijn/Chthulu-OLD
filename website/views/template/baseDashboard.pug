@@ -92,5 +92,5 @@ block bodyContent
             if (loggedInUser)
                 include ../components/profileMenu.pug
             else 
-                button(onclick="window.location='http://localhost:8080/auth/login';")#login Login
+                button(onclick=`window.location='${baseURL}/auth/login';`)#login Login
         block dashboardContent

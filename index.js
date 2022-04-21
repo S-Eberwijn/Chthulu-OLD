@@ -1,7 +1,6 @@
 require('dotenv').config();
 require('./website/routes/strategies/discordStrategy');
 const express = require('express')
-const utf8 = require('utf8');
 
 const path = require('path');
 const favicon = require('serve-favicon');
@@ -24,7 +23,7 @@ const firebase = admin.initializeApp({
         "type": "service_account",
         "project_id": process.env.FS_PROJECT_ID,
         "private_key_id": process.env.FS_PRIVATE_KEY_ID,
-        "private_key": process.env.FS_PRIVATE_KEY ? JSON.parse(process.env.FS_PRIVATE_KEY).replace(/\n/gm, '\n') : undefined,
+        "private_key": process.env.APP_ENV === 'PROD' ? JSON.parse(process.env.FS_PRIVATE_KEY).replace(/\n/gm, '\n') : process.env.FS_PRIVATE_KEY,
         "client_email": process.env.FS_CLIENT_EMAIL,
         "client_id": process.env.FS_CLIENT_ID,
         "auth_uri": "https://accounts.google.com/o/oauth2/auth",
@@ -37,6 +36,7 @@ const firebase = admin.initializeApp({
 firebaseSequelizer.initializeApp(admin);
 
 const BOT_TOKEN = process.env.BOT_TOKEN || '';
+const WB_BASE_URL = process.env.WB_BASE_URL || '';
 const WB_PORT = process.env.WB_PORT || 8080;
 
 // Initialize Webapp
@@ -129,7 +129,7 @@ bot.login(BOT_TOKEN).then(async () => {
 
     // Start Webserver
     app.listen(WB_PORT, () => {
-        console.log(`\nApp listening at http://localhost:${WB_PORT || 8080}\n`)
+        console.log(`\nApp listening at ${WB_BASE_URL}:${WB_PORT || 8080}\n`)
         module.exports = bot;
     })
 });
