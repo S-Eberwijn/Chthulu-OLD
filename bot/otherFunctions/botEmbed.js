@@ -19,7 +19,7 @@ exports.getBotEmbed = async function (bot) {
             {
                 name: `Info:`, value: `
             💻 \*\*Developer:\*\* \`${botOwner.username}#${botOwner.discriminator}\`
-            🕸 \*\*Website:\*\* [chthulu.online](https://github.com/S-Eberwijn/Chthulu)
+            🕸 \*\*Website:\*\* [chthulu.com](${process.env.APP_ENV === 'PROD' ? process.env.WB_BASE_URL : `${process.env.WB_BASE_URL}:${process.env.WB_PORT}`})
             🚧 \*\*Server:\*\* [discord.gg/hYt5hYmkSv](https://discord.gg/hYt5hYmkSv)
             ✏ \*\*Design:\*\* Looking for new one!
             `, inline: true
