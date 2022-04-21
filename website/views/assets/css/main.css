@@ -56,6 +56,38 @@ svg>g>g:last-child {
 }
 
 
+#loader_modal{
+    border: 0;
+    background-color: var(--content-color);
+    border-radius: 12.5%;
+    box-shadow: 0 0 .3em rgba(0,0,0,0.45);
+}
+
+
+#loader_modal img{
+    animation: pulse 2s infinite;
+}
+
+
+
+#loader_modal::backdrop{
+    background-color: rgba(0,0,0,0.4);
+
+}
+
+@keyframes pulse {
+    0%{
+        transform: scale(0.95);
+    }
+    70%{
+        transform: scale(1);
+    }
+    100%{
+        transform: scale(0.95);
+    }
+}
+
+
 
 /* Profile menu */
 .action {

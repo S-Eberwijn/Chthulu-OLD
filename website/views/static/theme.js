@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', (event) => {
+
+
     // Immediately invoked function to set the theme on initial load
     (function () {
         if (localStorage.getItem('menuState') === 'menuIsExtended') {
@@ -11,7 +13,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
         }
     })();
-
+    document.querySelectorAll('a').forEach(element => {
+        element.addEventListener('click', (event) => {
+            showPageLoader();
+        })
+    })
 
     setTimeout(function () {
         document.body.className = "";
@@ -100,5 +106,9 @@ function setMenuState(menuState) {
 function profileMenuToggle() {
     const toggleProfileMenu = document.querySelector('.action .profileMenu');
     toggleProfileMenu.classList.toggle('active');
+}
+
+function showPageLoader() {
+    document.getElementById('loader_modal').showModal();
 }
 
