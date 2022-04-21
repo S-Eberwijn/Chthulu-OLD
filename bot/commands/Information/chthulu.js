@@ -16,11 +16,6 @@ module.exports.run = async (interaction) => {
                 .setLabel('Dislike')
                 .setStyle('DANGER')
                 .setEmoji('😭'),
-            // new MessageButton()
-            //     .setCustomId('refresh-bot-button')
-            //     .setLabel('Refresh')
-            //     .setStyle('PRIMARY')
-            //     .setEmoji('🔄'),
             new MessageButton()
                 .setCustomId('help-bot-button')
                 .setLabel('Help')

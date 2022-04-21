@@ -5,7 +5,7 @@ module.exports.run = async (interaction) => {
     const userAvatarURL = user.avatarURL({ dynamic: true, size: 1024 });
     const avatarEmbed = new MessageEmbed()
         .setColor(0x333333)
-        .setAuthor(user.username)
+        .setAuthor({ name: user.username })
         .setImage(userAvatarURL);
     interaction.reply({ embeds: [avatarEmbed] });
     // const text = interaction.options.getString('text');

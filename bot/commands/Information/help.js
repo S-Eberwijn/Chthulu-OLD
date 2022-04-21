@@ -16,7 +16,7 @@ module.exports.run = async (interaction) => {
         let command = bot.commands.get(commandName);
 
         let helpEmbed = new MessageEmbed()
-            .setAuthor(`${bot.user.username}`, bot.user.displayAvatarURL())
+            .setAuthor({name: `${bot.user.username}`, iconURL: bot.user.displayAvatarURL()})
             .setColor("GREEN")
             .setThumbnail(`https://media.giphy.com/media/l0ExsgrTuACbtPaqQ/giphy.gif`)
             .setDescription(`

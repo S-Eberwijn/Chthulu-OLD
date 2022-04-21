@@ -8,7 +8,7 @@ module.exports.run = async (interaction) => {
     const guildCreatedAt = moment(interaction.guild.createdAt).format('DD/MM/YYYY');
 
     let serverembed = new MessageEmbed()
-        .setAuthor("Discord Server Information", interaction.guild.iconURL())
+        .setAuthor({ name: "Discord Server Information", iconURL: interaction.guild.iconURL() })
         // .setTitle("Discord Server Information")
         // .setThumbnail(message.guild.iconURL())
         .setColor("GREEN")

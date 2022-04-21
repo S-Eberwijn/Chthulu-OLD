@@ -5,9 +5,9 @@ module.exports.run = async (interaction) => {
     const bot = require('../../../index');
 
     let questEmbed = new MessageEmbed()
-        .setAuthor(`${bot.user.username}#${bot.user.discriminator} `, bot.user.avatarURL())
+        .setAuthor({ name: `${bot.user.username}`, iconURL: bot.user.displayAvatarURL() })
         .setColor("GREEN")
-        .setFooter(`0 quests`)
+        .setFooter({ text: `0 quests` })
     await Quest.findAll({ where: { server: interaction.guild.id, quest_status: 'OPEN' } }).then(ALL_SERVER_QUESTS => {
         if (!ALL_SERVER_QUESTS) return;
         ALL_SERVER_QUESTS.sort((a, b) => b.get('quest_importance_value') - a.get('quest_importance_value'))
@@ -16,7 +16,7 @@ module.exports.run = async (interaction) => {
         ALL_SERVER_QUESTS.forEach((QUEST) => {
             questEmbed.addField(`${getRightEmoji(QUEST.quest_importance_value)} - ${QUEST.quest_name}`, `\>\>\> \`\`\`${QUEST.quest_description}\`\`\``, false)
         })
-        questEmbed.setFooter(`Create new quests on the Chthulu website!`)
+        questEmbed.setFooter({ text: `Create new quests on the Chthulu website!` })
 
     })
     return await interaction.reply({ embeds: [questEmbed] })

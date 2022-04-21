@@ -8,7 +8,7 @@ exports.getBotEmbed = async function (bot) {
         botOwner = { username: 'Chthulu', discriminator: '6727' };
     }
     return new MessageEmbed()
-        .setAuthor(`${bot.user.username}#${bot.user.discriminator} `, bot.user.avatarURL())
+        .setAuthor({ name: `${bot.user.username}#${bot.user.discriminator}`, iconURL: bot.user.displayAvatarURL() })
         .setDescription(`
         \*\*Cthulhu\*\* is a Great Old One of great power who lies in a death-like slumber beneath the \*\*Pacific Ocean\*\* in his sunken city of \*\*R'lyeh\*\*. He remains a dominant presence in the eldrich dealings on our world.
         \*\*\`\`\`I've been awake for ${calculateUptimeBot(bot)}\`\`\`\*\*
@@ -33,7 +33,7 @@ exports.getBotEmbed = async function (bot) {
             `, inline: true
             }
         )
-        .setFooter(`💗 ${require('../jsonDb/likesAndDislikes.json')['likes'].length}`)
+        .setFooter({ text: `💗 ${require('../jsonDb/likesAndDislikes.json')['likes'].length}` })
 }
 
 function calculateUptimeBot(bot) {

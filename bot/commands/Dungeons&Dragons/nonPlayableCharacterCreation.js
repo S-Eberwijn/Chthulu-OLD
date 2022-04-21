@@ -80,7 +80,7 @@ module.exports.help = {
 
 async function characterCreationQuestion(QUESTION_OBJECT, createdChannel, newCharacter, interaction, bot, index) {
     let questionEmbed = new MessageEmbed()
-        .setAuthor(`${bot.user.username}`, bot.user.displayAvatarURL())
+        .setAuthor({name: `${bot.user.username}`, iconURL: bot.user.displayAvatarURL()})
         .setColor("GREEN")
         .setDescription(QUESTION_OBJECT.question)
 
@@ -223,7 +223,7 @@ async function characterCreationQuestion(QUESTION_OBJECT, createdChannel, newCha
 
 function createCreatedChannelEmbed(bot, interaction) {
     let embedCreatedChannel = new MessageEmbed()
-        .setAuthor(`${bot.user.username}`, bot.user.displayAvatarURL())
+        .setAuthor({name: `${bot.user.username}`, iconURL: bot.user.displayAvatarURL()})
         .setColor("GREEN")
         .addField(`Hello traveler!`, `<@${interaction.user.id.toString()}>, welcome to your character creation channel!`, true);
     return embedCreatedChannel;

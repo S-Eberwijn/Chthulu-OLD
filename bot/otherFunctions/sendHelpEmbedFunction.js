@@ -11,7 +11,7 @@ exports.sendHelpEmbedFunction = async function (bot, guildId, messageChannelId, 
         return r;
     }, {})
 
-    const initialEmbed = new MessageEmbed().setDescription("Please choose a category in the dropdown menu below").setAuthor(`${bot.user.username}`, bot.user.displayAvatarURL()).setColor("GREEN")
+    const initialEmbed = new MessageEmbed().setDescription("Please choose a category in the dropdown menu below").setAuthor({name: `${bot.user.username}`, iconURL: bot.user.displayAvatarURL()}).setColor("GREEN")
 
     let optionsArray = [];
     Object.keys(categorizedCommands).forEach(async key => {
