@@ -1,5 +1,6 @@
 const DiscordStrategy = require('passport-discord').Strategy;
 const passport = require('passport');
+const { getMutualGuilds } = require('../../../functions/api');
 const { encrypt } = require('../../../functions/cryptography');
 
 passport.serializeUser(function (user, done) {
@@ -13,9 +14,9 @@ passport.deserializeUser(function (user, done) {
 passport.use(new DiscordStrategy({
     clientID: process.env.OATH2_CLIENT_ID,
     clientSecret: process.env.OATH2_CLIENT_SECRET,
-    callbackURL: `${process.env.APP_ENV === 'PROD' ? process.env.WB_BASE_URL : `${process.env.WB_BASE_URL}:${process.env.WB_PORT}`}/auth/login/redirect`, 
+    callbackURL: `${process.env.APP_ENV === 'PROD' ? process.env.WB_BASE_URL : `${process.env.WB_BASE_URL}:${process.env.WB_PORT}`}/auth/login/redirect`,
     scope: ['identify', 'guilds']
-},async (accessToken, refreshToken, profile, done) => {
+}, async (accessToken, refreshToken, profile, done) => {
     if (profile) {
         const bot = require('../../../index');
         const { id, username, discriminator, avatar } = profile;
@@ -24,6 +25,7 @@ passport.use(new DiscordStrategy({
             username: username,
             discriminator: discriminator,
             avatar: await (await bot.users.fetch(id))?.avatarURL() || avatar,
+            guildsToAddNotification: getMutualGuilds(id).map(guild => guild.id),
             accT: encrypt(accessToken),
             refT: encrypt(refreshToken)
         }
