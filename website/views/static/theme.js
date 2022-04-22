@@ -3,13 +3,14 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
     // Immediately invoked function to set the theme on initial load
     (function () {
-        if (localStorage.getItem('menuState') === 'menuIsExtended') {
-            setMenuState('menuIsExtended');
-            document.querySelector('.extendMenu')?.querySelectorAll('.fa-chevron-right').forEach(chevron => { chevron.classList.add('flip') })
-
-        } else {
+        if (localStorage.getItem('menuState') === 'menuClosed') {
             setMenuState('menuClosed');
             document.querySelector('.extendMenu')?.querySelectorAll('.fa-chevron-right').forEach(chevron => { chevron.classList.remove('flip') })
+
+        } else {
+
+            setMenuState('menuIsExtended');
+            document.querySelector('.extendMenu')?.querySelectorAll('.fa-chevron-right').forEach(chevron => { chevron.classList.add('flip') })
 
         }
     })();
