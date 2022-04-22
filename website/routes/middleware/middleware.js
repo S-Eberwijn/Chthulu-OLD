@@ -17,7 +17,7 @@ async function centralizedData(req, res, next) {
     const mutualGuilds = getMutualGuilds(req.user?.discordID);
     const loggedInUser = req.user ? { username, discriminator, avatar } = req.user : undefined;
 
-    updateGuildsToAddNotification(req.user?.guildsToAddNotification, selectedGuildID).then(guildArray => { req.user.guildsToAddNotification = guildArray; req.session.save() }).catch((err) => console.log(err));
+    updateGuildsToAddNotification(req.user?.guildsToAddNotification, selectedGuildID).then(guildArray => { req.user.guildsToAddNotification = guildArray; req.session.save() }).catch(() => { });
 
     res.locals.renderData = {
         baseURL: process.env.APP_ENV === 'PROD' ? process.env.WB_BASE_URL : `${process.env.WB_BASE_URL}:${process.env.WB_PORT}`,
@@ -37,7 +37,7 @@ async function centralizedData(req, res, next) {
 function updateGuildsToAddNotification(guildsArray, selectedGuildID) {
     if (guildsArray === []) return;
     return new Promise((resolve, reject) => {
-        guildsArray.includes(selectedGuildID) ? guildsArray.splice(guildsArray.indexOf(selectedGuildID), 1) : reject();
+        guildsArray.includes(selectedGuildID) ? reject() : guildsArray.push(selectedGuildID);
         resolve(guildsArray);
     })
 }

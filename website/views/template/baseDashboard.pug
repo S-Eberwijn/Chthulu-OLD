@@ -19,7 +19,7 @@ block bodyContent
                                 a.guild-icon(href=`/dashboard/${guild.id}`)
                                     img(src=guild.iconURL() alt="Server Avatar")
                         else 
-                            if (guildsToAddNotification.includes(guild.id))
+                            if (!guildsToAddNotification.includes(guild.id))
                                 .icon(gIcon)
                                     a.guild-icon.new(href=`/dashboard/${guild.id}`)
                                         img(src=guild.iconURL() alt="Server Avatar")
