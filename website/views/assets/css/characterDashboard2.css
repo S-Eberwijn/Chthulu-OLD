@@ -1,0 +1,371 @@
+/*CHARACTERS PAGE*/
+.dashboardContent[characters] {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    /* For the informational characters page */
+}
+
+.dashboardContent[characters] h1 {
+    user-select: none;
+    width: 100%;
+    height: var(--title-height);
+    margin-bottom: 0;
+    margin: 0;
+    padding-left: 15px;
+    text-align: center;
+    display: flex;
+    position: relative;
+    align-items: center;
+}
+
+
+.dashboardContent[characters] h1 .count {
+    font-size: 1em;
+}
+
+.dashboardContent[characters] h1 .title {
+    margin-left: 10px;
+    font-size: .6em;
+}
+
+
+.charactersList {
+    width: 100%;
+    max-height: 365px;
+    height: 365px;
+
+    border-radius: 10px;
+    /* border: 3px solid var(--sidebar-color);
+    border-top: 0;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px; */
+    background-color: var(--menu-color);
+    display: flex;
+    flex-direction: column;
+    /* justify-content: center; */
+    gap: 5px;
+    /* align-items: flex-start; */
+    padding: 10px;
+    box-sizing: border-box;
+    overflow-y: hidden;
+    overflow-x: hidden;
+    /* z-index: 1; */
+    box-shadow: inset 0px 0px 0px 3px var(--sidebar-color);
+}
+
+
+
+.charactersList::-webkit-scrollbar {
+    width: 15px;
+    /* width of the entire scrollbar */
+}
+
+.charactersList::-webkit-scrollbar-track {
+    background: transparent;
+    /* color of the tracking area */
+}
+
+.charactersList::-webkit-scrollbar-thumb {
+    background-color: var(--sidebar-color);
+    /* color of the scroll thumb */
+    border-radius: 15px;
+    /* roundness of the scroll thumb */
+    border: 5px solid transparent;
+    background-clip: padding-box;
+}
+
+.characterItem.selected {
+    background-color: var(--sidebar-color) !important;
+    cursor: default !important;
+}
+
+
+.charactersList .characterItem {
+    width: 100%;
+    min-width: 370px;
+    height: 30px;
+    background-color: var(--menu-color);
+    transition: all .2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 3px;
+    position: relative;
+    z-index: 1;
+
+}
+
+.characterItem.notDisplayed {
+    display: none;
+}
+
+.charactersList .characterItem .classIcon {
+    width: 10%;
+    min-width: 40px;
+    height: 100%;
+    /* overflow: hidden; */
+    /* background-color: red; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.charactersList .characterItem .classIcon img {
+    height: 70%;
+    width: auto;
+    border-radius: 50%;
+
+}
+
+.charactersList .characterItem .characterFullName {
+    width: calc(100% - 10% - 70px);
+    min-width: 250px;
+    height: 100%;
+    /* background-color: yellow; */
+    display: flex;
+    align-items: center;
+    /* justify-content: flex-start; */
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.charactersList .characterItem .characterFullName p {
+    margin: 0;
+}
+
+.charactersList .characterItem .characterLevel {
+    width: 70px;
+    min-width: 70px;
+    height: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+    /* background-color: blue; */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+.charactersList .characterItem .characterLevel p {
+    margin: 0;
+}
+
+.charactersList .characterItem:hover {
+    cursor: pointer;
+    background-color: #42494c;
+
+}
+
+.dashboardContent[characters] .characterBox {
+    height: 75%;
+    width: 60%;
+    display: flex;
+    /* z-index: 1; */
+    /* flex-direction: row; */
+    align-items: center;
+    /* justify-content: space-between; */
+    /* For the informational characters page */
+}
+
+.dashboardContent[characters] .characterSelectionBox {
+    height: 75%;
+    width: 30%;
+    display: flex;
+    /* flex-direction: row; */
+    align-items: center;
+    /* justify-content: space-between; */
+    /* For the informational characters page */
+}
+
+.characterSelectionBox .paginationDiv {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 15%;
+    margin: 10px;
+    cursor: pointer;
+    color: var(--menu-color);
+}
+
+.characterSelectionBox .paginationDiv i {
+    font-size: .8em;
+    color: var(--text-color);
+}
+
+
+.dashboardContent[characters] .cardStack {
+    height: 365px;
+    width: 20rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    margin-top: var(--title-height);
+
+}
+
+.dashboardContent[characters] .cardStack .characterCardHolder {
+    position: absolute;
+    height: 100%;
+    width: 60rem;
+
+    /* z-index: 3; */
+
+    /* transition: all .75s; */
+    /* overflow: hidden; */
+
+    opacity: 0;
+    transition: opacity .2s ease;
+
+}
+
+.dashboardContent[characters] .cardStack .characterCardHolder .characterCard {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    background: var(--menu-color);
+    border-radius: 10px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: row;
+    gap: 1.5rem;
+    /* justify-content: space-evenly; */
+    /* /* -webkit-box-shadow: inset 0px 5px 3px var(--sidebar-color); */
+    box-shadow: inset 0px 0px 0px 3px var(--sidebar-color);
+    /* inset: 10px var(--sidebar-color); */
+    box-sizing: border-box;
+    /* If you want to implement it in very old browser-versions */
+    -webkit-user-select: none;
+    /* Chrome/Safari */
+    -moz-user-select: none;
+    /* Firefox */
+    -ms-user-select: none;
+    /* IE10+ */
+    /* The rule below is not implemented in browsers yet */
+    -o-user-select: none;
+    /* The rule below is implemented in most browsers by now */
+    user-select: none;
+    /* z-index: 10; */
+    /* overflow: hidden; */
+    /* transition: all .4s ease; */
+    /* transition: opacity .4s ease; */
+
+}
+
+.dashboardContent[characters] .cardStack .characterCardHolder:first-child {
+    opacity: 1;
+}
+
+.characterInformation {
+    height: 100%;
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+    /* align-items: center; */
+    justify-content: space-evenly;
+    /* overflow: hidden; */
+}
+
+.dashboardContent[characters] .cardStack .characterCard span.characterName {
+    font-weight: bold;
+}
+
+.dashboardContent[characters] .cardStack .characterCard span.characterLevel {
+    width: 9%;
+    position: absolute;
+    /* font-weight: bold;
+    font-size: 3.5rem; */
+    right: 1.5rem;
+    top: 1.5rem;
+}
+
+.dashboardContent[characters] .cardStack .characterCard span.characterLevel img {
+    width: 100%;
+    object-fit: cover;
+    /* height: 10px; */
+}
+
+.dashboardContent[characters] .cardStack .characterCard div.infoBundle {
+    width: 75%;
+    height: 50px;
+    display: flex;
+    flex-direction: row;
+    gap: 5rem;
+}
+
+.dashboardContent[characters] .cardStack .characterCard .characterDescription {
+    width: 77%;
+    height: 175px;
+    overflow-y: scroll;
+    /* background: green; */
+    font-size: .8rem;
+    text-align: justify;
+}
+
+
+.dashboardContent[characters] .cardStack .characterCard .characterDescription::-webkit-scrollbar {
+    width: 0px;
+    /* width of the entire scrollbar */
+}
+
+.dashboardContent[characters] .cardStack .characterCard div.infoBundle span {
+    display: flex;
+    flex-direction: column;
+    /* text-transform: uppercase; */
+    font-weight: bold;
+}
+
+span.characterRace, span.characterClass, span.characterBackground {
+    text-transform: capitalize !important;
+    font-weight: normal !important;
+}
+
+.dashboardContent[characters] .cardStack .characterCard div.characterImageHolder {
+    width: 30%;
+    height: 100%;
+    border-radius: 5px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+
+    -moz-box-shadow: 0 0 20px var(--average-color);
+    -webkit-box-shadow: 0 0 20px var(--average-color);
+    box-shadow: 0 0 20px var(--average-color);
+}
+
+.dashboardContent[characters] .cardStack .characterCard div.characterImageHolder img {
+    object-fit: cover;
+    width: 100%;
+
+
+    border-radius: 5px;
+}
+
+span[--race] {
+    position: relative;
+}
+
+span[--race]::after {
+    content: attr(--race);
+    position: absolute;
+    transform: translate(0, 100%);
+}
+
+span[--class]::after {
+    content: attr(--class);
+    position: absolute;
+    transform: translate(0, 100%);
+}
+
+span[--background]::after {
+    content: attr(--background);
+    position: absolute;
+    transform: translate(0, 100%);
+}
+
+img.classIcon {
+    width: 50%;
+    object-fit: cover;
+}

@@ -1,4 +1,3 @@
-const { count } = require('console');
 const { MessageEmbed } = require('discord.js');
 
 module.exports.run = async (interaction) => {

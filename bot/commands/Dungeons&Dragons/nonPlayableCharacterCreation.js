@@ -1,3 +1,4 @@
+const { logger } = require(`../../../functions/logger`)
 const { Player } = require('../../../database/models/Player');
 const { NonPlayableCharacter } = require('../../../database/models/NonPlayableCharacter');
 const { MessageEmbed, MessageActionRow, MessageButton, MessageSelectMenu } = require('discord.js');
@@ -10,7 +11,7 @@ module.exports.run = async (interaction) => {
     const bot = require('../../../index');
 
     const characterCreateCategory = interaction.guild.channels.cache.find(c => c.name == "--CHARACTER CREATION--" && c.type == "GUILD_CATEGORY")
-    if (!interaction.member.roles.cache.has(interaction.guild.roles.cache.find(role => role.name.includes('Dungeon Master')).id)) return interaction.reply({ content: 'You\'re not a dm, get lost kid!' }).then(() => { setTimeout(() => interaction.deleteReply(), 5000) }).catch(err => console.log(err));
+    if (!interaction.member.roles.cache.has(interaction.guild.roles.cache.find(role => role.name.includes('Dungeon Master')).id)) return interaction.reply({ content: 'You\'re not a dm, get lost kid!' }).then(() => { setTimeout(() => interaction.deleteReply(), 5000) }).catch(err => logger.error(err));
 
     await NonPlayableCharacter.findOne({ where: { creator: interaction.user.id, server: interaction.guild.id, status: "CREATING" } }).then((character) => {
         let name = interaction.user.username + "-" + interaction.user.discriminator;
@@ -25,10 +26,10 @@ module.exports.run = async (interaction) => {
     });
     let timestamp = Date.now();
     if (!characterCreateCategory) {
-        return interaction.reply({ content: 'There is no category named \"--CHARACTER CREATION--\"!' }).then(() => { setTimeout(() => interaction.deleteReply(), 3000) }).catch(err => console.log(err));
+        return interaction.reply({ content: 'There is no category named \"--CHARACTER CREATION--\"!' }).then(() => { setTimeout(() => interaction.deleteReply(), 3000) }).catch(err => logger.error(err));
     }
     interaction.guild.channels.cache.forEach(channel => {
-        if (channel.name == `${interaction.user.username.toLowerCase()}-${interaction.user.discriminator}`) return interaction.reply({ content: 'You already created a channel before!' }).then(() => { setTimeout(() => interaction.deleteReply(), 3000) }).catch(err => console.log(err));
+        if (channel.name == `${interaction.user.username.toLowerCase()}-${interaction.user.discriminator}`) return interaction.reply({ content: 'You already created a channel before!' }).then(() => { setTimeout(() => interaction.deleteReply(), 3000) }).catch(err => logger.error(err));
     });
 
     await NonPlayableCharacter.create({
@@ -173,7 +174,7 @@ async function characterCreationQuestion(QUESTION_OBJECT, createdChannel, newCha
                 newCharacter[`${QUESTION_OBJECT.databaseTable}`] = interaction.values[0];
                 newCharacter.save();
             }).catch(function (error) {
-                console.error(error)
+                logger.error(error)
                 // createdChannel.delete().then(() => {
                 //     interaction.user.send({ content: 'Times up! You took too long to respond. Try again by requesting a new character creation channel.' });
                 // });
@@ -212,7 +213,7 @@ async function characterCreationQuestion(QUESTION_OBJECT, createdChannel, newCha
                 }
                 newCharacter.save();
             }).catch(function (error) {
-                console.error(error)
+                logger.error(error)
                 // createdChannel.delete().then(() => {
                 //     interaction.author.send({ content: 'Times up! You took too long to respond. Try again by requesting a new character creation channel.' });
                 // });

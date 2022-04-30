@@ -1,3 +1,4 @@
+const { logger } = require(`../../../functions/logger`)
 const { MessageEmbed } = require('discord.js');
 const { SessionRequest } = require('../../../database/models/SessionRequest');
 const { PlayerCharacter } = require('../../../database/models/PlayerCharacter');
@@ -14,8 +15,8 @@ module.exports.run = async (interaction) => {
     const SESSIONS_CATEGORY = interaction.member.guild.channels.cache.find(c => c.name == "--SESSIONS--" && c.type == "GUILD_CATEGORY");
     const SESSION_REQUEST_CHANNEL = interaction.member.guild.channels.cache.find(c => c.name.includes("session-request") && c.type == "GUILD_TEXT");
     let messageAuthorCharacter = await PlayerCharacter.findOne({ where: { player_id_discord: interaction.user.id, alive: 1, server: interaction.guild.id } });
-    if (!messageAuthorCharacter) return interaction.reply({ content: `You do not have a character in the database!\nCreate one by using the "!createcharacter" command.` }).then(() => { setTimeout(() => interaction.deleteReply(), 3000) }).catch(err => console.log(err));
-    if (!SESSIONS_CATEGORY) return interaction.reply({ content: `There is no category named \"--SESSIONS--\"!` }).then(() => { setTimeout(() => interaction.deleteReply(), 3000) }).catch(err => console.log(err));
+    if (!messageAuthorCharacter) return interaction.reply({ content: `You do not have a character in the database!\nCreate one by using the "!createcharacter" command.` }).then(() => { setTimeout(() => interaction.deleteReply(), 3000) }).catch(err => logger.error(err));
+    if (!SESSIONS_CATEGORY) return interaction.reply({ content: `There is no category named \"--SESSIONS--\"!` }).then(() => { setTimeout(() => interaction.deleteReply(), 3000) }).catch(err => logger.error(err));
     if (!interaction.options.get('action').value) return interaction.channel.send({ content: "Not enough valid arguments\nCorrect format: !session [request]" });
     if (!COMMAND_OPTIONS.includes(interaction.options.get('action').value)) return interaction.channel.send({ content: "Not a valid session option\nCorrect format: !session [request]" });
 
@@ -131,7 +132,7 @@ module.exports.run = async (interaction) => {
                                     try {
                                         sessionDate = new Date(new Date().getFullYear(), month - 1, day);
                                     } catch (error) {
-                                        console.log(error)
+                                        logger.error(error)
                                         // TODO: Ask question again
                                     }
                                 } else if (QUESTION_OBJECT.question.includes('time')) {
@@ -140,9 +141,9 @@ module.exports.run = async (interaction) => {
                                     try {
                                         sessionDate.setHours(hours);
                                         sessionDate.setMinutes(minutes);
-                                        console.log(sessionDate.toString())
+                                        // logger.error(sessionDate.toString())
                                     } catch (error) {
-                                        console.log(error)
+                                        logger.error(error)
                                         // TODO: Ask question again
                                     }
                                 } else if (QUESTION_OBJECT.question.includes('players')) {

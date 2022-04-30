@@ -66,17 +66,6 @@ header.dashboardHeader button:hover {
     font-size: 8rem;
 }
 
-img[alt="Construction"] {
-    height: 500px;
-    width: auto;
-}
-
-.dashboardContent[construction] {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
 /*CHARACTERS PAGE*/
 .dashboardContent[characters] {
     display: flex;
@@ -97,9 +86,11 @@ img[alt="Construction"] {
     text-indent: 20px;
     position: relative;
     user-select: none;
-    border: 3px solid var(--sidebar-color);
+    background-color: var(--menu-color);
+    
+    /* border: 3px solid var(--sidebar-color);
     border-bottom-left-radius: 5px;
-    border-bottom-right-radius: 5px;
+    border-bottom-right-radius: 5px; */
 
 }
 
@@ -130,11 +121,11 @@ input::placeholder {
 .charactersList {
     width: 100%;
     max-height: calc(100% - 70px);
-    border: 3px solid var(--sidebar-color);
+    /* border: 3px solid var(--sidebar-color);
     border-top: 0;
     border-bottom-left-radius: 5px;
-    border-bottom-right-radius: 5px;
-
+    border-bottom-right-radius: 5px; */
+    background-color: var(--menu-color);
     display: flex;
     flex-direction: column;
     /* justify-content: center; */
@@ -262,7 +253,7 @@ input::placeholder {
 
 .dashboardContent[characters] .cardStack {
     height: 650px;
-    width: 400px;
+    width: 650px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -272,7 +263,7 @@ input::placeholder {
 .dashboardContent[characters] .cardStack .characterCardHolder {
     position: absolute;
     height: 100%;
-    width: 400px;
+    width: 650px;
     z-index: 3;
 
     /* transition: all .75s; */

@@ -1,3 +1,5 @@
+const { logger } = require(`../../../functions/logger`)
+
 const { MessageActionRow, MessageSelectMenu } = require('discord.js');
 const { NonPlayableCharacter } = require('../../../database/models/NonPlayableCharacter');
 
@@ -58,7 +60,7 @@ module.exports.run = async (interaction) => {
                     interaction.channel.send({
                         content: "You have too many visible NPCS only the first 625 characters will be shown."
                     }).then(msg => { setTimeout(() => msg.delete(), 3000) })
-                        .catch(err => console.log(err));
+                        .catch(err => logger.error(err));
                     break;
                 }
                 if (i + 1 * charsPerGroup < npcsObject.length) {
@@ -141,14 +143,14 @@ module.exports.run = async (interaction) => {
                                 + " is now impersonating " + character.name + "."
                         })
                             .then(msg => { setTimeout(() => msg.delete(), 3000) })
-                            .catch(err => console.log(err));
+                            .catch(err => logger.error(err));
                     }
                 })
         }).catch(function () {
             interaction.channel.send({
                 content: "This poll has been open for too long, it no longer accepts answers."
             }).then(msg => { setTimeout(() => msg.delete(), 3000) })
-                .catch(err => console.log(err));
+                .catch(err => logger.error(err));
         })
     })
 }

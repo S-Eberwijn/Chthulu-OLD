@@ -1,3 +1,4 @@
+const { logger } = require(`../../functions/logger`)
 const { writeToJsonDb } = require('../otherFunctions/writeToJsonDb')
 const { getBotEmbed } = require('../otherFunctions/botEmbed')
 const { PlayerCharacter } = require('../../database/models/PlayerCharacter');
@@ -118,7 +119,7 @@ module.exports = async (bot, interaction) => {
 
         }
     } catch (error) {
-        console.log(error);
+        logger.error(error);
     }
     try {
         //!createCharacter
@@ -134,7 +135,7 @@ module.exports = async (bot, interaction) => {
                 });
                 return interaction.reply({ content: `Approved this character`, ephemeral: true })
             case 'decline-character-button':
-                return interaction.message.channel.delete().catch(err => console.error(err));
+                return interaction.message.channel.delete().catch(err => logger.error(err));
         }
         //!createnpc
         switch (interaction.customId) {
@@ -148,10 +149,10 @@ module.exports = async (bot, interaction) => {
                 });
                 return interaction.reply({ content: `Approved this character`, ephemeral: true })
             case 'decline-npc-button':
-                return interaction.message.channel.delete().catch(err => console.error(err));
+                return interaction.message.channel.delete().catch(err => logger.error(err));
         }
     } catch (error) {
-        console.log(error)
+        logger.error(error)
     } finally {
         // interaction.deferUpdate();
     }
@@ -162,7 +163,7 @@ module.exports = async (bot, interaction) => {
             case 'change-npc-visibility-button':
                 interaction.deferUpdate();
                 if (!interaction.member.roles.cache.has(interaction.guild.roles.cache.find(role => role.name.includes('Dungeon Master')).id)) {
-                    interaction.channel.send("Only Dm's can set NPC's to visible").then(msg => { setTimeout(() => msg.delete(), 3000) }).catch(err => console.log(err));
+                    interaction.channel.send("Only Dm's can set NPC's to visible").then(msg => { setTimeout(() => msg.delete(), 3000) }).catch(err => logger.error(err));
                     return;
                 }
                 //TODO may need some revision
@@ -177,7 +178,7 @@ module.exports = async (bot, interaction) => {
                             character.save()
                         }
                         interaction.channel.send(`${character.name} is now  ${character.status.toLowerCase()} for all players`)
-                            .then(msg => { setTimeout(() => msg.delete(), 3000) }).catch(err => console.log(err));
+                            .then(msg => { setTimeout(() => msg.delete(), 3000) }).catch(err => logger.error(err));
                     }
                 });
                 return;
@@ -196,7 +197,7 @@ module.exports = async (bot, interaction) => {
                 if (!interaction.member.roles.cache.has(interaction.guild.roles.cache.find(role => role.name.includes('Dungeon Master')).id)) {
                     interaction.channel.send("How did you even get here? regardless you need the Dungeon Master role to edit npcs")
                         .then(msg => { setTimeout(() => msg.delete(), 3000) })
-                        .catch(err => console.log(err));
+                        .catch(err => logger.error(err));
                     return;
                 }
                 charId = interaction.channel.name.split("⼁")[0];
@@ -230,24 +231,23 @@ module.exports = async (bot, interaction) => {
                                     try {
                                         interaction.channel.bulkDelete(30);
                                     } catch (e) {
-                                        console.log(e);
-                                        console.log("problem with deleting messages");
+                                        logger.error("Problem with deleting messages after updating character.");
                                     }
                                     interaction.channel.send("The " + QUESTIONS_ARRAY[2].databaseTable + " of " + character.name + " has been changed.")
                                         .then(msg => { setTimeout(() => msg.delete(), 3000) })
-                                        .catch(err => console.log(err));
-                                    sendNPCEmbedMessageInChannel(interaction.channel, character, " ", [messageComponents4, messageComponents5, messageComponents6]).catch(err => console.log(err));
+                                        .catch(err => logger.error(err));
+                                    sendNPCEmbedMessageInChannel(interaction.channel, character, " ", [messageComponents4, messageComponents5, messageComponents6]).catch(err => logger.error(err));
                                 });
                             } else {
                                 interaction.channel.send("This character has been deleted from our database.")
                                     .then(msg => { setTimeout(() => msg.delete(), 3000) })
-                                    .catch(err => console.log(err));
+                                    .catch(err => logger.error(err));
                             }
                         });
                     }).catch(function () {
                         interaction.channel.send("Times up! You took too long to respond. Field remains unchanged.")
                             .then(msg => { setTimeout(() => msg.delete(), 3000) })
-                            .catch(err => console.log(err));
+                            .catch(err => logger.error(err));
                     });
                 });
                 return;
@@ -268,7 +268,7 @@ module.exports = async (bot, interaction) => {
                 if (!interaction.member.roles.cache.has(interaction.guild.roles.cache.find(role => role.name.includes('Dungeon Master')).id)) {
                     interaction.channel.send("How did you even get here? regardless you need the Dungeon Master role to edit npcs")
                         .then(msg => { setTimeout(() => msg.delete(), 3000) })
-                        .catch(err => console.log(err));
+                        .catch(err => logger.error(err));
                     return;
                 }
                 charId = interaction.channel.name.split("⼁")[0];
@@ -280,13 +280,13 @@ module.exports = async (bot, interaction) => {
                             });
                         });
                     } catch (err) {
-                        console.log(err);
+                        logger.error(err);
                     }
                 });
                 return;
         }
     } catch (error) {
-        console.log(error)
+        logger.error(error)
     }
     //edit character buttons
     try {
@@ -398,24 +398,24 @@ module.exports = async (bot, interaction) => {
                                     try {
                                         interaction.channel.bulkDelete(30);
                                     } catch (e) {
-                                        console.log(e);
-                                        console.log("problem with deleting messages");
+                                        // console.log(e);
+                                        logger.log("Problem with deleting messages after updating character.");
                                     }
                                     interaction.channel.send("The " + CHARACTER_QUESTIONS_ARRAY[1].databaseTable + " of " + interaction.values[0] + " has been changed.")
                                         .then(msg => { setTimeout(() => msg.delete(), 3000) })
-                                        .catch(err => console.log(err));
-                                    sendCharacterEmbedMessageInChannel(interaction.channel, character, " ", [messageComponents1, messageComponents2, messageComponents3]).catch(err => console.log(err));
+                                        .catch(err => logger.error(err));
+                                    sendCharacterEmbedMessageInChannel(interaction.channel, character, " ", [messageComponents1, messageComponents2, messageComponents3]).catch(err => logger.error(err));
                                 });
                             } else {
                                 interaction.channel.send("This character has been deleted from our database.")
                                     .then(msg => { setTimeout(() => msg.delete(), 3000) })
-                                    .catch(err => console.log(err));
+                                    .catch(err => logger.error(err));
                             }
                         });
                     }).catch(function () {
                         interaction.channel.send("Times up! You took too long to respond. Field remains unchanged.")
                             .then(msg => { setTimeout(() => msg.delete(), 3000) })
-                            .catch(err => console.log(err));
+                            .catch(err => logger.error(err));
                     });
                 });
                 return;
@@ -448,24 +448,24 @@ module.exports = async (bot, interaction) => {
                                     try {
                                         interaction.channel.bulkDelete(30);
                                     } catch (e) {
-                                        console.log(e);
-                                        console.log("problem with deleting messages");
+                                        // console.log(e);
+                                        logger.error("Problem with deleting messages after updating character.");
                                     }
                                     interaction.channel.send("The " + CHARACTER_QUESTIONS_ARRAY[2].databaseTable + " of " + character.name + " has been changed.")
                                         .then(msg => { setTimeout(() => msg.delete(), 3000) })
-                                        .catch(err => console.log(err));
-                                    sendCharacterEmbedMessageInChannel(interaction.channel, character, " ", components = [messageComponents1, messageComponents2, messageComponents3]).catch(err => console.log(err));
+                                        .catch(err => logger.error(err));
+                                    sendCharacterEmbedMessageInChannel(interaction.channel, character, " ", components = [messageComponents1, messageComponents2, messageComponents3]).catch(err => logger.error(err));
                                 });
                             } else {
                                 interaction.channel.send("This character has been deleted from our database.")
                                     .then(msg => { setTimeout(() => msg.delete(), 3000) })
-                                    .catch(err => console.log(err));
+                                    .catch(err => logger.error(err));
                             }
                         });
                     }).catch(function () {
                         interaction.channel.send("Times up! You took too long to respond. Field remains unchanged.")
                             .then(msg => { setTimeout(() => msg.delete(), 3000) })
-                            .catch(err => console.log(err));
+                            .catch(err => logger.error(err));
                     });
                 });
                 return;
@@ -503,24 +503,24 @@ module.exports = async (bot, interaction) => {
                                     try {
                                         interaction.channel.bulkDelete(30);
                                     } catch (e) {
-                                        console.log(e);
-                                        console.log("problem with deleting messages");
+                                        // console.log(e);
+                                        logger.error("Problem with deleting messages after updating character.");
                                     }
                                     interaction.channel.send("The " + CHARACTER_QUESTIONS_ARRAY[3].databaseTable + " of " + character.name + " has been changed.")
                                         .then(msg => { setTimeout(() => msg.delete(), 3000) })
-                                        .catch(err => console.log(err));
-                                    sendCharacterEmbedMessageInChannel(interaction.channel, character, " ", [messageComponents1, messageComponents2, messageComponents3]).catch(err => console.log(err));
+                                        .catch(err => logger.error(err));
+                                    sendCharacterEmbedMessageInChannel(interaction.channel, character, " ", [messageComponents1, messageComponents2, messageComponents3]).catch(err => logger.error(err));
                                 });
                             } else {
                                 interaction.channel.send("This character has been deleted from our database.")
                                     .then(msg => { setTimeout(() => msg.delete(), 3000) })
-                                    .catch(err => console.log(err));
+                                    .catch(err => logger.error(err));
                             }
                         });
                     }).catch(function () {
                         interaction.channel.send("Times up! You took too long to respond. Field remains unchanged.")
                             .then(msg => { setTimeout(() => msg.delete(), 3000) })
-                            .catch(err => console.log(err));
+                            .catch(err => logger.error(err));
                     });
                 });
                 return;
@@ -536,21 +536,20 @@ module.exports = async (bot, interaction) => {
                             try {
                                 interaction.channel.bulkDelete(30);
                             } catch (e) {
-                                console.log(e);
-                                console.log("problem with deleting messages");
+                                logger.log("Problem with deleting messages after updating character.");
                             }
                             interaction.channel.send(`${character.name} has been deleted, the character is no longer editable.`)
-                            sendCharacterEmbedMessageInChannel(interaction.channel, character).catch(err => console.log(err));
+                            sendCharacterEmbedMessageInChannel(interaction.channel, character).catch(err => logger.error(err));
                         });
                     } else {
                         interaction.channel.send("This character has been deleted from our database.")
                             .then(msg => { setTimeout(() => msg.delete(), 3000) })
-                            .catch(err => console.log(err));
+                            .catch(err => logger.error(err));
                     }
                 })
                 return;
         }
-    } catch (err) { console.log(err) }
+    } catch (err) { logger.error(err) }
 
 
 };
@@ -560,7 +559,7 @@ async function npcEditTextField(interaction, charId, QUESTION_OBJECT, bot) {
     if (!interaction.member.roles.cache.has(interaction.guild.roles.cache.find(role => role.name.includes('Dungeon Master')).id)) {
         interaction.channel.send("How did you even get here? regardless you need the Dungeon Master role to edit npcs")
             .then(msg => { setTimeout(() => msg.delete(), 3000) })
-            .catch(err => console.log(err));
+            .catch(err => logger.error(err));
         return;
     }
     let questionEmbed = new MessageEmbed()
@@ -604,24 +603,24 @@ async function npcEditTextField(interaction, charId, QUESTION_OBJECT, bot) {
                         try {
                             interaction.channel.bulkDelete(30);
                         } catch (e) {
-                            console.log(e);
-                            console.log("problem with deleting messages");
+                            // console.log(e);
+                            logger.error("Problem with deleting messages after updating npc.");
                         }
                         interaction.channel.send("The " + QUESTION_OBJECT.databaseTable + " of " + character.name + " has been changed to.")
                             .then(msg => { setTimeout(() => msg.delete(), 3000) })
-                            .catch(err => console.log(err));
-                        sendNPCEmbedMessageInChannel(interaction.channel, character, "NPC", [messageComponents4, messageComponents5, messageComponents6]).catch(err => console.log(err));
+                            .catch(err => logger.error(err));
+                        sendNPCEmbedMessageInChannel(interaction.channel, character, "NPC", [messageComponents4, messageComponents5, messageComponents6]).catch(err => logger.error(err));
                     });
                 } else {
                     interaction.channel.send("This character has been deleted from our database.")
                         .then(msg => { setTimeout(() => msg.delete(), 3000) })
-                        .catch(err => console.log(err));
+                        .catch(err => logger.error(err));
                 }
             })
         }).catch(function () {
             interaction.channel.send("Times up! You took too long to respond. Field remains unchanged.")
                 .then(msg => { setTimeout(() => msg.delete(), 3000) })
-                .catch(err => console.log(err));
+                .catch(err => logger.error(err));
         });
     });
 }
@@ -673,19 +672,19 @@ async function characterEditTextField(interaction, QUESTION_OBJECT, bot) {
                         // // }
                         interaction.channel.send("The " + QUESTION_OBJECT.databaseTable + " of " + character.name + " has been changed")
                             .then(msg => { setTimeout(() => msg.delete(), 3000) })
-                            .catch(err => console.log(err));
-                        sendCharacterEmbedMessageInChannel(interaction.channel, character, " ", [messageComponents1, messageComponents2, messageComponents3]).catch(err => console.log(err));
+                            .catch(err => logger.error(err));
+                        sendCharacterEmbedMessageInChannel(interaction.channel, character, " ", [messageComponents1, messageComponents2, messageComponents3]).catch(err => logger.error(err));
                     });
                 } else {
                     interaction.channel.send("This character has been deleted from our database.")
                         .then(msg => { setTimeout(() => msg.delete(), 3000) })
-                        .catch(err => console.log(err));
+                        .catch(err => logger.error(err));
                 }
             })
         }).catch(function () {
             interaction.channel.send("Times up! You took too long to respond. Field remains unchanged.")
                 .then(msg => { setTimeout(() => msg.delete(), 3000) })
-                .catch(err => console.log(err));
+                .catch(err => logger.error(err));
         });
     });
 }

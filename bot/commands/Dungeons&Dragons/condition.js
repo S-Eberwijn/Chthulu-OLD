@@ -1,3 +1,5 @@
+const { logger } = require(`../../../functions/logger`)
+
 const { MessageActionRow, MessageSelectMenu, MessageEmbed } = require('discord.js');
 const api = "https://api.open5e.com/conditions"
 const request = require('request');
@@ -6,7 +8,7 @@ module.exports.run = async (interaction) => {
     let condition = interaction.options.getString('condition-name')?.toLowerCase();
 
     request(api, { json: true }, async (err, res, body) => {
-        if (err) { return console.log(err); }
+        if (err) { return logger.error(err); }
         let data = body.results
 
         for (let i = 0; i < data.length; i++) {
@@ -52,7 +54,7 @@ async function useSelectionMenu(interaction, conditions) {
             interaction.channel.send({
                 content: "This poll has been open for too long, it no longer accepts answers."
             }).then(msg => { setTimeout(() => msg.delete(), 3000) })
-                .catch(err => console.log(err));
+                .catch(err => logger.error(err));
         })
     })
 }

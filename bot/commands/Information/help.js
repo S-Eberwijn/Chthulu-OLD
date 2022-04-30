@@ -1,3 +1,4 @@
+const { logger } = require(`../../../functions/logger`)
 const { MessageEmbed, MessageActionRow, MessageSelectMenu } = require('discord.js');
 const { sendHelpEmbedFunction } = require('../../otherFunctions/sendHelpEmbedFunction.js')
 module.exports.run = async (interaction) => {
@@ -9,7 +10,7 @@ module.exports.run = async (interaction) => {
         sendHelpEmbedFunction(bot, interaction.guild.id, interaction.channel.id, interaction.user.id)
     } else {
         let commandName = interaction.options.get('command').value;
-        console.log(commandName.name)
+        // console.log(commandName.name)
         if (commandName.includes('!')) commandName = commandName.slice(1)
         if (!bot.slashCommands.has(commandName)) return interaction.channel.send({ content: 'I do not posses that command...' })
 

@@ -1,3 +1,5 @@
+const { logger } = require(`../functions/logger`)
+
 const { PlayerCharacter } = require('../database/models/PlayerCharacter');
 const { NonPlayableCharacter } = require('../database/models/NonPlayableCharacter');
 const { Map } = require('../database/models/Maps');
@@ -36,7 +38,7 @@ function getGuildFromBot(guildID) {
 async function cacheAllUsers(bot) {
     for (const guild of bot.guilds.cache.map(guild => guild)) {
         await guild.members.fetch();
-        console.log(`Users from guild "${guild.name}" are loaded.`)
+        logger.debug(`Users from guild "${guild.name}" are loaded.`)
     }
 }
 
@@ -54,12 +56,22 @@ async function isUserInGuild(userID, guild) {
 }
 
 function isUserAdminInGuild(userID, guild) {
-    return guild?.members.cache.get(userID).permissions.has('ADMINISTRATOR') || false;
+    return guild?.members.cache.get(userID)?.permissions.has('ADMINISTRATOR') || false;
 }
 
 async function getAliveCharacters(guildId = null) {
     if (guildId === null) return await PlayerCharacter.findAll({ where: { alive: 1 } })
-    return await PlayerCharacter.findAll({ where: { alive: 1, server: guildId } })
+    const characters = await PlayerCharacter.findAll({ where: { alive: 1, server: guildId } })
+    if (!characters) return []
+    // console.log(characters)
+    for (let index = 0; index < characters.length; index++) {
+        const character = characters[index];
+        // await console.log(character.name)
+        character.playerIcon = await getUserFromBot(character.player_id_discord)?.displayAvatarURL();
+        // await console.log(character.playerIcon)
+    }
+    return characters
+    // return 
 }
 
 async function getDeadCharacters(guildId = null) {

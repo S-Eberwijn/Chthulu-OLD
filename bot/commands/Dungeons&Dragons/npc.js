@@ -1,3 +1,4 @@
+const { logger } = require(`../../../functions/logger`)
 const { NonPlayableCharacter } = require('../../../database/models/NonPlayableCharacter');
 const { getNonPlayableCharacterEmbed } = require('../../otherFunctions/characterEmbed')
 
@@ -24,7 +25,7 @@ module.exports.run = async (interaction) => {
     } else {
         const nonPlayerCharacters = await NonPlayableCharacter.findAll({ where: { server: interaction.guild.id } })
         // console.log(nonPlayerCharacters)
-        if (nonPlayerCharacters.length <= 0) return interaction.reply({ content: 'There are no NPC\'s to be found.' }).then(() => { setTimeout(() => interaction.deleteReply(), 3000) }).catch(err => console.log(err));
+        if (nonPlayerCharacters.length <= 0) return interaction.reply({ content: 'There are no NPC\'s to be found.' }).then(() => { setTimeout(() => interaction.deleteReply(), 3000) }).catch(err => logger.error(err));
 
         await createNPCPaginationEmbedInChannel(interaction.channel, nonPlayerCharacters, buttonList)
     }

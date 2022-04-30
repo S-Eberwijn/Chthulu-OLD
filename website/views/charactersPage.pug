@@ -11,19 +11,32 @@ block styles
         include ./assets/css/sidebar.css
         include ./assets/css/menu.css
         include ./assets/css/dashboard.css
-        include ./assets/css/characterDashboard.css
+        include ./assets/css/characterDashboard2.css
 
 block dashboardContent
     .dashboardContent(characters=true)
-        .characterBox
-            .cardStack#characterCardStack
-                each character in characters
-                    include ./components/characterCard.pug
         .characterSelectionBox
-            h1 #{characters.length} Characters
-                //- input(placeholder="Search Character", oninput="updateInput(this.value)", spellcheck="false")
+            h1 
+                span.count #{characters.length}
+                span.title Characters
+            //- input(placeholder="Search Character", oninput="updateInput(this.value)", spellcheck="false")
             .charactersList
                 each character in characters.reverse()
                     include ./components/characterListItem.pug
+            .paginationDiv
+                //- i.fas.fa-chevron-left
+                - var amount = 0 
+                while amount < Math.ceil(characters.length / 10)
+                    - if (amount == 0)
+                        i.fas.fa-circle(characterpage=amount++ onclick="changeCharacterItems(this, this.getAttribute('characterpage'))")
+                    - else
+                        i.far.fa-circle(characterpage=amount++ onclick="changeCharacterItems(this, this.getAttribute('characterpage'))")
+                //- i.fas.fa-chevron-right
 
+        .characterBox
+            .cardStack#characterCardStack
+                each character, index in characters
+                    include ./components/characterCard.pug
+            
+        
 

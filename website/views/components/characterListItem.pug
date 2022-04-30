@@ -1,6 +1,7 @@
 .characterItem(id=`listItem-${character.character_id}`)
     .classIcon 
-        img(src=`../../../${character.class}.png`, alt="icon")
+        if (character.playerIcon)
+            img(src=`${character.playerIcon}` alt="Player Icon")
     .characterFullName 
         p #{character.name}
     .characterLevel 

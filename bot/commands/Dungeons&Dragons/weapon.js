@@ -1,3 +1,4 @@
+const { logger } = require(`../../../functions/logger`)
 const { MessageActionRow, MessageSelectMenu, MessageEmbed } = require('discord.js');
 const api = "https://api.open5e.com/weapons"
 const request = require('request');
@@ -6,7 +7,7 @@ module.exports.run = async (interaction) => {
     let weapon = interaction.options.getString('weapon-name')?.toLowerCase();
 
     request(api, { json: true }, async (err, res, body) => {
-        if (err) { return console.log(err); }
+        if (err) { return logger.error(err); }
         let data = body.results
 
         for (let i = 0; i < data.length; i++) {
@@ -68,7 +69,7 @@ async function useSelectionMenu(interaction, weapons) {
                 content: "This poll has been open for too long, it no longer accepts answers."
                 , ephemeral: true
             }).then(msg => { setTimeout(() => msg.delete(), 3000) })
-                .catch(err => console.log(err));
+                .catch(err => logger.error(err));
         })
     })
 }

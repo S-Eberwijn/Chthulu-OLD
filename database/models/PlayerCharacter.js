@@ -132,6 +132,10 @@ const PlayerCharacter = defineModel("player_characters", {
         type: 'string',
         required: false,
     },
+    average_color: {
+        type: 'string',
+        required: false,
+    },
     alive: {
         type: 'number',
         required: false,

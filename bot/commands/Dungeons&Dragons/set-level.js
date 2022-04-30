@@ -1,3 +1,4 @@
+const { logger } = require(`../../../functions/logger`)
 const { PlayerCharacter } = require('../../../database/models/PlayerCharacter');
 
 module.exports.run = async (interaction) => {

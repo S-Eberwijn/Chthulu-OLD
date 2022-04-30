@@ -1,6 +1,7 @@
 require('dotenv').config();
 require('./website/routes/strategies/discordStrategy');
-const express = require('express')
+const { logger } = require(`./functions/logger`)
+const express = require('express');
 
 const path = require('path');
 const favicon = require('serve-favicon');
@@ -51,6 +52,8 @@ app.set('view engine', 'pug');
 // Set-up paths for static images
 app.use(express.static(path.join(__dirname, 'website', 'public')));
 app.use(express.static(path.join(__dirname, 'bot', 'images', 'DnD', 'ClassIcons')));
+app.use(express.static(path.join(__dirname, 'bot', 'images', 'DnD', 'CharacterLevel')));
+
 
 // Set-up Express Session (in combination with Firestore database)
 app.use(session({
@@ -85,7 +88,7 @@ bot.slashCommands = new Enmap();
 fs.readdir("./bot/commands/", async (err, dirs) => {
     if (err) console.log(err);
     if (dirs.length <= 0) {
-        console.log("Found no dirs files!");
+        logger.warn("Found no dirs files!");
         return;
     }
     dirs.forEach((d, i) => {
@@ -93,12 +96,12 @@ fs.readdir("./bot/commands/", async (err, dirs) => {
             if (err) console.log(err);
             var jsFiles = files.filter(f => f.split(".").pop() === "js");
             if (dirs.length <= 0) {
-                console.log("Found no dirs files!");
+                logger.warn("Empty folder in bot/commands!");
                 return;
             }
             jsFiles.forEach((f, i) => {
                 var fileGet = require(`./bot/commands/${d}/${f}`);
-                console.log(`--{ Slash Command ${f} is loaded }--`);
+                logger.info(`Command ${f} is loaded`);
                 var commandName = fileGet.help.name;
                 var commandAlias = fileGet.help.alias;
                 bot.slashCommands.set(commandName.toLowerCase(), fileGet);
@@ -118,7 +121,7 @@ fs.readdir('./bot/events/', (err, files) => {
         if (!file.endsWith('.js')) return;
         const evt = require(`./bot/events/${file}`);
         let evtName = file.split('.')[0];
-        console.log(`--{ Event ${evtName} is loaded }--`);
+        logger.info(`Event ${evtName}.js is loaded`);
         bot.on(evtName, evt.bind(null, bot));
     });
 });
@@ -129,7 +132,7 @@ bot.login(BOT_TOKEN).then(async () => {
 
     // Start Webserver
     app.listen(WB_PORT, () => {
-        console.log(`\nApp listening at ${WB_BASE_URL}:${WB_PORT || 8080}\n`)
+        logger.info(`Website is up and running at ${WB_BASE_URL}:${WB_PORT || 8080}`)
         module.exports = bot;
     })
 });
