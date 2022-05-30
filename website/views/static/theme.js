@@ -19,6 +19,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
             showPageLoader();
         })
     })
+    // document.getElementById('loader_modal').showModal();
+
 
     setTimeout(function () {
         document.body.className = "";

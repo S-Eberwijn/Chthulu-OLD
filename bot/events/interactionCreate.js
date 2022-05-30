@@ -99,6 +99,18 @@ module.exports = async (bot, interaction) => {
         const slashCommands = bot.slashCommands.get(interaction.commandName)
         if (slashCommands) slashCommands.run(interaction)
     }
+
+    if (interaction.isModalSubmit()) {
+        const [slashCommand] = bot.slashCommands.filter(command => { return command.help.modalIds?.includes(interaction.customId) }).values()
+        if (slashCommand) return slashCommand.modalSubmit(interaction)
+    }
+
+    if (interaction.isButton()) {
+        const [slashCommand] = bot.slashCommands.filter(command => { return command.help.buttonIds?.includes(interaction.customId) }).values()
+        if (slashCommand) return slashCommand.buttonSubmit(interaction)
+    }
+
+
     //TODO: Might change later when applying buttons to character creation 
     // if (!(interaction.user.id === interaction.message.author.id)) return interaction.reply({ content: `These buttons are not meant for you!`, ephemeral: true})
     try {

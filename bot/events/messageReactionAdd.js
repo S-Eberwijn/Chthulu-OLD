@@ -8,7 +8,7 @@ const fs = require("fs");
 
 module.exports = async (bot, messageReaction, user) => {
     const { message, emoji } = messageReaction;
-    // When we receive a reaction we check if the reaction is partial or not
+    //chro When we receive a reaction we check if the reaction is partial or not
     if (messageReaction.partial) {
         // If the message this reaction belongs to was removed the fetching might result in an API error, which we need to handle
         try {
@@ -33,169 +33,169 @@ module.exports = async (bot, messageReaction, user) => {
     // console.log(DUNGEON_MASTER_ROLE);
     // Enter when the message is in the "session-request" channel.
     if (message.channel.id === SESSION_REQUEST_CHANNEL_ID) {
-        const USER_CHARACTER = await PlayerCharacter.findOne({ where: { player_id_discord: user.id, alive: 1, server: message.guild.id } })
+        // const USER_CHARACTER = await PlayerCharacter.findOne({ where: { player_id_discord: user.id, alive: 1, server: message.guild.id } })
 
-        // Return if the message is not an embed.
-        if (!message.embeds[0]) return;
+        // // Return if the message is not an embed.
+        // if (!message.embeds[0]) return;
         // Find the session request in the database.
-        let FOUND_SESSION_REQUEST = await SessionRequest.findOne({ where: { message_id_discord: message.id } });
-        // Find the server in the database.
-        const GENERAL_SERVER_INFO = await GeneralInfo.findOne({ where: { server: messageReaction.message.guild.id } });
-        // Return if no session request has been found in the database corresponding to the server id.
-        if (!FOUND_SESSION_REQUEST) return message.channel.send({ content: 'Something went wrong; Cannot find this session request in the database!' }).then(msg => { setTimeout(() => msg.delete(), 3000) }).catch(err => console.log(err));
-        // Return if no general server info has been found in the database corresponding to the server id.
-        if (!GENERAL_SERVER_INFO) return message.channel.send({ content: 'Something went wrong; Cannot find general info of this server in the database!' }).then(msg => { setTimeout(() => msg.delete(), 3000) }).catch(err => console.log(err));
-        if (!message.guild.members.cache.get(user.id)) return console.log({ content: 'message.guild.members.cache.get(user.id) is undefined!' });
-        // Enter if the user has a Dungeon Master role on the server.
-        if (message.guild.members.cache.get(user.id).roles.cache.has(DUNGEON_MASTER_ROLE.id)) {
-            // Return if there is no "planned-session" channel on the server.
-            if (!PLANNED_SESSIONS_CHANNEL) return message.channel.send({ content: `No channel named "planned-sessions" found! Please create one first.` }).then(msg => { setTimeout(() => msg.delete(), 3000) }).catch(err => console.log(err));
-            try {
-                switch (emoji.name) {
-                    case '✅':
-                        // Send a planned session embed to the "session-planned" channel.
-                        PLANNED_SESSIONS_CHANNEL.send({ embeds: [createPlannedSessionEmbed(user.id, GENERAL_SERVER_INFO.session_number, message.embeds[0])] }).then(async plannedSessionEmbedMessage => {
-                            // Edit session channel name.
-                            message.guild.channels.cache.get(FOUND_SESSION_REQUEST.session_channel).setName(`session-${GENERAL_SERVER_INFO.session_number}`)
-                            // Create a planned session in the databse.
-                            createPlannedSessionDatabaseEntry(plannedSessionEmbedMessage.id, FOUND_SESSION_REQUEST, GENERAL_SERVER_INFO, user.id, message.guild.id);
-                            // Add the next session ID to each character of the party.
-                            updatePartyNextSessionId(FOUND_SESSION_REQUEST.session_party, plannedSessionEmbedMessage.id, message.guild.id);
-                            // Delete the session request in the database.
-                            deleteSessionRequestDatabaseEntry(message.id, message.guild.id);
+        // let FOUND_SESSION_REQUEST = await SessionRequest.findOne({ where: { message_id_discord: message.id } });
+        // // Find the server in the database.
+        // const GENERAL_SERVER_INFO = await GeneralInfo.findOne({ where: { server: messageReaction.message.guild.id } });
+        // // Return if no session request has been found in the database corresponding to the server id.
+        // if (!FOUND_SESSION_REQUEST) return message.channel.send({ content: 'Something went wrong; Cannot find this session request in the database!' }).then(msg => { setTimeout(() => msg.delete(), 3000) }).catch(err => console.log(err));
+        // // Return if no general server info has been found in the database corresponding to the server id.
+        // if (!GENERAL_SERVER_INFO) return message.channel.send({ content: 'Something went wrong; Cannot find general info of this server in the database!' }).then(msg => { setTimeout(() => msg.delete(), 3000) }).catch(err => console.log(err));
+        // if (!message.guild.members.cache.get(user.id)) return console.log({ content: 'message.guild.members.cache.get(user.id) is undefined!' });
+        // // Enter if the user has a Dungeon Master role on the server.
+        // if (message.guild.members.cache.get(user.id).roles.cache.has(DUNGEON_MASTER_ROLE.id)) {
+        //     // Return if there is no "planned-session" channel on the server.
+        //     if (!PLANNED_SESSIONS_CHANNEL) return message.channel.send({ content: `No channel named "planned-sessions" found! Please create one first.` }).then(msg => { setTimeout(() => msg.delete(), 3000) }).catch(err => console.log(err));
+        //     try {
+        //         switch (emoji.name) {
+        //             case '✅':
+        //                 // Send a planned session embed to the "session-planned" channel.
+        //                 PLANNED_SESSIONS_CHANNEL.send({ embeds: [createPlannedSessionEmbed(user.id, GENERAL_SERVER_INFO.session_number, message.embeds[0])] }).then(async plannedSessionEmbedMessage => {
+        //                     // Edit session channel name.
+        //                     message.guild.channels.cache.get(FOUND_SESSION_REQUEST.session_channel).setName(`session-${GENERAL_SERVER_INFO.session_number}`)
+        //                     // Create a planned session in the databse.
+        //                     createPlannedSessionDatabaseEntry(plannedSessionEmbedMessage.id, FOUND_SESSION_REQUEST, GENERAL_SERVER_INFO, user.id, message.guild.id);
+        //                     // Add the next session ID to each character of the party.
+        //                     updatePartyNextSessionId(FOUND_SESSION_REQUEST.session_party, plannedSessionEmbedMessage.id, message.guild.id);
+        //                     // Delete the session request in the database.
+        //                     deleteSessionRequestDatabaseEntry(message.id, message.guild.id);
 
-                            await plannedSessionEmbedMessage.react('🟢');
-                            await plannedSessionEmbedMessage.react('🔴');
-                            await plannedSessionEmbedMessage.react('🙋‍♂️');
+        //                     await plannedSessionEmbedMessage.react('🟢');
+        //                     await plannedSessionEmbedMessage.react('🔴');
+        //                     await plannedSessionEmbedMessage.react('🙋‍♂️');
 
-                            message.delete();
-                        });
-                        break;
-                    case '❌':
-                        // Delete session channel.
-                        message.guild.channels.cache.get(FOUND_SESSION_REQUEST.session_channel).delete();
-                        // Delete the session request in the database.
-                        deleteSessionRequestDatabaseEntry(message.id, message.guild.id);
-                        // Delete the session request embed.
-                        message.delete();
-                        break;
+        //                     message.delete();
+        //                 });
+        //                 break;
+        //             case '❌':
+        //                 // Delete session channel.
+        //                 message.guild.channels.cache.get(FOUND_SESSION_REQUEST.session_channel).delete();
+        //                 // Delete the session request in the database.
+        //                 deleteSessionRequestDatabaseEntry(message.id, message.guild.id);
+        //                 // Delete the session request embed.
+        //                 message.delete();
+        //                 break;
 
-                    case '🙋‍♂️':
-                        // Alert user that Dungeon Masters cant join session party.
-                        message.channel.send({ content: 'Dungeon Masters can not join the sessions party of players!' }).then(msg => { setTimeout(() => msg.delete(), 3000) }).catch(err => console.log(err));
-                    default:
-                        // Delete the user reaction a.k.a. emoji.
-                        return await deleteReactionFromUser(message, user.id);
-                }
-            } catch (error) {
-                console.log(error);
-            }
-        } else if (USER_CHARACTER) {
-            try {
-                switch (emoji.name) {
-                    case '🙋‍♂️':
-                        //Return if player is already in the session.
-                        if (isPlayerAlreadyInSessionParty(FOUND_SESSION_REQUEST.session_party, user.id)) return message.channel.send({ content: 'You are already in this session!' }).then(msg => { setTimeout(() => msg.delete(), 3000) }).catch(err => console.log(err));
-                        // Return if session is full and no more players can fit.
-                        if (!(FOUND_SESSION_REQUEST.session_party.length < 5)) return message.channel.send({ content: 'This session is full! Only 5 players are allowed!' }).then(msg => { setTimeout(() => msg.delete(), 3000) }).catch(err => console.log(err));
-                        // Return if the user already requested for the session.
-                        if (playerAlreadyRequestedForSession(bot, user.id, message, FOUND_SESSION_REQUEST.session_channel)) return message.channel.send({ content: `You already requested to join this session, please be patient!` }).then(msg => { setTimeout(() => msg.delete(), 3000) }).catch(err => console.log(err));
-                        // Return if the user already has been denied for the session.
-                        if (playerAlreadyBeenDenied(bot, user.id, message, FOUND_SESSION_REQUEST.session_channel)) return message.channel.send({ content: `Your request to join this session has already been declined by the session commander, better luck next time!` }).then(msg => { setTimeout(() => msg.delete(), 5000) }).catch(err => console.log(err));
-                        // Give user feedback on asking the session commander if he/she may join the session.
-                        message.channel.send({ content: `${user}, I have asked the session commander if you may join the session. Please give him/her some time to decide!` }).then(msg => { setTimeout(() => msg.delete(), 5000) }).catch(err => console.log(err));
-                        // Add REQUESTED-status to user in designated database. 
-                        giveUserRequestedStatus(bot, FOUND_SESSION_REQUEST, user)
-                        // Send a message in the session channel to ask the session commander if the user may join the session.
-                        const SESSION_CHANNEL = bot.channels.cache.find(c => c.id == FOUND_SESSION_REQUEST.session_channel && c.type == "text");
-                        SESSION_CHANNEL.send({ content: `Hello, ${bot.users.cache.get(FOUND_SESSION_REQUEST.session_commander)}. <@!${user.id}> (${USER_CHARACTER.name.trim()}) is requesting to join your session!` }).then(async msg => {
-                            await msg.react('✔️');
-                            await msg.react('✖️');
+        //             case '🙋‍♂️':
+        //                 // Alert user that Dungeon Masters cant join session party.
+        //                 message.channel.send({ content: 'Dungeon Masters can not join the sessions party of players!' }).then(msg => { setTimeout(() => msg.delete(), 3000) }).catch(err => console.log(err));
+        //             default:
+        //                 // Delete the user reaction a.k.a. emoji.
+        //                 return await deleteReactionFromUser(message, user.id);
+        //         }
+        //     } catch (error) {
+        //         console.log(error);
+        //     }
+        // } else if (USER_CHARACTER) {
+        //     try {
+        //         switch (emoji.name) {
+        //             case '🙋‍♂️':
+        //                 //Return if player is already in the session.
+        //                 if (isPlayerAlreadyInSessionParty(FOUND_SESSION_REQUEST.session_party, user.id)) return message.channel.send({ content: 'You are already in this session!' }).then(msg => { setTimeout(() => msg.delete(), 3000) }).catch(err => console.log(err));
+        //                 // Return if session is full and no more players can fit.
+        //                 if (!(FOUND_SESSION_REQUEST.session_party.length < 5)) return message.channel.send({ content: 'This session is full! Only 5 players are allowed!' }).then(msg => { setTimeout(() => msg.delete(), 3000) }).catch(err => console.log(err));
+        //                 // Return if the user already requested for the session.
+        //                 if (playerAlreadyRequestedForSession(bot, user.id, message, FOUND_SESSION_REQUEST.session_channel)) return message.channel.send({ content: `You already requested to join this session, please be patient!` }).then(msg => { setTimeout(() => msg.delete(), 3000) }).catch(err => console.log(err));
+        //                 // Return if the user already has been denied for the session.
+        //                 if (playerAlreadyBeenDenied(bot, user.id, message, FOUND_SESSION_REQUEST.session_channel)) return message.channel.send({ content: `Your request to join this session has already been declined by the session commander, better luck next time!` }).then(msg => { setTimeout(() => msg.delete(), 5000) }).catch(err => console.log(err));
+        //                 // Give user feedback on asking the session commander if he/she may join the session.
+        //                 message.channel.send({ content: `${user}, I have asked the session commander if you may join the session. Please give him/her some time to decide!` }).then(msg => { setTimeout(() => msg.delete(), 5000) }).catch(err => console.log(err));
+        //                 // Add REQUESTED-status to user in designated database. 
+        //                 giveUserRequestedStatus(bot, FOUND_SESSION_REQUEST, user)
+        //                 // Send a message in the session channel to ask the session commander if the user may join the session.
+        //                 const SESSION_CHANNEL = bot.channels.cache.find(c => c.id == FOUND_SESSION_REQUEST.session_channel && c.type == "text");
+        //                 SESSION_CHANNEL.send({ content: `Hello, ${bot.users.cache.get(FOUND_SESSION_REQUEST.session_commander)}. <@!${user.id}> (${USER_CHARACTER.name.trim()}) is requesting to join your session!` }).then(async msg => {
+        //                     await msg.react('✔️');
+        //                     await msg.react('✖️');
 
-                            const emojiFilter = (reaction, user) => {
-                                if (user.bot === true) return false;
-                                return (reaction.emoji.name === '✔️' || reaction.emoji.name === '✖️') && user.id === FOUND_SESSION_REQUEST.session_commander;
-                            };
-                            msg.awaitReactions(emojiFilter, {
-                                max: 1,
-                                time: 86400000,
-                                errors: ['time'],
-                            }).then(async collected => {
-                                msg.delete().catch(err => console.error(err));
-                                switch (collected.first().emoji.name) {
-                                    case '✔️':
-                                        // Check again if in the meantime the sessions party is already full.
-                                        FOUND_SESSION_REQUEST = await SessionRequest.findOne({ where: { message_id_discord: message.id } });
-                                        if (!(FOUND_SESSION_REQUEST.session_party.length < 5)) return msg.channel.send({ content: 'This session is full! Only 5 players are allowed!' }).then(msg => { setTimeout(() => msg.delete(), 3000) }).catch(err => console.log(err));
-                                        // Send the person who wants to join the session he/she got accepted.
-                                        user.send({ content: `Your request to join ${bot.users.cache.get(FOUND_SESSION_REQUEST.session_commander).username}'s session has been **ACCEPTED**` });
-                                        // Adjust permissions of session channel so the newly allowed player can see the channel.
-                                        SESSION_CHANNEL.permissionOverwrites.edit(bot.users.cache.get(user.id), {
-                                            CREATE_INSTANT_INVITE: false,
-                                            KICK_MEMBERS: false,
-                                            BAN_MEMBERS: false,
-                                            ADMINISTRATOR: false,
-                                            MANAGE_CHANNELS: false,
-                                            MANAGE_GUILD: false,
-                                            ADD_REACTIONS: true,
-                                            VIEW_CHANNEL: true,
-                                            SEND_MESSAGES: true,
-                                            SEND_TTS_MESSAGES: false,
-                                            MANAGE_MESSAGES: false,
-                                            EMBED_LINKS: true,
-                                            ATTACH_FILES: true,
-                                            READ_MESSAGE_HISTORY: true,
-                                            MENTION_EVERYONE: false,
-                                            USE_EXTERNAL_EMOJIS: true,
-                                            VIEW_GUILD_INSIGHTS: false,
-                                            CHANGE_NICKNAME: true,
-                                            MANAGE_NICKNAMES: false,
-                                            MANAGE_ROLES: false,
-                                            MANAGE_WEBHOOKS: false,
-                                            MANAGE_EMOJIS: false,
-                                            USE_SLASH_COMMANDS: false,
-                                            MANAGE_THREADS: false,
-                                            USE_PUBLIC_THREADS: false,
-                                        });
-                                        // Remove user REQUESTED-status in JSON database. 
-                                        removeUserRequestStatus(bot, FOUND_SESSION_REQUEST, user)
-                                        // Update session party database entry.
-                                        updateDatabaseSessionParty(FOUND_SESSION_REQUEST, user.id);
-                                        // Edit the session message embed.
-                                        message.edit(updateSessionEmbedParty(message, FOUND_SESSION_REQUEST.session_party).embeds[0]);
-                                        break;
-                                    case '✖️':
-                                        // Send the person who requested to join the session, he/she got declined.
-                                        user.send({ content: `Your request to join ${bot.users.cache.get(FOUND_SESSION_REQUEST.session_commander).username}'s session has been **DECLINED**` });
-                                        // Give the user a DENIED-status in the JSON database.
-                                        giveUserDeniedStatus(bot, FOUND_SESSION_REQUEST, user)
-                                        break;
-                                }
-                            }).catch(err => {
-                                console.error(err);
-                                // Send the person who wants to join the session his/her request has not been answered.
-                                user.send({ content: `Your request to join ${bot.users.cache.get(FOUND_SESSION_REQUEST.session_commander).username}'s session has **NOT BEEN ANSWERED**` });
-                                // Remove user REQUESTED-status in JSON database. 
-                                removeUserRequestStatus(bot, FOUND_SESSION_REQUEST, user)
-                            })
-                        })
-                        return;
-                    case '✅':
+        //                     const emojiFilter = (reaction, user) => {
+        //                         if (user.bot === true) return false;
+        //                         return (reaction.emoji.name === '✔️' || reaction.emoji.name === '✖️') && user.id === FOUND_SESSION_REQUEST.session_commander;
+        //                     };
+        //                     msg.awaitReactions(emojiFilter, {
+        //                         max: 1,
+        //                         time: 86400000,
+        //                         errors: ['time'],
+        //                     }).then(async collected => {
+        //                         msg.delete().catch(err => console.error(err));
+        //                         switch (collected.first().emoji.name) {
+        //                             case '✔️':
+        //                                 // Check again if in the meantime the sessions party is already full.
+        //                                 FOUND_SESSION_REQUEST = await SessionRequest.findOne({ where: { message_id_discord: message.id } });
+        //                                 if (!(FOUND_SESSION_REQUEST.session_party.length < 5)) return msg.channel.send({ content: 'This session is full! Only 5 players are allowed!' }).then(msg => { setTimeout(() => msg.delete(), 3000) }).catch(err => console.log(err));
+        //                                 // Send the person who wants to join the session he/she got accepted.
+        //                                 user.send({ content: `Your request to join ${bot.users.cache.get(FOUND_SESSION_REQUEST.session_commander).username}'s session has been **ACCEPTED**` });
+        //                                 // Adjust permissions of session channel so the newly allowed player can see the channel.
+        //                                 SESSION_CHANNEL.permissionOverwrites.edit(bot.users.cache.get(user.id), {
+        //                                     CREATE_INSTANT_INVITE: false,
+        //                                     KICK_MEMBERS: false,
+        //                                     BAN_MEMBERS: false,
+        //                                     ADMINISTRATOR: false,
+        //                                     MANAGE_CHANNELS: false,
+        //                                     MANAGE_GUILD: false,
+        //                                     ADD_REACTIONS: true,
+        //                                     VIEW_CHANNEL: true,
+        //                                     SEND_MESSAGES: true,
+        //                                     SEND_TTS_MESSAGES: false,
+        //                                     MANAGE_MESSAGES: false,
+        //                                     EMBED_LINKS: true,
+        //                                     ATTACH_FILES: true,
+        //                                     READ_MESSAGE_HISTORY: true,
+        //                                     MENTION_EVERYONE: false,
+        //                                     USE_EXTERNAL_EMOJIS: true,
+        //                                     VIEW_GUILD_INSIGHTS: false,
+        //                                     CHANGE_NICKNAME: true,
+        //                                     MANAGE_NICKNAMES: false,
+        //                                     MANAGE_ROLES: false,
+        //                                     MANAGE_WEBHOOKS: false,
+        //                                     MANAGE_EMOJIS: false,
+        //                                     USE_SLASH_COMMANDS: false,
+        //                                     MANAGE_THREADS: false,
+        //                                     USE_PUBLIC_THREADS: false,
+        //                                 });
+        //                                 // Remove user REQUESTED-status in JSON database. 
+        //                                 removeUserRequestStatus(bot, FOUND_SESSION_REQUEST, user)
+        //                                 // Update session party database entry.
+        //                                 updateDatabaseSessionParty(FOUND_SESSION_REQUEST, user.id);
+        //                                 // Edit the session message embed.
+        //                                 message.edit(updateSessionEmbedParty(message, FOUND_SESSION_REQUEST.session_party).embeds[0]);
+        //                                 break;
+        //                             case '✖️':
+        //                                 // Send the person who requested to join the session, he/she got declined.
+        //                                 user.send({ content: `Your request to join ${bot.users.cache.get(FOUND_SESSION_REQUEST.session_commander).username}'s session has been **DECLINED**` });
+        //                                 // Give the user a DENIED-status in the JSON database.
+        //                                 giveUserDeniedStatus(bot, FOUND_SESSION_REQUEST, user)
+        //                                 break;
+        //                         }
+        //                     }).catch(err => {
+        //                         console.error(err);
+        //                         // Send the person who wants to join the session his/her request has not been answered.
+        //                         user.send({ content: `Your request to join ${bot.users.cache.get(FOUND_SESSION_REQUEST.session_commander).username}'s session has **NOT BEEN ANSWERED**` });
+        //                         // Remove user REQUESTED-status in JSON database. 
+        //                         removeUserRequestStatus(bot, FOUND_SESSION_REQUEST, user)
+        //                     })
+        //                 })
+        //                 return;
+        //             case '✅':
 
-                    case '❌':
-                        // Alert user that Dungeon Masters cant join session party.
-                        message.channel.send({ content: 'You do not have permission to accept or decline a session request!' }).then(msg => { setTimeout(() => msg.delete(), 3000) }).catch(err => console.log(err));
-                    default:
-                        // Delete the user reaction a.k.a. emoji.
-                        return await deleteReactionFromUser(message, user.id)
-                }
-            } catch (error) {
-                console.log(error)
-            }
-        } else {
-            message.channel.send({ content: 'You do not have a character in the database of this server! Please create one by typing "!createCharacter".' }).then(msg => { setTimeout(() => msg.delete(), 3000) }).catch(err => console.log(err));
-            return await deleteReactionFromUser(message, user.id)
-        }
+        //             case '❌':
+        //                 // Alert user that Dungeon Masters cant join session party.
+        //                 message.channel.send({ content: 'You do not have permission to accept or decline a session request!' }).then(msg => { setTimeout(() => msg.delete(), 3000) }).catch(err => console.log(err));
+        //             default:
+        //                 // Delete the user reaction a.k.a. emoji.
+        //                 return await deleteReactionFromUser(message, user.id)
+        //         }
+        //     } catch (error) {
+        //         console.log(error)
+        //     }
+        // } else {
+        //     message.channel.send({ content: 'You do not have a character in the database of this server! Please create one by typing "!createCharacter".' }).then(msg => { setTimeout(() => msg.delete(), 3000) }).catch(err => console.log(err));
+        //     return await deleteReactionFromUser(message, user.id)
+        // }
     } else if (message.channel.id === PLANNED_SESSIONS_CHANNEL_ID) {
         const USER_CHARACTER = await PlayerCharacter.findOne({ where: { player_id_discord: user.id, alive: 1, server: message.guild.id } })
 

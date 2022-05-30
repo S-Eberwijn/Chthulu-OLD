@@ -6,187 +6,22 @@
             "denied": []
         },
         {
-            "session_channel_id": "867815349717434368",
+            "session_channel_id": "980731184424316938",
             "requested": [
                 {
-                    "user_id": "241273372892200963"
+                    "user_id": "712588051792134166"
                 }
             ],
             "denied": []
         },
         {
-            "session_channel_id": "868565128226959461",
+            "session_channel_id": "980733503496929330",
             "requested": [],
             "denied": [
                 {
-                    "user_id": "241273372892200963"
+                    "user_id": "712588051792134166"
                 }
             ]
-        },
-        {
-            "session_channel_id": "869259629601906698",
-            "requested": [],
-            "denied": []
-        },
-        {
-            "session_channel_id": "869264838562570260",
-            "requested": [],
-            "denied": []
-        },
-        {
-            "session_channel_id": "869297244430565387",
-            "requested": [],
-            "denied": []
-        },
-        {
-            "session_channel_id": "869514176828153896",
-            "requested": [],
-            "denied": []
-        },
-        {
-            "session_channel_id": "869514339646849055",
-            "requested": [],
-            "denied": []
-        },
-        {
-            "session_channel_id": "869998349724581918",
-            "requested": [],
-            "denied": []
-        },
-        {
-            "session_channel_id": "869998666163818496",
-            "requested": [],
-            "denied": []
-        },
-        {
-            "session_channel_id": "869999055613341696",
-            "requested": [],
-            "denied": []
-        },
-        {
-            "session_channel_id": "870000586978902046",
-            "requested": [],
-            "denied": []
-        },
-        {
-            "session_channel_id": "870001145668579339",
-            "requested": [],
-            "denied": []
-        },
-        {
-            "session_channel_id": "870001934252261449",
-            "requested": [],
-            "denied": []
-        },
-        {
-            "session_channel_id": "870003982481899601",
-            "requested": [],
-            "denied": []
-        },
-        {
-            "session_channel_id": "870004478277996544",
-            "requested": [],
-            "denied": []
-        },
-        {
-            "session_channel_id": "870005078864572446",
-            "requested": [],
-            "denied": []
-        },
-        {
-            "session_channel_id": "870005459942244404",
-            "requested": [],
-            "denied": []
-        },
-        {
-            "session_channel_id": "870005927309369384",
-            "requested": [],
-            "denied": []
-        },
-        {
-            "session_channel_id": "870006190896214079",
-            "requested": [],
-            "denied": []
-        },
-        {
-            "session_channel_id": "870006527442960504",
-            "requested": [],
-            "denied": []
-        },
-        {
-            "session_channel_id": "870007064255156304",
-            "requested": [],
-            "denied": []
-        },
-        {
-            "session_channel_id": "870007452735795291",
-            "requested": [],
-            "denied": []
-        },
-        {
-            "session_channel_id": "870008067331338320",
-            "requested": [],
-            "denied": []
-        },
-        {
-            "session_channel_id": "870008609688399892",
-            "requested": [],
-            "denied": []
-        },
-        {
-            "session_channel_id": "870008902958350356",
-            "requested": [],
-            "denied": []
-        },
-        {
-            "session_channel_id": "870009185092378685",
-            "requested": [],
-            "denied": []
-        },
-        {
-            "session_channel_id": "870009604204007484",
-            "requested": [],
-            "denied": []
-        },
-        {
-            "session_channel_id": "870627365888335882",
-            "requested": [],
-            "denied": []
-        },
-        {
-            "session_channel_id": "870627770638667786",
-            "requested": [],
-            "denied": []
-        },
-        {
-            "session_channel_id": "870628324739784765",
-            "requested": [],
-            "denied": []
-        },
-        {
-            "session_channel_id": "870665164851126282",
-            "requested": [],
-            "denied": []
-        },
-        {
-            "session_channel_id": "872540671205052457",
-            "requested": [],
-            "denied": []
-        },
-        {
-            "session_channel_id": "881241549936164894",
-            "requested": [],
-            "denied": []
-        },
-        {
-            "session_channel_id": "882556117861953536",
-            "requested": [],
-            "denied": []
-        },
-        {
-            "session_channel_id": "952124679622107147",
-            "requested": [],
-            "denied": []
         }
     ]
 }
