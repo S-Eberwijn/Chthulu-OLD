@@ -1,6 +1,7 @@
 require('dotenv').config();
 require('./website/routes/strategies/discordStrategy');
 const { logger } = require(`./functions/logger`)
+
 const express = require('express');
 
 const path = require('path');
@@ -12,7 +13,7 @@ const passport = require('passport');
 const FirestoreStore = require("firestore-store")(session);
 
 const fs = require("fs");
-const { cacheAllUsers } = require('./functions/api');
+const { cacheAllUsers, loadAllJSONFiles } = require('./functions/api');
 
 //Firebase database modules
 const admin = require("firebase-admin");
@@ -129,6 +130,7 @@ fs.readdir('./bot/events/', (err, files) => {
 // Login Discord Bot 'Chthulu'
 bot.login(BOT_TOKEN).then(async () => {
     await cacheAllUsers(bot);
+    await loadAllJSONFiles(bot)
 
     // Start Webserver
     app.listen(WB_PORT, () => {

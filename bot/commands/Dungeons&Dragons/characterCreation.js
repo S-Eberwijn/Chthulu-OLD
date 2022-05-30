@@ -3,13 +3,10 @@ const { PlayerCharacter } = require('../../../database/models/PlayerCharacter');
 const { MessageEmbed, MessageActionRow, MessageButton, MessageSelectMenu } = require('discord.js');
 
 const QUESTIONS_ARRAY = require('../../jsonDb/characterCreationQuestions.json');
-const { sendCharacterEmbedMessageInChannel } = require('../../otherFunctions/characterEmbed')
+const { sendCharacterEmbedMessageInChannel, getAverageColor } = require('../../otherFunctions/characterEmbed')
 
 module.exports.run = async (interaction) => {
     const bot = require('../../../index');
-
-    // console.log(interaction.user.id)
-    // return await interaction.reply( 'test', {ephemeral: true} );
 
     const characterCreateCategory = interaction.guild.channels.cache.find(c => c.name == "--CHARACTER CREATION--" && c.type == "GUILD_CATEGORY")
     let foundPlayer = await Player.findOne({ where: { player_id_discord: interaction.user.id, server: interaction.guild.id } })

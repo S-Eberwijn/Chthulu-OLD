@@ -1,4 +1,5 @@
 window.onload = function () {
+    document.getElementById('loader_modal').style = `display: none;`;
     particlesJS("background", {
         particles: {
             number: { value: 200, density: { enable: true, value_area: 800 } },
@@ -28,7 +29,7 @@ window.onload = function () {
             },
             move: {
                 enable: true,
-                speed: 1    ,
+                speed: 1,
                 direction: "none",
                 random: true,
                 straight: false,

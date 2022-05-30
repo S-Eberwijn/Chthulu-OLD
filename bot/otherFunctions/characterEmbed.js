@@ -126,6 +126,10 @@ async function getCharacterPicture(character) {
     return new MessageAttachment(canvas.toBuffer(), 'img.png');
 }
 
+exports.getAverageColor = async function (url) {
+    return await getAverageImageColor(url);
+}
+
 async function getAverageImageColor(imageUrl) {
     const color = await getAverageColor(imageUrl)
     return color.hex ? color.hex : "#2C2F33";

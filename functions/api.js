@@ -42,6 +42,13 @@ async function cacheAllUsers(bot) {
     }
 }
 
+async function loadAllJSONFiles(bot){
+    bot.stupidQuestionTracker = await require("../bot/jsonDb/stupidQuestionTracker.json");
+    bot.ressurection = await require("../bot/jsonDb/ressurection.json");
+    bot.sessionAddUserRequest = await require("../bot/jsonDb/sessionAddUserRequest.json");
+    logger.debug(`All local JSON databases have been loaded.`)
+}
+
 function getUserFromBot(userID) {
     return getBot().users.cache.get(userID);
 }
@@ -188,7 +195,7 @@ function sortByImportanceValue(a, b) {
 
 module.exports = {
     getBotGuilds, getMutualGuilds, getGuildFromBot, getBotCommandsByCategory,
-    isUserInGuild, isUserAdminInGuild, cacheAllUsers,
+    isUserInGuild, isUserAdminInGuild, cacheAllUsers, loadAllJSONFiles,
     getAliveCharacters, getNonPlayableCharacters, getDeadCharacters,
     getServerMap,
     getServerQuestsByStatuses, getQuestsByStatuses, createQuest, deleteQuest, updateQuest,

@@ -11,7 +11,7 @@ const fs = require("fs");
 
 const DATE_REGEX_PATTERN = /[0-3]\d\/(0[1-9]|1[0-2])\/\d{4} [0-2]\d:[0-5]\d(?:\.\d+)?Z?/g;
 const COMMAND_OPTIONS = ['request', 'b'];
-const QUESTIONS_ARRAY = require('../../jsonDb/sessionChannelQuestion.json');
+// const QUESTIONS_ARRAY = require('../../jsonDb/sessionChannelQuestion.json');
 const NAME_OF_DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 const MODAL_IDS = ['myModal'];
 const BUTTON_IDS = ['approve-session-request-button', 'decline-session-request-button', 'join-session-button', 'played-session-button', 'cancel-session-button', 'test1', 'test2']
@@ -82,11 +82,11 @@ module.exports.run = async (interaction) => {
     if (!COMMAND_OPTIONS.includes(interaction.options.get('action').value)) return interaction.channel.send({ content: `Not a valid session option\nCorrect format: !session [${COMMAND_OPTIONS.map(option => option).join(', ')}]` });
 
     switch (interaction.options.get('action').value) {
-        case 'request':
+        case COMMAND_OPTIONS[0]:
             await interaction.showModal(SESSION_MODAL);
             break;
 
-        case 'b':
+        case COMMAND_OPTIONS[1]:
 
             break;
 
@@ -123,12 +123,11 @@ module.exports.modalSubmit = async (modal) => {
 
     const session_objective = modal.fields?.getTextInputValue('sessionObjective'),
         session_date_text = modal.fields?.getTextInputValue('sessionDate');
-        session_location = modal.fields?.getTextInputValue('sessionLocation') || `Roll20 (online)`;
-    // console.log(session_date_text)
-    if (session_date_text.match(DATE_REGEX_PATTERN) === null) return;
+    session_location = modal.fields?.getTextInputValue('sessionLocation') || `Roll20 (online)`;
+
+    if (session_date_text.match(DATE_REGEX_PATTERN) === null) return logger.debug(`Invalid date format, ${session_date_text} does not comply with the regex pattern.`);
     const session_date = new Date(session_date_text.split(' ')[0].split('/')[2], session_date_text.split(' ')[0].split('/')[0] - 1, session_date_text.split(' ')[0].split('/')[1], session_date_text.split(' ')[1].split(':')[0], session_date_text.split(' ')[1].split(':')[1])
 
-    // console.log({ session_objective, session_date, })
     // Makes a request channel for the message author
     modal.guild.channels.create(`${modal.user.username}s-request`, "text").then(async CREATED_CHANNEL => {
         // Puts the channel under the "--SESSIONS--" category
@@ -192,8 +191,6 @@ module.exports.modalSubmit = async (modal) => {
         });
 
         CREATED_CHANNEL.send({ content: `${modal.user}, welcome to your session request channel!` }).then(async () => {
-
-
         })
 
         SESSION_REQUEST_CHANNEL.send({ embeds: [createSessionChannelEmbed(modal.user, session_date, [modal.user.id], session_objective, USER_CHARACTER.picture_url, session_location)], components: [MESSAGE_COMPONENTS_REQUEST] }).then(async MESSAGE => {
@@ -205,10 +202,7 @@ module.exports.modalSubmit = async (modal) => {
                 denied: []
             }
             writeToJsonDb("./bot/jsonDb/sessionAddUserRequest.json", bot.sessionAddUserRequest);
-
         })
-
-
     })
     modal.reply({ content: `Session request created! You can find it back in this channel: ${SESSION_REQUEST_CHANNEL}`, ephemeral: true });
 }
@@ -237,7 +231,6 @@ module.exports.buttonSubmit = async (button) => {
     if (!FOUND_GAME_SESSION) return button.message.channel.send({ content: 'Something went wrong; Cannot find this session request in the database!' }).then(msg => { setTimeout(() => msg.delete(), 3000) }).catch(err => console.log(err));
     // Return if no server info has been found in the database corresponding to the server id.
     if (!GENERAL_SERVER_INFO) return message.channel.send({ content: 'Something went wrong; Cannot find general info of this server in the database!' }).then(msg => { setTimeout(() => msg.delete(), 3000) }).catch(err => console.log(err));
-
 
     if (!BUTTON_IDS.includes(button.customId)) return console.log("Something went wrong")
     switch (button.customId) {
@@ -273,7 +266,7 @@ module.exports.buttonSubmit = async (button) => {
         case BUTTON_IDS[2]:
             if (isDungeonMaster) return button.reply({ content: 'Dungeon Masters can not join a sessions party!', ephemeral: true });
             const isPlayerAlreadyInParty = FOUND_GAME_SESSION.session_party.includes(button.user.id);
-            if(!USER_CHARACTER) return button.reply({ content: 'You do not have a character in the database, use **/createCharacter** to create one!', ephemeral: true });
+            if (!USER_CHARACTER) return button.reply({ content: 'You do not have a character in the database, use **/createCharacter** to create one!', ephemeral: true });
             if (isPlayerAlreadyInParty) return button.reply({ content: 'You are already in the party!', ephemeral: true });
             const isPartyFull = FOUND_GAME_SESSION.session_party.length >= 5;
             if (isPartyFull) return button.reply({ content: 'The party is full!', ephemeral: true });
@@ -402,9 +395,9 @@ function createSessionChannelEmbed(messageAuthor, sessionDate, sessionParticipan
             { name: `**Session Commander:**`, value: `<@!${sessionParticipants[0]}>\n`, inline: false },
             { name: `**Players(${sessionParticipants.length}/5):**`, value: `${sessionParticipants.map(id => `<@!${id}>`).join(', ')}`, inline: false },
             { name: `**DM:**`, value: `*TBD*`, inline: false },
-            { name: `**Time:**`, value: `*${NAME_OF_DAYS[sessionDate.getDay()]} (${getDoubleDigitNumber(sessionDate.getDate())}/${getDoubleDigitNumber(sessionDate.getMonth() + 1)}/${sessionDate.getYear() + 1900}) ${getDoubleDigitNumber(sessionDate.getHours())}:${getDoubleDigitNumber(sessionDate.getMinutes())}*`, inline: false },
             { name: `**Location:**`, value: `*${sessionLocation}*`, inline: false },
-            { name: `**Objective:**`, value: `*${sessionObjective}*`, inline: false },
+            { name: `**Date & Time:**`, value: `\`${NAME_OF_DAYS[sessionDate.getDay()]} (${getDoubleDigitNumber(sessionDate.getDate())}/${getDoubleDigitNumber(sessionDate.getMonth() + 1)}/${sessionDate.getYear() + 1900}) ${getDoubleDigitNumber(sessionDate.getHours())}:${getDoubleDigitNumber(sessionDate.getMinutes())}\``, inline: false },
+            { name: `**Objective:**`, value: `>>> *${sessionObjective}*`, inline: false },
         )
         .setTimestamp()
         .setFooter({ text: `Requested by ${messageAuthor.username}`, iconURL: messageAuthor.avatarURL() });
@@ -438,6 +431,7 @@ async function createModal(MODAL_ID) {
     const sessionObjective = new TextInputComponent()
         .setCustomId('sessionObjective')
         .setLabel("Objective")
+        .setPlaceholder('e.g. "Defeat the BBEG at his lair."')
         // Paragraph means multiple lines of text.
         .setStyle('PARAGRAPH')
         .setRequired(true)
@@ -445,11 +439,11 @@ async function createModal(MODAL_ID) {
     const sessionDate = new TextInputComponent()
         .setCustomId('sessionDate')
         // The label is the prompt the user sees for this input
-        .setLabel("Date - Time")
+        .setLabel("Date - Time ~> [DD/MM/YYYY HH:MM]")
         // Short means only a single line of text
         .setStyle('SHORT')
         .setRequired(true)
-        .setPlaceholder('20/12/2022 15:30')
+        .setPlaceholder(`20/12/${(new Date).getFullYear()} 15:30`)
         .setMaxLength(16)
 
     const sessionLocation = new TextInputComponent()
