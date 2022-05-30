@@ -22,6 +22,21 @@
                     "user_id": "712588051792134166"
                 }
             ]
+        },
+        {
+            "session_channel_id": "980787748199882772",
+            "requested": [],
+            "denied": []
+        },
+        {
+            "session_channel_id": "980788745219485706",
+            "requested": [],
+            "denied": []
+        },
+        {
+            "session_channel_id": "980789318283051058",
+            "requested": [],
+            "denied": []
         }
     ]
 }

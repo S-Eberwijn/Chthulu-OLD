@@ -9,8 +9,8 @@ const { GeneralInfo } = require('../../../database/models/GeneralInfo');
 
 const fs = require("fs");
 
-
-const COMMAND_OPTIONS = ['r', 'b'];
+const DATE_REGEX_PATTERN = /[0-3]\d\/(0[1-9]|1[0-2])\/\d{4} [0-2]\d:[0-5]\d(?:\.\d+)?Z?/g;
+const COMMAND_OPTIONS = ['request', 'b'];
 const QUESTIONS_ARRAY = require('../../jsonDb/sessionChannelQuestion.json');
 const NAME_OF_DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 const MODAL_IDS = ['myModal'];
@@ -79,10 +79,10 @@ module.exports.run = async (interaction) => {
 
     if (!SESSIONS_CATEGORY) return interaction.reply({ content: `There is no category named \"--SESSIONS--\"!` }).then(() => { setTimeout(() => interaction.deleteReply(), 3000) }).catch(err => logger.error(err));
     // if (!interaction.options.get('action').value) return interaction.channel.send({ content: "Not enough valid arguments\nCorrect format: !session [request]" });
-    if (!COMMAND_OPTIONS.includes(interaction.options.get('action').value)) return interaction.channel.send({ content: "Not a valid session option\nCorrect format: !session [request]" });
+    if (!COMMAND_OPTIONS.includes(interaction.options.get('action').value)) return interaction.channel.send({ content: `Not a valid session option\nCorrect format: !session [${COMMAND_OPTIONS.map(option => option).join(', ')}]` });
 
     switch (interaction.options.get('action').value) {
-        case 'r':
+        case 'request':
             await interaction.showModal(SESSION_MODAL);
             break;
 
@@ -91,6 +91,7 @@ module.exports.run = async (interaction) => {
             break;
 
         default:
+            interaction.reply({ content: "Not a valid session option!", ephemeral: true });
             break;
     }
 }
@@ -115,12 +116,16 @@ module.exports.help = {
 module.exports.modalSubmit = async (modal) => {
     const bot = require('../../../index');
 
+    const USER_CHARACTER = await PlayerCharacter.findOne({ where: { player_id_discord: modal.user.id, alive: 1, server: modal.guild.id } })
+
     const SESSIONS_CATEGORY = modal.guild.channels.cache.find(c => c.name == "--SESSIONS--" && c.type == "GUILD_CATEGORY");
     const SESSION_REQUEST_CHANNEL = modal.guild.channels.cache.find(c => c.name.includes("session-request") && c.type == "GUILD_TEXT");
 
     const session_objective = modal.fields?.getTextInputValue('sessionObjective'),
         session_date_text = modal.fields?.getTextInputValue('sessionDate');
+        session_location = modal.fields?.getTextInputValue('sessionLocation') || `Roll20 (online)`;
     // console.log(session_date_text)
+    if (session_date_text.match(DATE_REGEX_PATTERN) === null) return;
     const session_date = new Date(session_date_text.split(' ')[0].split('/')[2], session_date_text.split(' ')[0].split('/')[0] - 1, session_date_text.split(' ')[0].split('/')[1], session_date_text.split(' ')[1].split(':')[0], session_date_text.split(' ')[1].split(':')[1])
 
     // console.log({ session_objective, session_date, })
@@ -191,7 +196,7 @@ module.exports.modalSubmit = async (modal) => {
 
         })
 
-        SESSION_REQUEST_CHANNEL.send({ embeds: [createSessionChannelEmbed(modal.user, session_date, [modal.user.id], session_objective, 'https://cdn.discordapp.com/attachments/954441542645481522/954442266490044486/Tess.png')], components: [MESSAGE_COMPONENTS_REQUEST] }).then(async MESSAGE => {
+        SESSION_REQUEST_CHANNEL.send({ embeds: [createSessionChannelEmbed(modal.user, session_date, [modal.user.id], session_objective, USER_CHARACTER.picture_url, session_location)], components: [MESSAGE_COMPONENTS_REQUEST] }).then(async MESSAGE => {
             createSession(modal, session_objective, session_date, MESSAGE.id, CREATED_CHANNEL.id)
             // Add the session to a json database.
             bot.sessionAddUserRequest['sessions'][bot.sessionAddUserRequest['sessions'].length] = {
@@ -268,6 +273,7 @@ module.exports.buttonSubmit = async (button) => {
         case BUTTON_IDS[2]:
             if (isDungeonMaster) return button.reply({ content: 'Dungeon Masters can not join a sessions party!', ephemeral: true });
             const isPlayerAlreadyInParty = FOUND_GAME_SESSION.session_party.includes(button.user.id);
+            if(!USER_CHARACTER) return button.reply({ content: 'You do not have a character in the database, use **/createCharacter** to create one!', ephemeral: true });
             if (isPlayerAlreadyInParty) return button.reply({ content: 'You are already in the party!', ephemeral: true });
             const isPartyFull = FOUND_GAME_SESSION.session_party.length >= 5;
             if (isPartyFull) return button.reply({ content: 'The party is full!', ephemeral: true });
@@ -276,7 +282,7 @@ module.exports.buttonSubmit = async (button) => {
             // Return if the user already has been denied for the session.
             if (playerAlreadyDenied(bot.sessionAddUserRequest['sessions'], button.user.id, FOUND_GAME_SESSION.session_channel)) return button.reply({ content: `Your request to join this session has already been declined by the session commander, better luck next time!`, ephemeral: true });
             // Give user feedback on asking the session commander if he/she may join the session.
-            GAME_SESSION_CHANNEL?.send({ content: `Hello, ${bot.users.cache.get(FOUND_GAME_SESSION.session_commander)}. <@!${button.user.id}> (${USER_CHARACTER?.name.trim() || 'test'}) is requesting to join your session!`, components: [MESSAGE_COMPONENTS_JOIN] }).then(JOIN_MESSAGE => {
+            GAME_SESSION_CHANNEL?.send({ content: `Hello, ${bot.users.cache.get(FOUND_GAME_SESSION.session_commander)}. <@!${button.user.id}> (${USER_CHARACTER?.name.trim()}) is requesting to join your session!`, components: [MESSAGE_COMPONENTS_JOIN] }).then(JOIN_MESSAGE => {
                 // Add REQUESTED-status to user in json database. 
                 giveUserRequestedStatus(bot.sessionAddUserRequest['sessions'], FOUND_GAME_SESSION.session_channel, button.user.id, bot.sessionAddUserRequest);
             })
@@ -387,7 +393,7 @@ async function createSession(modal, objective, date, message_id, session_channel
     })
 }
 
-function createSessionChannelEmbed(messageAuthor, sessionDate, sessionParticipants, sessionObjective, sessionCommanderAvatar) {
+function createSessionChannelEmbed(messageAuthor, sessionDate, sessionParticipants, sessionObjective, sessionCommanderAvatar, sessionLocation) {
     return new MessageEmbed()
         .setThumbnail(sessionCommanderAvatar)
         .setColor(0x333333)
@@ -397,7 +403,7 @@ function createSessionChannelEmbed(messageAuthor, sessionDate, sessionParticipan
             { name: `**Players(${sessionParticipants.length}/5):**`, value: `${sessionParticipants.map(id => `<@!${id}>`).join(', ')}`, inline: false },
             { name: `**DM:**`, value: `*TBD*`, inline: false },
             { name: `**Time:**`, value: `*${NAME_OF_DAYS[sessionDate.getDay()]} (${getDoubleDigitNumber(sessionDate.getDate())}/${getDoubleDigitNumber(sessionDate.getMonth() + 1)}/${sessionDate.getYear() + 1900}) ${getDoubleDigitNumber(sessionDate.getHours())}:${getDoubleDigitNumber(sessionDate.getMinutes())}*`, inline: false },
-            { name: `**Location:**`, value: `*Roll20 (online)*`, inline: false },
+            { name: `**Location:**`, value: `*${sessionLocation}*`, inline: false },
             { name: `**Objective:**`, value: `*${sessionObjective}*`, inline: false },
         )
         .setTimestamp()
@@ -446,23 +452,23 @@ async function createModal(MODAL_ID) {
         .setPlaceholder('20/12/2022 15:30')
         .setMaxLength(16)
 
-    const sessionParty = new TextInputComponent()
-        .setCustomId('sessionParty')
+    const sessionLocation = new TextInputComponent()
+        .setCustomId('sessionLocation')
         // The label is the prompt the user sees for this input
-        .setLabel("Party")
+        .setLabel("Location")
         // Short means only a single line of text
         .setStyle('SHORT')
-
+        .setPlaceholder('Roll20 (online)')
         .setRequired(false)
 
     // An action row only holds one text input,
     const firstActionRow = new MessageActionRow().addComponents(sessionTitle),
         secondActionRow = new MessageActionRow().addComponents(sessionObjective),
         thirdActionRow = new MessageActionRow().addComponents(sessionDate),
-        fourthActionRow = new MessageActionRow().addComponents(sessionParty);
+        fourthActionRow = new MessageActionRow().addComponents(sessionLocation);
 
     // Add inputs to the modal
-    modal.addComponents(secondActionRow, thirdActionRow,);
+    modal.addComponents(secondActionRow, fourthActionRow, thirdActionRow,);
     return modal;
 }
 
@@ -604,5 +610,15 @@ async function fetchGameSessionMessage(SESSION_REQUEST_CHANNEL, PLANNED_SESSIONS
 
 async function editRequestSessionEmbedTitle(editedEmbed, status) {
     editedEmbed.title = `${editedEmbed.title} [${status}]`;
+    switch (status) {
+        case 'PLAYED':
+            editedEmbed.setColor('#78b159')
+            break;
+        case 'CANCELED':
+            editedEmbed.setColor('#dd2e44')
+            break;
+        default:
+            break;
+    }
     return editedEmbed;
 }
