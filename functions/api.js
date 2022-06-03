@@ -194,6 +194,7 @@ function sortByImportanceValue(a, b) {
 }
 
 module.exports = {
+    getBot,
     getBotGuilds, getMutualGuilds, getGuildFromBot, getBotCommandsByCategory,
     isUserInGuild, isUserAdminInGuild, cacheAllUsers, loadAllJSONFiles,
     getAliveCharacters, getNonPlayableCharacters, getDeadCharacters,

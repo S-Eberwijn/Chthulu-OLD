@@ -12,7 +12,7 @@
     "discord-buttons": "^4.0.0",
     "discord.io": "https://github.com/woor/discord.io/tarball/gateway_v6",
     "discord.js": "^13.1.0",
-    "discordjs-button-pagination": "^2.0.0",
+    "discordjs-button-pagination": "^3.0.1",
     "dotenv": "^10.0.0",
     "dotenv-flow": "^3.2.0",
     "enmap": "^5.8.7",

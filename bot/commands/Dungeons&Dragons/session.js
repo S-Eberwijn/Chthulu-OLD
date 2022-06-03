@@ -1,4 +1,5 @@
 //TODO: Refactor? Make less api calls?
+const paginationEmbed = require('discordjs-button-pagination');
 
 const { logger } = require(`../../../functions/logger`)
 const { MessageEmbed, Modal, TextInputComponent, MessageActionRow, MessageButton } = require('discord.js');
@@ -8,13 +9,14 @@ const { PlayerCharacter } = require('../../../database/models/PlayerCharacter');
 const { GeneralInfo } = require('../../../database/models/GeneralInfo');
 
 const fs = require("fs");
+const { getBot } = require('../../../functions/api');
 
 const DATE_REGEX_PATTERN = /[0-3]\d\/(0[1-9]|1[0-2])\/\d{4} [0-2]\d:[0-5]\d(?:\.\d+)?Z?/g;
-const COMMAND_OPTIONS = ['request', 'b'];
+const COMMAND_OPTIONS = ['request', 'board'];
 // const QUESTIONS_ARRAY = require('../../jsonDb/sessionChannelQuestion.json');
 const NAME_OF_DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-const MODAL_IDS = ['myModal'];
-const BUTTON_IDS = ['approve-session-request-button', 'decline-session-request-button', 'join-session-button', 'played-session-button', 'cancel-session-button', 'test1', 'test2']
+const MODAL_IDS = ['session-request-modal'];
+const BUTTON_IDS = ['approve-session-request-button', 'decline-session-request-button', 'join-session-button', 'played-session-button', 'cancel-session-button', 'join-accepted-button', 'join-denied-button']
 
 const MESSAGE_COMPONENTS_REQUEST = new MessageActionRow()
     .addComponents(
@@ -67,6 +69,16 @@ const MESSAGE_COMPONENTS_JOIN = new MessageActionRow()
             .setEmoji('✖️'),
     );
 
+const previousButton = new MessageButton()
+    .setCustomId('previousbtn')
+    .setLabel('Previous')
+    .setStyle('SECONDARY');
+
+const nextButton = new MessageButton()
+    .setCustomId('nextbtn')
+    .setLabel('Next')
+    .setStyle('SECONDARY');
+
 module.exports.run = async (interaction) => {
     const SESSION_MODAL = await createModal(MODAL_IDS[0]);
 
@@ -87,7 +99,8 @@ module.exports.run = async (interaction) => {
             break;
 
         case COMMAND_OPTIONS[1]:
-
+            const ALL_SERVER_PLANNED_SESSIONS = await GameSession.findAll({ where: { session_status: 'PLANNED', server: interaction.guild.id } });
+            !ALL_SERVER_PLANNED_SESSIONS.length ? interaction.reply({ content: `There are no planned sessions.`, ephemeral: true }) : paginationEmbed(interaction, createSessionsOverviewEmbedPages(ALL_SERVER_PLANNED_SESSIONS), [previousButton, nextButton]);
             break;
 
         default:
@@ -126,7 +139,13 @@ module.exports.modalSubmit = async (modal) => {
     session_location = modal.fields?.getTextInputValue('sessionLocation') || `Roll20 (online)`;
 
     if (session_date_text.match(DATE_REGEX_PATTERN) === null) return logger.debug(`Invalid date format, ${session_date_text} does not comply with the regex pattern.`);
-    const session_date = new Date(session_date_text.split(' ')[0].split('/')[2], session_date_text.split(' ')[0].split('/')[0] - 1, session_date_text.split(' ')[0].split('/')[1], session_date_text.split(' ')[1].split(':')[0], session_date_text.split(' ')[1].split(':')[1])
+    let date_year = session_date_text.split(' ')[0].split('/')[2],
+        date_month = session_date_text.split(' ')[0].split('/')[1],
+        date_day = session_date_text.split(' ')[0].split('/')[0],
+        date_hour = session_date_text.split(' ')[1].split(':')[0],
+        date_minutes = session_date_text.split(' ')[1].split(':')[1];
+
+    const session_date = new Date(Date.UTC(date_year, date_month - 1, date_day, date_hour, date_minutes)).getTime()
 
     // Makes a request channel for the message author
     modal.guild.channels.create(`${modal.user.username}s-request`, "text").then(async CREATED_CHANNEL => {
@@ -242,9 +261,9 @@ module.exports.buttonSubmit = async (button) => {
                 button.message.guild.channels.cache.get(FOUND_GAME_SESSION.session_channel)?.setName(`session-${GENERAL_SERVER_INFO.session_number}`)
                 updatePartyNextSessionId(FOUND_GAME_SESSION.session_party, PLANNED_SESSION_MESSAGE.id, button.message.guild.id);
 
-                updateGameSessionMessageId(FOUND_GAME_SESSION, PLANNED_SESSION_MESSAGE.id);
-                updateGameSessionStatus(FOUND_GAME_SESSION, 'PLANNED')
-                updateGameSessionNumber(FOUND_GAME_SESSION, GENERAL_SERVER_INFO.session_number)
+                await updateGameSessionMessageId(FOUND_GAME_SESSION, PLANNED_SESSION_MESSAGE.id);
+                await updateGameSessionStatus(FOUND_GAME_SESSION, 'PLANNED')
+                await updateGameSessionNumber(FOUND_GAME_SESSION, GENERAL_SERVER_INFO.session_number)
 
                 updateGeneralServerSessionNumber(GENERAL_SERVER_INFO, GENERAL_SERVER_INFO.session_number + 1)
 
@@ -367,6 +386,7 @@ module.exports.buttonSubmit = async (button) => {
 
 async function createSession(modal, objective, date, message_id, session_channel_id) {
     const TIMESTAMP = Date.now();
+    // const DATE = new Date(date);
     // const GENERAL_INFO = await GeneralInfo.findOne({ where: { server: modal.guildId } });
     await GameSession.create({
         id: `GS${TIMESTAMP}`,
@@ -396,7 +416,7 @@ function createSessionChannelEmbed(messageAuthor, sessionDate, sessionParticipan
             { name: `**Players(${sessionParticipants.length}/5):**`, value: `${sessionParticipants.map(id => `<@!${id}>`).join(', ')}`, inline: false },
             { name: `**DM:**`, value: `*TBD*`, inline: false },
             { name: `**Location:**`, value: `*${sessionLocation}*`, inline: false },
-            { name: `**Date & Time:**`, value: `\`${NAME_OF_DAYS[sessionDate.getDay()]} (${getDoubleDigitNumber(sessionDate.getDate())}/${getDoubleDigitNumber(sessionDate.getMonth() + 1)}/${sessionDate.getYear() + 1900}) ${getDoubleDigitNumber(sessionDate.getHours())}:${getDoubleDigitNumber(sessionDate.getMinutes())}\``, inline: false },
+            { name: `**Date & Time:**`, value: `\`${getPrettyDateString(new Date(sessionDate))}\``, inline: false },
             { name: `**Objective:**`, value: `>>> *${sessionObjective}*`, inline: false },
         )
         .setTimestamp()
@@ -615,4 +635,21 @@ async function editRequestSessionEmbedTitle(editedEmbed, status) {
             break;
     }
     return editedEmbed;
+}
+
+function createSessionsOverviewEmbedPages(sessions) {
+    const MAX_SESSIONS_SHOWN_PER_PAGE = 5;
+    let pages = [];
+    for (let index = 0; index < Math.ceil(sessions.length / MAX_SESSIONS_SHOWN_PER_PAGE); index++) {
+        pages.push(new MessageEmbed()
+            .setAuthor({ name: 'Session board', iconURL: getBot().user.displayAvatarURL() })
+            .setDescription(`${sessions.slice(index * 5, 5 * (index + 1))?.map(session => `> **Session ${session.session_number}:** \u200b \`${getPrettyDateString(new Date(session.date))}\` \n\`\`\`${session.objective}\`\`\` `).join('\n\n')}`)
+            .setFooter({ text: `${1}/${Math.ceil(sessions.length / MAX_SESSIONS_SHOWN_PER_PAGE)} page` })
+            .setTimestamp())
+    }
+    return pages
+}
+
+function getPrettyDateString(date) {
+    return `${NAME_OF_DAYS[date.getUTCDay()]} (${getDoubleDigitNumber(date.getUTCDate())}/${getDoubleDigitNumber(date.getUTCMonth() + 1)}/${date.getYear() + 1900}) ${getDoubleDigitNumber(date.getUTCHours())}:${getDoubleDigitNumber(date.getUTCMinutes())}`;
 }
