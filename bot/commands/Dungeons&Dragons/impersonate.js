@@ -161,6 +161,6 @@ module.exports.help = {
     // alias: [],
     category: "Dungeons & Dragons",
     name: 'impersonate',
-    description: 'Allows a dm to talk as if he is that npc.',
+    description: 'Allows a dm to talk as if he/she is that npc.',
     ephemeral: true,
 }

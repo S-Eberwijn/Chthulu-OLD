@@ -46,7 +46,7 @@ module.exports.help = {
     // alias: [],
     category: "Dungeons & Dragons",
     name: 'roll-check',
-    description: 'roll check',
+    description: 'Rolls 1d20',
     ephemeral: true,
     options: [
         {

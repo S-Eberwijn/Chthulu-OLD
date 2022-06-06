@@ -20,24 +20,24 @@ If you want to add the Chthulu to your Discord server, click [here](https://disc
 
 | Command name  | Options |  Description |
 | ------------- | ------------- | ------------- |
-| /`add-character-channel`  | Content  |------------- |
-| /`character`  | Content  |------------- |
-| /`characterCreation`  | Content  |------------- |
-| /`condition`  | Content  |------------- |
-| /`impersonate`  | Content  |------------- |
-| /`magic-item`  | Content  |------------- |
-| /`magicItemList`  | Content  |------------- |
-| /`nonPlayableCharacterCreation`  | Content  |------------- |
-| /`npc`  | Content  |------------- |
-| /`quests`  | Content  |------------- |
-| /`roll-check`  | Content  |------------- |
-| /`roll-dice`  | Content  |------------- |
-| /`roll-stats`  | Content  |------------- |
-| /`session`  | Content  |------------- |
-| /`set-level`  | Content  |------------- |
-| /`spell`  | Content  |------------- |
-| /`stop-impersonating`  | Content  |------------- |
-| /`weapon`  | Content  |------------- |
+| /`add-character-channel`  | \<channel-name\> | Add in-character channel (voice), so if someone has a character on that server configured, their name will change to his/her/they character's. |
+| /`character`  | [@User]  | When a user has a character configured, the can view their (or someone else's) by using this command. |
+| /`characterCreation`  |   | This command will create a new text channel, in which Chthulu will ask the user some question about his/her soon to be character. Once all questions have been filled in, the character will be created and assigned to the user. |
+| /`condition`  | \<condition-name\>  | This command will provide more information about the given condition-name. |
+| /`impersonate`  |  | Chthulu will show a list where the Dungeon Master can choose which create to impersonate. When the Dungeon Master is in an 'in-character'-channel, their name will change to the responding NPC. |
+| /`magic-item`  | \<magic-item-name\>  | This command will provide more information about the given magic-item-name. |
+| /`magicItemList`  |   | Chthulu will give a list with magic items. |
+| /`nonPlayableCharacterCreation`  |   | A Dungeon Master can use this command to create a new NPC. Chthulu will create a new channel and ask questions about the new, soon to be, NPC. Once finished, the NPC will be stored in the database and the Dungeon Master can start impersonating the creature. |
+| /`npc`  | [npc-name]  | ------------- |
+| /`quests`  |  | Chthulu will show a list of all ongoing quests, which can be configured and updated on the website. |
+| /`roll-check`  | [modifier] [roll twice]  | ------------- |
+| /`roll-dice`  | [d4] [d6] [d8] [d10] [d12] [d20] [d100] [modifier]  | ------------- |
+| /`roll-stats`  | [amount-of-dice] [drop-lowest] [drop-highest] [modifier]  | ------------- |
+| /`session`  | <'request', 'board'>  | A user with a configured character can use this command to request a new session, as well as see all planned session in a nicely formatted embed. |
+| /`set-level`  | \<@User\> \<1-20\>  | A Dungeon Master can use this command to set a new level to the provided user, considering the user has an active character configured. |
+| /`spell`  | \<spell-name\>  | This command will provide more information about the given spell-name. |
+| /`stop-impersonating`  |  | A Dungeon Master can use this command to stop impersonating the previously chosen creature. |
+| /`weapon`  | \<weapon -name\>  | This command will provide more information about the given weapon-name. |
 
 
 # Developers information
