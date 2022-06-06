@@ -19,7 +19,7 @@ If you want to add the Chthulu to your Discord server, click [here](https://disc
 
 # Commands
 ### General
-| Command name   | Options             |  Description |
+| <div style="width:220px">Command name</div>  | <div style="width:250px">Options</div>             |  Description  |
 | -------------  | -------------       | ------------- |
 | /`spell`       | \<spell-name\>      | This command will provide more information about the given spell-name. |
 | /`condition`   | \<condition-name\>  | This command will provide more information about the given condition-name. |
@@ -30,7 +30,7 @@ If you want to add the Chthulu to your Discord server, click [here](https://disc
 | /`roll-check`  | [modifier] [roll twice]  | TODO |
 
 ### Players
-| Command name          | Options               |  Description |
+| <div style="width:220px">Command name</div> | <div style="width:250px">Options</div>           |  Description  |
 | --------------------- | --------------------- | ------------- |
 | /`characterCreation`  |                       | This command will create a new text channel, in which Chthulu will ask the user some question about his/her soon to be character. Once all questions have been filled in, the character will be created and assigned to the user. |
 | /`character`          | [@User]               | When a user has a character configured, the can view their (or someone else's) by using this command. |
@@ -40,7 +40,7 @@ If you want to add the Chthulu to your Discord server, click [here](https://disc
 | /`roll-stats`         | [amount-of-dice] [drop-lowest] [drop-highest] [modifier]  | TODO |
 
 ### Dungeon Masters
-| Command name                     | Options              |  Description |
+| <div style="width:220px">Command name</div>   | <div style="width:250px">Options</div>              |  Description  |
 | -------------                    | -------------        | ------------- |
 | /`add-character-channel`         | \<channel-name\>     | Add in-character channel (voice), so if someone has a character on that server configured, their name will change to his/her/they character's. |
 | /`nonPlayableCharacterCreation`  |                      | A Dungeon Master can use this command to create a new NPC. Chthulu will create a new channel and ask questions about the new, soon to be, NPC. Once finished, the NPC will be stored in the database and the Dungeon Master can start impersonating the creature. |
