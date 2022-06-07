@@ -21,18 +21,22 @@ If you want to add the Chthulu to your Discord server, click [here](https://disc
 <table>
 <tr>
 <th colspan="3" align="left">
-<font size=5>General </font>
+<font size=5>1. General </font>
+</th>
+</tr>
+<tr>
+<th colspan="3" align="left">
 </th>
 </tr>
 <tr>
 <th align="left">
-<strong>Command name</strong>
+Command name
 </th>
 <th align="left">
-<strong>Options</strong>
+Options
 </th>
 <th align="left">
-<strong>Description</strong>
+Description
 </th>
 </tr>
 <tr>
@@ -135,9 +139,18 @@ TODO
 TODO
 </td>
 </tr>
+
 <tr>
 <th colspan="3" align="left">
-<font size="+2">Players </font>
+</th>
+</tr>
+<tr>
+<th colspan="3" align="left">
+<font size="+2">2. Players </font>
+</th>
+</tr>
+<tr>
+<th colspan="3" align="left">
 </th>
 </tr>
 <tr>
@@ -240,10 +253,17 @@ TODO
 </td>
 
 </tr>
-
 <tr>
 <th colspan="3" align="left">
-<font size="+2">Dungeon Masters </font>
+</th>
+</tr>
+<tr>
+<th colspan="3" align="left">
+<font size="+2">3. Dungeon Masters </font>
+</th>
+</tr>
+<tr>
+<th colspan="3" align="left">
 </th>
 </tr>
 <tr>
