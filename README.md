@@ -43,16 +43,22 @@ Description
 </tr>
 <tr>
 <td>
+<sub><sup>
 
 /`spell`  
-
+</sub></sup>
 </td>
 <td>
+<sub><sup>
 
 \<spell-name\>
+</sub></sup>
 </td>
 <td>
+<sub><sup>
+
 This command will provide more information about the given spell-name.
+</sub></sup>
 </td>
 
 </tr>
