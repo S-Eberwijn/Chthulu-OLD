@@ -26,13 +26,13 @@ If you want to add the Chthulu to your Discord server, click [here](https://disc
 </tr>
 <tr>
 <th align="left">
-Command name
+<strong>Command name</strong>
 </th>
 <th align="left">
-Options
+<strong>Options</strong>
 </th>
 <th align="left">
-Description
+<strong>Description</strong>
 </th>
 </tr>
 <tr>
