@@ -26,39 +26,27 @@ If you want to add the Chthulu to your Discord server, click [here](https://disc
 </tr>
 <tr>
 <th align="left">
-<sub><sup>
 Command name
-</sub></sup>
 </th>
 <th align="left">
-<sub><sup>
 Options
-</sub></sup>
 </th>
 <th align="left">
-<sub><sup>
 Description
-</sub></sup>
 </th>
 </tr>
 <tr>
 <td>
-<sub><sup>
 
 /`spell`  
-</sub></sup>
+
 </td>
 <td>
-<sub><sup>
 
 \<spell-name\>
-</sub></sup>
 </td>
 <td>
-<sub><sup>
-
 This command will provide more information about the given spell-name.
-</sub></sup>
 </td>
 
 </tr>
