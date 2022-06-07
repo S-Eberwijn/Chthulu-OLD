@@ -18,11 +18,16 @@
 If you want to add the Chthulu to your Discord server, click [here](https://discord.com/oauth2/authorize?client_id=532524817740464138&permissions=0&scope=bot%20applications.commands)
 
 # Commands
-### General
 <table>
 <tr>
+<th colspan="3">
+
+<font size="+2">General </font>
+
+</th>
+</tr>
+<tr>
 <th align="center">
-<img width="294" height="1">
 <p>
 <small>
 Command name
@@ -30,7 +35,6 @@ Command name
 </p>
 </th>
 <th align="center">
-<img width="294" height="1">
 <p>
 <small>
 Options
@@ -38,7 +42,6 @@ Options
 </p>
 </th>
 <th align="center">
-<img width="294" height="1">
 <p>
 <small>
 Description
@@ -146,13 +149,17 @@ TODO
 TODO
 </td>
 </tr>
-</table>
 
-### Players
-<table>
+
+<tr>
+<th colspan="3">
+
+<font size="+2">Players </font>
+
+</th>
+</tr>
 <tr>
 <th align="center">
-<img width="294" height="1">
 <p>
 <small>
 Command name
@@ -160,7 +167,6 @@ Command name
 </p>
 </th>
 <th align="center">
-<img width="294" height="1">
 <p>
 <small>
 Options
@@ -168,7 +174,6 @@ Options
 </p>
 </th>
 <th align="center">
-<img width="294" height="1">
 <p>
 <small>
 Description
@@ -265,13 +270,16 @@ TODO
 </td>
 
 </tr>
-</table>
 
-### Dungeon Masters
-<table>
+<tr>
+<th colspan="3">
+
+<font size="+2">Dungeon Masters </font>
+
+</th>
+</tr>
 <tr>
 <th align="center">
-<img width="294" height="1">
 <p>
 <small>
 Command name
@@ -279,7 +287,6 @@ Command name
 </p>
 </th>
 <th align="center">
-<img width="294" height="1">
 <p>
 <small>
 Options
@@ -287,7 +294,6 @@ Options
 </p>
 </th>
 <th align="center">
-<img width="294" height="1">
 <p>
 <small>
 Description
