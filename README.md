@@ -27,21 +27,21 @@ If you want to add the Chthulu to your Discord server, click [here](https://disc
 </th>
 </tr>
 <tr>
-<th align="center">
+<th>
 <p>
 <small>
 Command name
 </small>
 </p>
 </th>
-<th align="center">
+<th>
 <p>
 <small>
 Options
 </small>
 </p>
 </th>
-<th align="center">
+<th>
 <p>
 <small>
 Description
@@ -159,21 +159,21 @@ TODO
 </th>
 </tr>
 <tr>
-<th align="center">
+<th>
 <p>
 <small>
 Command name
 </small>
 </p>
 </th>
-<th align="center">
+<th>
 <p>
 <small>
 Options
 </small>
 </p>
 </th>
-<th align="center">
+<th>
 <p>
 <small>
 Description
@@ -279,21 +279,21 @@ TODO
 </th>
 </tr>
 <tr>
-<th align="center">
+<th>
 <p>
 <small>
 Command name
 </small>
 </p>
 </th>
-<th align="center">
+<th>
 <p>
 <small>
 Options
 </small>
 </p>
 </th>
-<th align="center">
+<th>
 <p>
 <small>
 Description
