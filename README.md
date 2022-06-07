@@ -21,7 +21,7 @@ If you want to add the Chthulu to your Discord server, click [here](https://disc
 <table>
 <tr>
 <th colspan="3">
-<font size="+2">General </font>
+<font size=5 align="left">General </font>
 </th>
 </tr>
 <tr>
@@ -137,7 +137,7 @@ TODO
 </tr>
 <tr>
 <th colspan="3">
-<font size="+2">Players </font>
+<font size="+2" align="left">Players </font>
 </th>
 </tr>
 <tr>
@@ -242,7 +242,7 @@ TODO
 </tr>
 
 <tr>
-<th colspan="3">
+<th colspan="3" align="left">
 <font size="+2">Dungeon Masters </font>
 </th>
 </tr>
