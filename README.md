@@ -20,19 +20,25 @@ If you want to add the Chthulu to your Discord server, click [here](https://disc
 # Commands
 <table>
 <tr>
-<th colspan="3">
-<font size=5 align="left">General </font>
+<th colspan="3" align="left">
+<font size=5>General </font>
 </th>
 </tr>
 <tr>
 <th align="left">
+<sub><sup>
 Command name
+</sub></sup>
 </th>
 <th align="left">
+<sub><sup>
 Options
+</sub></sup>
 </th>
 <th align="left">
+<sub><sup>
 Description
+</sub></sup>
 </th>
 </tr>
 <tr>
@@ -136,8 +142,8 @@ TODO
 </td>
 </tr>
 <tr>
-<th colspan="3">
-<font size="+2" align="left">Players </font>
+<th colspan="3" align="left">
+<font size="+2">Players </font>
 </th>
 </tr>
 <tr>
