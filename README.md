@@ -21,32 +21,18 @@ If you want to add the Chthulu to your Discord server, click [here](https://disc
 <table>
 <tr>
 <th colspan="3">
-
 <font size="+2">General </font>
-
 </th>
 </tr>
 <tr>
 <th align="left">
-<p>
-<small>
 Command name
-</small>
-</p>
 </th>
-<th>
-<p>
-<small>
+<th align="left">
 Options
-</small>
-</p>
 </th>
-<th>
-<p>
-<small>
+<th align="left">
 Description
-</small>
-</p>
 </th>
 </tr>
 <tr>
@@ -149,36 +135,20 @@ TODO
 TODO
 </td>
 </tr>
-
-
 <tr>
 <th colspan="3">
-
 <font size="+2">Players </font>
-
 </th>
 </tr>
 <tr>
-<th>
-<p>
-<small>
+<th align="left">
 Command name
-</small>
-</p>
 </th>
-<th>
-<p>
-<small>
+<th align="left">
 Options
-</small>
-</p>
 </th>
-<th>
-<p>
-<small>
+<th align="left">
 Description
-</small>
-</p>
 </th>
 </tr>
 <tr>
@@ -273,35 +243,20 @@ TODO
 
 <tr>
 <th colspan="3">
-
 <font size="+2">Dungeon Masters </font>
-
 </th>
 </tr>
 <tr>
-<th>
-<p>
-<small>
+<th align="left">
 Command name
-</small>
-</p>
 </th>
-<th>
-<p>
-<small>
+<th align="left">
 Options
-</small>
-</p>
 </th>
-<th>
-<p>
-<small>
+<th align="left">
 Description
-</small>
-</p>
 </th>
 </tr>
-<tr>
 <td>
 
 /`add-character-channel`
