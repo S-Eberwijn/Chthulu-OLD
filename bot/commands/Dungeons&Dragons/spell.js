@@ -124,6 +124,6 @@ function EmbedSpellInMessage(data, message) {
             { name: 'At Higher Level: ', value: `${data.higherLevel}`, inline: false },
         )
         .setTimestamp()
-        .setFooter(data.casters);
+        .setFooter({ text: data.casters });
     return msg;
 }

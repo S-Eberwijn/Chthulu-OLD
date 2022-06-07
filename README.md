@@ -30,7 +30,7 @@ If you want to add the Chthulu to your Discord server, click [here](https://disc
 | /`roll-check`  | [modifier] [roll twice]  | TODO |
 
 ### Players
-| <div style="width:220px">Command name</div> | <div style="width:250px">Options</div>           |  Description  |
+| Command name | <div style="width:250px">Options</div>           |  Description  |
 | --------------------- | --------------------- | ------------- |
 | /`characterCreation`  |                       | This command will create a new text channel, in which Chthulu will ask the user some question about his/her soon to be character. Once all questions have been filled in, the character will be created and assigned to the user. |
 | /`character`          | [@User]               | When a user has a character configured, the can view their (or someone else's) by using this command. |
@@ -38,15 +38,116 @@ If you want to add the Chthulu to your Discord server, click [here](https://disc
 | /`session`            | <'request', 'board'>  | A user with a configured character can use this command to request a new session, as well as see all planned session in a nicely formatted embed. |
 | /`magicItemList`      |                       | Chthulu will give a list with magic items. |
 | /`roll-stats`         | [amount-of-dice] [drop-lowest] [drop-highest] [modifier]  | TODO |
+|  | | |
 
 ### Dungeon Masters
-| <div style="width:220px">Command name</div>   | <div style="width:250px">Options</div>              |  Description  |
+| Command name <img width=220/>   | <div style="width:250px">Options</div>              |  Description  |
 | -------------                    | -------------        | ------------- |
 | /`add-character-channel`         | \<channel-name\>     | Add in-character channel (voice), so if someone has a character on that server configured, their name will change to his/her/they character's. |
 | /`nonPlayableCharacterCreation`  |                      | A Dungeon Master can use this command to create a new NPC. Chthulu will create a new channel and ask questions about the new, soon to be, NPC. Once finished, the NPC will be stored in the database and the Dungeon Master can start impersonating the creature. |
 | /`set-level`                     | \<@User\> \<1-20\>   | A Dungeon Master can use this command to set a new level to the provided user, considering the user has an active character configured. |
 | /`stop-impersonating`            |                      | A Dungeon Master can use this command to stop impersonating the previously chosen creature. |
 | /`impersonate`                   |                      | Chthulu will show a list where the Dungeon Master can choose which create to impersonate. When the Dungeon Master is in an 'in-character'-channel, their name will change to the responding NPC. |
+
+<table>
+<tr>
+<th align="center">
+<img width="294" height="1">
+<p>
+<small>
+Command name
+</small>
+</p>
+</th>
+<th align="center">
+<img width="294" height="1">
+<p>
+<small>
+Options
+</small>
+</p>
+</th>
+<th align="center">
+<img width="294" height="1">
+<p>
+<small>
+Description
+</small>
+</p>
+</th>
+</tr>
+<tr>
+<td>
+test 1x2
+</td>
+<td>
+test 2x2
+
+</td>
+<td>
+test 3x2
+</td>
+
+</tr>
+<tr>
+<td align="center">
+Column 1
+</td>
+<td align="center">
+Column 2
+</td>
+</tr>
+</table>
+
+<table>
+<tr>
+<th align="center">
+<img width="294" height="1">
+<p>
+<small>
+Command name
+</small>
+</p>
+</th>
+<th align="center">
+<img width="294" height="1">
+<p>
+<small>
+Options
+</small>
+</p>
+</th>
+<th align="center">
+<img width="294" height="1">
+<p>
+<small>
+Description
+</small>
+</p>
+</th>
+</tr>
+<tr>
+<td>
+test 1x2
+</td>
+<td>
+test 2x2
+
+</td>
+<td>
+test 3x2
+</td>
+
+</tr>
+<tr>
+<td align="center">
+Column 1
+</td>
+<td align="center">
+Column 2
+</td>
+</tr>
+</table>
 
 # Developers information
 ```
