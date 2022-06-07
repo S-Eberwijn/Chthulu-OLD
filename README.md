@@ -27,7 +27,7 @@ If you want to add the Chthulu to your Discord server, click [here](https://disc
 </th>
 </tr>
 <tr>
-<th>
+<th align="left">
 <p>
 <small>
 Command name
