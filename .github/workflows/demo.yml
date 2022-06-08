@@ -32,13 +32,19 @@ jobs:
         run: |
           echo Add other actions to build,
           echo test, and deploy your project.
-          
+        
+      # Get the current version of the project
+      - uses: avides/actions-project-version-check@v1.3.0
+      - with:
+          token: ${{ secrets.GH_TOKEN }}
+          only-return-version: package.json
+        
       # Send a messgase to Discord    
       - uses: sarisia/actions-status-discord@v1
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
           nodetail: true
-          title: New version of `software` is ready!
+          title: New version of `Chthulu` is ready!
           description: |
-            Version `1.2.3-alpha`
+            Version `${{ steps.actions_project_version_check.outputs.version }}`
             Click [here](https://github.com/sarisia/actions-status-discord) to download!
