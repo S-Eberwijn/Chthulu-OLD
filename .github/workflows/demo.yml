@@ -37,7 +37,7 @@ jobs:
       - uses: avides/actions-project-version-check@v1.3.0
         with:
           token: ${{ secrets.GH_TOKEN }}
-          only-return-version: package.json
+          only-return-version: .\package.json
         
       # Send a messgase to Discord    
       - uses: sarisia/actions-status-discord@v1
