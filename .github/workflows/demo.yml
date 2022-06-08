@@ -35,7 +35,7 @@ jobs:
         
       # Get the current version of the project
       - uses: avides/actions-project-version-check@v1.3.0
-      - with:
+        with:
           token: ${{ secrets.GH_TOKEN }}
           only-return-version: package.json
         
