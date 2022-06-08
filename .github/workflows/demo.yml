@@ -32,3 +32,13 @@ jobs:
         run: |
           echo Add other actions to build,
           echo test, and deploy your project.
+          
+      # Send a messgase to Discord    
+      - uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          nodetail: true
+          title: New version of `software` is ready!
+          description: |
+            Version `1.2.3-alpha`
+            Click [here](https://github.com/sarisia/actions-status-discord) to download!
