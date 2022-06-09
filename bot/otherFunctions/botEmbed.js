@@ -44,7 +44,7 @@ function calculateUptimeBot(bot) {
     let minutes = Math.floor(totalSeconds / 60);
     let seconds = Math.floor(totalSeconds % 60);
 
-    let uptime = `${seconds} seconds`;
+    let uptime = `${seconds} seconds`; 
 
     if (minutes != 0) {
         uptime = `${minutes} minutes and ${seconds} seconds`;
