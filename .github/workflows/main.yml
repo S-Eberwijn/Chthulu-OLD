@@ -23,8 +23,8 @@ jobs:
           major-wording:  'major'
           patch-wording:  'fix, fixed, fixes'     # Providing patch-wording will override commits
                                                   # defaulting to a patch bump.
-          skip-commit:  'true'
-          skip-tag: 'true'
+          #skip-commit:  'true'
+          #skip-tag: 'true'
           target-branch: 'main'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
