@@ -1,16 +1,23 @@
-name: Update Project Version
+name: Pushed to main branch
 on:
   push:
     branches: [ "main" ]
 
 jobs:
-  upgrade-version:
+  bump-version:
+    name: 'Bump project version on master'
     runs-on: ubuntu-latest
+
     steps:
-      - name:  'Automated Version Bump'
-        uses:  'phips28/gh-action-bump-version@master'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+      - name: 'Checkout source code'
+        uses: 'actions/checkout@v2'
+        with:
+          ref: ${{ github.ref }}
+      - name: 'cat package.json'
+        run: cat ./package.json
+      - name: 'Automated Version Bump'
+        id: version-bump
+        uses: 'phips28/gh-action-bump-version@master'
         with:
           minor-wording:  'minor'
           major-wording:  'major'
@@ -18,4 +25,29 @@ jobs:
                                                   # defaulting to a patch bump.
           skip-commit:  'true'
           skip-tag: 'true'
-          target-brach: 'master'
+          target-branch: 'master'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: 'cat package.json'
+        run: cat ./package.json
+  bump-version:
+    name: 'Send update to Discord'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      #Get project version
+      - name: Extract version
+        id: extract_version
+        uses: Saionaro/extract-package-version@v1.0.6
+      
+      # Send a messgase to Discord    
+      - uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          nodetail: true
+          title: New version of `Chthulu` is ready!
+          description: |
+            Version `${{ steps.extract_version.outputs.version }}`
+            Click [here](https://github.com/sarisia/actions-status-discord) to download!
