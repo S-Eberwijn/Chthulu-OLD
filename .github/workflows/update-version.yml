@@ -1,4 +1,4 @@
-name: Upgrade Version
+name: Update Project Version
 on:
   push:
     branches: [ "main" ]
@@ -10,6 +10,6 @@ jobs:
       - uses: actions/checkout@v2
       - uses: pocket-apps/action-update-version@v1
         with:
-          files: 'package.json, app.yaml'
+          files: 'package.json'
           version-regexp: '\d+.\d+.\d+'
           repo-token: ${{ secrets.GH_TOKEN }}
