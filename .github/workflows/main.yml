@@ -1,11 +1,11 @@
-name: Pushed to main branch
+name: Main
 on:
   push:
     branches: [ "main" ]
 
 jobs:
   bump-version:
-    name: 'Bump project version on master'
+    name: 'Update version'
     runs-on: ubuntu-latest
 
     steps:
@@ -61,7 +61,7 @@ jobs:
             # Adds more detail to both client and server-side analysis logs, activating DEBUG mode for the scanner, and adding client-side environment variables and system properties to the server-side log of analysis report processing.
             # optional, default is false   
   discord-message:
-    name: 'Send update to Discord'
+    name: 'Discord'
     needs: [sonarcloud]
     runs-on: ubuntu-latest
 
