@@ -5,6 +5,8 @@ const { NonPlayableCharacter } = require('../database/models/NonPlayableCharacte
 const { Map } = require('../database/models/Maps');
 const { Quest } = require('../database/models/Quest');
 const { GeneralInfo } = require('../database/models/GeneralInfo');
+const { GameSession } = require('../database/models/GameSession');
+
 
 const Importance = Object.freeze({ 1: 'Very low', 2: 'Low', 3: 'Normal', 4: 'High', 5: 'Very high', });
 const Category = Object.freeze({ 'information': 'Information', 'dnd': 'Dungeons & Dragons', 'general': 'General', 'miscellaneous': 'Miscellaneous', });
@@ -42,7 +44,7 @@ async function cacheAllUsers(bot) {
     }
 }
 
-async function loadAllJSONFiles(bot){
+async function loadAllJSONFiles(bot) {
     bot.stupidQuestionTracker = await require("../bot/jsonDb/stupidQuestionTracker.json");
     bot.ressurection = await require("../bot/jsonDb/ressurection.json");
     bot.sessionAddUserRequest = await require("../bot/jsonDb/sessionAddUserRequest.json");
@@ -183,6 +185,14 @@ async function editServerCommands(serverID, commands) {
     });
 }
 
+async function getAllGameSessions() {
+    return await GameSession.findAll();
+}
+
+async function getAllServerGameSessions(serverID) {
+    return await GameSession.findAll({ where: { server: serverID } });
+}
+
 function onlyUnique(value, index, self) {
     return self.indexOf(value) === index;
 }
@@ -198,7 +208,7 @@ module.exports = {
     getBotGuilds, getMutualGuilds, getGuildFromBot, getBotCommandsByCategory,
     isUserInGuild, isUserAdminInGuild, cacheAllUsers, loadAllJSONFiles,
     getAliveCharacters, getNonPlayableCharacters, getDeadCharacters,
-    getServerMap,
+    getServerMap, getAllGameSessions, getAllServerGameSessions,
     getServerQuestsByStatuses, getQuestsByStatuses, createQuest, deleteQuest, updateQuest,
     getServerGeneralInfo, getServerDisabledCommands, editServerCommands
 };

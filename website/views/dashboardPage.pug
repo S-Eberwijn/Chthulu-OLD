@@ -7,6 +7,7 @@ block scripts
     script. 
         var characters = !{JSON.stringify(characters)}; 
         var allQuests = !{JSON.stringify(allQuests)}; 
+        var sessions = !{JSON.stringify(sessions)}; 
 
 block styles 
     style 
@@ -32,7 +33,22 @@ block dashboardContent
                     
         section 
             h1 Sessions
-
+            .sectionContent
+                div.kpiItem
+                    span.kpiTitle Currently Requested Sessions
+                    span.kpiContent#currentlyRequestedSessions #{''}
+                div.kpiItem
+                    span.kpiTitle Currently Planned Sessions
+                    span.kpiContent#currentlyPlannedSessions #{''}
+                div.kpiItem
+                    span.kpiTitle Total Played Sessions
+                    span.kpiContent#totalPlayedSessions #{''}
+                div.kpiItem
+                    span.kpiTitle Total Canceled Sessions
+                    span.kpiContent#totalCanceledSessions #{''}
+                //- div.kpiItem
+                //-     span.kpiTitle Total Requested Sessions
+                //-     span.kpiContent#totalRequestedSessions #{''}
         section
             h1 Quests
             .sectionContent

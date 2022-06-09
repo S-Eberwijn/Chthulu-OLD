@@ -49,8 +49,16 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon"
   },
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "node": "^16.14.2"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/S-Eberwijn/Chthulu.git"
+  },
+  "bugs": {
+    "url": "https://github.com/S-Eberwijn/Chthulu/issues"
+  },
+  "homepage": "https://github.com/S-Eberwijn/Chthulu#readme"
 }

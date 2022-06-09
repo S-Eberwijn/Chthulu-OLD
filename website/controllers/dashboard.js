@@ -1,4 +1,4 @@
-const { getAliveCharacters, getNonPlayableCharacters, getServerMap, getServerQuestsByStatuses,getQuestsByStatuses, createQuest, deleteQuest, updateQuest, getServerDisabledCommands, getBotCommandsByCategory, editServerCommands } = require('../../functions/api');
+const { getAliveCharacters, getNonPlayableCharacters, getServerMap, getServerQuestsByStatuses,getQuestsByStatuses, createQuest, deleteQuest, updateQuest, getServerDisabledCommands, getBotCommandsByCategory, editServerCommands, getAllGameSessions, getAllServerGameSessions } = require('../../functions/api');
 
 exports.dashboardPage = async (req, res) => {
     res.render('dashboardPage', {
@@ -8,6 +8,7 @@ exports.dashboardPage = async (req, res) => {
             headerTitle: 'Chthulu',
             characters: await getAliveCharacters(),
             allQuests: await getQuestsByStatuses(["OPEN", "DONE", "EXPIRED", "FAILED"]),
+            sessions: await getAllGameSessions(),
         }
     });
 }
@@ -20,6 +21,7 @@ exports.guildDashboardPage = async (req, res) => {
             headerTitle: '',
             characters: await getAliveCharacters(res.locals.renderData?.selectedGuildId),
             allQuests: await getServerQuestsByStatuses(res.locals.renderData?.selectedGuildId, ["OPEN", "DONE", "EXPIRED", "FAILED"]),
+            sessions: await getAllServerGameSessions(res.locals.renderData?.selectedGuildId),
         }
     });
 }

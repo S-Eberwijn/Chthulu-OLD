@@ -17,7 +17,7 @@ function addChartToElement(chartID, chartTitle, values, axisLabels) {
 
 
 document.addEventListener("DOMContentLoaded", function () {
-    // console.log(getDeadCharacters(characters));
+    console.log(sessions);
     // console.log(allQuests.filter(quest => quest.status === 'OPEN'));
 
     timeout = setInterval(function () {
@@ -34,6 +34,13 @@ document.addEventListener("DOMContentLoaded", function () {
             addValueToElement('EXPIRED-quests', allQuests.filter(quest => quest.data.quest_status === 'EXPIRED').length).then(element => { return element.parentNode.classList.add('no-after'); });
             addValueToElement('DONE-quests', allQuests.filter(quest => quest.data.quest_status === 'DONE').length).then(element => { return element.parentNode.classList.add('no-after'); });
             addValueToElement('total-quests', allQuests.length).then(element => { return element.parentNode.classList.add('no-after'); });
+
+            addValueToElement('currentlyRequestedSessions', sessions?.filter(session => session.data.session_status === "CREATED").length).then(element => { return element.parentNode.classList.add('no-after'); });
+            addValueToElement('currentlyPlannedSessions', sessions?.filter(session => session.data.session_status === "PLANNED").length).then(element => { return element.parentNode.classList.add('no-after'); });
+            addValueToElement('totalPlayedSessions', sessions?.filter(session => session.data.session_status === "PLAYED").length).then(element => { return element.parentNode.classList.add('no-after'); });
+            addValueToElement('totalCanceledSessions', sessions?.filter(session => session.data.session_status === "CANCELED").length).then(element => { return element.parentNode.classList.add('no-after'); });
+            // addValueToElement('totalRequestedSessions', allQuests.length).then(element => { return element.parentNode.classList.add('no-after'); });
+
 
             clearInterval(timeout);
         }
