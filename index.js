@@ -76,7 +76,10 @@ app.use('/dashboard/', require('./website/routes/dashboard'));
 app.use('/auth', require('./website/routes/auth'));
 
 app.post("/refresh", async (req, res) => {
-    console.log("repl.deploy" + req?.body + req?.get("Signature"))
+    console.log("repl.deploy" + req?.body + req?.get("Signature"));
+
+    await res.setStatus(result.status).end(result.body)
+    console.log("repl.deploy-success")
 })
 
 // Initialize Discord Bot
