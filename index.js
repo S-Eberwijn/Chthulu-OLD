@@ -75,14 +75,14 @@ app.use('/', require('./website/routes/home'));
 app.use('/dashboard/', require('./website/routes/dashboard'));
 app.use('/auth', require('./website/routes/auth'));
 
-// app.post("/refresh", async (req, res) => {
-//     console.log("repl.deploy" + req.body + req.headers.get("Signature"))
+app.post("/refresh", async (req, res) => {
+    console.log("repl.deploy" + req.body + req.headers.get("Signature"))
 
-//     const result = JSON.parse((await getStdinLine()))
+    //     const result = JSON.parse((await getStdinLine()))
 
-//     await res.setStatus(result.status).end(result.body)
-//     console.log("repl.deploy-success")
-// })
+    //     await res.setStatus(result.status).end(result.body)
+    //     console.log("repl.deploy-success")
+})
 // async function getStdinLine() {
 //     for await (const line of readLines(Deno.stdin)) {
 //         return line
