@@ -25,7 +25,7 @@ jobs:
                                                   # defaulting to a patch bump.
           skip-commit:  'true'
           skip-tag: 'true'
-          target-branch: 'master'
+          target-branch: 'main'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: 'cat package.json'
