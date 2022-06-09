@@ -1,0 +1,21 @@
+name: Update Project Version
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  upgrade-version:
+    runs-on: ubuntu-latest
+    steps:
+      - name:  'Automated Version Bump'
+        uses:  'phips28/gh-action-bump-version@master'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        with:
+          minor-wording:  'minor'
+          major-wording:  'major'
+          patch-wording:  'fix, fixed, fixes'     # Providing patch-wording will override commits
+                                                  # defaulting to a patch bump.
+          skip-commit:  'true'
+          skip-tag: 'true'
+          target-brach: 'master'
