@@ -28,6 +28,6 @@ jobs:
           skip-tag: 'true'
           target-branch: 'master'
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
       - name: 'cat package.json'
         run: cat ./package.json
