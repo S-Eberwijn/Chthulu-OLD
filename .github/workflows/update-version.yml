@@ -7,9 +7,13 @@ jobs:
   upgrade-version:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: pocket-apps/action-update-version@v1
+      - name:  'Automated Version Bump'
+        uses:  'phips28/gh-action-bump-version@master'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         with:
-          files: 'package.json'
-          version-regexp: '\d+.\d+.\d+'
-          repo-token: ${{ secrets.GH_TOKEN }}
+          minor-wording:  'minor'
+          major-wording:  'major'
+          patch-wording:  'fix, fixed, fixes'     # Providing patch-wording will override commits
+                                                  # defaulting to a patch bump.
+
