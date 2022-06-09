@@ -1,7 +1,7 @@
 {
   "name": "chthulu",
   "version": "1.1.4",
-  "description": "Ready to serve my master Khthonios f",
+  "description": "Ready to serve my master Khthonios",
   "main": "bot.js",
   "author": "Stephan 'Khthonios' Eberwijn",
   "dependencies": {
