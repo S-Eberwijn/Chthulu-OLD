@@ -32,6 +32,7 @@ jobs:
         run: cat ./package.json
   discord-message:
     name: 'Send update to Discord'
+    needs: [bump-version]
     runs-on: ubuntu-latest
 
     steps:
