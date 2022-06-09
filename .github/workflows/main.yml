@@ -50,4 +50,4 @@ jobs:
           title: New version of `Chthulu` is ready!
           description: |
             Version `${{ steps.extract_version.outputs.version }}`
-            Click [here](https://github.com/sarisia/actions-status-discord) to download!
+            Click [here](https://github.com/S-Eberwijn/Chthulu#readme) to see!
