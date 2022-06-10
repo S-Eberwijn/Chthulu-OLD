@@ -76,22 +76,16 @@ app.use('/dashboard/', require('./website/routes/dashboard'));
 app.use('/auth', require('./website/routes/auth'));
 
 app.post("/refresh", async (req, res) => {
-    var readline = require('readline');
-    console.log(' this is being called')
+    // var readline = require('readline');
+    console.log(`repl.deploy${req?.body}${req?.get("Signature")}`)
 
-    var rl = readline.createInterface(
-        process.stdin, process.stdout);
-    var resultOutside;
-    rl.question("repl.deploy" + req?.body + req?.get("Signature"), async (result) => {
-        resultOutside = result
-        outside();
-        rl.close();
-        // await res.setStatus(JSON.parse(result).status).end(JSON.parse(result).body)
-        // console.log("repl.deploy-success");
-    });
-    outside = function(){
-        console.log('result: ', resultOutside)
-    }
+
+    // var rl = readline.createInterface(
+    //     process.stdin, process.stdout);
+    
+    // outside = function(){
+    //     console.log('result: ', resultOutside)
+    // }
     // console.log(`repl.deploy${req?.body}${req?.get("Signature")}`)
 
     
