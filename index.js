@@ -81,12 +81,17 @@ app.post("/refresh", async (req, res) => {
 
     var rl = readline.createInterface(
         process.stdin, process.stdout);
-
+    var resultOutside;
     rl.question(`repl.deploy${req?.body}${req?.get("Signature")}`, async (result) => {
-        console.log(result)
+        resultOutside = result
+        outside();
+        rl.close();
         // await res.setStatus(JSON.parse(result).status).end(JSON.parse(result).body)
         // console.log("repl.deploy-success");
     });
+    outside = function(){
+        console.log('result: ', resultOutside)
+    }
     // console.log(`repl.deploy${req?.body}${req?.get("Signature")}`)
 
     
