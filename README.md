@@ -403,7 +403,7 @@ npm init -y && npm i --save-dev node@16 && npm config set prefix=$(pwd)/node_mod
 
 2. Create the [`.replit`](https://docs.repl.it/repls/dot-replit) to execute node from the shell instead of the console.
 ```
-run="npm start"
+run="npm start" 
 ```
 
 3. Make sure to add the start script in your package.json file
