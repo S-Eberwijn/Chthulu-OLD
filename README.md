@@ -387,4 +387,9 @@ FS_CERT_URL=
 FS_DATABASE_NAME=
 ```
 
+##### replit shell
+```
+curl -sL https://repl-deploy.vercel.app/ -o repl.deploy
+chmod +x ./repl.deploy
+```
 <!-- on replit use double quotes for FS_PRIVATE_KEY and JSON.parse it -->
