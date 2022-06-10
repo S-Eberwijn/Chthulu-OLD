@@ -416,5 +416,6 @@ run="npm start"
 4. (Optional) If you had packages like canvas or sqlite before, you need to re-install those packages
 ```
 npm uninstall canvas && npm i canvas
-```
+``` 
+<!-- test -->
 <!-- on replit use double quotes for FS_PRIVATE_KEY and JSON.parse it -->
