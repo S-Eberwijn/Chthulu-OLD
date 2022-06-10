@@ -417,5 +417,4 @@ run="npm start"
 ```
 npm uninstall canvas && npm i canvas
 ```
-<!-- change -->
 <!-- on replit use double quotes for FS_PRIVATE_KEY and JSON.parse it -->
