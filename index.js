@@ -77,21 +77,26 @@ app.use('/auth', require('./website/routes/auth'));
 
 app.post("/refresh", async (req, res) => {
     // var readline = require('readline');
-    // console.log(`repl.deploy${req?.body}${req?.get("Signature")}`)
-    // console.log("repl.deploy" +req?.body + req?.get("Signature"))
-    console.log(req.body)
-    res.end("OK")
-
-
     // var rl = readline.createInterface(
     //     process.stdin, process.stdout);
+
     
+    console.log(`repl.deploy${req?.body}${req?.get("Signature")}`)
+    // console.log("repl.deploy" +req?.body + req?.get("Signature"))
+    // console.log(req.body)
+    // rl.on('line', (input) => {
+    //     console.log(`Received: ${input}`);
+    // });
+    // res.end("OK")
+
+
+
     // outside = function(){
     //     console.log('result: ', resultOutside)
     // }
     // console.log(`repl.deploy${req?.body}${req?.get("Signature")}`)
 
-    
+
     //TODO = create result, read from stdin
     // const result: {
     //     body: string
