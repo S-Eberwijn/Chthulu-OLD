@@ -76,10 +76,26 @@ app.use('/dashboard/', require('./website/routes/dashboard'));
 app.use('/auth', require('./website/routes/auth'));
 
 app.post("/refresh", async (req, res) => {
-    console.log("repl.deploy" + req?.body + req?.get("Signature"));
+    var readline = require('readline');
+    // console.log(req.body)
 
-    await res.setStatus(result.status).end(result.body)
-    console.log("repl.deploy-success")
+    var rl = readline.createInterface(
+        process.stdin, process.stdout);
+
+    rl.question(`repl.deploy${req?.body}${req?.get("Signature")}`, async (result) => {
+        result = JSON.parse(result);
+        await res.setStatus(result.status).end(result.body)
+        console.log("repl.deploy-success");
+    });
+
+
+    //TODO = create result, read from stdin
+    // const result: {
+    //     body: string
+    //     status: number
+    // } = JSON.parse((await getStdinLine())!)
+    // await res.setStatus(result.status).end(result.body)
+    // console.log("repl.deploy-success")
 })
 
 // Initialize Discord Bot
