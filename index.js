@@ -85,6 +85,7 @@ app.post("/refresh", async (req, res) => {
     console.log("repl.deploy" + req?.body + req?.get("Signature"))
 
     rl.on('line', async (result) => {
+        console.log(result)
         await res.status(result.status).end(result.body)
         console.log("repl.deploy-success")  
     });
