@@ -1,2 +1,2 @@
 language = "nodejs"
-run = "./repl.deploy node index.js"
+run = "npm start"
