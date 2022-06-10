@@ -77,12 +77,12 @@ app.use('/auth', require('./website/routes/auth'));
 
 app.post("/refresh", async (req, res) => {
     var readline = require('readline');
-    // console.log(req.body)
+    console.log(' this is being called')
 
     var rl = readline.createInterface(
         process.stdin, process.stdout);
     var resultOutside;
-    rl.question(`repl.deploy${req?.body}${req?.get("Signature")}`, async (result) => {
+    rl.question("repl.deploy" + req?.body + req?.get("Signature"), async (result) => {
         resultOutside = result
         outside();
         rl.close();
