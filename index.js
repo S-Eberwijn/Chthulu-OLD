@@ -45,7 +45,7 @@ const WB_PORT = process.env.WB_PORT || 8080;
 const app = express();
 app.use(favicon(path.join(__dirname, 'website', 'public', 'favicon.ico')));
 app.use(bodyParser.json());
-app.use(bodyParser.text({type:"*/*"}));
+app.use(bodyParser.text({ type: "*/*" }));
 //Load View Engine
 app.set('views', path.join(__dirname, 'website', 'views'));
 app.set('view engine', 'pug');
@@ -77,17 +77,19 @@ app.use('/auth', require('./website/routes/auth'));
 
 app.post("/refresh", async (req, res) => {
     var readline = require('readline');
-    console.log(req.body)
+    // console.log(req.body)
 
     var rl = readline.createInterface(
         process.stdin, process.stdout);
 
     rl.question(`repl.deploy${req?.body}${req?.get("Signature")}`, async (result) => {
-        await res.setStatus(JSON.parse(result).status).end(JSON.parse(result).body)
-        console.log("repl.deploy-success");
+        console.log(result)
+        // await res.setStatus(JSON.parse(result).status).end(JSON.parse(result).body)
+        // console.log("repl.deploy-success");
     });
+    // console.log(`repl.deploy${req?.body}${req?.get("Signature")}`)
 
-
+    
     //TODO = create result, read from stdin
     // const result: {
     //     body: string
