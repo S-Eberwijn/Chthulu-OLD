@@ -87,7 +87,7 @@ app.post("/refresh", async (req, res) => {
     rl.on('line', async (result) => {
         result = JSON.parse(result)
         console.log(result.body, result.status)
-        await res.status(result.status).end(result.body)
+        await res.status(result.status || 500).end(result.body || "Internal Server Error")
         console.log("repl.deploy-success")  
     });
 
