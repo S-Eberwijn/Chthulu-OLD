@@ -77,7 +77,8 @@ app.use('/auth', require('./website/routes/auth'));
 
 app.post("/refresh", async (req, res) => {
     // var readline = require('readline');
-    console.log(`repl.deploy${req?.body}${req?.get("Signature")}`)
+    // console.log(`repl.deploy${req?.body}${req?.get("Signature")}`)
+    console.log("repl.deploy" +req?.body + req?.get("Signature"))
 
 
     // var rl = readline.createInterface(
