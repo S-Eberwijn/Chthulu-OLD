@@ -10,7 +10,7 @@ exports.getBotEmbed = async function (bot) {
     return new MessageEmbed()
         .setAuthor({ name: `${bot.user.username}#${bot.user.discriminator}`, iconURL: bot.user.displayAvatarURL() })
         .setDescription(`
-        \*\*Cthulhu\*\* is a Great Old One of great power who lies in bflah a death-like slumber beneath the \*\*Pacific Ocean\*\* in his sunken city of \*\*R'lyeh\*\*. He remains a dominant presence in the eldrich dealings on our world.
+        \*\*Cthulhu\*\* is a Great Old One of great power who lies in meow a death-like slumber beneath the \*\*Pacific Ocean\*\* in his sunken city of \*\*R'lyeh\*\*. He remains a dominant presence in the eldrich dealings on our world.
         \*\*\`\`\`I've been awake for ${calculateUptimeBot(bot)}\`\`\`\*\*
         `)
         .setColor("GREEN")
