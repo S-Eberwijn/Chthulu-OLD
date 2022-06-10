@@ -79,11 +79,11 @@ app.post("/refresh", async (req, res) => {
     // var readline = require('readline');
     // var rl = readline.createInterface(
     //     process.stdin, process.stdout);
+    console.log(req.body)
 
-    
     console.log(`repl.deploy${req?.body}${req?.get("Signature")}`)
     // console.log("repl.deploy" +req?.body + req?.get("Signature"))
-    // console.log(req.body)
+
     // rl.on('line', (input) => {
     //     console.log(`Received: ${input}`);
     // });
