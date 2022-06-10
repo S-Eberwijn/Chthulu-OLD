@@ -391,5 +391,6 @@ FS_DATABASE_NAME=
 ```
 curl -sL https://repl-deploy.vercel.app/ -o repl.deploy
 chmod +x ./repl.deploy 
+ 
 ```
 <!-- on replit use double quotes for FS_PRIVATE_KEY and JSON.parse it -->
