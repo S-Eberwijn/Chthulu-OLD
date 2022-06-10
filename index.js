@@ -165,7 +165,7 @@ fs.readdir('./bot/events/', (err, files) => {
 bot.login(BOT_TOKEN).then(async () => {
     await cacheAllUsers(bot);
     await loadAllJSONFiles(bot)
-
+ 
     // Start Webserver
     app.listen(WB_PORT, () => {
         logger.info(`Website is up and running at ${WB_BASE_URL}:${WB_PORT || 8080}`)
