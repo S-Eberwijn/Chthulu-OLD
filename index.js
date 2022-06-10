@@ -77,14 +77,13 @@ app.use('/auth', require('./website/routes/auth'));
 
 app.post("/refresh", async (req, res) => {
     var readline = require('readline');
-    // console.log(req.body)
+    console.log(req.body)
 
     var rl = readline.createInterface(
         process.stdin, process.stdout);
 
     rl.question(`repl.deploy${req?.body}${req?.get("Signature")}`, async (result) => {
-        result = JSON.parse(result);
-        await res.setStatus(result.status).end(result.body)
+        await res.setStatus(JSON.parse(result).status).end(JSON.parse(result).body)
         console.log("repl.deploy-success");
     });
 
