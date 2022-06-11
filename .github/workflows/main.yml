@@ -4,36 +4,36 @@ on:
     branches: [ "main" ]
 
 jobs:
-  bump-version:
-    name: 'Update version'
-    runs-on: ubuntu-latest
+  # bump-version:
+  #   name: 'Update version'
+  #   runs-on: ubuntu-latest
 
-    steps:
-      - name: 'Checkout source code'
-        uses: 'actions/checkout@v2'
-        with:
-          ref: ${{ github.ref }}
-      - name: 'cat package.json'
-        run: cat ./package.json
-      - name: 'Automated Version Bump'
-        id: version-bump
-        uses: 'phips28/gh-action-bump-version@master'
-        with:
-          minor-wording:  'minor'
-          major-wording:  'major'
-          patch-wording:  'fix, fixed, fixes'     # Providing patch-wording will override commits
-                                                  # defaulting to a patch bump.
-          #skip-commit:  'true'
-          skip-tag: 'true'
-          target-branch: 'main'
+  #   steps:
+  #     - name: 'Checkout source code'
+  #       uses: 'actions/checkout@v2'
+  #       with:
+  #         ref: ${{ github.ref }}
+  #     - name: 'cat package.json'
+  #       run: cat ./package.json
+  #     - name: 'Automated Version Bump'
+  #       id: version-bump
+  #       uses: 'phips28/gh-action-bump-version@master'
+  #       with:
+  #         minor-wording:  'minor'
+  #         major-wording:  'major'
+  #         patch-wording:  'fix, fixed, fixes'     # Providing patch-wording will override commits
+  #                                                 # defaulting to a patch bump.
+  #         #skip-commit:  'true'
+  #         skip-tag: 'true'
+  #         target-branch: 'main'
           
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: 'cat package.json'
-        run: cat ./package.json
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #     - name: 'cat package.json'
+  #       run: cat ./package.json
   sonarcloud:
     name: SonarCloud
-    needs: [bump-version]
+    # needs: [bump-version]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -67,7 +67,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-
       #Get project version
       - name: Extract version
         id: extract_version
