@@ -1,4 +1,4 @@
-const { getAliveCharacters, getNonPlayableCharacters, getServerMap, getServerQuestsByStatuses,getQuestsByStatuses, createQuest, deleteQuest, updateQuest, getServerDisabledCommands, getBotCommandsByCategory, editServerCommands, getAllGameSessions, getAllServerGameSessions } = require('../../functions/api');
+const { getAliveCharacters, getNonPlayableCharacters, getServerMap, getAllMaps, getServerQuestsByStatuses,getQuestsByStatuses, createQuest, deleteQuest, updateQuest, getServerDisabledCommands, getBotCommandsByCategory, editServerCommands, getAllGameSessions, getAllServerGameSessions } = require('../../functions/api');
 
 exports.dashboardPage = async (req, res) => {
     res.render('dashboardPage', {
@@ -9,6 +9,7 @@ exports.dashboardPage = async (req, res) => {
             characters: await getAliveCharacters(),
             allQuests: await getQuestsByStatuses(["OPEN", "DONE", "EXPIRED", "FAILED"]),
             sessions: await getAllGameSessions(),
+            locations: await getAllMaps(),
         }
     });
 }
@@ -22,6 +23,7 @@ exports.guildDashboardPage = async (req, res) => {
             characters: await getAliveCharacters(res.locals.renderData?.selectedGuildId),
             allQuests: await getServerQuestsByStatuses(res.locals.renderData?.selectedGuildId, ["OPEN", "DONE", "EXPIRED", "FAILED"]),
             sessions: await getAllServerGameSessions(res.locals.renderData?.selectedGuildId),
+            locations: await getServerMap(res.locals.renderData?.selectedGuildId),
         }
     });
 }

@@ -8,6 +8,7 @@ block scripts
         var characters = !{JSON.stringify(characters)}; 
         var allQuests = !{JSON.stringify(allQuests)}; 
         var sessions = !{JSON.stringify(sessions)}; 
+        var locations = !{JSON.stringify(locations)};
 
 block styles 
     style 
@@ -66,6 +67,13 @@ block dashboardContent
                     span.kpiContent#total-quests 
         section
             h1 Location
+            .sectionContent
+                div.kpiItem
+                    span.kpiTitle Total locations
+                    span.kpiContent#total-locations 
+                div.kpiItem
+                    span.kpiTitle Undiscovered locations
+                    span.kpiContent#undiscovered-locations
 
         section
             h1 Interaction

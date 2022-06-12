@@ -17,7 +17,7 @@ function addChartToElement(chartID, chartTitle, values, axisLabels) {
 
 
 document.addEventListener("DOMContentLoaded", function () {
-    console.log(sessions);
+    console.log(locations);
     // console.log(allQuests.filter(quest => quest.status === 'OPEN'));
 
     timeout = setInterval(function () {
@@ -41,7 +41,8 @@ document.addEventListener("DOMContentLoaded", function () {
             addValueToElement('totalCanceledSessions', sessions?.filter(session => session.data.session_status === "CANCELED").length).then(element => { return element.parentNode.classList.add('no-after'); });
             // addValueToElement('totalRequestedSessions', allQuests.length).then(element => { return element.parentNode.classList.add('no-after'); });
 
-
+            addValueToElement('total-locations', locations?.map(map => map.data.locations.length).reduce((partialSum, a) => partialSum + a, 0)).then(element => { return element.parentNode.classList.add('no-after'); });
+            addValueToElement('undiscovered-locations', locations?.map(map => map.data.locations.filter(location => location.visited === false).length).reduce((partialSum, a) => partialSum + a, 0)).then(element => { return element.parentNode.classList.add('no-after'); });
             clearInterval(timeout);
         }
     }, 300);

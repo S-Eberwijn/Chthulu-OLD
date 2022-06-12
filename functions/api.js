@@ -94,7 +94,12 @@ async function getNonPlayableCharacters(guildId = null) {
 }
 
 async function getServerMap(serverID) {
-    return await Map.findOne({ where: { id: serverID } })
+    const map = await Map.findOne({ where: { id: serverID } })
+    return map ? [map] : []
+}
+
+async function getAllMaps() {
+    return await Map.findAll()
 }
 
 async function getServerGeneralInfo(serverID) {
@@ -208,7 +213,7 @@ module.exports = {
     getBotGuilds, getMutualGuilds, getGuildFromBot, getBotCommandsByCategory,
     isUserInGuild, isUserAdminInGuild, cacheAllUsers, loadAllJSONFiles,
     getAliveCharacters, getNonPlayableCharacters, getDeadCharacters,
-    getServerMap, getAllGameSessions, getAllServerGameSessions,
+    getServerMap, getAllMaps, getAllGameSessions, getAllServerGameSessions,
     getServerQuestsByStatuses, getQuestsByStatuses, createQuest, deleteQuest, updateQuest,
     getServerGeneralInfo, getServerDisabledCommands, editServerCommands
 };
