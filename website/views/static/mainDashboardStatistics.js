@@ -1,5 +1,6 @@
 google.load("visualization", "1", { packages: ["corechart"] });
 var timeout;
+const sections = ["characters", "sessions", "quests", "locations", "interactions"]
 
 function addValueToElement(elementID, value) {
     return new Promise((resolve, reject) => {
@@ -16,31 +17,15 @@ function addChartToElement(chartID, chartTitle, values, axisLabels) {
 }
 
 
-document.addEventListener("DOMContentLoaded", function () {
-    const wrap = document.querySelector(".embla");
-    const viewPort = wrap.querySelector(".embla__viewport");
-    const dots = document.querySelector(".embla__dots");
-
-    // var emblaNode = document.querySelector('.embla')
-    var options = {  align: "start", loop: false, skipSnaps: false, slidesToScroll: 4 }
-    var plugins = [
-        // EmblaCarouselAutoplay()
-    ] // Plugins
-
-    var embla = EmblaCarousel(viewPort, options, plugins)
-    const dotsArray = generateDotBtns(dots, embla);
-    const setSelectedDotBtn = selectDotBtn(dotsArray, embla);
-    setupDotBtns(dotsArray, embla);
-
-    embla.on("select", setSelectedDotBtn);
-    embla.on("init", setSelectedDotBtn);
+document.addEventListener("DOMContentLoaded", async function () {
+    for (const key in sections) {
+        if (Object.hasOwnProperty.call(sections, key)) {
+            const section = sections[key];
+            await createCarousel(section);
+        }
+    }
 
 
-
-
-
-    // console.log(locations);
-    // console.log(allQuests.filter(quest => quest.status === 'OPEN'));
 
     timeout = setInterval(function () {
         if (google.visualization != undefined) {
@@ -167,6 +152,35 @@ function getDeadCharacters(characters) {
 
 
 // Carousel for section
+
+async function createCarousel(sectionName) {
+    const wrap = document.querySelector(`.embla__${sectionName}`);
+    if (!wrap) return;
+    // console.log(wrap)
+
+    const viewPort = wrap.querySelector(".embla__viewport");
+    const container = viewPort.querySelector(".embla__container");
+    const items = container.querySelectorAll(".embla__slide");
+    if (!(items.length >= 1)) return;
+    const dots = wrap.parentElement.querySelector(".embla__dots");
+
+    // var emblaNode = document.querySelector('.embla')
+    var options = { align: "start", loop: false, skipSnaps: false, slidesToScroll: 4 }
+    var plugins = [
+        // EmblaCarouselAutoplay()
+    ] // Plugins
+
+    var embla = EmblaCarousel(viewPort, options, plugins)
+    const dotsArray = generateDotBtns(dots, embla);
+    const setSelectedDotBtn = selectDotBtn(dotsArray, embla);
+    setupDotBtns(dotsArray, embla);
+
+    embla.on("select", setSelectedDotBtn);
+    embla.on("init", setSelectedDotBtn);
+
+}
+
+
 const setupDotBtns = (dotsArray, embla) => {
     dotsArray.forEach((dotNode, i) => {
         dotNode.addEventListener("click", () => embla.scrollTo(i), false);

@@ -24,7 +24,7 @@ block dashboardContent
     .dashboardContent
         section
             h1 Characters
-            .embla
+            .embla__characters
                 .embla__viewport
                     .embla__container
                         .embla__slide 
@@ -44,61 +44,75 @@ block dashboardContent
             .embla__dots
             script(type='text/template', id='embla-dot-template')
                 button(class="embla__dot" type='button')
-        //- section
-        //-     h1 Characters
-        //-     .sectionContent
-                //- div.kpiItem
-                //-     span.kpiTitle Highest Character Level
-                //-     span.kpiContent#highestCharacterLevel #{''}     
-                //- div(id='topFiveClasses').chart
-                //- div(id='topFiveRaces').chart
-                //- div(id='topFiveBackgrounds').chart
-                //- div.kpiItem
-                //-     span.kpiTitle Dead Characters
-                //-     span.kpiContent#deadCharacters #{''}
-                    
-        section 
+        section
             h1 Sessions
-            .sectionContent
-                div.kpiItem
-                    span.kpiTitle Currently Requested Sessions
-                    span.kpiContent#currentlyRequestedSessions #{''}
-                div.kpiItem
-                    span.kpiTitle Currently Planned Sessions
-                    span.kpiContent#currentlyPlannedSessions #{''}
-                div.kpiItem
-                    span.kpiTitle Total Played Sessions
-                    span.kpiContent#totalPlayedSessions #{''}
-                div.kpiItem
-                    span.kpiTitle Total Canceled Sessions
-                    span.kpiContent#totalCanceledSessions #{''}
-                //- div.kpiItem
-                //-     span.kpiTitle Total Requested Sessions
-                //-     span.kpiContent#totalRequestedSessions #{''}
+            .embla__sessions
+                .embla__viewport
+                    .embla__container
+                        .embla__slide 
+                            div.kpiItem
+                                span.kpiTitle Currently Requested Sessions
+                                span.kpiContent#currentlyRequestedSessions #{''}   
+                        .embla__slide 
+                            div.kpiItem
+                                span.kpiTitle Currently Planned Sessions
+                                span.kpiContent#currentlyPlannedSessions #{''}
+                        .embla__slide
+                            div.kpiItem
+                                span.kpiTitle Total Played Sessions
+                                span.kpiContent#totalPlayedSessions #{''}
+                        .embla__slide
+                            div.kpiItem
+                                span.kpiTitle Total Canceled Sessions
+                                span.kpiContent#totalCanceledSessions #{''}
+            .embla__dots
+            script(type='text/template', id='embla-dot-template')
+                button(class="embla__dot" type='button')
         section
             h1 Quests
-            .sectionContent
-                div.kpiItem
-                    span.kpiTitle Active quests
-                    span.kpiContent#OPEN-quests 
-                div.kpiItem
-                    span.kpiTitle Expired quests
-                    span.kpiContent#EXPIRED-quests 
-                div.kpiItem
-                    span.kpiTitle Completed quests
-                    span.kpiContent#DONE-quests 
-                div.kpiItem
-                    span.kpiTitle Total quests
-                    span.kpiContent#total-quests 
+            .embla__quests
+                .embla__viewport
+                    .embla__container
+                        .embla__slide 
+                            div.kpiItem
+                                span.kpiTitle Active quests
+                                span.kpiContent#OPEN-quests   
+                        .embla__slide 
+                            div.kpiItem
+                                span.kpiTitle Expired quests
+                                span.kpiContent#EXPIRED-quests
+                        .embla__slide
+                            div.kpiItem
+                                span.kpiTitle Completed quests
+                                span.kpiContent#DONE-quests 
+                        .embla__slide
+                            div.kpiItem
+                                span.kpiTitle Total quests
+                                span.kpiContent#total-quests
+            .embla__dots
+            script(type='text/template', id='embla-dot-template')
+                button(class="embla__dot" type='button')
         section
-            h1 Location
-            .sectionContent
-                div.kpiItem
-                    span.kpiTitle Total locations
-                    span.kpiContent#total-locations 
-                div.kpiItem
-                    span.kpiTitle Undiscovered locations
-                    span.kpiContent#undiscovered-locations
-
-        section
-            h1 Interaction
+            h1 Locations
+            .embla__locations
+                .embla__viewport
+                    .embla__container
+                        .embla__slide 
+                            div.kpiItem
+                                span.kpiTitle Total locations
+                                span.kpiContent#total-locations  
+                        .embla__slide 
+                            div.kpiItem
+                                span.kpiTitle Undiscovered locations
+                                span.kpiContent#undiscovered-locations
+            .embla__dots
+            script(type='text/template', id='embla-dot-template')
+                button(class="embla__dot" type='button')
+        //- section
+        //-     h1 Interactions
+        //-     .embla__interactions
+        //-         .embla__viewport
+        //-             .embla__container
+        //-     .embla__dots
+        //-     script(type='text/template', id='embla-dot-template')
+        //-         button(class="embla__dot" type='button')

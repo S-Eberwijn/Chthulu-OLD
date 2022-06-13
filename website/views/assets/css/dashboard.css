@@ -217,7 +217,8 @@ section {
     display: flex;
     flex-direction: column;
     margin: 0;
-    height: 40%;
+    /* height: 42.5%; */
+    height: auto;
     overflow: hidden;
     /* margin-bottom: 2.5%; */
 }
@@ -279,6 +280,9 @@ section {
     margin-left: 7.5px;
     display: flex;
     align-items: center;
+}
+.embla__dots .embla__dot:only-child{
+    display: none;
 }
 
 .embla__dot:after {
