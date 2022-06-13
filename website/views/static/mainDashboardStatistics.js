@@ -2,17 +2,24 @@ google.load("visualization", "1", { packages: ["corechart"] });
 var timeout;
 const sections = ["characters", "sessions", "quests", "locations", "interactions"]
 
-function addValueToElement(elementID, value) {
+async function addValueToElement(elementID, value) {
+
     return new Promise((resolve, reject) => {
-        document.getElementById(elementID).innerHTML = value;
-        resolve(document.getElementById(elementID));
+        //Extra 'loading' time
+        setTimeout(function () {
+            document.getElementById(elementID).innerHTML = value;
+            resolve(document.getElementById(elementID));
+        }, Math.floor(Math.random() * 300));
     });
+
 }
 
 function addChartToElement(chartID, chartTitle, values, axisLabels) {
     return new Promise((resolve, reject) => {
-        google.charts.setOnLoadCallback(drawChart(chartID, chartTitle, values, axisLabels));
-        resolve(document.getElementById(chartID));
+        setTimeout(function () {
+            google.charts.setOnLoadCallback(drawChart(chartID, chartTitle, values, axisLabels));
+            resolve(document.getElementById(chartID));
+        }, Math.floor(Math.random() * 200));
     });
 }
 
