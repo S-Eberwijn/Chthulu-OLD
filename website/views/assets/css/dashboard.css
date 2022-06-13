@@ -180,8 +180,8 @@ img[alt="Construction"] {
 }
 
 
-.dashboardContent section .sectionContent>div.kpiItem::after,
-.dashboardContent section .sectionContent>div.chart::after {
+.dashboardContent section .embla__slide>div.kpiItem::after,
+.dashboardContent section .embla__slide>div.chart::after {
     content: '';
     position: absolute;
     top: 50%;

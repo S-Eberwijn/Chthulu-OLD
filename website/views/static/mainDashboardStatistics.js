@@ -25,8 +25,6 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
     }
 
-
-
     timeout = setInterval(function () {
         if (google.visualization != undefined) {
             // Add Google charts to page
@@ -152,11 +150,9 @@ function getDeadCharacters(characters) {
 
 
 // Carousel for section
-
 async function createCarousel(sectionName) {
     const wrap = document.querySelector(`.embla__${sectionName}`);
     if (!wrap) return;
-    // console.log(wrap)
 
     const viewPort = wrap.querySelector(".embla__viewport");
     const container = viewPort.querySelector(".embla__container");
@@ -164,7 +160,6 @@ async function createCarousel(sectionName) {
     if (!(items.length >= 1)) return;
     const dots = wrap.parentElement.querySelector(".embla__dots");
 
-    // var emblaNode = document.querySelector('.embla')
     var options = { align: "start", loop: false, skipSnaps: false, slidesToScroll: 4 }
     var plugins = [
         // EmblaCarouselAutoplay()
@@ -177,7 +172,6 @@ async function createCarousel(sectionName) {
 
     embla.on("select", setSelectedDotBtn);
     embla.on("init", setSelectedDotBtn);
-
 }
 
 
