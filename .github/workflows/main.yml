@@ -4,33 +4,6 @@ on:
     branches: [ "main" ]
 
 jobs:
-  # bump-version:
-  #   name: 'Update version'
-  #   runs-on: ubuntu-latest
-
-  #   steps:
-  #     - name: 'Checkout source code'
-  #       uses: 'actions/checkout@v2'
-  #       with:
-  #         ref: ${{ github.ref }}
-  #     - name: 'cat package.json'
-  #       run: cat ./package.json
-  #     - name: 'Automated Version Bump'
-  #       id: version-bump
-  #       uses: 'phips28/gh-action-bump-version@master'
-  #       with:
-  #         minor-wording:  'minor'
-  #         major-wording:  'major'
-  #         patch-wording:  'fix, fixed, fixes'     # Providing patch-wording will override commits
-  #                                                 # defaulting to a patch bump.
-  #         #skip-commit:  'true'
-  #         skip-tag: 'true'
-  #         target-branch: 'main'
-          
-  #       env:
-  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #     - name: 'cat package.json'
-  #       run: cat ./package.json
   sonarcloud:
     name: SonarCloud
     # needs: [bump-version]
@@ -60,6 +33,16 @@ jobs:
             #-Dsonar.tests= # optional. For more info about Code Coverage, please refer to https://docs.sonarcloud.io/enriching/test-coverage/overview/
             # Adds more detail to both client and server-side analysis logs, activating DEBUG mode for the scanner, and adding client-side environment variables and system properties to the server-side log of analysis report processing.
             # optional, default is false   
+  heroku:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: "chthulu" #Must be unique in Heroku
+          heroku_email: "stephan.eberwijn@hotmail.com"
+          
   discord-message:
     name: 'Discord'
     needs: [sonarcloud]

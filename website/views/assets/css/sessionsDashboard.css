@@ -1,6 +1,8 @@
 /* Carousel for embeds */
-/* Carousel for section */
-.embla {
+.dashboardContent[sessions] {
+
+}
+.embla__requested {
     overflow: hidden;
     width: 100%;
     margin-left: auto;
@@ -10,6 +12,9 @@
 .embla__viewport {
     overflow: hidden;
     width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 20px;
 }
 
 .embla__viewport.is-draggable {
@@ -23,6 +28,7 @@
 
 .embla__container {
     display: flex;
+    width: 100%;
     user-select: none;
     -webkit-touch-callout: none;
     -khtml-user-select: none;
