@@ -82,11 +82,6 @@ header.dashboardHeader button {
     transition: all 200ms ease;
 }
 
-/* 
-header.dashboardHeader button:hover {
-    transform: scale(1.2);
-} */
-
 .dashboardContent {
     height: calc(100% - var(--header-height));
     padding: 20px;
@@ -97,9 +92,6 @@ header.dashboardHeader button:hover {
     overflow: scroll;
     gap: 20px;
 }
-
-/* .dashboardContent[guild]{
-} */
 
 .dashboardContent::-webkit-scrollbar {
     width: 15px;

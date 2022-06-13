@@ -102,6 +102,18 @@ exports.guildInformationalMapDashboardPage = async (req, res) => {
     });
 }
 
+//Sessions Page
+exports.sessionsPage = async (req, res) => {
+    res.render('sessionsPage', {
+        ...res.locals.renderData,
+        ...{
+            isGuildDashboardPage: true,
+            headerTitle: `Sessions`,
+            sessions: await getAllGameSessions(),
+        }
+    });
+}
+
 //SETTINGS PAGE
 exports.guildSettingsPage = async (req, res) => {
     res.render('settingsPage', {

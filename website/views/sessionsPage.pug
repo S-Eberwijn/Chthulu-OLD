@@ -1,0 +1,87 @@
+extends ./template/baseDashboard.pug
+block scripts
+    //- script(type='text/javascript', src='https://www.gstatic.com/charts/loader.js')
+    script(src="https://unpkg.com/embla-carousel/embla-carousel.umd.js")
+    //- script(src="https://unpkg.com/embla-carousel-autoplay/embla-carousel-autoplay.umd.js")
+
+    script
+        include ./static/theme.js
+        include ./static/sessionsDashboard.js
+
+        //- include ./static/mainDashboardStatistics.js
+    script. 
+        //- var characters = !{JSON.stringify(characters)}; 
+        //- var allQuests = !{JSON.stringify(allQuests)}; 
+        var sessions = !{JSON.stringify(sessions)}; 
+        //- var locations = !{JSON.stringify(locations)};
+
+block styles 
+    style 
+        include ./assets/css/main.css
+        include ./assets/css/sidebar.css
+        include ./assets/css/menu.css
+        include ./assets/css/dashboard.css
+        include ./assets/css/sessionsDashboard.css
+
+
+block dashboardContent
+    .dashboardContent(sessions=true)
+        section
+            h1 Requested sessions
+            .embla__requested
+                .embla__viewport
+                    .embla__container
+                        .embla__slide 
+                            include ./components/discordSessionEmbed.pug
+                        .embla__slide    
+                            include ./components/discordSessionEmbed.pug
+                        .embla__slide    
+                            include ./components/discordSessionEmbed.pug
+                        .embla__slide    
+                            include ./components/discordSessionEmbed.pug
+                        .embla__slide    
+                            include ./components/discordSessionEmbed.pug
+                        .embla__slide    
+                            include ./components/discordSessionEmbed.pug
+                            //- div.kpiItem
+                            //-     span.kpiTitle Highest Character Level
+                            //-     span.kpiContent#highestCharacterLevel #{''}    
+                        //- .embla__slide 
+                        //-     div(id='topFiveClasses').chart
+                        //- .embla__slide
+                        //-     div(id='topFiveRaces').chart
+                        //- .embla__slide
+                        //-     div(id='topFiveBackgrounds').chart
+                        //- .embla__slide
+                        //-     div.kpiItem
+                        //-         span.kpiTitle Dead Characters
+                        //-         span.kpiContent#deadCharacters #{''}
+            .embla__dots
+            script(type='text/template', id='embla-dot-template')
+                button(class="embla__dot" type='button')
+        section
+            h1 Planned sessions
+            .embla__sessions
+                .embla__viewport
+                    .embla__container
+                        .embla__slide
+                            p Test 2 
+                            //- div.kpiItem
+                            //-     span.kpiTitle Currently Requested Sessions
+                            //-     span.kpiContent#currentlyRequestedSessions #{''}   
+                        //- .embla__slide 
+                        //-     div.kpiItem
+                        //-         span.kpiTitle Currently Planned Sessions
+                        //-         span.kpiContent#currentlyPlannedSessions #{''}
+                        //- .embla__slide
+                        //-     div.kpiItem
+                        //-         span.kpiTitle Total Played Sessions
+                        //-         span.kpiContent#totalPlayedSessions #{''}
+                        //- .embla__slide
+                        //-     div.kpiItem
+                        //-         span.kpiTitle Total Canceled Sessions
+                        //-         span.kpiContent#totalCanceledSessions #{''}
+            .embla__dots
+            script(type='text/template', id='embla-dot-template')
+                button(class="embla__dot" type='button')
+        

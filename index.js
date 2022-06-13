@@ -55,7 +55,6 @@ app.use(express.static(path.join(__dirname, 'website', 'public')));
 app.use(express.static(path.join(__dirname, 'bot', 'images', 'DnD', 'ClassIcons')));
 app.use(express.static(path.join(__dirname, 'bot', 'images', 'DnD', 'CharacterLevel')));
 
-
 // Set-up Express Session (in combination with Firestore database)
 app.use(session({
     store: new FirestoreStore({
@@ -79,35 +78,12 @@ app.post("/refresh", async (req, res) => {
     var readline = require('readline');
     var rl = readline.createInterface(
         process.stdin, process.stdout);
-    console.log(req.body)
-
-    // console.log(`repl.deploy${req?.body}${req?.get("Signature")}`)
     console.log("repl.deploy" + req?.body + req?.get("Signature"))
-
     rl.on('line', async (result) => {
         result = JSON.parse(result)
-        console.log(result.body, result.status)
         await res.status(result.status || 500).end(result.body || "Internal Server Error")
         console.log("repl.deploy-success")  
     });
-
-    // res.end("OK")
-
-
-
-    // outside = function(){
-    //     console.log('result: ', resultOutside)
-    // }
-    // console.log(`repl.deploy${req?.body}${req?.get("Signature")}`)
-
-
-    //TODO = create result, read from stdin
-    // const result: {
-    //     body: string
-    //     status: number
-    // } = JSON.parse((await getStdinLine())!)
-    // await res.setStatus(result.status).end(result.body)
-    // console.log("repl.deploy-success")
 })
 
 // Initialize Discord Bot

@@ -10,8 +10,6 @@ const consoleFormat = printf(({ level, message, timestamp }) => {
 });
 
 const currentTime = new Date();
-
-console.log(`${`${currentTime.toISOString().split('T')[0]}${currentTime.getHours()}${currentTime.getMinutes()}`.replaceAll('-', '')}` )
 const logger = createLogger({
     level: 'debug',
     format:
@@ -19,9 +17,8 @@ const logger = createLogger({
             timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
             prodFormat
         ),
-    // defaultMeta: { service: 'user-service' },
     transports: [
-        new transports.File({ filename: `logs/${`${currentTime.toISOString().split('T')[0]}${currentTime.getHours()}${currentTime.getMinutes()}`.replaceAll('-', '')}.log`, level: 'info' }),
+        new transports.File({ filename: `logs/${`${currentTime.toISOString().split('T')[0]}${currentTime.getHours()}${currentTime.getMinutes()}`.replaceAll('-', '')}.log`, level: 'debug' }),
     ],
     exitOnError: false,
 });

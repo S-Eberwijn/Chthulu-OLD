@@ -3,7 +3,6 @@ var timeout;
 const sections = ["characters", "sessions", "quests", "locations", "interactions"]
 
 async function addValueToElement(elementID, value) {
-
     return new Promise((resolve, reject) => {
         //Extra 'loading' time
         setTimeout(function () {
@@ -16,6 +15,7 @@ async function addValueToElement(elementID, value) {
 
 function addChartToElement(chartID, chartTitle, values, axisLabels) {
     return new Promise((resolve, reject) => {
+        //Extra 'loading' time
         setTimeout(function () {
             google.charts.setOnLoadCallback(drawChart(chartID, chartTitle, values, axisLabels));
             resolve(document.getElementById(chartID));
@@ -66,8 +66,6 @@ function drawChart(elementId, title, chartData, headerData) {
     chartData.slice(0, 5).forEach(cClass => {
         dataForGoogleChart.push(cClass)
     });
-    // console.log(dataForGoogleChart)
-
     var data = google.visualization.arrayToDataTable(dataForGoogleChart, false);
     var options = {
         title: title,
@@ -153,9 +151,6 @@ function getDeadCharacters(characters) {
     return characters.filter(character => character.data.alive === 0);
 }
 
-
-
-
 // Carousel for section
 async function createCarousel(sectionName) {
     const wrap = document.querySelector(`.embla__${sectionName}`);
@@ -180,7 +175,6 @@ async function createCarousel(sectionName) {
     embla.on("select", setSelectedDotBtn);
     embla.on("init", setSelectedDotBtn);
 }
-
 
 const setupDotBtns = (dotsArray, embla) => {
     dotsArray.forEach((dotNode, i) => {

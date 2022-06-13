@@ -1,0 +1,250 @@
+/* Carousel for embeds */
+/* Carousel for section */
+.embla {
+    overflow: hidden;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.embla__viewport {
+    overflow: hidden;
+    width: 100%;
+}
+
+.embla__viewport.is-draggable {
+    cursor: move;
+    cursor: grab;
+}
+
+.embla__viewport.is-dragging {
+    cursor: grabbing;
+}
+
+.embla__container {
+    display: flex;
+    user-select: none;
+    -webkit-touch-callout: none;
+    -khtml-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.embla__dots {
+    display: flex;
+    list-style: none;
+    justify-content: center;
+    padding-top: 10px;
+}
+
+.embla__dot {
+    background-color: transparent;
+    cursor: pointer;
+    position: relative;
+    padding: 0;
+    outline: 0;
+    border: 0;
+    width: 30px;
+    height: 30px;
+    margin-right: 7.5px;
+    margin-left: 7.5px;
+    display: flex;
+    align-items: center;
+}
+.embla__dots .embla__dot:only-child{
+    display: none;
+}
+
+.embla__dot:after {
+    background-color: var(--placeholder-text-color);
+    width: 100%;
+    height: 4px;
+    border-radius: 2px;
+    content: "";
+}
+
+.embla__dot.is-selected:after {
+    background-color: #efefef;
+    opacity: 1;
+}
+
+
+
+
+.dashboardContent[sessions] .embla__slide {
+    transition: all .5s ease;
+    transform: scale(0.9);
+    flex: 0 0 10%;
+    /* Slide covers 25% of the viewport */
+
+}
+
+/* .embla__slide:is(:not(:first-child)) {
+    transform: scale(0.9);
+} */
+
+.dashboardContent[sessions] .embla__slide:hover {
+    transform: scale(1);
+}
+
+/* Session Embed */
+.embed {
+    position: relative;
+}
+.embedWrapper {
+    position: relative;
+    width: 300px;
+    height: 400px;
+    border-radius: 5px;
+    padding: 15px;
+    box-sizing: border-box;
+    background-color: var(--menu-color);
+    
+    
+}
+
+
+.embedWrapper h4 {
+    margin: 0;
+    font-size: .9em;
+    
+}
+
+.embedWrapper h5 {
+    margin: 0;
+    font-size: .75em;
+    
+}
+
+.embedWrapper .embedField {
+    margin-top: 5px;
+}
+
+.embedWrapper p.embedFieldValue {
+    margin: 0;
+    padding: 1px;
+    box-sizing: border-box;
+    font-size: .7em;
+    display: inline-block;
+    position: relative;
+}
+
+.embedWrapper code {
+    /* margin: 0; */
+    padding: 2px; 
+    box-sizing: border-box;
+    font-size: .7em;
+    display: inline-block;
+    background-color: var(--sidebar-color);
+    border-radius: 2px;
+}
+
+.embedWrapper p.objective {
+    /* margin: 0; */
+    padding-left: 8px;
+} 
+
+.embedWrapper p.objective::before {
+    /* margin: 0; */
+    content: '';
+    position: absolute;
+    height: 100%;
+    width: 3px;
+    background-color: var(--content-color);
+    top: 0;
+    left: 0;
+} 
+
+
+.embedWrapper p.italic {
+    font-style: italic;
+}
+
+.embedWrapper p.user {
+    background-color: rgba(88,101,242,.6);
+    border-radius: 2px;
+    cursor: pointer;
+    transition: all .1s ease-in-out;
+    font-weight: normal;
+}
+
+
+
+.embedWrapper p.user:hover {
+    background-color: rgba(88,101,242,1);
+}
+
+.embedWrapper img {
+    position: absolute;
+    width: 20%;
+    object-fit: contain;
+    right: 5%;
+    top: 0;
+    border-radius: 10px;
+    transform: translate(0%, -33%);
+    
+}
+
+.embedWrapper .embedFooterWrapper {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    transform: translate(0%, 170%);
+}
+
+.embedWrapper .embedFooter {
+    position: relative;
+}
+
+.embedWrapper .embedFooter .imgWrapper  {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    left: 0;
+    bottom: 0;
+    transform: translate(0,25%);
+}
+.embedWrapper .embedFooter .imgWrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.embedWrapper .embedFooter p.footerText{
+    font-size: .7em;
+    padding-left: 25px;
+}
+
+/* Embed Buttons */
+.embedButtons {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    height: auto;
+    margin-top: 10px;
+    /* background-color: yellow; */
+}
+
+.embedButtons .button {
+    display: flex;
+    font-size: .8em;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 30%;
+    height: 30px;
+    border-radius: 2px;
+    cursor: pointer;
+}
+
+.button.approve {
+    background-color: green;
+}
+
+.button.decline {
+    background-color: red;
+}
+
+.button.join {
+    background-color: var(--menu-color);
+}
