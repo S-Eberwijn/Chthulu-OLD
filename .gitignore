@@ -4,4 +4,4 @@ node_modules/
 Unused_Methods/
 Unused_Commands/
 database/service-account.json
-*.log
+logs
