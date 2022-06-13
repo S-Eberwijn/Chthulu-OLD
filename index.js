@@ -39,7 +39,7 @@ firebaseSequelizer.initializeApp(admin);
 
 const BOT_TOKEN = process.env.BOT_TOKEN || '';
 const WB_BASE_URL = process.env.WB_BASE_URL || '';
-const WB_PORT = process.env.WB_PORT || 8080;
+const WB_PORT = process.env.PORT || process.env.WB_PORT || 5000;
 
 // Initialize Webapp
 const app = express();
