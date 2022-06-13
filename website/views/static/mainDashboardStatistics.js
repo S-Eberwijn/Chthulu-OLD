@@ -17,7 +17,29 @@ function addChartToElement(chartID, chartTitle, values, axisLabels) {
 
 
 document.addEventListener("DOMContentLoaded", function () {
-    console.log(locations);
+    const wrap = document.querySelector(".embla");
+    const viewPort = wrap.querySelector(".embla__viewport");
+    const dots = document.querySelector(".embla__dots");
+
+    // var emblaNode = document.querySelector('.embla')
+    var options = {  align: "start", loop: false, skipSnaps: false, slidesToScroll: 4 }
+    var plugins = [
+        // EmblaCarouselAutoplay()
+    ] // Plugins
+
+    var embla = EmblaCarousel(viewPort, options, plugins)
+    const dotsArray = generateDotBtns(dots, embla);
+    const setSelectedDotBtn = selectDotBtn(dotsArray, embla);
+    setupDotBtns(dotsArray, embla);
+
+    embla.on("select", setSelectedDotBtn);
+    embla.on("init", setSelectedDotBtn);
+
+
+
+
+
+    // console.log(locations);
     // console.log(allQuests.filter(quest => quest.status === 'OPEN'));
 
     timeout = setInterval(function () {
@@ -54,7 +76,7 @@ function drawChart(elementId, title, chartData, headerData) {
     chartData.slice(0, 5).forEach(cClass => {
         dataForGoogleChart.push(cClass)
     });
-    console.log(dataForGoogleChart)
+    // console.log(dataForGoogleChart)
 
     var data = google.visualization.arrayToDataTable(dataForGoogleChart, false);
     var options = {
@@ -140,4 +162,27 @@ function getHighestCharacterLevel(characters) {
 function getDeadCharacters(characters) {
     return characters.filter(character => character.data.alive === 0);
 }
+
+
+
+
+// Carousel for section
+const setupDotBtns = (dotsArray, embla) => {
+    dotsArray.forEach((dotNode, i) => {
+        dotNode.addEventListener("click", () => embla.scrollTo(i), false);
+    });
+};
+
+const generateDotBtns = (dots, embla) => {
+    const template = document.getElementById("embla-dot-template").innerHTML;
+    dots.innerHTML = embla.scrollSnapList().reduce(acc => acc + template, "");
+    return [].slice.call(dots.querySelectorAll(".embla__dot"));
+};
+
+const selectDotBtn = (dotsArray, embla) => () => {
+    const previous = embla.previousScrollSnap();
+    const selected = embla.selectedScrollSnap();
+    dotsArray[previous].classList.remove("is-selected");
+    dotsArray[selected].classList.add("is-selected");
+};
 

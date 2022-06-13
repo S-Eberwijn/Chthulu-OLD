@@ -1,6 +1,9 @@
 extends ./template/baseDashboard.pug
 block scripts
     script(type='text/javascript', src='https://www.gstatic.com/charts/loader.js')
+    script(src="https://unpkg.com/embla-carousel/embla-carousel.umd.js")
+    script(src="https://unpkg.com/embla-carousel-autoplay/embla-carousel-autoplay.umd.js")
+
     script
         include ./static/theme.js
         include ./static/mainDashboardStatistics.js
@@ -21,16 +24,38 @@ block dashboardContent
     .dashboardContent
         section
             h1 Characters
-            .sectionContent
-                div.kpiItem
-                    span.kpiTitle Highest Character Level
-                    span.kpiContent#highestCharacterLevel #{''}     
-                div(id='topFiveClasses').chart
-                div(id='topFiveRaces').chart
-                div(id='topFiveBackgrounds').chart
-                div.kpiItem
-                    span.kpiTitle Dead Characters
-                    span.kpiContent#deadCharacters #{''}
+            .embla
+                .embla__viewport
+                    .embla__container
+                        .embla__slide 
+                            div.kpiItem
+                                span.kpiTitle Highest Character Level
+                                span.kpiContent#highestCharacterLevel #{''}    
+                        .embla__slide 
+                            div(id='topFiveClasses').chart
+                        .embla__slide
+                            div(id='topFiveRaces').chart
+                        .embla__slide
+                            div(id='topFiveBackgrounds').chart
+                        .embla__slide
+                            div.kpiItem
+                                span.kpiTitle Dead Characters
+                                span.kpiContent#deadCharacters #{''}
+            .embla__dots
+            script(type='text/template', id='embla-dot-template')
+                button(class="embla__dot" type='button')
+        //- section
+        //-     h1 Characters
+        //-     .sectionContent
+                //- div.kpiItem
+                //-     span.kpiTitle Highest Character Level
+                //-     span.kpiContent#highestCharacterLevel #{''}     
+                //- div(id='topFiveClasses').chart
+                //- div(id='topFiveRaces').chart
+                //- div(id='topFiveBackgrounds').chart
+                //- div.kpiItem
+                //-     span.kpiTitle Dead Characters
+                //-     span.kpiContent#deadCharacters #{''}
                     
         section 
             h1 Sessions

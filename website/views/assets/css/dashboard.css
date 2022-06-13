@@ -136,7 +136,7 @@ header.dashboardHeader button:hover {
     position: relative;
 }
 
-.chart{
+.chart {
     width: 400px;
     height: 240px;
     min-width: 400px;
@@ -158,14 +158,7 @@ header.dashboardHeader button:hover {
     margin-right: 4rem;
 }
 
-section {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    margin: 0;
-    height: 33%;
-    overflow: hidden;
-}
+
 
 .sectionContent {
     display: flex;
@@ -215,4 +208,88 @@ img[alt="Construction"] {
 
 .no-after::after {
     content: none !important;
+}
+
+
+
+section {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    height: 40%;
+    overflow: hidden;
+    /* margin-bottom: 2.5%; */
+}
+/* Carousel for section */
+.embla {
+    overflow: hidden;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.embla__viewport {
+    overflow: hidden;
+    width: 100%;
+}
+
+.embla__viewport.is-draggable {
+    cursor: move;
+    cursor: grab;
+}
+
+.embla__viewport.is-dragging {
+    cursor: grabbing;
+}
+
+.embla__container {
+    display: flex;
+    user-select: none;
+    -webkit-touch-callout: none;
+    -khtml-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+
+.embla__slide {
+    flex: 0 0 25%;
+    /* Slide covers 25% of the viewport */
+
+
+}
+
+.embla__dots {
+    display: flex;
+    list-style: none;
+    justify-content: center;
+    padding-top: 10px;
+}
+
+.embla__dot {
+    background-color: transparent;
+    cursor: pointer;
+    position: relative;
+    padding: 0;
+    outline: 0;
+    border: 0;
+    width: 30px;
+    height: 30px;
+    margin-right: 7.5px;
+    margin-left: 7.5px;
+    display: flex;
+    align-items: center;
+}
+
+.embla__dot:after {
+    background-color: #efefef;
+    width: 100%;
+    height: 4px;
+    border-radius: 2px;
+    content: "";
+}
+
+.embla__dot.is-selected:after {
+    background-color: var(--placeholder-text-color);
+    opacity: 1;
 }
