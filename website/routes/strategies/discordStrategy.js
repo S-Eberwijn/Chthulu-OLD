@@ -14,7 +14,7 @@ passport.deserializeUser(function (user, done) {
 passport.use(new DiscordStrategy({
     clientID: process.env.OATH2_CLIENT_ID,
     clientSecret: process.env.OATH2_CLIENT_SECRET,
-    callbackURL: `${process.env.APP_ENV === 'PROD' ? process.env.WB_BASE_URL : `${process.env.WB_BASE_URL}:${process.env.WB_PORT}`}/auth/login/redirect`,
+    callbackURL: `${process.env.APP_ENV === 'PROD' ? process.env.WB_BASE_URL : `${process.env.WB_BASE_URL}:${process.env.PORT}`}/auth/login/redirect`,
     scope: ['identify', 'guilds']
 }, async (accessToken, refreshToken, profile, done) => {
     if (profile) {
