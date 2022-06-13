@@ -77,8 +77,7 @@
 
 
 .dashboardContent[sessions] .embla__slide {
-    transition: all .5s ease;
-    transform: scale(0.9);
+    
     flex: 0 0 10%;
     /* Slide covers 25% of the viewport */
 
@@ -88,14 +87,27 @@
     transform: scale(0.9);
 } */
 
-.dashboardContent[sessions] .embla__slide:hover {
+/* .dashboardContent[sessions] .embla__slide:hover {
+} */
+
+/* Session Embed */
+.embedWrapper {
+    position: relative;
+    transition: all .5s ease;
+    transform: scale(0.95);
+}
+.embedWrapper:hover {
     transform: scale(1);
 }
 
-/* Session Embed */
+.embedWrapper:hover + .embedButtons {
+    transform: translateY(-5px);
+}
+
 .embed {
     position: relative;
 }
+
 .embedWrapper {
     position: relative;
     width: 300px;
@@ -229,6 +241,7 @@
     justify-content: space-evenly;
     height: auto;
     margin-top: 10px;
+    transition: all .5s ease;
     /* background-color: yellow; */
 }
 

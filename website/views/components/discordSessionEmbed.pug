@@ -28,12 +28,14 @@
                 p.footerText Requested by Khthonios - 01-06-2022
 
 .embedButtons 
-    .button.approve 
-        i(class="fas fa-thumbs-up")
-        p Approve
-    .button.decline
-        i(class="fas fa-times")
-        p Decline
-    .button.join
-        i(class="fas fa-handshake")
-        p Join
+    if(isDungeonMaster)
+        .button.approve 
+            i(class="fas fa-thumbs-up")
+            p Approve
+        .button.decline
+            i(class="fas fa-times")
+            p Decline
+    else 
+        .button.join
+            i(class="fas fa-handshake")
+            p Join

@@ -68,6 +68,11 @@ function isUserAdminInGuild(userID, guild) {
     return guild?.members.cache.get(userID)?.permissions.has('ADMINISTRATOR') || false;
 }
 
+function isDungeonMaster(userID, guild) {
+    const DUNGEON_MASTER_ROLE = guild?.roles.cache.find(role => role.name.toLowerCase().includes('dungeon master'));
+    return guild?.members.cache.get(userID)?.roles.cache.has(DUNGEON_MASTER_ROLE?.id) || false;
+}
+
 async function getAliveCharacters(guildId = null) {
     if (guildId === null) return await PlayerCharacter.findAll({ where: { alive: 1 } })
     const characters = await PlayerCharacter.findAll({ where: { alive: 1, server: guildId } })
@@ -211,7 +216,7 @@ function sortByImportanceValue(a, b) {
 module.exports = {
     getBot,
     getBotGuilds, getMutualGuilds, getGuildFromBot, getBotCommandsByCategory,
-    isUserInGuild, isUserAdminInGuild, cacheAllUsers, loadAllJSONFiles,
+    isUserInGuild, isUserAdminInGuild, isDungeonMaster, cacheAllUsers, loadAllJSONFiles,
     getAliveCharacters, getNonPlayableCharacters, getDeadCharacters,
     getServerMap, getAllMaps, getAllGameSessions, getAllServerGameSessions,
     getServerQuestsByStatuses, getQuestsByStatuses, createQuest, deleteQuest, updateQuest,
