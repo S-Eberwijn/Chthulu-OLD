@@ -13,7 +13,7 @@ const logger = createLogger({
     level: 'debug',
     format:
         combine(
-            timestamp({ format: "HH:mm:ss" }),
+            timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
             prodFormat
         ),
     // defaultMeta: { service: 'user-service' },

@@ -1,7 +1,7 @@
 node_modules/
 .env
 .eslintrc.json
-logs/error.log
 Unused_Methods/
 Unused_Commands/
 database/service-account.json
+*.log
