@@ -4,9 +4,27 @@ on:
     branches: [ "main" ]
 
 jobs:
+  tests:
+    name: 'Jest Unit Tests'
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm ci
+      - run: npm run build --if-present
+      - run: npm test
+
   sonarcloud:
     name: SonarCloud
-    # needs: [bump-version]
+    needs: [tests]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -34,6 +52,8 @@ jobs:
             # Adds more detail to both client and server-side analysis logs, activating DEBUG mode for the scanner, and adding client-side environment variables and system properties to the server-side log of analysis report processing.
             # optional, default is false   
   heroku:
+    name: 'Heroku'
+    needs: [sonarcloud]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -45,7 +65,7 @@ jobs:
           
   discord-message:
     name: 'Discord'
-    needs: [sonarcloud]
+    needs: [sonarcloud, heroku]
     runs-on: ubuntu-latest
 
     steps:

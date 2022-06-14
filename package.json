@@ -8,6 +8,7 @@
   "main": "index.js",
   "author": "Stephan 'Khthonios' Eberwijn",
   "dependencies": {
+    "@types/jest": "^28.1.1",
     "body-parser": "^1.19.0",
     "canvas": "^2.8.0",
     "cheerio": "^1.0.0-rc.10",
@@ -44,14 +45,17 @@
     "utf8": "^3.0.0",
     "winston": "^3.3.3"
   },
+  "jest": {
+    "verbose": true,
+    "testEnvironment": "node"
+  },
   "nodemonConfig": {
     "ignore": [
       "jsonDb/*.json"
     ]
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "replit": "chmod +x ./repl.deploy && ./repl.deploy node index.js",
+    "test": "jest --coverage",
     "start": "node index.js"
   },
   "license": "MIT",

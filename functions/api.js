@@ -227,7 +227,8 @@ function getPrettyDateString(date) {
 }
 
 function getDoubleDigitNumber(number) {
-    if (number < 10) return `0${number}`;
+    if (!(typeof number === 'number' || typeof number === 'string')) return '00';
+    if (parseInt(number) < 10) return `0${number}`;
     return `${number}`;
 }
 
@@ -240,5 +241,5 @@ module.exports = {
     getServerMap, getAllMaps, getAllGameSessions, getAllServerGameSessions, getDoubleDigitNumber,
     getServerQuestsByStatuses, getQuestsByStatuses, createQuest, deleteQuest, updateQuest,
     getServerGeneralInfo, getServerDisabledCommands, editServerCommands,
-    getPrettyDateString
+    getPrettyDateString, onlyUnique,
 };
