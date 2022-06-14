@@ -30,7 +30,7 @@ describe(`Tests for function 'getDoubleDigitNumber'`, () => {
 })
 
 describe(`Tests for function 'getPrettyDateString'`, () => {
-    var date = new Date(2020, 2, 13, 14, 30);
+    var date = new Date(2020, 2, 13, 15, 30);
     var dateString = api.getPrettyDateString(date);
 
     test("returns a string with the day written in full", () => {
@@ -41,7 +41,7 @@ describe(`Tests for function 'getPrettyDateString'`, () => {
     })
 
     test("returns a string with the hours and minutes in the right format: HH:MM", () => {
-        expect(dateString).toContain('13:30');
+        expect(dateString).toContain('15:30');
     })
 
 })
