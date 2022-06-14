@@ -9,12 +9,11 @@ const { PlayerCharacter } = require('../../../database/models/PlayerCharacter');
 const { GeneralInfo } = require('../../../database/models/GeneralInfo');
 
 const fs = require("fs");
-const { getBot } = require('../../../functions/api');
+const { getBot, getPrettyDateString } = require('../../../functions/api');
 
 const DATE_REGEX_PATTERN = /[0-3]\d\/(0[1-9]|1[0-2])\/\d{4} [0-2]\d:[0-5]\d(?:\.\d+)?Z?/g;
 const COMMAND_OPTIONS = ['request', 'board'];
 // const QUESTIONS_ARRAY = require('../../jsonDb/sessionChannelQuestion.json');
-const NAME_OF_DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 const MODAL_IDS = ['session-request-modal'];
 const BUTTON_IDS = ['approve-session-request-button', 'decline-session-request-button', 'join-session-button', 'played-session-button', 'cancel-session-button', 'join-accepted-button', 'join-denied-button']
 
@@ -213,7 +212,7 @@ module.exports.modalSubmit = async (modal) => {
         })
 
         SESSION_REQUEST_CHANNEL.send({ embeds: [createSessionChannelEmbed(modal.user, session_date, [modal.user.id], session_objective, USER_CHARACTER.picture_url, session_location)], components: [MESSAGE_COMPONENTS_REQUEST] }).then(async MESSAGE => {
-            createSession(modal, session_objective, session_date, MESSAGE.id, CREATED_CHANNEL.id)
+            createSession(modal, session_objective, session_location, session_date, MESSAGE.id, CREATED_CHANNEL.id)
             // Add the session to a json database.
             bot.sessionAddUserRequest['sessions'][bot.sessionAddUserRequest['sessions'].length] = {
                 session_channel_id: CREATED_CHANNEL.id,
@@ -384,7 +383,7 @@ module.exports.buttonSubmit = async (button) => {
     }
 }
 
-async function createSession(modal, objective, date, message_id, session_channel_id) {
+async function createSession(modal, objective, session_location, date, message_id, session_channel_id) {
     const TIMESTAMP = Date.now();
     // const DATE = new Date(date);
     // const GENERAL_INFO = await GeneralInfo.findOne({ where: { server: modal.guildId } });
@@ -396,6 +395,7 @@ async function createSession(modal, objective, date, message_id, session_channel
         date: date,
         dungeon_master_id_discord: '',
         objective: objective,
+        location: session_location,
         session_number: 0,
         session_channel: session_channel_id,
         session_status: 'CREATED',
@@ -423,10 +423,7 @@ function createSessionChannelEmbed(messageAuthor, sessionDate, sessionParticipan
         .setFooter({ text: `Requested by ${messageAuthor.username}`, iconURL: messageAuthor.avatarURL() });
 }
 
-function getDoubleDigitNumber(number) {
-    if (number < 10) return `0${number}`;
-    return `${number}`;
-}
+
 
 // TODO: Centralize this code
 function writeToJsonDb(location, data) {
@@ -650,6 +647,3 @@ function createSessionsOverviewEmbedPages(sessions) {
     return pages
 }
 
-function getPrettyDateString(date) {
-    return `${NAME_OF_DAYS[date.getUTCDay()]} (${getDoubleDigitNumber(date.getUTCDate())}/${getDoubleDigitNumber(date.getUTCMonth() + 1)}/${date.getYear() + 1900}) ${getDoubleDigitNumber(date.getUTCHours())}:${getDoubleDigitNumber(date.getUTCMinutes())}`;
-}

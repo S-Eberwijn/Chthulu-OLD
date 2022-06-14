@@ -10,6 +10,8 @@ const { GameSession } = require('../database/models/GameSession');
 
 const Importance = Object.freeze({ 1: 'Very low', 2: 'Low', 3: 'Normal', 4: 'High', 5: 'Very high', });
 const Category = Object.freeze({ 'information': 'Information', 'dnd': 'Dungeons & Dragons', 'general': 'General', 'miscellaneous': 'Miscellaneous', });
+const NAME_OF_DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
 
 function getBot() {
     return require('../index');
@@ -67,6 +69,9 @@ async function isUserInGuild(userID, guild) {
 function isUserAdminInGuild(userID, guild) {
     return guild?.members.cache.get(userID)?.permissions.has('ADMINISTRATOR') || false;
 }
+function getUserFromGuild(userID, guild) {
+    return guild?.members?.cache.get(userID)
+}
 
 function isDungeonMaster(userID, guild) {
     const DUNGEON_MASTER_ROLE = guild?.roles.cache.find(role => role.name.toLowerCase().includes('dungeon master'));
@@ -86,6 +91,10 @@ async function getAliveCharacters(guildId = null) {
     }
     return characters
     // return 
+}
+
+async function getUserCharacter(userID, guildID) {
+    return PlayerCharacter.findOne({ where: { player_id_discord: userID, server: guildID, alive: 1 } })
 }
 
 async function getDeadCharacters(guildId = null) {
@@ -213,12 +222,23 @@ function sortByImportanceValue(a, b) {
     return a - b;
 }
 
+function getPrettyDateString(date) {
+    return `${NAME_OF_DAYS[date.getUTCDay()]} (${getDoubleDigitNumber(date.getUTCDate())}/${getDoubleDigitNumber(date.getUTCMonth() + 1)}/${date.getYear() + 1900}) ${getDoubleDigitNumber(date.getUTCHours())}:${getDoubleDigitNumber(date.getUTCMinutes())}`;
+}
+
+function getDoubleDigitNumber(number) {
+    if (number < 10) return `0${number}`;
+    return `${number}`;
+}
+
+
 module.exports = {
     getBot,
     getBotGuilds, getMutualGuilds, getGuildFromBot, getBotCommandsByCategory,
     isUserInGuild, isUserAdminInGuild, isDungeonMaster, cacheAllUsers, loadAllJSONFiles,
-    getAliveCharacters, getNonPlayableCharacters, getDeadCharacters,
-    getServerMap, getAllMaps, getAllGameSessions, getAllServerGameSessions,
+    getAliveCharacters, getNonPlayableCharacters, getDeadCharacters, getUserFromBot, getUserFromGuild, getUserCharacter,
+    getServerMap, getAllMaps, getAllGameSessions, getAllServerGameSessions, getDoubleDigitNumber,
     getServerQuestsByStatuses, getQuestsByStatuses, createQuest, deleteQuest, updateQuest,
-    getServerGeneralInfo, getServerDisabledCommands, editServerCommands
+    getServerGeneralInfo, getServerDisabledCommands, editServerCommands,
+    getPrettyDateString
 };

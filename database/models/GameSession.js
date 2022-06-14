@@ -81,6 +81,10 @@ const GameSession = defineModel("game_session", {
         type: 'string',
         required: true,
     },
+    location: {
+        type: 'string',
+        required: false,
+    },
     session_number: {
         type: 'number',
         required: false,

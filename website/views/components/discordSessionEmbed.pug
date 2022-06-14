@@ -1,41 +1,48 @@
-.embedWrapper   
-    .embed
-        h4 #{'Session Request'}
-        img.embedThumbnail(src="https://cdn.discordapp.com/attachments/954441542645481522/954442266490044486/Tess.png", alt="")
-        .embedField 
-            h5 #{'Session Commander:'}
-            p.embedFieldValue.user #{'@Stephan'}
-        .embedField 
-            h5 #{'Players (1/5):'}
-            p.embedFieldValue.user #{'@Stephan'}
-        .embedField 
-            h5 #{'DM:'}
-            p.embedFieldValue.italic #{'TBD'}
-        .embedField 
-            h5 #{'Location:'}
-            p.embedFieldValue.italic #{'Roll20 (online)'}
-        .embedField 
-            h5 #{'Date & Time:'}
-            code #{'Saturday (10/12/2022) 13:00'}
-            //- p.embedFieldValue #{'Saturday (10/12/2022) 13:00'}
-        .embedField 
-            h5 #{'Objective:'}
-            p.embedFieldValue.italic.objective #{'Guide Dun Kill through the Flintlock Fighters to the great city of Zenfar.'}
-        .embedFooterWrapper    
-            .embedFooter 
-                .imgWrapper
-                    img(src="https://images-ext-1.discordapp.net/external/cTagcVGtpcKmQCmx5dzZY-IoFT0tqw4MXzMvBCHlCb8/%3Fsize%3D1024/https/cdn.discordapp.com/avatars/241273372892200963/995f2979745bc07073371853ba935238.webp?width=676&height=676", alt="")
-                p.footerText Requested by Khthonios - 01-06-2022
+.slideItem(id=session.id)    
+    .embedWrapper   
+        .embed
+            h4 #{'Session Request'}
+            img.embedThumbnail(src=`${session.session_commander.picture_url}`, alt="")
+            .embedField 
+                h5 #{'Session Commander:'}
+                p.embedFieldValue 
+                    span.user #{`@${session.session_party[0].nickname}`}
+            .embedField 
+                h5 #{`Players (${session.session_party.length}/5):`}
+                p.embedFieldValue 
+                    span.user #{`@${session.session_party[0].nickname}`}
+                    each member in session.session_party.slice(1)
+                        span ,#{' '}
+                        span.user #{`@${member.nickname || 'Unknown'}`}
+                        
+            .embedField 
+                h5 #{'DM:'}
+                p.embedFieldValue.italic #{session.dungeon_master_id_discord ? session.dungeon_master_id_discord : 'TBD'}
+            .embedField 
+                h5 #{'Location:'}
+                p.embedFieldValue.italic #{session.location || 'Roll20 (online)'}
+            .embedField 
+                h5 #{'Date & Time:'}
+                code #{session.date}
+                //- p.embedFieldValue #{'Saturday (10/12/2022) 13:00'}
+            .embedField 
+                h5 #{'Objective:'}
+                p.embedFieldValue.italic.objective #{session.objective || 'No data avaialable.'}
+            .embedFooterWrapper    
+                .embedFooter 
+                    .imgWrapper
+                        img(src=`${session.session_party[0].displayAvatarURL()}`, alt="")
+                    p.footerText #{`Requested by ${session.session_party[0].user.username} - ${session.created}`}
 
-.embedButtons 
-    if(isDungeonMaster)
-        .button.approve 
-            i(class="fas fa-thumbs-up")
-            p Approve
-        .button.decline
-            i(class="fas fa-times")
-            p Decline
-    else 
-        .button.join
-            i(class="fas fa-handshake")
-            p Join
+    .embedButtons 
+        if(isDungeonMaster)
+            .button.approve 
+                i(class="fas fa-thumbs-up")
+                p Approve
+            .button.decline
+                i(class="fas fa-times")
+                p Decline
+        else 
+            .button.join
+                i(class="fas fa-handshake")
+                p Join

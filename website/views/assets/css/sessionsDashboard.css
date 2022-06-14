@@ -1,7 +1,5 @@
 /* Carousel for embeds */
-.dashboardContent[sessions] {
 
-}
 .embla__requested {
     overflow: hidden;
     width: 100%;
@@ -96,13 +94,16 @@
     transition: all .5s ease;
     transform: scale(0.95);
 }
-.embedWrapper:hover {
-    transform: scale(1);
-}
 
-.embedWrapper:hover + .embedButtons {
+.slideItem:hover .embedWrapper{
+    transform: scale(1);
+}   
+
+.slideItem:hover .embedButtons{
     transform: translateY(-5px);
-}
+    opacity: 1;
+}   
+
 
 .embed {
     position: relative;
@@ -177,7 +178,7 @@
     font-style: italic;
 }
 
-.embedWrapper p.user {
+.embedWrapper span.user {
     background-color: rgba(88,101,242,.6);
     border-radius: 2px;
     cursor: pointer;
@@ -187,7 +188,7 @@
 
 
 
-.embedWrapper p.user:hover {
+.embedWrapper span.user:hover {
     background-color: rgba(88,101,242,1);
 }
 
@@ -242,6 +243,7 @@
     height: auto;
     margin-top: 10px;
     transition: all .5s ease;
+    opacity: 0;
     /* background-color: yellow; */
 }
 
@@ -254,6 +256,7 @@
     height: 30px;
     border-radius: 2px;
     cursor: pointer;
+    
 }
 
 .button.approve {
