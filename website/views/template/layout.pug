@@ -5,6 +5,33 @@ html(lang="en")
         meta(name="viewport", content="width=device-width, initial-scale=1.0")
         script(src="https://kit.fontawesome.com/632dfea1bf.js" crossorigin="anonymous")
         script(src="https://unpkg.com/axios/dist/axios.min.js")
+
+
+        script(src=`https://cdn.jsdelivr.net/npm/simple-notify@0.5.5/dist/simple-notify.min.js`)
+        //- script(src="../../../node_modules/awesome-notifications/src/index.var.js")
+        link(rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-notify@0.5.5/dist/simple-notify.min.css")
+
+        script.
+            function pushNotify() {
+                new Notify({
+                    status: 'success',
+                    title: 'Notify Title',
+                    text: 'Notify text lorem ipsum',
+                    effect: 'slide',
+                    speed: 500,
+                    customClass: null,
+                    customIcon: null,
+                    showIcon: true,
+                    showCloseButton: true,
+                    autoclose: true,
+                    autotimeout: 5000,
+                    gap: 20,
+                    distance: 20,
+                    type: 2,
+                    position: 'right bottom'
+                })
+            }
+
         //- script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js")
 
         title Chthulu Dashboard

@@ -1,6 +1,8 @@
 //- button(onclick="window.location='http://localhost:8080/auth/logout';") Logout
 .action 
-    .profileImageWrapper(onclick="profileMenuToggle();")
+    //- .profileImageWrapper(onclick="profileMenuToggle();")
+    .profileImageWrapper(onclick="pushNotify();")
+    
         img(src=loggedInUser.avatar, alt="")
     .profileMenu 
         h3 #{`${loggedInUser.username}#${loggedInUser.discriminator}` }

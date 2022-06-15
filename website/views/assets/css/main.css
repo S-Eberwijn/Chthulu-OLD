@@ -25,7 +25,6 @@
 
 * {
     font-family: 'Poppins', sans-serif;
-    color: var(--text-color);
 }
 
 body, html {
@@ -34,6 +33,10 @@ body, html {
     width: 100%;
     overflow: hidden;
     scroll-behavior: smooth;
+    color: var(--text-color);
+}
+a {
+    color: var(--text-color);
 }
 
 body.preload * {
@@ -342,6 +345,7 @@ svg>g>g:last-child {
         transform: translate(39px, 0px) rotate(180deg);
     }
 }
+
 /* 
 @-o-keyframes bouncy1 {
     0% {
@@ -542,3 +546,19 @@ svg>g>g:last-child {
         -moz-transform: translateX(-39px);
     }
 } */
+
+
+.notify {
+    /* defaults */
+    --notify-error: #eb5757;
+    --notify-success: #6fcf97;
+    --notify-warning: #f2c94c;
+    --notify-gray: #333333;
+    --notify-gray-2: #4d4d4d;
+    --notify-gray-3: #828282;
+    --notify-white: #333333;
+    --notify-white-2: #4d4d4d;
+    --notify-padding: 0.75rem;
+    --notify-icon-size: 32px;
+    --notify-close-icon-size: 16px;
+}
