@@ -9,7 +9,7 @@
     color: var(--text-color);
     height: 100%;
     box-sizing: border-box;
-    position: fixed;
+    /* position: fixed; */
     margin-left: 5em;
     overflow: scroll;
     scrollbar-width: none;

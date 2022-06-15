@@ -7,9 +7,9 @@ module.exports.run = async (interaction) => {
     if (Number.isInteger(parseInt(interaction.options.get('number').value))) {
         var amount = parseInt(interaction.options.get('number').value);
         interaction.channel.bulkDelete(amount).then(() => {
-            if (amount === '0') {
+            if (amount === 0) {
                 interaction.channel.send({ content: `Cant delete 0 messages!` }).then(msg => { setTimeout(() => msg.delete(), 3000) });
-            } else if (amount === '1') {
+            } else if (amount === 1) {
                 interaction.channel.send({ content: `${amount} message deleted!` }).then(msg => { setTimeout(() => msg.delete(), 3000) });
             } else {
                 interaction.channel.send({ content: `${amount} messages deleted!` }).then(msg => { setTimeout(() => msg.delete(), 3000) });

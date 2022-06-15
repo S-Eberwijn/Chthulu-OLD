@@ -10,7 +10,6 @@
     width: calc(100% - 5em);
     z-index: 20;
     animation-fill-mode: forwards;
-    box-sizing: border-box;
     /* transition: width 1s; */
     /* float: right; */
 }
@@ -68,7 +67,7 @@ header.dashboardHeader button {
     width: 6rem;
     height: 2.5rem;
     display: inline-block;
-    border: none;
+    /* border: none; */
     margin: 0;
     font-size: .8rem;
     text-decoration: none;

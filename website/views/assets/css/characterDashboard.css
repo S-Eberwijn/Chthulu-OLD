@@ -1,71 +1,3 @@
-/* Searchbar */
-input {
-    border: 2px solid var(--sidebar-color);
-    color: var(--text-color);
-    background-color: var(--content-color);
-    padding: .5rem;
-    padding-left: .8rem;
-    border-radius: 20px;
-}
-
-input:focus {
-    outline: 0;
-}
-
-input::placeholder {
-    color: #ddd;
-}
-
-
-header.dashboardHeader {
-    padding: 1.3em;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-}
-
-header.dashboardHeader button {
-    width: 6rem;
-    height: 2.5rem;
-    display: inline-block;
-    border: none;
-    margin: 0;
-    font-size: .8rem;
-    text-decoration: none;
-    cursor: pointer;
-    text-align: center;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    background-color: var(--dashboard-color);
-    border: 2px solid var(--sidebar-color);
-    border-radius: 20px;
-    transition: all 200ms ease;
-}
-
-header.dashboardHeader button:hover {
-    transform: scale(1.2);
-}
-
-.dashboardContent>div {
-    height: 240px;
-    width: 400px;
-    display: flex;
-    flex-direction: column;
-}
-
-.dashboardContentItemTitle {
-    color: white;
-    font-size: .7rem;
-    font-weight: 900;
-    margin-left: 70px;
-    margin-top: 10px;
-}
-
-.dashboardContentItemContent {
-    align-self: center;
-    font-size: 8rem;
-}
-
 /*CHARACTERS PAGE*/
 .dashboardContent[characters] {
     display: flex;
@@ -75,52 +7,34 @@ header.dashboardHeader button:hover {
 }
 
 .dashboardContent[characters] h1 {
+    user-select: none;
     width: 100%;
-    height: 70px;
+    height: var(--title-height);
     margin: 0;
-    margin-left: 0px;
+    padding-left: 15px;
     text-align: center;
     display: flex;
-    align-items: center;
-    /* justify-content: center; */
-    text-indent: 20px;
     position: relative;
-    user-select: none;
-    background-color: var(--menu-color);
-    
-    /* border: 3px solid var(--sidebar-color);
-    border-bottom-left-radius: 5px;
-    border-bottom-right-radius: 5px; */
-
+    align-items: center;
 }
 
-.dashboardContent[characters] h1 input {
-    position: absolute;
-    margin-left: 500px;
+
+.dashboardContent[characters] h1 .count {
+    font-size: 1em;
 }
 
-/* Searchbar */
-
-input {
-    border: 2px solid var(--sidebar-color);
-    color: var(--text-color);
-    background-color: var(--content-color);
-    padding: .5rem;
-    padding-left: .8rem;
-    border-radius: 20px;
+.dashboardContent[characters] h1 .title {
+    margin-left: 10px;
+    font-size: .6em;
 }
 
-input:focus {
-    outline: 0;
-}
-
-input::placeholder {
-    color: #ddd;
-}
 
 .charactersList {
     width: 100%;
-    max-height: calc(100% - 70px);
+    max-height: 365px;
+    height: 365px;
+
+    border-radius: 10px;
     /* border: 3px solid var(--sidebar-color);
     border-top: 0;
     border-bottom-left-radius: 5px;
@@ -131,13 +45,15 @@ input::placeholder {
     /* justify-content: center; */
     gap: 5px;
     /* align-items: flex-start; */
-    padding-top: 10px;
-    padding-bottom: 10px;
-
-    padding-left: 20px;
+    padding: 10px;
     box-sizing: border-box;
-    overflow-y: scroll;
+    overflow-y: hidden;
+    overflow-x: hidden;
+    /* z-index: 1; */
+    box-shadow: inset 0px 0px 0px 3px var(--sidebar-color);
 }
+
+
 
 .charactersList::-webkit-scrollbar {
     width: 15px;
@@ -163,22 +79,31 @@ input::placeholder {
     cursor: default !important;
 }
 
+
 .charactersList .characterItem {
     width: 100%;
     min-width: 370px;
     height: 30px;
     background-color: var(--menu-color);
-    transition: all .275s ease;
+    transition: all .2s ease;
     display: flex;
     align-items: center;
     justify-content: space-between;
     border-radius: 3px;
+    position: relative;
+    z-index: 1;
+
+}
+
+.characterItem.notDisplayed {
+    display: none;
 }
 
 .charactersList .characterItem .classIcon {
     width: 10%;
     min-width: 40px;
     height: 100%;
+    /* overflow: hidden; */
     /* background-color: red; */
     display: flex;
     align-items: center;
@@ -188,6 +113,8 @@ input::placeholder {
 .charactersList .characterItem .classIcon img {
     height: 70%;
     width: auto;
+    border-radius: 50%;
+
 }
 
 .charactersList .characterItem .characterFullName {
@@ -219,6 +146,7 @@ input::placeholder {
     align-items: center;
 }
 
+
 .charactersList .characterItem .characterLevel p {
     margin: 0;
 }
@@ -233,7 +161,7 @@ input::placeholder {
     height: 75%;
     width: 60%;
     display: flex;
-    z-index: 1;
+    /* z-index: 1; */
     /* flex-direction: row; */
     align-items: center;
     /* justify-content: space-between; */
@@ -244,122 +172,52 @@ input::placeholder {
     height: 75%;
     width: 30%;
     display: flex;
-    z-index: 1;
     /* flex-direction: row; */
     align-items: center;
     /* justify-content: space-between; */
     /* For the informational characters page */
 }
 
+.characterSelectionBox .paginationDiv {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 15%;
+    margin: 10px;
+    cursor: pointer;
+    color: var(--menu-color);
+}
+
+.characterSelectionBox .paginationDiv i {
+    font-size: .8em;
+    color: var(--text-color);
+}
+
+
 .dashboardContent[characters] .cardStack {
-    height: 650px;
-    width: 650px;
+    height: 365px;
+    width: 20rem;
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
+    margin-top: var(--title-height);
+
 }
 
 .dashboardContent[characters] .cardStack .characterCardHolder {
     position: absolute;
     height: 100%;
-    width: 650px;
-    z-index: 3;
+    width: 60rem;
+
+    /* z-index: 3; */
 
     /* transition: all .75s; */
     /* overflow: hidden; */
-}
 
+    opacity: 0;
+    transition: opacity .2s ease;
 
-
-.dashboardContent[characters] .cardStack .characterCardHolder:first-child:not(:last-child) {
-    transition: transform;
-    transition-duration: .75s;
-    /* transition-delay: 100ms; */
-    transform: translate(-30%);
-    z-index: 2;
-}
-
-.dashboardContent[characters] .cardStack .characterCardHolder:nth-of-type(2) {
-    transform: translate(-30%);
-    z-index: 1;
-}
-
-.dashboardContent[characters] .cardStack .characterCardHolder::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    border-radius: 10px;
-    transition: all 0.5s;
-    z-index: 5;
-}
-
-.dashboardContent[characters] .cardStack .characterCardHolder:first-child:not(:last-child)::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    transform: translate(0, -50%) scale(2.5);
-    left: 0;
-    color: var(--text-color);
-    opacity: 1;
-    z-index: 6;
-    font-family: 'Poppins', 'FontAwesome', sans-serif;
-    padding-left: 5%;
-    transition: all 0.5s;
-}
-
-.dashboardContent[characters] .cardStack .characterCardHolder:first-child:not(:last-child):hover {
-    transform: translate(-40%);
-    cursor: pointer;
-}
-
-.dashboardContent[characters] .cardStack .characterCardHolder:first-child:not(:last-child):hover::before,
-.dashboardContent[characters] .cardStack .characterCardHolder:nth-last-child(2):hover::before {
-    transform: translate(0, -50%) scale(3);
-}
-
-.dashboardContent[characters] .cardStack .characterCardHolder:first-child:not(:last-child):hover::after,
-.dashboardContent[characters] .cardStack .characterCardHolder:nth-last-child(2):hover::after {
-    background-color: rgba(0, 0, 0, 0.3);
-    transition-delay: 50ms;
-
-}
-
-.dashboardContent[characters] .cardStack .characterCardHolder:nth-last-child(2) {
-    transition: transform;
-    transition-duration: .75s;
-    /* transition-delay: 2s; */
-    transform: translate(30%);
-    z-index: 2;
-}
-
-.dashboardContent[characters] .cardStack .characterCardHolder:nth-last-child(3) {
-    transform: translate(30%);
-    z-index: 1;
-}
-
-.dashboardContent[characters] .cardStack .characterCardHolder:nth-last-child(2):not(:first-child):before,
-.dashboardContent[characters] .cardStack .characterCardHolder:nth-last-child(3):not(:first-child)::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    transform: translate(0, -50%) scale(2.5);
-    right: 0;
-    color: var(--text-color);
-    opacity: 1;
-    z-index: 6;
-    font-family: 'Poppins', 'FontAwesome', sans-serif;
-    padding-right: 5%;
-    transition: all 0.5s;
-}
-
-.dashboardContent[characters] .cardStack .characterCardHolder:nth-last-child(2):hover {
-    transform: translate(40%);
-    cursor: pointer;
 }
 
 .dashboardContent[characters] .cardStack .characterCardHolder .characterCard {
@@ -368,12 +226,13 @@ input::placeholder {
     width: 100%;
     background: var(--menu-color);
     border-radius: 10px;
-    padding: 0.8rem;
+    padding: 1rem;
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    -webkit-box-shadow: inset 0px 5px 3px var(--sidebar-color);
-    box-shadow: inset 0px 0px 5px 3px var(--sidebar-color);
+    flex-direction: row;
+    gap: 1.5rem;
+    /* justify-content: space-evenly; */
+    /* /* -webkit-box-shadow: inset 0px 5px 3px var(--sidebar-color); */
+    box-shadow: inset 0px 0px 0px 3px var(--sidebar-color);
     /* inset: 10px var(--sidebar-color); */
     box-sizing: border-box;
     /* If you want to implement it in very old browser-versions */
@@ -387,13 +246,25 @@ input::placeholder {
     -o-user-select: none;
     /* The rule below is implemented in most browsers by now */
     user-select: none;
-    z-index: 10;
+    /* z-index: 10; */
     /* overflow: hidden; */
+    /* transition: all .4s ease; */
+    /* transition: opacity .4s ease; */
+
 }
 
-.dashboardContent[characters] .cardStack .characterCardHolder:not(:last-child) .characterCard {
-    z-index: 0;
+.dashboardContent[characters] .cardStack .characterCardHolder:first-child {
+    opacity: 1;
+}
 
+.characterInformation {
+    height: 100%;
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+    /* align-items: center; */
+    justify-content: space-evenly;
+    /* overflow: hidden; */
 }
 
 .dashboardContent[characters] .cardStack .characterCard span.characterName {
@@ -401,20 +272,26 @@ input::placeholder {
 }
 
 .dashboardContent[characters] .cardStack .characterCard span.characterLevel {
+    width: 9%;
     position: absolute;
-    font-weight: bold;
-    font-size: 3.5rem;
-    right: 1rem;
-    top: 0.5rem;
+    /* font-weight: bold;
+    font-size: 3.5rem; */
+    right: 1.5rem;
+    top: 1.5rem;
+}
+
+.dashboardContent[characters] .cardStack .characterCard span.characterLevel img {
+    width: 100%;
+    object-fit: cover;
+    /* height: 10px; */
 }
 
 .dashboardContent[characters] .cardStack .characterCard div.infoBundle {
-    width: 100%;
+    width: 75%;
     height: 50px;
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
-    /* background: green; */
+    gap: 5rem;
 }
 
 .dashboardContent[characters] .cardStack .characterCard .characterDescription {
@@ -426,6 +303,7 @@ input::placeholder {
     text-align: justify;
 }
 
+
 .dashboardContent[characters] .cardStack .characterCard .characterDescription::-webkit-scrollbar {
     width: 0px;
     /* width of the entire scrollbar */
@@ -434,7 +312,7 @@ input::placeholder {
 .dashboardContent[characters] .cardStack .characterCard div.infoBundle span {
     display: flex;
     flex-direction: column;
-    text-transform: uppercase;
+    /* text-transform: uppercase; */
     font-weight: bold;
 }
 
@@ -444,388 +322,49 @@ span.characterRace, span.characterClass, span.characterBackground {
 }
 
 .dashboardContent[characters] .cardStack .characterCard div.characterImageHolder {
-    width: 100%;
-    height: 300px;
-    /* background: green; */
+    width: 30%;
+    height: 100%;
     border-radius: 5px;
     overflow: hidden;
     display: flex;
     justify-content: center;
+
+    -moz-box-shadow: 0 0 20px var(--average-color);
+    -webkit-box-shadow: 0 0 20px var(--average-color);
+    box-shadow: 0 0 20px var(--average-color);
 }
 
 .dashboardContent[characters] .cardStack .characterCard div.characterImageHolder img {
-    width: auto;
-    height: 100%;
+    object-fit: cover;
+    width: 100%;
+
+
     border-radius: 5px;
 }
 
-ul.arrow {
-    list-style: none;
-    font-size: 500%;
-    cursor: pointer;
-    padding: 0;
-    margin: 0;
-}
-
-ul.arrow:hover li::before {
-    border-color: #fff;
-    transform: scale(1.2);
-    /* For the arrow (which is a border) */
-}
-
-li.left {
-    transform: rotate(-135deg);
-}
-
-li.right {
-    transform: rotate(45deg);
-}
-
-li.down {
-    transform: rotate(180deg);
-}
-
-li::before {
+span[--race] {
     position: relative;
-    /* top: 3pt; Uncomment this to lower the icons as requested in comments*/
-    content: "";
-    display: inline-block;
-    /* By using an em scale, the arrows will size with the font */
-    width: 0.4em;
-    height: 0.4em;
-    border-right: 0.2em solid var(--text-color);
-    border-top: 0.2em solid var(--text-color);
-    margin-right: 0.5em;
-    transition: all 250ms ease;
 }
 
-/* Change color */
-li:hover::before {
-    border-color: #fff;
-    /* For the arrow (which is a border) */
+span[--race]::after {
+    content: attr(--race);
+    position: absolute;
+    transform: translate(0, 100%);
 }
 
-ul.arrow:active li::before {
-    /* animation css */
-    transform: skew(10deg, 10deg)
+span[--class]::after {
+    content: attr(--class);
+    position: absolute;
+    transform: translate(0, 100%);
 }
 
-.rightCardToTopMiddle {
-    animation-name: rightCardToTopMiddle;
-    animation-duration: .75s;
-    animation-fill-mode: forwards;
+span[--background]::after {
+    content: attr(--background);
+    position: absolute;
+    transform: translate(0, 100%);
 }
 
-.leftCardToTopMiddle {
-    animation-name: leftCardToTopMiddle;
-    animation-duration: .75s;
-    animation-fill-mode: forwards;
-}
-
-@keyframes leftCardToTopMiddle {
-    0% {
-        transform: translate(-40%);
-        z-index: 2;
-    }
-
-    25% {
-        transform: translate(-60%);
-    }
-
-    50% {
-        transform: translate(0%);
-        z-index: 10;
-    }
-
-    75% {
-        transform: translate(0%);
-    }
-
-    100% {
-        transform: translate(0%);
-        z-index: 10;
-    }
-}
-
-.characterCardContentVisible {
-    animation-name: characterCardContentVisible;
-    animation-duration: .75s;
-    animation-fill-mode: forwards;
-}
-
-.characterCardContentDarkened {
-    animation-name: characterCardContentDarkened;
-    animation-duration: .75s;
-    animation-fill-mode: forwards;
-}
-
-@keyframes characterCardContentVisible {
-    from {
-        z-index: 0;
-    }
-
-    to {
-        z-index: 10;
-
-
-    }
-}
-
-@keyframes characterCardContentDarkened {
-    from {
-        z-index: 10;
-    }
-
-    to {
-        z-index: 0;
-    }
-}
-
-@keyframes rightCardToTopMiddle {
-    0% {
-        transform: translate(40%);
-        z-index: 2;
-    }
-
-    25% {
-        transform: translate(60%);
-    }
-
-    50% {
-        transform: translate(0%);
-        z-index: 10;
-    }
-
-    75% {
-        transform: translate(0%);
-    }
-
-    100% {
-        transform: translate(0%);
-        z-index: 10;
-    }
-}
-
-.middleCardToBehindLeft {
-    animation-name: middleCardToBehindLeft;
-    animation-duration: .75s;
-    /* animation-delay: 400ms; */
-    animation-fill-mode: forwards;
-}
-
-
-
-@keyframes middleCardToBehindLeft {
-    0% {
-        transform: translate(0%);
-        z-index: 4;
-    }
-
-    25% {
-        transform: translate(-60%);
-    }
-
-    50% {
-        transform: translate(-30%);
-        z-index: 3;
-    }
-
-    75% {
-        transform: translate(-30%);
-    }
-
-    100% {
-        transform: translate(-30%);
-        z-index: 3;
-    }
-}
-
-.middleCardToBehindRight {
-    animation-name: middleCardToBehindRight;
-    animation-duration: .75s;
-    /* animation-delay: 400ms; */
-    animation-fill-mode: forwards;
-}
-
-
-
-@keyframes middleCardToBehindRight {
-    0% {
-        transform: translate(0%);
-        z-index: 4;
-    }
-
-    25% {
-        transform: translate(60%);
-    }
-
-    50% {
-        transform: translate(30%);
-        z-index: 3;
-    }
-
-    75% {
-        transform: translate(30%);
-    }
-
-    100% {
-        transform: translate(30%);
-        z-index: 3;
-    }
-}
-
-.leftCardToBehindMiddle {
-    animation-name: leftCardToBehindMiddle;
-    animation-duration: 1s;
-    animation-fill-mode: forwards;
-}
-
-
-
-@keyframes leftCardToBehindMiddle {
-    0% {
-        transform: translate(-30%);
-    }
-
-    25% {
-        transform: translate(-30%);
-    }
-
-    50% {
-        transform: translate(0%);
-    }
-
-    75% {
-        transform: translate(0%);
-    }
-
-    100% {
-        transform: translate(0%);
-    }
-}
-
-.rightCardToBehindMiddle {
-    animation-name: rightCardToBehindMiddle;
-    animation-duration: 1s;
-    animation-fill-mode: forwards;
-}
-
-
-
-@keyframes rightCardToBehindMiddle {
-    0% {
-        transform: translate(30%);
-    }
-
-    25% {
-        transform: translate(30%);
-    }
-
-    50% {
-        transform: translate(0%);
-    }
-
-    75% {
-        transform: translate(0%);
-    }
-
-    100% {
-        transform: translate(0%);
-    }
-}
-
-.behindMiddleCardToLeft {
-    animation-name: behindMiddleCardToLeft;
-    animation-duration: 1s;
-    animation-fill-mode: forwards;
-}
-
-@keyframes behindMiddleCardToLeft {
-    0% {
-        transform: translate(0%);
-    }
-
-    25% {
-        transform: translate(0%);
-    }
-
-    50% {
-        transform: translate(-30%);
-    }
-
-    75% {
-        transform: translate(-30%);
-    }
-
-    100% {
-        transform: translate(-30%);
-    }
-}
-
-.behindMiddleCardToRight {
-    animation-name: behindMiddleCardToRight;
-    animation-duration: 1s;
-    animation-fill-mode: forwards;
-}
-
-@keyframes behindMiddleCardToRight {
-    0% {
-        transform: translate(0%);
-    }
-
-    25% {
-        transform: translate(0%);
-    }
-
-    50% {
-        transform: translate(30%);
-    }
-
-    75% {
-        transform: translate(30%);
-    }
-
-    100% {
-        transform: translate(30%);
-    }
-}
-
-
-@keyframes characterCardContentToBlank {
-    from {
-        opacity: 1
-    }
-
-    to {
-
-
-        opacity: 0
-    }
-}
-
-@keyframes characterCardContentToContent {
-    from {
-        z-index: 10;
-    }
-
-    to {
-        z-index: 0;
-    }
-}
-
-.characterCardContentToBlank {
-    animation-name: characterCardContentToBlank;
-    animation-duration: .75s;
-    animation-fill-mode: forwards;
-}
-
-.characterCardContentToContent {
-    animation-name: characterCardContentToContent;
-    animation-duration: .75s;
-    animation-fill-mode: forwards;
-}
-
-.dashboardContent[characters] .cardStack .characterCardHolder:last-child {
-    z-index: 3;
-    transform: translate(0%);
+img.classIcon {
+    width: 50%;
+    object-fit: cover;
 }

@@ -11,7 +11,7 @@ router.get('/login/redirect', passport.authenticate('discord', {
 });
 router.get('/logout', (req, res) => {
     if (req.session) {
-        req.session.destroy(err => err ? res.redirect('/') : res.redirect('/'));
+        req.session.destroy(err =>  res.redirect('/'));
     } else {
         res.redirect('/')
     }
