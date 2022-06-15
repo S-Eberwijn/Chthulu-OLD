@@ -55,7 +55,7 @@
     ]
   },
   "scripts": {
-    "test": "jest --coverage",
+    "test": "jest",
     "start": "node index.js"
   },
   "license": "MIT",
