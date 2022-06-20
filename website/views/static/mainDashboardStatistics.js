@@ -69,8 +69,8 @@ function drawChart(elementId, title, chartData, headerData) {
     var data = google.visualization.arrayToDataTable(dataForGoogleChart, false);
     var options = {
         title: title,
-        width: 400,
-        height: 240,
+        width: 340,
+        height: 180,
         colors: ['#404552', '#383c4a', '#4b5162', '#7c818c', '#444444'],
         backgroundColor: {
             fill: 'transparent',

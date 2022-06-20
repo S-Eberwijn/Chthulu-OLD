@@ -63,11 +63,14 @@ header.dashboardHeader {
     justify-content: space-between;
 }
 
-header.dashboardHeader button {
+header.dashboardHeader span {
+    font-size: var(--header-font-size);
+}
+
+/* header.dashboardHeader button {
     width: 6rem;
     height: 2.5rem;
     display: inline-block;
-    /* border: none; */
     margin: 0;
     font-size: .8rem;
     text-decoration: none;
@@ -79,17 +82,23 @@ header.dashboardHeader button {
     border: 2px solid var(--sidebar-color);
     border-radius: 20px;
     transition: all 200ms ease;
-}
+} */
 
 .dashboardContent {
     height: calc(100% - var(--header-height));
+    /* height: 100%; */
     padding: 20px;
     display: flex;
     flex-direction: row;
     /* justify-content: space-between; */
     flex-wrap: wrap;
     overflow: scroll;
-    gap: 20px;
+    /* gap: 20px; */
+}
+
+.dashboardContent h1{
+    font-size: var(--header-font-size);
+    margin-top: 0;
 }
 
 .dashboardContent::-webkit-scrollbar {
@@ -112,8 +121,8 @@ header.dashboardHeader button {
 }
 
 .dashboardContent>div {
-    height: 240px;
-    width: 400px;
+    height: 180px;
+    width: 340px;
     display: flex;
     flex-direction: column;
 }
@@ -121,23 +130,23 @@ header.dashboardHeader button {
 .kpiItem {
     display: flex;
     flex-direction: column;
-    width: 400px;
-    height: 240px;
-    min-width: 400px;
+    width: 340px;
+    height: 180px;
+    min-width: 340px;
     position: relative;
 }
 
 .chart {
-    width: 400px;
-    height: 240px;
-    min-width: 400px;
+    width: 340px;
+    height: 180px;
+    min-width: 340px;
     position: relative;
 
 }
 
 .kpiTitle {
     color: white;
-    font-size: .7rem;
+    font-size: var(--kpi-sub-font-size);
     font-weight: 900;
     margin-left: 70px;
     margin-top: 15px;
@@ -145,7 +154,7 @@ header.dashboardHeader button {
 
 .kpiContent {
     align-self: center;
-    font-size: 7rem;
+    font-size: var(--kpi-font-size);
     margin-right: 4rem;
 }
 
@@ -255,7 +264,7 @@ section {
     display: flex;
     list-style: none;
     justify-content: center;
-    padding-top: 10px;
+    /* padding-top: 10px; */
 }
 
 .embla__dot {

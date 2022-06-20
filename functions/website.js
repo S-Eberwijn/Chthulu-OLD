@@ -11,7 +11,7 @@ async function editAllGameSessionsForWebsite(sessions) {
         for (const key in session.session_party) {
             if (Object.hasOwnProperty.call(session.session_party, key)) {
                 const element = session.session_party[key];
-                session.session_party[key] = (await getUserFromGuild(element, guild));
+                session.session_party[key] = (await getUserFromGuild(element, guild)) || {username: 'Unknown'};
             }
         }
 

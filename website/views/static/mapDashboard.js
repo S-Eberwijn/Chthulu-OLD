@@ -1,5 +1,6 @@
 
 window.addEventListener('DOMContentLoaded', async (event) => {
+    databaseMap = databaseMap[0];
     let img = await getMeta(databaseMap.data.map_url);
 
     var imgHeight = img.height,

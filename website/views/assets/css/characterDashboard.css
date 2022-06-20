@@ -20,12 +20,12 @@
 
 
 .dashboardContent[characters] h1 .count {
-    font-size: 1em;
+    font-size: calc(var(--header-font-size) * 1.25);
 }
 
 .dashboardContent[characters] h1 .title {
     margin-left: 10px;
-    font-size: .6em;
+    font-size: var(--header-font-size);
 }
 
 

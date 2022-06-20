@@ -59,13 +59,13 @@
 
 .setting span.commandName {
     color: var(--navbar-text-color);
-    font-size: 1.2em;
+    font-size: var(--menu-font-size);
     /* width: calc(100% - 80px); */
 }
 
 .setting span.commandDescription {
     color: var(--placeholder-text-color);
-    font-size: .8;
+    font-size: var(--menu-sub-font-size);
     padding: 0 10px;
     /* width: calc(100% - 80px); */
 

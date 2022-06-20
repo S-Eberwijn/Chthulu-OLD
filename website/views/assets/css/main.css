@@ -7,11 +7,7 @@
     --menu-color: #2F3136;
     --content-color: #36393F;
     --placeholder-text-color: #8e8e8e;
-    --header-height: 100px;
-    --content-padding: 20px 0px;
     --clr-border: #202225;
-    --menu-width: 16em;
-    --title-height: 50px;
 }
 
 /* .theme-light {
@@ -24,6 +20,15 @@
 } */
 
 * {
+    --menu-width: 16em;
+    --header-height: 75px;
+    --content-padding: 20px 0px;
+    --title-height: 50px;
+    --header-font-size: 1.1rem;
+    --menu-font-size: 1rem;
+    --menu-sub-font-size: 0.8rem;
+    --kpi-font-size: 5rem;
+    --kpi-sub-font-size: .65rem;
     font-family: 'Poppins', sans-serif;
 }
 
@@ -35,6 +40,7 @@ body, html {
     scroll-behavior: smooth;
     color: var(--text-color);
 }
+
 a {
     color: var(--text-color);
 }
@@ -121,12 +127,12 @@ svg>g>g:last-child {
 
 
 /* Profile menu */
-.action {
-    position: fixed;
+/* .action { */
+    /* position: fixed;
     top: 20px;
-    right: 30px;
-    z-index: 1000;
-}
+    right: 30px; */
+    /* z-index: 1000; */
+/* }  */
 
 .action .profileImageWrapper {
     position: relative;
@@ -181,14 +187,14 @@ svg>g>g:last-child {
 .action .profileMenu h3 {
     width: 100%;
     text-align: center;
-    font-size: 1rem;
+    font-size: var(--menu-font-size);
     font-weight: 500;
     color: var(--navbar-text-color);
     line-height: 1.2em;
 }
 
 .action .profileMenu h3 span {
-    font-size: 0.8rem;
+    font-size: var(--menu-sub-font-size);
     color: var(--placeholder-text-color);
     font-weight: 400;
 }

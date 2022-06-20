@@ -312,16 +312,16 @@ i.fas.fa-chevron-up.rotateChevron {
     color: var(--placeholder-text-color);
     padding-left: 5px;
     padding-right: 5px;
-    font-size: .65rem;
+    font-size: var(--menu-font-size);
 }
 
 .questBoxTitle {
     margin-left: 10px;
-    font-size: .6em;
+    font-size: var(--menu-font-size);
 }
 
 span.questCount {
-    font-size: 1em;
+    font-size: var(--header-font-size);
 }
 
 select {

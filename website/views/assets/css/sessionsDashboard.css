@@ -54,7 +54,8 @@
     display: flex;
     align-items: center;
 }
-.embla__dots .embla__dot:only-child{
+
+.embla__dots .embla__dot:only-child {
     display: none;
 }
 
@@ -75,10 +76,11 @@
 
 
 .dashboardContent[sessions] .embla__slide {
-    
+
     flex: 0 0 10%;
     /* Slide covers 25% of the viewport */
-
+    padding: 5px;
+    box-sizing: border-box;
 }
 
 /* .embla__slide:is(:not(:first-child)) {
@@ -92,17 +94,19 @@
 .embedWrapper {
     position: relative;
     transition: all .5s ease;
-    transform: scale(0.95);
+
+    /* transform: scale(0.95); */
 }
 
-.slideItem:hover .embedWrapper{
-    transform: scale(1);
-}   
+.slideItem:hover .embedWrapper {
+    /* transform: scale(1); */
+    transform: translateY(-5px);
+}
 
-.slideItem:hover .embedButtons{
+.slideItem:hover .embedButtons {
     transform: translateY(-5px);
     opacity: 1;
-}   
+}
 
 
 .embed {
@@ -117,21 +121,21 @@
     padding: 15px;
     box-sizing: border-box;
     background-color: var(--menu-color);
-    
-    
+
+
 }
 
 
 .embedWrapper h4 {
     margin: 0;
     font-size: .9em;
-    
+
 }
 
 .embedWrapper h5 {
     margin: 0;
     font-size: .75em;
-    
+
 }
 
 .embedWrapper .embedField {
@@ -149,7 +153,7 @@
 
 .embedWrapper code {
     /* margin: 0; */
-    padding: 2px; 
+    padding: 2px;
     box-sizing: border-box;
     font-size: .7em;
     display: inline-block;
@@ -160,7 +164,7 @@
 .embedWrapper p.objective {
     /* margin: 0; */
     padding-left: 8px;
-} 
+}
 
 .embedWrapper p.objective::before {
     /* margin: 0; */
@@ -171,7 +175,7 @@
     background-color: var(--content-color);
     top: 0;
     left: 0;
-} 
+}
 
 
 .embedWrapper p.italic {
@@ -179,7 +183,7 @@
 }
 
 .embedWrapper span.user {
-    background-color: rgba(88,101,242,.6);
+    background-color: rgba(88, 101, 242, .6);
     border-radius: 2px;
     cursor: pointer;
     transition: all .1s ease-in-out;
@@ -189,7 +193,7 @@
 
 
 .embedWrapper span.user:hover {
-    background-color: rgba(88,101,242,1);
+    background-color: rgba(88, 101, 242, 1);
 }
 
 .embedWrapper img {
@@ -200,7 +204,7 @@
     top: 0;
     border-radius: 10px;
     transform: translate(0%, -33%);
-    
+
 }
 
 .embedWrapper .embedFooterWrapper {
@@ -214,22 +218,23 @@
     position: relative;
 }
 
-.embedWrapper .embedFooter .imgWrapper  {
+.embedWrapper .embedFooter .imgWrapper {
     position: absolute;
     width: 20px;
     height: 20px;
     border-radius: 50%;
     left: 0;
     bottom: 0;
-    transform: translate(0,25%);
+    transform: translate(0, 25%);
 }
+
 .embedWrapper .embedFooter .imgWrapper img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-.embedWrapper .embedFooter p.footerText{
+.embedWrapper .embedFooter p.footerText {
     font-size: .7em;
     padding-left: 25px;
 }
@@ -256,7 +261,7 @@
     height: 30px;
     border-radius: 2px;
     cursor: pointer;
-    
+
 }
 
 .button.approve {
