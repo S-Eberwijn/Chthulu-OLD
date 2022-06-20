@@ -146,26 +146,6 @@ img {
     transition-delay: .2s;
 }
 
-/* .extendMenu i.fa-chevron-right.flip:first-child {
-    transition-delay: .2s;
-} */
-
-/* .extendMenu i.fa-chevron-right.flip:nth-child(2) {
-    transition-delay: .1s;
-}
-
-.extendMenu i.fa-chevron-right.flip:last-child {
-    transition-delay: 0s;
-} */
-
-
-
-.extendMenu:hover i.fa-chevron-right {
-    /* transition: all 1 ease-in-out !important; */
-
-    /* transform: scale(1.2); */
-}
-
 .extendMenu i.fa-chevron-right.flip {
     transform: rotateY(180deg)
 }

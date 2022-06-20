@@ -12,11 +12,11 @@ html(lang="en")
         link(rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-notify@0.5.5/dist/simple-notify.min.css")
 
         script.
-            function pushNotify() {
+            function pushNotify(status, title, text) {
                 new Notify({
-                    status: 'success',
-                    title: 'Notify Title',
-                    text: 'Notify text lorem ipsum',
+                    status: status,
+                    title: title,
+                    text: text,
                     effect: 'slide',
                     speed: 500,
                     customClass: null,

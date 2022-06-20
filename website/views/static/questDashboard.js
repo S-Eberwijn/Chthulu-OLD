@@ -34,17 +34,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
         document.getElementById('quest_description').value = text.charAt(0).toUpperCase() + text.slice(1);
     });
 
-
-
-
-
-
-
-
-    // TESTING PURPOSES
-    let count = 0;
-
-
     function handleDragStart(e) {
         this.style.opacity = '0.4';
         // let quests = document.querySelectorAll('.questBox .questDiv.quest');
@@ -327,7 +316,7 @@ function createQuest(buttonElement) {
     document.querySelector(`.createButton>i.fa-spinner`).classList.add('active')
     buttonElement.setAttribute('disabled', 'true')
 
-    console.log(`Clicking "Create"-button`)
+    // console.log(`Clicking "Create"-button`)
     setTimeout(() => {
         try {
             axios.post(`/dashboard/${guildID}/informational/quests`, {
@@ -336,7 +325,8 @@ function createQuest(buttonElement) {
                 "description": description,
             }).then(response => {
                 if (response.status === 201) {
-                    console.log(`Creation of quest complete`)
+                    //TODO insert quest div immediately after creation of quest
+                    // console.log(`Creation of quest complete`)
                     window.location = './quests'
                 } else {
                     console.log("Something went wrong!; ERROR STATUS: " + response.status);
@@ -369,12 +359,20 @@ function editQuest(buttonElement) {
                 "description": description
             }).then(response => {
                 if (response.status === 201) {
-                    window.location = './quests';
+                    document.querySelector(`input[action="edit"]`).checked = false;
+                    questElement.querySelector(`p.title`).textContent = title;
+                    questElement.querySelector(`span.description`).textContent = description;
+                    questElement.setAttribute('quest_importance_value', priority);
+                    pushNotify('success', 'Quest edited', 'The quest has been edited successfully.');
                 }
             })
         } catch (error) {
-            console.log("error occured during edit");
+            console.log("error occured during edit of quest: " + globalQuestID);
         };
+        document.querySelector(`.editButton>i.fa-spinner`).classList.remove('active')
+        buttonElement.removeAttribute('disabled')
+        buttonElement.value = 'Edit';
+
     }, 250);
 }
 
@@ -389,14 +387,20 @@ function deleteQuest(buttonElement) {
         try {
             axios.delete(`/dashboard/${guildID}/informational/quests`, { data: { 'quest_id': globalQuestID } }).then(response => {
                 if (response.status === 201) {
+                    document.querySelector(`input[action="delete"]`).checked = false;
                     questElement.remove();
                     uncompletedQuestsCount.innerText = uncompletedQuestsCount.innerText - 1;
-                    window.location = './quests';
+                    pushNotify('success', 'Quest removed', 'The quest has been removed successfully.');
                 }
             })
         } catch (error) {
             console.log("error occured during delete");
         };
+        buttonElement.value = 'Delete';
+        document.querySelector(`.deleteButton>i.fa-spinner`).classList.remove('active')
+        buttonElement.removeAttribute('disabled')
+
+
     }, 250);
 }
 
