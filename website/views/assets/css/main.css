@@ -164,6 +164,8 @@ svg>g>g:last-child {
     transition: 0.4s;
     visibility: hidden;
     opacity: 0;
+    z-index: 200;
+
 }
 
 .action .profileMenu.active {
@@ -176,7 +178,7 @@ svg>g>g:last-child {
     content: '';
     position: absolute;
     top: 0;
-    right: 20px;
+    right: 40px;
     width: 50px;
     height: 50px;
     z-index: -1;

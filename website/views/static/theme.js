@@ -1,6 +1,8 @@
+document.addEventListener('keydown', (e) => {
+    if (e.key == 'Escape') return e.preventDefault();
+});
+
 document.addEventListener('DOMContentLoaded', (event) => {
-
-
     // Immediately invoked function to set the theme on initial load
     (function () {
         if (localStorage.getItem('menuState') === 'menuClosed') {
