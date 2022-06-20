@@ -33,6 +33,8 @@ header.sidebarHeader {
     width: .25rem;
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
+    opacity: 1;
+
 }
 
 .bot-icon {
@@ -56,17 +58,25 @@ header.sidebarHeader {
     border-radius: 15px;
 }
 
-.icon:hover:before {
+.icon::before {
     content: '';
     position: absolute;
     top: 50%;
     left: 0;
     transform: translate(-200%, -50%);
     background-color: #ddd;
-    height: 2rem;
+    height: 0rem;
     width: .25rem;
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
+    opacity: 0;
+    transition: all 150ms linear;
+}
+
+
+.icon:hover:before {
+    height: 1.5rem;
+    opacity: 1;
 }
 
 .guild-icon.new::after {
