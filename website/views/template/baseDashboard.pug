@@ -91,6 +91,24 @@ block bodyContent
                             .menuCategoryItem
                                 span.menuIcon  
                                 span Miscellaneous
+            //- .menuCategory 
+            //-         span Account
+            //-             //- a(href=`/dashboard/${selectedGuildId}/settings/dnd`)   
+            //-             //-     .menuCategoryItem
+            //-             //-         span.menuIcon  
+            //-             //-         span Test 1
+            //-             //- a(href=`/dashboard/${selectedGuildId}/settings/general`)   
+            //-             //-     .menuCategoryItem
+            //-             //-         span.menuIcon  
+            //-             //-         span Test 2
+            //-             a(href=`/dashboard/${selectedGuildId}/lookup/spell`)   
+            //-                 .menuCategoryItem
+            //-                     span.menuIcon  
+            //-                     span Preferences
+            //-             a(href=`${baseURL}/auth/logout`)   
+            //-                 .menuCategoryItem#logout
+            //-                     span.menuIcon  
+            //-                     span Logout    
     .dashboard(guild=isGuildDashboardPage).menuIsExtended
         header.dashboardHeader
             span #{headerTitle} Dashboard

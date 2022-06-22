@@ -24,7 +24,7 @@ passport.use(new DiscordStrategy({
             discordID: id,
             username: username,
             discriminator: discriminator,
-            avatar: await (await bot.users.fetch(id))?.avatarURL() || avatar,
+            avatar: await (await bot.users.fetch(id))?.displayAvatarURL({ dynamic: true }) || avatar,
             guildsToAddNotification: [],
             accT: encrypt(accessToken),
             refT: encrypt(refreshToken)

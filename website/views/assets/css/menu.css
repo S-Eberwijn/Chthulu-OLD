@@ -42,6 +42,9 @@ header.menuHeader span {
     box-sizing: border-box;
     padding: var(--content-padding);
     margin-top: var(--header-height);
+    display: flex;
+    flex-direction: column;
+    height: calc(100% - var(--header-height));
 }
 
 .menuCategory {
@@ -50,6 +53,12 @@ header.menuHeader span {
     font-weight: bold;
 }
 
+/* .menuCategory:last-child {
+    margin-top: auto;
+} */
+.menuCategoryItem#logout span{
+    color: var(--error-color);
+}
 
 
 .menuCategoryItem span.menuIcon{
