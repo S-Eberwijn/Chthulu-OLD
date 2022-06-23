@@ -36,12 +36,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
     function handleDragStart(e) {
         this.style.opacity = '0.4';
-        // let quests = document.querySelectorAll('.questBox .questDiv.quest');
-        // quests.forEach(quest => {
-        //     if (this != quest) {
-        //         quest.style.pointerEvents = "none";
-        //     }
-        // })
+
         document.getElementById("completedQuestsBox").style.pointerEvents = "all";
         e.dataTransfer.effectAllowed = 'move';
         e.dataTransfer.setData('text/plain', e.target.id);
@@ -230,19 +225,11 @@ function sortingChanged(sortingSelector) {
         })
     }
 
-    // // Remove Quests
-    // questsToSort.forEach(quest => {
-    //     quest.remove();
-    // });
+
 
     if (document.getElementById('sortingIcon').classList.contains('desc')) {
         questToSortArray.reverse();
     }
-
-    // // Add Sorted Quests
-    // questToSortArray.forEach(quest => {
-    //     correctQuestBox.insertBefore(quest, correctQuestBox.querySelector('.addNewQuest'))
-    // })
 
 
 
@@ -324,10 +311,29 @@ function createQuest(buttonElement) {
                 "title": title,
                 "description": description,
             }).then(response => {
-                if (response.status === 201) {
-                    //TODO insert quest div immediately after creation of quest
-                    // console.log(`Creation of quest complete`)
-                    window.location = './quests'
+                if (response.status === 200) {
+                    document.querySelector(`input[action="create"]`).checked = false;
+
+                    // Reset createQuestModal
+                    let selectDiv = document.querySelector(`#addNewQuestDiv .select`)
+                    selectDiv.querySelector(`.custom-option.selected`).classList.remove('selected');
+                    selectDiv.querySelector(`#quest_priority`).textContent = 'Select a priority';
+                    
+                    document.querySelector(`#quest_title`).value = '';
+                    updateInput(document.querySelector(`#quest_title`))
+                    
+                    document.querySelector(`#quest_description`).value = '';
+                    updateInput(document.querySelector(`#quest_description`))
+
+
+
+                    let uncompletedQuestsBox = document.querySelector('.questBox[id="uncompletedQuestsBox"]');
+                    uncompletedQuestsBox.insertBefore(createQuestDiv(response.data.data), uncompletedQuestsBox.childNodes[uncompletedQuestsBox.childNodes.length -1])     
+                    
+                    let uncompletedQuestCountElement = document.querySelector(`#uncompletedQuestsCount`);
+                    uncompletedQuestCountElement.textContent = parseInt(uncompletedQuestCountElement.textContent) + 1;
+
+                    pushNotify('success', 'Quest created', 'The quest has been successfully created.');
                 } else {
                     console.log("Something went wrong!; ERROR STATUS: " + response.status);
                 }
@@ -335,8 +341,68 @@ function createQuest(buttonElement) {
         } catch (error) {
             console.log("error occured during create");
         };
+        buttonElement.value = 'Create';
+        document.querySelector(`.createButton>i.fa-spinner`).classList.remove('active')
+        buttonElement.removeAttribute('disabled')
+
     }, 250);
 
+}
+
+function createQuestDiv(quest_data){
+    // console.log(quest_data)
+    let questDiv = document.createElement('div');
+    questDiv.classList.add('questDiv', 'quest');
+    questDiv.setAttribute('id', quest_data.quest_identifier);
+    questDiv.setAttribute('quest_importance_value', quest_data.quest_importance_value);
+    questDiv.setAttribute('quest_started', quest_data.createdAt);
+    questDiv.setAttribute('draggable', 'true');
+
+
+    let questTitleDiv = document.createElement('div');
+    questTitleDiv.classList.add('questTitleDiv');
+    questDiv.appendChild(questTitleDiv);
+    
+    let questTitleP = document.createElement('p');
+    questTitleP.classList.add('title');
+    questTitleP.textContent = quest_data.quest_name;
+    questTitleDiv.appendChild(questTitleP);
+
+
+    let questDescriptionSpan = document.createElement('span'); 
+    questDescriptionSpan.classList.add('description');
+    questDescriptionSpan.textContent = quest_data.quest_description;
+    quest_data.quest_description ? questTitleDiv.appendChild(questDescriptionSpan) : questDiv.classList.add('onlyTitle');
+
+
+    let optionsDiv = document.createElement('div');
+    optionsDiv.classList.add('options');
+    questDiv.appendChild(optionsDiv);
+
+    let deleteLabel = document.createElement('label');
+    deleteLabel.classList.add('trash-label');
+    deleteLabel.setAttribute('action', 'delete');
+    deleteLabel.setAttribute('for', 'deleteQuestModal');
+    deleteLabel.setAttribute('onclick', 'updateGlobalQuestId(this)');
+    optionsDiv.appendChild(deleteLabel);
+
+    let editLabel = document.createElement('label');
+    editLabel.classList.add('edit-label');
+    editLabel.setAttribute('action', 'edit');
+    editLabel.setAttribute('for', 'editQuestModal');
+    editLabel.setAttribute('onclick', 'updateGlobalQuestId(this)');
+    optionsDiv.appendChild(editLabel);
+
+    let trashIcon = document.createElement('i');
+    trashIcon.classList.add('fas', 'fa-trash');
+    deleteLabel.appendChild(trashIcon);
+
+    let editIcon = document.createElement('i');
+    editIcon.classList.add('fas', 'fa-edit');
+    editLabel.appendChild(editIcon);
+
+
+    return questDiv;
 }
 
 function editQuest(buttonElement) {
@@ -407,7 +473,7 @@ function deleteQuest(buttonElement) {
 async function statusChangeQuest(buttonValue) {
     let possibleOutcomes = ["done", "expired", "failed"]
     if (!possibleOutcomes.includes(buttonValue.toLowerCase())) console.log("Not in here");
-    console.log(globalQuestID)
+    // console.log(globalQuestID)
     setTimeout(() => {
         try {
             axios.put(`/dashboard/${guildID}/informational/quests`, { 'quest_id': globalQuestID, 'status': buttonValue.toUpperCase() }).then(response => {
@@ -431,7 +497,7 @@ async function updateGlobalQuestId(iconElement) {
     let quest_description = document.querySelector(`.quest[id="${globalQuestID}"] .questTitleDiv span.description`)?.textContent || '';
     // console.log(document.querySelector(`.quest[id="${globalQuestID}"] .questTitleDiv p.title span.description`))
     if (iconElement.className.includes('trash')) {
-        console.log(`Delete "${document.querySelector(`.quest[id="${globalQuestID}"] .questTitleDiv p.title`).textContent.split('started')[0]}"?`)
+        // console.log(`Delete "${document.querySelector(`.quest[id="${globalQuestID}"] .questTitleDiv p.title`).textContent.split('started')[0]}"?`)
         document.querySelector('p.questDeleteTitle').textContent = `Delete "${quest_title}"?`;
     } else if (iconElement.className.includes('edit')) {
         document.querySelector('input[id="edit_quest_title"]').value = quest_title;

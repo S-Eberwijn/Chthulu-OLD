@@ -151,7 +151,7 @@ svg>g>g:last-child {
     align-items: center;
     gap: 15px;
     transition: all 0.3s ease-in-out;
-    transform: translateX(calc(15px + 25px + 2px));
+    transform: translateX(calc(15px + 2rem + 1rem));
 }
 
 .action:hover .profileHeader {
@@ -204,7 +204,7 @@ svg>g>g:last-child {
 .action a {
     text-decoration: none;
     box-sizing: border-box;
-    padding: 5px;
+    padding: 1.5rem;
     border-radius: 50%;
     height: 2rem;
     width: 2rem;

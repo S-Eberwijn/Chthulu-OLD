@@ -79,7 +79,7 @@ exports.guildInformationalQuestsDashboardPage = async (req, res) => {
 //CREATE QUEST POST
 exports.createQuestPost = async (req, res) => {
     // TODO add validator on backend level
-    createQuest(req.body, res.locals.renderData?.selectedGuildId, req.user?.discordID).then(() => { res.sendStatus(201) }).catch(() => { res.sendStatus(401) });
+    createQuest(req.body, res.locals.renderData?.selectedGuildId, req.user?.discordID).then((quest) => { res.json(quest);  }).catch(() => { res.sendStatus(401) });
 }
 
 exports.deleteQuestRequest = async (req, res) => {
