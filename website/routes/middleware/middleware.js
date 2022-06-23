@@ -1,4 +1,4 @@
-const { getMutualGuilds, getGuildFromBot, isUserAdminInGuild, isDungeonMaster } = require('../../../functions/api');
+const { getMutualGuilds, getGuildFromBot, isUserAdminInGuild, isDungeonMaster, getUserCharacter } = require('../../../functions/api');
 
 function isAlreadyLoggedIn(req, res, next) {
     if (req.user) return res.redirect('/dashboard/chthulu');
@@ -30,10 +30,10 @@ async function centralizedData(req, res, next) {
         loggedInUser: loggedInUser,
         isAdmin: isUserAdminInGuild(req.user?.discordID, guild),
         isDungeonMaster: isDungeonMaster(req.user?.discordID, guild),
+        userCharacter: isDungeonMaster(req.user?.discordID, guild) ? undefined : await getUserCharacter(req.user?.discordID, selectedGuildID),
     }
     next();
 }
-
 
 function updateGuildsToAddNotification(guildsArray, selectedGuildID) {
     if (guildsArray === []) return;
