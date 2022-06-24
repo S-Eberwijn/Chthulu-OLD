@@ -3,7 +3,7 @@ if (quest.quest_description)
         .questTitleDiv
             p.title #{quest.quest_name}
                 //- - var createdAt = quest.createdAt.toISOString().split('T')[0].split('-').reverse().join('/')
-                //- span.createdAt started #{createdAt}
+                span.createdAt #{quest.data.created_date}
             if (quest.quest_description)
                 span.description #{quest.quest_description}
         .options 
@@ -23,7 +23,7 @@ else
         .questTitleDiv
             p.title #{quest.quest_name}
                 //- - var createdAt = quest.createdAt.toISOString().split('T')[0].split('-').reverse().join('/')
-                //- span.createdAt started #{createdAt}
+                span.createdAt #{quest.data.created_date}
             if (quest.quest_description)
                 span.description #{quest.quest_description}
         .options 

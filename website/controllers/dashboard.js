@@ -1,4 +1,4 @@
-const { getAliveCharacters, getNonPlayableCharacters, getServerMap, getAllMaps, getServerQuestsByStatuses, getQuestsByStatuses, createQuest, deleteQuest, updateQuest, getServerDisabledCommands, getBotCommandsByCategory, editServerCommands, getAllGameSessions, getAllServerGameSessions } = require('../../functions/api');
+const { getAliveCharacters, getNonPlayableCharacters, getServerMap, getAllMaps, addCreatedDate, getServerQuestsByStatuses, getQuestsByStatuses, createQuest, deleteQuest, updateQuest, getServerDisabledCommands, getBotCommandsByCategory, editServerCommands, getAllGameSessions, getAllServerGameSessions } = require('../../functions/api');
 const { editAllGameSessionsForWebsite } = require('../../functions/website');
 exports.dashboardPage = async (req, res) => {
     res.render('dashboardPage', {
@@ -70,7 +70,7 @@ exports.guildInformationalQuestsDashboardPage = async (req, res) => {
         ...{
             isGuildDashboardPage: true,
             headerTitle: `Quests`,
-            uncompletedQuests: (await getServerQuestsByStatuses(res.locals.renderData?.selectedGuildId, ["OPEN"])).reverse(),
+            uncompletedQuests: (await addCreatedDate((await getServerQuestsByStatuses(res.locals.renderData?.selectedGuildId, ["OPEN"])))).reverse(),
             completedQuests: (await getServerQuestsByStatuses(res.locals.renderData?.selectedGuildId, ["DONE", "EXPIRED", "FAILED"])).reverse(),
         }
     });

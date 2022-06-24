@@ -74,8 +74,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
         if (draggedElement !== this) {
             if (this === document.getElementById("uncompletedQuestsBox")) {
-                draggedElement.classList.add("quest")
-                this.insertBefore(draggedElement, document.getElementById("addNewQuestDiv"));
+                // draggedElement.classList.add("quest")
+                // this.insertBefore(draggedElement, document.getElementById("addNewQuestDiv"));
             } else {
                 document.querySelector('input[action="status"]').checked = true;
             }

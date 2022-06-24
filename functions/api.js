@@ -226,12 +226,23 @@ function getPrettyDateString(date) {
     return `${NAME_OF_DAYS[date.getUTCDay()]} (${getDoubleDigitNumber(date.getUTCDate())}/${getDoubleDigitNumber(date.getUTCMonth() + 1)}/${date.getYear() + 1900}) ${getDoubleDigitNumber(date.getUTCHours())}:${getDoubleDigitNumber(date.getUTCMinutes())}`;
 }
 
+function getSimpleDateString(date) {
+    return `${getDoubleDigitNumber(date.getUTCDate())}/${getDoubleDigitNumber(date.getUTCMonth() + 1)}/${date.getYear() + 1900}`;
+}
+
 function getDoubleDigitNumber(number) {
     if (!(typeof number === 'number' || typeof number === 'string')) return '00';
     if (parseInt(number) < 10) return `0${number}`;
     return `${number}`;
 }
 
+
+async function addCreatedDate(array) {
+    for (const object of array) {
+        object.data.created_date = await getSimpleDateString(new Date(parseInt(object.data.quest_identifier.slice(1))));
+    }
+    return array
+}
 
 module.exports = {
     getBot,
@@ -241,5 +252,5 @@ module.exports = {
     getServerMap, getAllMaps, getAllGameSessions, getAllServerGameSessions, getDoubleDigitNumber,
     getServerQuestsByStatuses, getQuestsByStatuses, createQuest, deleteQuest, updateQuest,
     getServerGeneralInfo, getServerDisabledCommands, editServerCommands,
-    getPrettyDateString, onlyUnique,
+    getPrettyDateString, onlyUnique, addCreatedDate,
 };
