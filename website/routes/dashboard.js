@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { dashboardPage, guildDashboardPage, constructionDashboardPage, sessionsPage, guildInformationalCharactersDashboardPage, guildInformationalNonPlayableCharactersDashboardPage, guildInformationalQuestsDashboardPage, guildInformationalMapDashboardPage, createQuestPost, deleteQuestRequest, editQuestRequest, guildSettingsPage, editSettingsRequest } = require('../controllers/dashboard');
+const { dashboardPage, guildDashboardPage, constructionDashboardPage, sessionsPage, editGameSession, guildInformationalCharactersDashboardPage, guildInformationalNonPlayableCharactersDashboardPage, guildInformationalQuestsDashboardPage, guildInformationalMapDashboardPage, createQuestPost, deleteQuestRequest, editQuestRequest, guildSettingsPage, editSettingsRequest } = require('../controllers/dashboard');
 const { isAuthorized, centralizedData } = require('./middleware/middleware');
 
 router.get('/chthulu', isAuthorized, centralizedData, dashboardPage);
@@ -17,6 +17,8 @@ router.put('/:id/informational/quests', isAuthorized, centralizedData, editQuest
 router.get('/:id/informational/map', isAuthorized, centralizedData, guildInformationalMapDashboardPage);
 
 router.get('/:id/informational/sessions', isAuthorized, centralizedData, sessionsPage);
+router.put('/:id/informational/sessions', isAuthorized, centralizedData, editGameSession);
+
 // router.get('/dashboard/:id/sessions/request', constructionDashboardPage);
 
 //Lookup

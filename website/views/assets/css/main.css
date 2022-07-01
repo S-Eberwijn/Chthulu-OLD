@@ -30,6 +30,8 @@
     --menu-sub-font-size: 0.8rem;
     --kpi-font-size: 5rem;
     --kpi-sub-font-size: .65rem;
+    --scrollbar-width: 15px;
+    --scrollbar-border-width: 5px;
     font-family: 'Poppins', sans-serif;
 }
 

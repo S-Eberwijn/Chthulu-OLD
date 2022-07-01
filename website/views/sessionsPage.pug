@@ -7,13 +7,14 @@ block scripts
     script
         include ./static/theme.js
         include ./static/sessionsDashboard.js
-
+        | var guildID = !{JSON.stringify(selectedGuildId)};
         //- include ./static/mainDashboardStatistics.js
     script. 
         //- var characters = !{JSON.stringify(characters)}; 
         //- var allQuests = !{JSON.stringify(allQuests)}; 
         //- var sessions = !{JSON.stringify(sessions)}; 
         //- var locations = !{JSON.stringify(locations)};
+        
 
 block styles 
     style 
@@ -27,25 +28,49 @@ block styles
 block dashboardContent
     .dashboardContent(sessions=true)
         section
-            h1 Requested sessions
-            .embla__requested
-                .embla__viewport
-                    .embla__container
-                        each session in sessions.filter(session => session.session_status === 'CREATED')
-                            .embla__slide 
-                                include ./components/discordSessionEmbed.pug
-            .embla__dots
-            script(type='text/template', id='embla-dot-template')
-                button(class="embla__dot" type='button')
+            details
+                summary
+                    h1 
+                        span.count #{sessions.filter(session => session.session_status === 'CREATED').length}
+                        span.title Requested Sessions
+                .embla(data-type="requested")
+                    .embla__viewport
+                        .embla__container
+                            each session in sessions.filter(session => session.session_status === 'CREATED')
+                                .embla__slide 
+                                    include ./components/discordSessionEmbed.pug
+                .embla__dots
+                script(type='text/template', id='embla-dot-template')
+                    button(class="embla__dot" type='button')
         section
-            h1 Planned sessions
-            .embla__planned
-                .embla__viewport
-                    .embla__container
-                        each session in sessions.filter(session => session.session_status === 'PLANNED')
-                            .embla__slide 
-                                include ./components/discordSessionEmbed.pug
-            .embla__dots
-            script(type='text/template', id='embla-dot-template')
-                button(class="embla__dot" type='button')
-        
+            details
+                summary
+                    h1 
+                        span.count #{sessions.filter(session => session.session_status === 'PLANNED').length}
+                        span.title Planned Sessions
+                .embla(data-type="planned")
+                    .embla__viewport
+                        .embla__container
+                            each session in sessions.filter(session => session.session_status === 'PLANNED')
+                                .embla__slide 
+                                    include ./components/discordSessionEmbed.pug
+                .embla__dots
+                script(type='text/template', id='embla-dot-template')
+                    button(class="embla__dot" type='button')
+
+        section
+            details
+                summary
+                    h1 
+                        span.count #{sessions.filter(session => session.session_status === 'PLAYED' || session.session_status === 'CANCELED' || session.session_status === 'DECLINED').length}
+                        span.title Past Sessions
+                .embla(data-type="past")
+                    .embla__viewport
+                        .embla__container
+                            each session in sessions.filter(session => session.session_status === 'PLAYED' || session.session_status === 'CANCELED' || session.session_status === 'DECLINED')
+                                .embla__slide 
+                                    include ./components/discordSessionEmbed.pug
+                .embla__dots
+                script(type='text/template', id='embla-dot-template')
+                    button(class="embla__dot" type='button')
+            

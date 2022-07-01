@@ -1,4 +1,4 @@
-const { getAliveCharacters, getNonPlayableCharacters, getServerMap, getAllMaps, addCreatedDate, getServerQuestsByStatuses, getQuestsByStatuses, createQuest, deleteQuest, updateQuest, getServerDisabledCommands, getBotCommandsByCategory, editServerCommands, getAllGameSessions, getAllServerGameSessions } = require('../../functions/api');
+const { getAliveCharacters, getNonPlayableCharacters,approveGameSession, getServerMap, getAllMaps, addCreatedDate, getServerQuestsByStatuses, getQuestsByStatuses, createQuest, deleteQuest, updateQuest, getServerDisabledCommands, getBotCommandsByCategory, editServerCommands, getAllGameSessions, getAllServerGameSessions } = require('../../functions/api');
 const { editAllGameSessionsForWebsite } = require('../../functions/website');
 exports.dashboardPage = async (req, res) => {
     res.render('dashboardPage', {
@@ -13,7 +13,7 @@ exports.dashboardPage = async (req, res) => {
         }
     });
 }
-
+ 
 exports.guildDashboardPage = async (req, res) => {
     res.render('dashboardPage', {
         ...res.locals.renderData,
@@ -112,6 +112,11 @@ exports.sessionsPage = async (req, res) => {
             sessions: await editAllGameSessionsForWebsite(await getAllServerGameSessions(res.locals.renderData?.selectedGuildId)),
         }
     });
+}
+
+//TODO: Add validation with express validation
+exports.editGameSession = async (req, res) => {
+    await approveGameSession(req.body, req.params?.id, req.user?.discordID).then(message => { return res.json(message); }).catch(() => { return res.sendStatus(400) });
 }
 
 //SETTINGS PAGE

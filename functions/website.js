@@ -27,6 +27,7 @@ async function editAllGameSessionsForWebsite(sessions) {
         session.created = `${getDoubleDigitNumber(createdDate.getUTCDate())}/${getDoubleDigitNumber(createdDate.getUTCMonth() + 1)}/${createdDate.getUTCFullYear()}`;
 
     }
+    // console.log(sessions)
     return sessions
 }
 

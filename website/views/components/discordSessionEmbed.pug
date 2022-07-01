@@ -1,7 +1,14 @@
 .slideItem(id=session.id)    
     .embedWrapper   
         .embed
-            h4 #{'Session Request'}
+            if(session.session_status === 'CREATED')
+                h4 #{'Session Request'}
+            else if(session.session_status === 'PLANNED')
+                h4 #{`Session ${session.session_number}`}
+            else if(session.session_status === 'PLAYED')
+                h4 #{`Session ${session.session_number}: PLAYED`}
+            else if(session.session_status === 'CANCELED')
+                h4 #{`Session ${session.session_number}: CANCELED`}
             img.embedThumbnail(src=`${session.session_commander.picture_url}`, alt="")
             .embedField 
                 h5 #{'Session Commander:'}
@@ -9,7 +16,7 @@
                     span.user #{`@${session.session_party[0].nickname}`}
             .embedField 
                 h5 #{`Players (${session.session_party.length}/5):`}
-                p.embedFieldValue 
+                p.embedFieldValue() 
                     span.user #{`@${session.session_party[0].nickname}`}
                     each member in session.session_party.slice(1)
                         span ,#{' '}
@@ -17,7 +24,11 @@
                         
             .embedField 
                 h5 #{'DM:'}
-                p.embedFieldValue.italic #{session.dungeon_master_id_discord ? session.dungeon_master_id_discord : 'TBD'}
+                if (session.dungeon_master_id_discord != undefined)
+                    p.embedFieldValue(data-attribute="DM")
+                        span.user #{`@${session.dungeon_master_id_discord.nickname || session.dungeon_master_id_discord.user.username}`}
+                else 
+                    p.embedFieldValue.italic(data-attribute="DM") #{'TBD'}
             .embedField 
                 h5 #{'Location:'}
                 p.embedFieldValue.italic #{session.location || 'Roll20 (online)'}
@@ -36,13 +47,21 @@
 
     .embedButtons 
         if(isDungeonMaster)
-            .button.approve 
-                i(class="fas fa-thumbs-up")
-                p Approve
-            .button.decline
-                i(class="fas fa-times")
-                p Decline
-        else 
+            if(session.session_status === 'CREATED')
+                .button.approve(onclick=`approveGameSession(${session.id})`)
+                    i(class="fas fa-thumbs-up")
+                    p Approve
+                .button.decline
+                    i(class="fas fa-times")
+                    p Decline
+            else if (session.session_status === 'PLANNED')
+                .button.approve(onclick=`doneGameSession(${session.id})`)
+                    i(class="fas fa-thumbs-up")
+                    p Played
+                .button.decline
+                    i(class="fas fa-times")
+                    p Canceled
+        else if(userCharacter && !["PLAYED", "CANCELED", "DECLINED"].includes(session.session_status))
             .button.join
                 i(class="fas fa-handshake")
                 p Join

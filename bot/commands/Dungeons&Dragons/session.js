@@ -9,7 +9,7 @@ const { PlayerCharacter } = require('../../../database/models/PlayerCharacter');
 const { GeneralInfo } = require('../../../database/models/GeneralInfo');
 
 const fs = require("fs");
-const { getBot, getPrettyDateString } = require('../../../functions/api');
+const { getBot, getPrettyDateString, fetchGameSessionMessage, editRequestSessionEmbedToPlannedSessionEmbed,  updatePartyNextSessionId, updateGameSessionStatus, updateGameSessionMessageId, updateGameSessionNumber, updateGameSessionParty, updateGeneralServerSessionNumber, updateGameSessionDungeonMaster } = require('../../../functions/api');
 
 const DATE_REGEX_PATTERN = /[0-3]\d\/(0[1-9]|1[0-2])\/\d{4} [0-2]\d:[0-5]\d(?:\.\d+)?Z?/g;
 const COMMAND_OPTIONS = ['request', 'board'];
@@ -263,6 +263,7 @@ module.exports.buttonSubmit = async (button) => {
                 await updateGameSessionMessageId(FOUND_GAME_SESSION, PLANNED_SESSION_MESSAGE.id);
                 await updateGameSessionStatus(FOUND_GAME_SESSION, 'PLANNED')
                 await updateGameSessionNumber(FOUND_GAME_SESSION, GENERAL_SERVER_INFO.session_number)
+                await updateGameSessionDungeonMaster(FOUND_GAME_SESSION, button.user.id)
 
                 updateGeneralServerSessionNumber(GENERAL_SERVER_INFO, GENERAL_SERVER_INFO.session_number + 1)
 
@@ -483,47 +484,6 @@ async function createModal(MODAL_ID) {
     return modal;
 }
 
-async function updateGameSessionStatus(session, session_status) {
-    session.session_status = session_status;
-    await session.save();
-}
-async function updateGameSessionMessageId(session, new_message_id) {
-    session.message_id_discord = new_message_id;
-    await session.save();
-}
-
-async function updateGameSessionNumber(session, session_number) {
-    session.session_number = session_number;
-    await session.save();
-}
-
-async function updateGameSessionParty(session, session_party) {
-    session.session_party = session_party;
-    await session.save();
-}
-
-async function updateGeneralServerSessionNumber(server, next_session_number) {
-    server.session_number = next_session_number;
-    await server.save();
-}
-
-function editRequestSessionEmbedToPlannedSessionEmbed(dungeonMasterId, sessionNumber, editedEmbed) {
-    editedEmbed.fields[2].value = `<@!${dungeonMasterId}>`;
-    editedEmbed.setTitle(`**Session ${sessionNumber}: **`);
-    return editedEmbed;
-}
-
-
-
-function updatePartyNextSessionId(party, next_session_id, serverId) {
-    //TODO: change to for of loop
-    party.forEach(async player => {
-        await PlayerCharacter.findOne({ where: { player_id_discord: player, alive: 1, server: serverId } }).then(character => {
-            character.next_session = next_session_id;
-            character.save();
-        });
-    });
-}
 
 function playerAlreadyRequestedForSession(sessions, userID, sessionChannelID) {
     // TODO: Make this per server.
@@ -609,15 +569,15 @@ async function updatePartyOnSessionEmbed(message, sessionParty) {
     return message;
 }
 
-async function fetchGameSessionMessage(SESSION_REQUEST_CHANNEL, PLANNED_SESSIONS_CHANNEL, messageID) {
-    try {
-        let foundMessage = await SESSION_REQUEST_CHANNEL.messages.fetch(messageID).catch(() => console.log('Message not found'));
-        foundMessage = foundMessage != null ? foundMessage : await PLANNED_SESSIONS_CHANNEL.messages.fetch(messageID).catch(() => console.log('Message not found'));
-        return foundMessage;
-    } catch (error) {
-        console.log(error);
-    }
-}
+// async function fetchGameSessionMessage(SESSION_REQUEST_CHANNEL, PLANNED_SESSIONS_CHANNEL, messageID) {
+//     try {
+//         let foundMessage = await SESSION_REQUEST_CHANNEL.messages.fetch(messageID).catch(() => console.log('Message not found'));
+//         foundMessage = foundMessage != null ? foundMessage : await PLANNED_SESSIONS_CHANNEL.messages.fetch(messageID).catch(() => console.log('Message not found'));
+//         return foundMessage;
+//     } catch (error) {
+//         console.log(error);
+//     }
+// }
 
 async function editRequestSessionEmbedTitle(editedEmbed, status) {
     editedEmbed.title = `${editedEmbed.title} [${status}]`;

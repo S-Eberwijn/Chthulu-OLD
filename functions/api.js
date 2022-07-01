@@ -1,4 +1,5 @@
 const { logger } = require(`../functions/logger`)
+const { MessageEmbed, Modal, TextInputComponent, MessageActionRow, MessageButton } = require('discord.js');
 
 const { PlayerCharacter } = require('../database/models/PlayerCharacter');
 const { NonPlayableCharacter } = require('../database/models/NonPlayableCharacter');
@@ -8,10 +9,32 @@ const { GeneralInfo } = require('../database/models/GeneralInfo');
 const { GameSession } = require('../database/models/GameSession');
 
 
+
 const Importance = Object.freeze({ 1: 'Very low', 2: 'Low', 3: 'Normal', 4: 'High', 5: 'Very high', });
 const Category = Object.freeze({ 'information': 'Information', 'dnd': 'Dungeons & Dragons', 'general': 'General', 'miscellaneous': 'Miscellaneous', });
 const NAME_OF_DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
+//TODO: better naming, this is soley for sessions
+const BUTTON_IDS = ['approve-session-request-button', 'decline-session-request-button', 'join-session-button', 'played-session-button', 'cancel-session-button', 'join-accepted-button', 'join-denied-button']
+
+const MESSAGE_COMPONENTS_PLANNED = new MessageActionRow()
+    .addComponents(
+        new MessageButton()
+            .setCustomId(BUTTON_IDS[3])
+            .setLabel('Played')
+            .setStyle('SUCCESS'),
+        // .setEmoji('👍'),
+        new MessageButton()
+            .setCustomId(BUTTON_IDS[4])
+            .setLabel('Cancel')
+            .setStyle('DANGER'),
+        // .setEmoji('✖️'),
+        new MessageButton()
+            .setCustomId(BUTTON_IDS[2])
+            .setLabel('Join')
+            .setStyle('SECONDARY')
+            .setEmoji('🙋‍♂️'),
+    );
 
 function getBot() {
     return require('../index');
@@ -212,6 +235,58 @@ async function getAllServerGameSessions(serverID) {
     return await GameSession.findAll({ where: { server: serverID } });
 }
 
+async function approveGameSession(sessionData, serverID, userID) {
+
+    const { editAllGameSessionsForWebsite } = require('./website');
+    //TODO: Change to a resolve or reject state
+    // if (!isDungeonMaster(userID, serverID)) console.log("You are not allowed to approve a game session - not a dungeon master")
+
+    // if(!sessionData.gameSessionID) throw Error("No gameSessionID provided");
+    // if(!userID) throw Error("No userID provided");
+    // if(!sessionData.serverID) throw Error("No serverID provided");
+
+    let GAME_SESSION = await GameSession.findOne({ where: { id: sessionData.gameSessionID, server: serverID } });
+    const GENERAL_SERVER_INFO = await GeneralInfo.findOne({ where: { server: serverID } });
+
+    const SESSION_REQUEST_CHANNEL = getGuildFromBot(serverID)?.channels.cache.find(c => c.name.includes("session-request") && c.type == "GUILD_TEXT");
+    const PLANNED_SESSIONS_CHANNEL = getGuildFromBot(serverID)?.channels.cache.find(c => c.name.includes("planned-session") && c.type == "GUILD_TEXT");
+
+    const GAME_SESSION_MESSAGE = await fetchGameSessionMessage(SESSION_REQUEST_CHANNEL, PLANNED_SESSIONS_CHANNEL, GAME_SESSION.message_id_discord)
+
+    return new Promise((resolve, reject) => {
+        if (!GAME_SESSION) return reject();
+
+        PLANNED_SESSIONS_CHANNEL?.send({ embeds: [editRequestSessionEmbedToPlannedSessionEmbed(userID, GENERAL_SERVER_INFO.session_number, GAME_SESSION_MESSAGE.embeds[0])], components: [MESSAGE_COMPONENTS_PLANNED] }).then(async PLANNED_SESSION_MESSAGE => {
+            getGuildFromBot(serverID)?.channels.cache.get(GAME_SESSION.session_channel)?.setName(`session-${GENERAL_SERVER_INFO.session_number}`)
+            updatePartyNextSessionId(GAME_SESSION.session_party, PLANNED_SESSION_MESSAGE.id, serverID);
+
+            await updateGameSessionMessageId(GAME_SESSION, PLANNED_SESSION_MESSAGE.id);
+            await updateGameSessionStatus(GAME_SESSION, 'PLANNED')
+            await updateGameSessionNumber(GAME_SESSION, GENERAL_SERVER_INFO.session_number)
+            await updateGameSessionDungeonMaster(GAME_SESSION, userID)
+
+            updateGeneralServerSessionNumber(GENERAL_SERVER_INFO, GENERAL_SERVER_INFO.session_number + 1)
+
+            GAME_SESSION_MESSAGE.delete();
+
+            GAME_SESSION = await editAllGameSessionsForWebsite([GAME_SESSION]);
+
+            // console.log(GAME_SESSION[0])
+
+            GAME_SESSION[0].data.message = 'The session has been successfully approved.'
+            return resolve(GAME_SESSION[0].data);
+        })
+    });
+}
+
+async function declineGameSession() {
+
+}
+
+async function joinGameSession() {
+
+}
+
 function onlyUnique(value, index, self) {
     return self.indexOf(value) === index;
 }
@@ -244,6 +319,62 @@ async function addCreatedDate(array) {
     return array
 }
 
+async function fetchGameSessionMessage(SESSION_REQUEST_CHANNEL, PLANNED_SESSIONS_CHANNEL, messageID) {
+    try {
+        let foundMessage = await SESSION_REQUEST_CHANNEL.messages.fetch(messageID).catch(() => console.log('Message not found'));
+        foundMessage = foundMessage != null ? foundMessage : await PLANNED_SESSIONS_CHANNEL.messages.fetch(messageID).catch(() => console.log('Message not found'));
+        return foundMessage;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+function editRequestSessionEmbedToPlannedSessionEmbed(dungeonMasterId, sessionNumber, editedEmbed) {
+    editedEmbed.fields[2].value = `<@!${dungeonMasterId}>`;
+    editedEmbed.setTitle(`**Session ${sessionNumber}: **`);
+    return editedEmbed;
+}
+
+function updatePartyNextSessionId(party, next_session_id, serverId) {
+    //TODO: change to for of loop
+    party.forEach(async player => {
+        await PlayerCharacter.findOne({ where: { player_id_discord: player, alive: 1, server: serverId } }).then(character => {
+            character.next_session = next_session_id;
+            character.save();
+        });
+    });
+}
+
+async function updateGameSessionStatus(session, session_status) {
+    session.session_status = session_status;
+    await session.save();
+}
+async function updateGameSessionMessageId(session, new_message_id) {
+    session.message_id_discord = new_message_id;
+    await session.save();
+}
+
+async function updateGameSessionNumber(session, session_number) {
+    session.session_number = session_number;
+    await session.save();
+}
+
+async function updateGameSessionParty(session, session_party) {
+    session.session_party = session_party;
+    await session.save();
+}
+
+async function updateGameSessionDungeonMaster(session, dungeon_master_id) {
+    session.dungeon_master_id_discord = dungeon_master_id;
+    await session.save();
+}
+
+
+async function updateGeneralServerSessionNumber(server, next_session_number) {
+    server.session_number = next_session_number;
+    await server.save();
+}
+
 module.exports = {
     getBot,
     getBotGuilds, getMutualGuilds, getGuildFromBot, getBotCommandsByCategory,
@@ -253,4 +384,7 @@ module.exports = {
     getServerQuestsByStatuses, getQuestsByStatuses, createQuest, deleteQuest, updateQuest,
     getServerGeneralInfo, getServerDisabledCommands, editServerCommands,
     getPrettyDateString, onlyUnique, addCreatedDate,
+    approveGameSession, declineGameSession, joinGameSession, fetchGameSessionMessage, editRequestSessionEmbedToPlannedSessionEmbed,
+    updatePartyNextSessionId, updateGameSessionStatus, updateGameSessionMessageId, updateGameSessionNumber, updateGameSessionParty, updateGeneralServerSessionNumber,
+    updateGameSessionDungeonMaster,
 };

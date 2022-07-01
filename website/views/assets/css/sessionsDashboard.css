@@ -1,18 +1,173 @@
-/* Carousel for embeds */
+.dashboardContent[sessions] {
+    flex-direction: column;
+    flex-wrap: unset;
+    gap: 20px;
+    /* height: 600px; */
+}
+.dashboardContent[sessions] section {
+    min-height: calc(var(--title-height) + var(--title-height) / 2);
+    /* overflow: unset; */
+    flex-shrink: 0;
+}
 
-.embla__requested {
-    overflow: hidden;
+.dashboardContent[sessions] section h1 {
+    background-color: var(--sidebar-color);
+    margin: 0;
+    width: fit-content;
+    padding: 10px;
+    box-sizing: border-box;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    position: relative;
+}
+
+
+
+.dashboardContent[sessions] section details {
+    /* background-color: var(--sidebar-color); */
+    display: flex;
+    height: calc(var(--title-height) + 20px);
+    transition: height .2s ease-out;
+    position: relative;
+    outline: none;
+    /* overflow: auto; */
+}
+
+.dashboardContent[sessions] section details summary::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: calc(var(--title-height) / 2);
+    transform: translate(0, 200%);
     width: 100%;
-    margin-left: auto;
-    margin-right: auto;
+    background-color: var(--sidebar-color);
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border-top-right-radius: 5px;
+    /* overflow: auto; */
+}
+
+.dashboardContent[sessions] section details[open] {
+    height: 600px;
+}
+
+.dashboardContent[sessions] section details[open]::after {
+    display: none;
+}
+
+
+@keyframes open {
+    0% {
+        /* opacity: 0.8; */
+        height:0;
+    }
+
+    100% {
+        height: 470px;
+        /* opacity: 1; */
+    }
+}
+
+/* closing animation */
+@keyframes close {
+    0% {
+        /* opacity: 1; */
+    }
+
+    100% {
+        /* opacity: 0.8; */
+        height: 0;
+    }
+}
+
+details summary~* {
+    animation-duration: 300ms;
+    animation-timing-function: ease;
+    animation-fill-mode: forwards;
+}
+
+.dashboardContent[sessions] section details[open] summary~* {
+    animation-name: open;
+}
+
+/* closing class */
+/* details.closing summary~* {
+    animation-name: close !important;
+} */
+
+details.closing {
+    /* animation-name: close !important; */
+    height: calc(var(--title-height) + var(--title-height) / 2) !important;
+}
+
+/* calc(var(--title-height) + 28px) */
+details.closing .embla__dots {
+    opacity: 0 !important;
+    /* height: auto !important; */
+
+}
+
+.dashboardContent[sessions] section details summary {
+    height: var(--title-height);
+    overflow: hidden;
+    list-style: none;
+    cursor: pointer;
+    user-select: none;
+    outline: none;
+
+}
+
+
+.dashboardContent[sessions] h1 .count {
+    font-size: calc(var(--header-font-size) * 1.25);
+}
+
+.dashboardContent[sessions] h1 .title {
+    margin-left: 10px;
+    font-size: var(--header-font-size);
+}
+
+/* .dashboardContent[sessions] section h1:hover + .embla {
+    height: 20px;
+}
+
+.dashboardContent[sessions] section h1:hover + .embla__dots {
+    opacity: 0;
+    user-select: none;
+    cursor: default;
+} */
+
+.dashboardContent[sessions] .embla.closed {
+    height: 20px;
+}
+
+/* Carousel for embeds */
+.embla {
+    overflow: hidden;
+    padding: 0 5px;
+    box-sizing: border-box;
+    background-color: var(--sidebar-color);
+    width: 100%;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border-top-right-radius: 5px;
+    height: 470px;
+    transition: all 200ms ease;
+    /* width: 100%; */
+    /* margin-left: auto;
+    margin-right: auto; */
 }
 
 .embla__viewport {
     overflow: hidden;
-    width: 100%;
     margin-left: auto;
     margin-right: auto;
-    padding: 0 20px;
+    padding: 25px 5px;
+    /* box-sizing: border-box; */
+    background-color: var(--sidebar-color);
+
+
 }
 
 .embla__viewport.is-draggable {
@@ -38,6 +193,7 @@
     list-style: none;
     justify-content: center;
     padding-top: 10px;
+    height: auto !important;
 }
 
 .embla__dot {

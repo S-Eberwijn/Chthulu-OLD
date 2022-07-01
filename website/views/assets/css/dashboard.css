@@ -23,7 +23,6 @@
     0% {
         margin-left: calc(var(--menu-width) + 5em);
         width: calc(100% - var(--menu-width) - 5em);
-
     }
 
     100% {
@@ -87,7 +86,7 @@ header.dashboardHeader span {
 .dashboardContent {
     height: calc(100% - var(--header-height));
     /* height: 100%; */
-    padding: 20px;
+    padding: calc(var(--scrollbar-width) + var(--scrollbar-border-width));
     display: flex;
     flex-direction: row;
     /* justify-content: space-between; */
@@ -102,7 +101,7 @@ header.dashboardHeader span {
 }
 
 .dashboardContent::-webkit-scrollbar {
-    width: 15px;
+    width: var(--scrollbar-width);
     /* width of the entire scrollbar */
 }
 
@@ -114,9 +113,9 @@ header.dashboardHeader span {
 .dashboardContent::-webkit-scrollbar-thumb {
     background-color: var(--sidebar-color);
     /* color of the scroll thumb */
-    border-radius: 15px;
+    border-radius: var(--scrollbar-width);
     /* roundness of the scroll thumb */
-    border: 5px solid transparent;
+    border: var(--scrollbar-border-width) solid transparent;
     background-clip: padding-box;
 }
 
