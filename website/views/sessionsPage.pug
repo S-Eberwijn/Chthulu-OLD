@@ -29,8 +29,9 @@ block dashboardContent
     .dashboardContent(sessions=true)
         section
             details
-                summary
+                summary(data-type="requested" data-session-date=`${sessions.filter(session => session.session_status === 'CREATED')[0] ? sessions.filter(session => session.session_status === 'CREATED')[0].date : 'No data'}`)
                     h1 
+                        i.fas.fa-chevron-right.fa-xs
                         span.count #{sessions.filter(session => session.session_status === 'CREATED').length}
                         span.title Requested Sessions
                 .embla(data-type="requested")
@@ -44,8 +45,9 @@ block dashboardContent
                     button(class="embla__dot" type='button')
         section
             details
-                summary
+                summary(data-type="planned" data-session-date=`${sessions.filter(session => session.session_status === 'PLANNED')[0] ? sessions.filter(session => session.session_status === 'PLANNED')[0].date : 'No data'}`)
                     h1 
+                        i.fas.fa-chevron-right.fa-xs
                         span.count #{sessions.filter(session => session.session_status === 'PLANNED').length}
                         span.title Planned Sessions
                 .embla(data-type="planned")
@@ -57,17 +59,17 @@ block dashboardContent
                 .embla__dots
                 script(type='text/template', id='embla-dot-template')
                     button(class="embla__dot" type='button')
-
         section
             details
-                summary
+                summary(data-type="past" data-session-date=`${sessions.filter(session => session.session_status === 'PLAYED' || session.session_status === 'CANCELED' || session.session_status === 'DECLINED').reverse()[0] ? sessions.filter(session => session.session_status === 'PLAYED' || session.session_status === 'CANCELED' || session.session_status === 'DECLINED').reverse()[0].date : 'No data'}`)
                     h1 
+                        i.fas.fa-chevron-right.fa-xs
                         span.count #{sessions.filter(session => session.session_status === 'PLAYED' || session.session_status === 'CANCELED' || session.session_status === 'DECLINED').length}
                         span.title Past Sessions
                 .embla(data-type="past")
                     .embla__viewport
                         .embla__container
-                            each session in sessions.filter(session => session.session_status === 'PLAYED' || session.session_status === 'CANCELED' || session.session_status === 'DECLINED')
+                            each session in sessions.filter(session => session.session_status === 'PLAYED' || session.session_status === 'CANCELED' || session.session_status === 'DECLINED').reverse()
                                 .embla__slide 
                                     include ./components/discordSessionEmbed.pug
                 .embla__dots

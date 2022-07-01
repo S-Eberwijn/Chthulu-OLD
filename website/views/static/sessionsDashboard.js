@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", async function () {
                 setTimeout(() => { // only after the animation finishes, continue
                     detail.removeAttribute("open"); // close the element
                     detail.classList.remove("closing");
-                }, 300);
+                }, 290);
             }
         });
     })
