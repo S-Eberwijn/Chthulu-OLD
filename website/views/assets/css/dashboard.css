@@ -86,12 +86,14 @@ header.dashboardHeader span {
 .dashboardContent {
     height: calc(100% - var(--header-height));
     /* height: 100%; */
+    box-sizing: border-box;
     padding: calc(var(--scrollbar-width) + var(--scrollbar-border-width));
     display: flex;
     flex-direction: row;
     /* justify-content: space-between; */
     flex-wrap: wrap;
-    overflow: scroll;
+    overflow-y: scroll;
+    overflow-x: hidden;
     /* gap: 20px; */
 }
 

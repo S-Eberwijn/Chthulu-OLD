@@ -30,6 +30,8 @@
     transition: transform 0.2s ease-in-out;
 }
 
+
+
 .dashboardContent[sessions] section details[open] h1 i {
     transform: rotate(90deg);
 }
@@ -49,6 +51,40 @@
     position: relative;
     outline: none;
     /* overflow: auto; */
+}
+
+.dashboardContent[sessions] section details summary {
+    height: var(--title-height);
+    /* overflow: hidden; */
+    /* display: inline; */
+    list-style: none;
+    cursor: pointer;
+    user-select: none;
+    outline: none;
+    width: fit-content;
+    /* position: relative; */
+    
+
+}
+
+.dashboardContent[sessions] section details summary h1 p {
+    position: absolute;
+    margin: 0;
+    right: 0;
+    transform: translate(125%,0);
+    border: 2px solid var(--menu-color);
+    border-radius: 5px;
+    color: var(--placeholder-text-color);
+    box-sizing: border-box;
+    padding: 3px 5px;
+    font-size: var(--menu-sub-font-size);
+    transition: color .2s ease;
+    cursor: pointer;
+
+}
+
+.dashboardContent[sessions] section details summary h1 p:hover {
+    color: var(--text-color);
 }
 
 /* .dashboardContent[sessions] section details summary[data-type="requested"]::after {
@@ -150,16 +186,7 @@ details.closing .embla__dots {
 
 }
 
-.dashboardContent[sessions] section details summary {
-    height: var(--title-height);
-    overflow: hidden;
-    /* display: inline; */
-    list-style: none;
-    cursor: pointer;
-    user-select: none;
-    outline: none;
 
-}
 
 /* .dashboardContent[sessions] section details summary > *{
     display: inline;
@@ -313,6 +340,7 @@ details.closing .embla__dots {
 
 .embed {
     position: relative;
+    height: 100%;
 }
 
 .embedWrapper {
@@ -324,13 +352,12 @@ details.closing .embla__dots {
     box-sizing: border-box;
     background-color: var(--content-color);
     box-shadow: inset 0 0 5px var(--sidebar-color);
-
-
 }
 
 
 .embedWrapper h4 {
     margin: 0;
+    margin-bottom: 10px;
     font-size: .9em;
 
 }
@@ -352,6 +379,7 @@ details.closing .embla__dots {
     font-size: .7em;
     display: inline-block;
     position: relative;
+    line-height: 180%;
 }
 
 .embedWrapper code {
@@ -391,12 +419,42 @@ details.closing .embla__dots {
     cursor: pointer;
     transition: all .1s ease-in-out;
     font-weight: normal;
+
 }
 
 
 
 .embedWrapper span.user:hover {
     background-color: rgba(88, 101, 242, 1);
+}
+
+.embedWrapper span#addPlayer {
+    /* position: absolute; */
+    /* margin: 0; */
+    /* right: 0; */
+    /* transform: translate(125%,0); */
+    /* border: 2px solid var(--sidebar-color); */
+    box-shadow: inset 0 0 5px var(--sidebar-color);
+    border-radius: 5px;
+    color: var(--placeholder-text-color);
+    box-sizing: border-box;
+    padding: 2px;
+    /* font-size: var(--menu-sub-font-size); */
+    transition: color .2s ease;
+    cursor: pointer;
+    margin-left: 5px;
+}
+
+.embedWrapper span#addPlayer:hover {
+    color: var(--text-color);
+
+}
+
+.embedThumbnail {
+    top: 0;
+    transform: none !important;
+    right: 0 !important;
+    height: auto;
 }
 
 .embedWrapper img {
@@ -412,9 +470,9 @@ details.closing .embla__dots {
 
 .embedWrapper .embedFooterWrapper {
     position: absolute;
-    left: 0;
+    /* left: 0; */
     bottom: 0;
-    transform: translate(0%, 170%);
+    /* transform: translate(0%, 100%); */
 }
 
 .embedWrapper .embedFooter {
@@ -476,5 +534,5 @@ details.closing .embla__dots {
 }
 
 .button.join {
-    background-color: var(--menu-color);
+    background-color: var(--sidebar-color);
 }

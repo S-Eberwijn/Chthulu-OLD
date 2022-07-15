@@ -9,7 +9,12 @@ const { PlayerCharacter } = require('../../../database/models/PlayerCharacter');
 const { GeneralInfo } = require('../../../database/models/GeneralInfo');
 
 const fs = require("fs");
-const { getBot, getPrettyDateString, fetchGameSessionMessage, editRequestSessionEmbedToPlannedSessionEmbed,  updatePartyNextSessionId, updateGameSessionStatus, updateGameSessionMessageId, updateGameSessionNumber, updateGameSessionParty, updateGeneralServerSessionNumber, updateGameSessionDungeonMaster } = require('../../../functions/api');
+
+const { getBot } = require('../../../functions/api/bot');
+const { getPrettyDateString } = require('../../../functions/api/misc');
+
+ 
+const { fetchGameSessionMessage, editRequestSessionEmbedToPlannedSessionEmbed, updatePartyNextSessionId, updateGameSessionStatus, updateGameSessionMessageId, updateGameSessionNumber, updateGameSessionParty, updateGeneralServerSessionNumber, updateGameSessionDungeonMaster } = require('../../../functions/api/sessions');
 
 const DATE_REGEX_PATTERN = /[0-3]\d\/(0[1-9]|1[0-2])\/\d{4} [0-2]\d:[0-5]\d(?:\.\d+)?Z?/g;
 const COMMAND_OPTIONS = ['request', 'board'];
@@ -243,8 +248,8 @@ module.exports.buttonSubmit = async (button) => {
     const isSessionCommander = FOUND_GAME_SESSION?.session_commander === button.user.id;
     const GAME_SESSION_CHANNEL = button.message.guild.channels.cache.get(FOUND_GAME_SESSION?.session_channel);
     const GENERAL_SERVER_INFO = await GeneralInfo.findOne({ where: { server: button.guildId } });
-    const targetUser = (Array.from(button.message.mentions.users.values()))[1];
-
+    const USER_MENTION_ARRAY = Array.from(button.message.mentions.users.values())
+    const targetUser = USER_MENTION_ARRAY[1] ? USER_MENTION_ARRAY[1] : USER_MENTION_ARRAY[0];
     // Return if no session request has been found in the database corresponding to the server id.
     if (!FOUND_GAME_SESSION) return button.message.channel.send({ content: 'Something went wrong; Cannot find this session request in the database!' }).then(msg => { setTimeout(() => msg.delete(), 3000) }).catch(err => console.log(err));
     // Return if no server info has been found in the database corresponding to the server id.

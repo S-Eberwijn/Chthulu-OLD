@@ -13,7 +13,9 @@ const passport = require('passport');
 const FirestoreStore = require("firestore-store")(session);
 
 const fs = require("fs");
-const { cacheAllUsers, loadAllJSONFiles } = require('./functions/api');
+const { loadAllJSONFiles } = require('./functions/api/misc');
+const { cacheAllUsers } = require('./functions/api/guild');
+
 
 //Firebase database modules
 const admin = require("firebase-admin");
@@ -91,7 +93,7 @@ const { Client, Intents } = require('discord.js');
 const bot = new Client({ restTimeOffset: 0, partials: ['MESSAGE', 'CHANNEL', 'REACTION'], intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS, Intents.FLAGS.GUILD_MEMBERS] });
 
 const Enmap = require('enmap');
-const { getBotGuilds } = require('./functions/api');
+const { getBotGuilds } = require('./functions/api/misc');
 bot.commands = new Enmap();
 bot.slashCommands = new Enmap();
 

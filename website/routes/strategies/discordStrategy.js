@@ -1,6 +1,6 @@
 const DiscordStrategy = require('passport-discord').Strategy;
 const passport = require('passport');
-const { getMutualGuilds } = require('../../../functions/api');
+const { getMutualGuilds } = require('../../../functions/api/guild');
 const { encrypt } = require('../../../functions/cryptography');
 
 passport.serializeUser(function (user, done) {

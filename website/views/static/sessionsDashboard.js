@@ -10,11 +10,25 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
     }
 
+    document.querySelector(`#createSessionRequest`).addEventListener('click', function (e) {
+        e.preventDefault();
+        console.log(`Create Session Request`)
+    })
+
+    document.querySelectorAll(`.addPlayer`).forEach(element => {
+        element.addEventListener('click', function (e) {
+            // e.preventDefault();
+            console.log(`Add Player`)
+        }
+        )
+    })
+
     // const details = document.querySelectorAll("details");
     const summaries = document.querySelectorAll("summary");
     summaries.forEach(summary => {
         const detail = summary.parentNode;
         summary.addEventListener("click", function (e) {
+            if (e.target.id === "createSessionRequest") return;
             if (detail.hasAttribute("open")) { // since it's not closed yet, it's open!
                 e.preventDefault(); // stop the default behavior, meaning - the hiding
                 detail.classList.add("closing"); // add a class which apply the animation in CSS
@@ -75,19 +89,76 @@ async function approveGameSession(gameSessionElement) {
 
     setTimeout(() => {
         try {
-            axios.put(`/dashboard/${guildID}/informational/sessions`, {
+            axios.put(`/dashboard/${guildID}/informational/sessions/approve`, {
                 "gameSessionID": gameSessionElement.id,
             }).then(response => {
                 if (response.status === 200) {
                     updateSessionRequestToPlannedSession(gameSessionElement, response.data)
                     pushNotify('success', 'Session approved', response.data.message);
-                    //TODO: Move & Edit gameSessionElement to 'Planned' section
                 }
             })
         } catch (error) {
             console.log("error occured during edit of session: " + gameSessionElement.id);
         };
+    }, 250);
+}
 
+async function declineGameSession(gameSessionElement) {
+    setTimeout(() => {
+        try {
+            axios.put(`/dashboard/${guildID}/informational/sessions/decline`, {
+                "gameSessionID": gameSessionElement.id,
+            }).then(response => {
+                if (response.status === 200) {
+                    gameSessionElement.parentNode.removeChild(gameSessionElement);
+                    let countElement = document.querySelector(`summary[data-type="requested"] span.count`)
+                    let count = parseInt(countElement.textContent) - 1;
+                    countElement.textContent = count;
+                    pushNotify('success', 'Session declined', response.data.message);
+                }
+            })
+        } catch (error) {
+            console.log("error occured during decline of session: " + gameSessionElement.id);
+        };
+    }, 250);
+}
+
+async function joinGameSession(gameSessionElement, userID = null) {
+    console.log(gameSessionElement.querySelector('#userList'))
+    setTimeout(() => {
+        try {
+            axios.put(`/dashboard/${guildID}/informational/sessions/join`, {
+                "gameSessionID": gameSessionElement.id,
+                "userID": userID,
+            }).then(response => {
+                console.log(response)
+                if (response.status === 200) {
+                    // updateSessionRequestToPlannedSession(gameSessionElement, response.data)
+                    const USER_LIST = gameSessionElement.querySelector('#userList')
+                    let comma = document.createElement('span')
+                    comma.textContent = ', '
+                    let user = document.createElement('span')
+                    user.classList.add('user')
+                    //TODO: Change later to use username
+                    user.textContent = '@Stephan'
+
+                    USER_LIST.parentNode.querySelector('h5').textContent = `Players (${response.data.session_party.length}/5)`
+
+                    USER_LIST.insertBefore(comma, USER_LIST.lastChild)
+                    USER_LIST.insertBefore(user, USER_LIST.lastChild)
+
+                    if (response.data.session_party.length >= 5) {
+                        USER_LIST.removeChild(USER_LIST.lastChild)
+                    }
+
+                    pushNotify('success', 'Session join', response.data.message);
+                }
+            }).catch(error => {
+                pushNotify('error', 'Session join', error.response.data);
+            })
+        } catch (error) {
+            console.log("error occured during join of session: " + gameSessionElement.id);
+        };
     }, 250);
 }
 
@@ -105,4 +176,3 @@ function updateSessionRequestToPlannedSession(gameSessionElement, gameSessionDat
 
     PLANNED_SESSION_CONTAINER.appendChild(gameSessionElement.parentNode);
 }
-

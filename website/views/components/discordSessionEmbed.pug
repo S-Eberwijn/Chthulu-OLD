@@ -16,11 +16,14 @@
                     span.user #{`@${session.session_party[0].nickname}`}
             .embedField 
                 h5 #{`Players (${session.session_party.length}/5):`}
-                p.embedFieldValue() 
+                p.embedFieldValue(id="userList") 
                     span.user #{`@${session.session_party[0].nickname}`}
                     each member in session.session_party.slice(1)
                         span ,#{' '}
                         span.user #{`@${member.nickname || 'Unknown'}`}
+                    if (session.session_party.length < 5 && ["CREATED", "PLANNED"].includes(session.session_status) && loggedInUser.discordID === session.session_commander.data.player_id_discord) 
+                        span(id="addPlayer" onclick=`joinGameSession(${session.id},'241273372892200963')`).addPlayer + Add Player
+                        
                         
             .embedField 
                 h5 #{'DM:'}
@@ -39,11 +42,11 @@
             .embedField 
                 h5 #{'Objective:'}
                 p.embedFieldValue.italic.objective #{session.objective || 'No data avaialable.'}
-            .embedFooterWrapper    
-                .embedFooter 
-                    .imgWrapper
-                        img(src=`${session.session_party[0].displayAvatarURL()}`, alt="")
-                    p.footerText #{`Requested by ${session.session_party[0].user.username} - ${session.created}`}
+        .embedFooterWrapper    
+            .embedFooter 
+                .imgWrapper
+                    img(src=`${session.session_party[0].displayAvatarURL()}`, alt="")
+                p.footerText #{`Requested by ${session.session_party[0].user.username} - ${session.created}`}    
 
     .embedButtons 
         if(isDungeonMaster)
@@ -51,7 +54,7 @@
                 .button.approve(onclick=`approveGameSession(${session.id})`)
                     i(class="fas fa-thumbs-up")
                     p Approve
-                .button.decline
+                .button.decline(onclick=`declineGameSession(${session.id})`)
                     i(class="fas fa-times")
                     p Decline
             else if (session.session_status === 'PLANNED')
@@ -61,7 +64,7 @@
                 .button.decline
                     i(class="fas fa-times")
                     p Canceled
-        else if(userCharacter && !["PLAYED", "CANCELED", "DECLINED"].includes(session.session_status))
-            .button.join
+        else if(userCharacter && (session.session_party.length < 5 && !["PLAYED", "CANCELED"].includes(session.session_status) &&  !session.session_party.map(user => user.id).includes(loggedInUser.discordID)) && session.session_commander.data.player_id_discord != loggedInUser.discordID)
+            .button.join(onclick=`joinGameSession(${session.id})`)
                 i(class="fas fa-handshake")
                 p Join

@@ -1,5 +1,13 @@
-const { getAliveCharacters, getNonPlayableCharacters,approveGameSession, getServerMap, getAllMaps, addCreatedDate, getServerQuestsByStatuses, getQuestsByStatuses, createQuest, deleteQuest, updateQuest, getServerDisabledCommands, getBotCommandsByCategory, editServerCommands, getAllGameSessions, getAllServerGameSessions } = require('../../functions/api');
+const { addCreatedDate } = require('../../functions/api/misc');
+const { getServerMap, getAllMaps } = require('../../functions/api/maps');
+const { getServerDisabledCommands, editServerCommands } = require('../../functions/api/guild');
+const { getAliveCharacters, getNonPlayableCharacters } = require('../../functions/api/characters');
+const { getServerQuestsByStatuses, getQuestsByStatuses, createQuest, deleteQuest, updateQuest } = require('../../functions/api/quests');
+const { getBotCommandsByCategory } = require('../../functions/api/bot');
+const { approveGameSession, declineGameSession, joinGameSession, getAllGameSessions, getAllServerGameSessions } = require('../../functions/api/sessions');
+
 const { editAllGameSessionsForWebsite } = require('../../functions/website');
+
 exports.dashboardPage = async (req, res) => {
     res.render('dashboardPage', {
         ...res.locals.renderData,
@@ -13,7 +21,7 @@ exports.dashboardPage = async (req, res) => {
         }
     });
 }
- 
+
 exports.guildDashboardPage = async (req, res) => {
     res.render('dashboardPage', {
         ...res.locals.renderData,
@@ -79,7 +87,7 @@ exports.guildInformationalQuestsDashboardPage = async (req, res) => {
 //CREATE QUEST POST
 exports.createQuestPost = async (req, res) => {
     // TODO add validator on backend level
-    createQuest(req.body, res.locals.renderData?.selectedGuildId, req.user?.discordID).then((quest) => { res.json(quest);  }).catch(() => { res.sendStatus(401) });
+    createQuest(req.body, res.locals.renderData?.selectedGuildId, req.user?.discordID).then((quest) => { res.json(quest); }).catch(() => { res.sendStatus(401) });
 }
 
 exports.deleteQuestRequest = async (req, res) => {
@@ -115,8 +123,17 @@ exports.sessionsPage = async (req, res) => {
 }
 
 //TODO: Add validation with express validation
-exports.editGameSession = async (req, res) => {
+exports.approveGameSession = async (req, res) => {
     await approveGameSession(req.body, req.params?.id, req.user?.discordID).then(message => { return res.json(message); }).catch(() => { return res.sendStatus(400) });
+}
+
+//TODO: Add validation with express validation
+exports.declineGameSession = async (req, res) => {
+    await declineGameSession(req.body, req.params?.id, req.user?.discordID).then(message => { return res.json(message); }).catch(() => { return res.sendStatus(400) });
+}
+
+exports.joinGameSession = async (req, res) => {
+    await joinGameSession(req.body, req.params?.id, req.user?.discordID).then(message => { return res.json(message); }).catch((err) => { return res.status(400).json(err); });
 }
 
 //SETTINGS PAGE
