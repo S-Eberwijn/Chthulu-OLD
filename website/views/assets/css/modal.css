@@ -65,7 +65,6 @@ input[action="status"]:checked~.modal-background[action="status"] {
     display: flex;
     align-items: center;
     justify-content: center;
-    position: relative;
 }
 
 .button-wrapper::after {

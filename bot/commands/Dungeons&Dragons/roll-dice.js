@@ -2,7 +2,6 @@ const { MessageEmbed } = require('discord.js');
 const { logger } = require(`../../../functions/logger`)
 
 module.exports.run = async (interaction) => {
-    logger.debug(`${interaction.user.username}#${interaction.user.discriminator} used the roll-dice command.`);
     let diceSet = new Map();
     let resultSet = new Map();
 
@@ -14,7 +13,6 @@ module.exports.run = async (interaction) => {
     diceSet.set("d20", interaction.options.getNumber('d20') == null ? 0 : interaction.options.getNumber('d20'));
     diceSet.set("d100", interaction.options.getNumber('d100') == null ? 0 : interaction.options.getNumber('d100'));
 
-    console.log(diceSet);
     let additionalModifier = interaction.options.getNumber('additional-modifier') == null ? 0 : interaction.options.getNumber('additional-modifier');
     //error handling
     if (tooManyDice(diceSet)) { return interaction.reply({ content: `Total number of dice you want to roll can not be higher than 24!`, ephemeral: true }) }
@@ -23,6 +21,9 @@ module.exports.run = async (interaction) => {
     resultSet = rollDice(diceSet);
     //constructing command
     let command = constructCommand(diceSet, additionalModifier)
+
+    logger.debug(`${interaction.user.username}#${interaction.user.discriminator} rolled ${command} in ${interaction.guild.name}.`);
+
     //rolling the dice
     return interaction.reply({ embeds: [createEmbed(command, resultSet, additionalModifier)] })
 }
