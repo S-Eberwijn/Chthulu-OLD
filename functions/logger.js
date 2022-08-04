@@ -6,7 +6,8 @@ const prodFormat = printf(({ level, message, timestamp }) => {
 });
 
 const consoleFormat = printf(({ level, message, timestamp }) => {
-    return `${timestamp} [${level}]: ${message}`;
+    const FORMAT = process.env.PLATFORM == "HEROKU" ? `[${level}]: ${message}` : `${timestamp} [${level}]: ${message}`;
+    return FORMAT;
 });
 
 const currentTime = new Date();
@@ -26,8 +27,8 @@ const logger = createLogger({
 logger.add(new transports.Console({
     format:
         combine(
-            format.colorize(),
-            timestamp({ format: "HH:mm:ss" }),
+            process.env.PLATFORM != "HEROKU" ? format.colorize() : format.json(),
+            // timestamp({ format: "HH:mm:ss" }),
             consoleFormat,
         )
 }));
