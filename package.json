@@ -26,6 +26,7 @@
     "firebase-admin": "^10.0.2",
     "firestore-sequelizer": "^0.2.5",
     "firestore-store": "^2.0.2",
+    "heroku-keep-awake": "^1.1.2",
     "https": "^1.0.0",
     "mariadb": "^2.5.4",
     "moment": "^2.29.1",

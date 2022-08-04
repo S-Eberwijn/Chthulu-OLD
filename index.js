@@ -1,6 +1,8 @@
 require('dotenv').config();
 require('./website/routes/strategies/discordStrategy');
 const { logger } = require(`./functions/logger`)
+const { wakeDyno, wakeDynos } = require('heroku-keep-awake');
+const DYNO_URL = process.env.DYNO_URL;
 
 const express = require('express');
 
@@ -84,7 +86,7 @@ app.post("/refresh", async (req, res) => {
     rl.on('line', async (result) => {
         result = JSON.parse(result)
         await res.status(result.status || 500).end(result.body || "Internal Server Error")
-        console.log("repl.deploy-success")  
+        console.log("repl.deploy-success")
     });
 })
 
@@ -146,6 +148,12 @@ bot.login(BOT_TOKEN).then(async () => {
 
     // Start Webserver
     app.listen(WB_PORT, () => {
+        const HEROKU_OPTIONS = {
+            interval: 29,
+            logging: false,
+            // stopTimes: { start: '00:00', end: '06:00' }
+        }
+        wakeDyno(DYNO_URL, HEROKU_OPTIONS); // Use this function when only needing to wake a single Heroku app.
         logger.info(`Website is up and running at ${WB_BASE_URL}:${WB_PORT || 5000}`)
         module.exports = bot;
     })
