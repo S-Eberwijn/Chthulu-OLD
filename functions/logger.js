@@ -22,16 +22,16 @@ const logger = createLogger({
     ],
     exitOnError: false,
 });
-if (process.env.APP_ENV !== 'PROD') {
-    logger.add(new transports.Console({
-        format:
-            combine(
-                format.colorize(),
-                timestamp({ format: "HH:mm:ss" }),
-                consoleFormat,
-            )
-    }));
-}
+
+logger.add(new transports.Console({
+    format:
+        combine(
+            format.colorize(),
+            timestamp({ format: "HH:mm:ss" }),
+            consoleFormat,
+        )
+}));
+
 
 //
 // If we're not in production then log to the `console` with the format:
