@@ -1,4 +1,5 @@
 // const { logger } = require(`../../functions/logger`)
+const { MessageEmbed, Modal, TextInputComponent, MessageActionRow, MessageButton } = require('discord.js');
 
 const { GameSession } = require('../../database/models/GameSession');
 const { GeneralInfo } = require('../../database/models/GeneralInfo');
@@ -9,13 +10,18 @@ const { MESSAGE_COMPONENTS } = require('../messageComponents');
 const { getGuildFromBot, isDungeonMaster } = require('./guild');
 const { getUserFromBot, getBot } = require('./bot');
 const { getUserCharacter } = require('./characters');
+const { getPrettyDateString } = require('./misc');
+const { editAllGameSessionsForWebsite } = require('../website');
+
+const DATE_REGEX_PATTERN = /[0-3]\d\/(0[1-9]|1[0-2])\/\d{4} [0-2]\d:[0-5]\d(?:\.\d+)?Z?/g;
+
 
 async function getAllGameSessions() {
     return await GameSession.findAll();
 }
 
 /**
- * @param {""} serverID - The ID of a Discord server.
+ * @param {"532525442201026580"} serverID - The ID of a Discord server.
  */
 async function getAllServerGameSessions(serverID) {
     return await GameSession.findAll({ where: { server: serverID } });
@@ -78,6 +84,112 @@ async function updateGeneralServerSessionNumber(server, next_session_number) {
     server.session_number = next_session_number;
     await server.save();
 }
+
+async function createGameSession(sessionData, serverID, userID) {
+    const BOT = getBot();
+    const GUILD = getGuildFromBot(serverID);
+    const DISCORD_USER = getUserFromBot(userID);
+    return new Promise(async (resolve, reject) => {
+        const USER_CHARACTER = await getUserCharacter(userID, serverID);
+
+        const SESSIONS_CATEGORY = GUILD?.channels.cache.find(c => c.name == "--SESSIONS--" && c.type == "GUILD_CATEGORY");
+        const SESSION_REQUEST_CHANNEL = GUILD?.channels.cache.find(c => c.name.includes("session-request") && c.type == "GUILD_TEXT");
+
+        const session_objective = sessionData.session_objective,
+            session_date_text = sessionData.session_date_text,
+            session_location = sessionData.session_location || `Roll20 (online)`;
+
+        if (session_date_text.match(DATE_REGEX_PATTERN) === null) return reject(`Invalid date format, ${session_date_text} does not comply with the regex pattern.`);
+        let date_year = session_date_text.split(' ')[0].split('/')[2],
+            date_month = session_date_text.split(' ')[0].split('/')[1],
+            date_day = session_date_text.split(' ')[0].split('/')[0],
+            date_hour = session_date_text.split(' ')[1].split(':')[0],
+            date_minutes = session_date_text.split(' ')[1].split(':')[1];
+
+        const session_date = new Date(Date.UTC(date_year, date_month - 1, date_day, date_hour, date_minutes)).getTime()
+
+        // Makes a request channel for the message author
+        GUILD.channels.create(`${DISCORD_USER.username}s-request`, "text").then(async CREATED_CHANNEL => {
+            // Puts the channel under the "--SESSIONS--" category
+            CREATED_CHANNEL.setParent(SESSIONS_CATEGORY, { lockPermissions: false });
+
+            // Update channel permissions so everyone can't see it.
+            await CREATED_CHANNEL.permissionOverwrites.create(CREATED_CHANNEL.guild.roles.everyone, { VIEW_CHANNEL: false });
+
+            // Update channel permissions so Dungeon Masters can see it.
+            CREATED_CHANNEL.permissionOverwrites.edit(GUILD.roles.cache.find(role => role.name.toLowerCase().includes('dungeon master')), {
+                CREATE_INSTANT_INVITE: false,
+                KICK_MEMBERS: false,
+                BAN_MEMBERS: false,
+                ADMINISTRATOR: false,
+                MANAGE_CHANNELS: false,
+                MANAGE_GUILD: false,
+                ADD_REACTIONS: true,
+                VIEW_CHANNEL: true,
+                SEND_MESSAGES: true,
+                SEND_TTS_MESSAGES: false,
+                MANAGE_MESSAGES: true,
+                EMBED_LINKS: true,
+                ATTACH_FILES: true,
+                READ_MESSAGE_HISTORY: true,
+                MENTION_EVERYONE: false,
+                USE_EXTERNAL_EMOJIS: true,
+                VIEW_GUILD_INSIGHTS: false,
+                CHANGE_NICKNAME: true,
+                MANAGE_NICKNAMES: true,
+                MANAGE_ROLES: true,
+                MANAGE_WEBHOOKS: true,
+                MANAGE_THREADS: false,
+                USE_PUBLIC_THREADS: false,
+            });
+
+            // Update channel permissions so session commander can see it.
+            CREATED_CHANNEL.permissionOverwrites.create(BOT.users.cache.get(userID), {
+                CREATE_INSTANT_INVITE: false,
+                KICK_MEMBERS: false,
+                BAN_MEMBERS: false,
+                ADMINISTRATOR: false,
+                MANAGE_CHANNELS: false,
+                MANAGE_GUILD: false,
+                ADD_REACTIONS: true,
+                VIEW_CHANNEL: true,
+                SEND_MESSAGES: true,
+                SEND_TTS_MESSAGES: false,
+                MANAGE_MESSAGES: false,
+                EMBED_LINKS: true,
+                ATTACH_FILES: true,
+                READ_MESSAGE_HISTORY: true,
+                MENTION_EVERYONE: false,
+                USE_EXTERNAL_EMOJIS: true,
+                VIEW_GUILD_INSIGHTS: false,
+                CHANGE_NICKNAME: true,
+                MANAGE_NICKNAMES: false,
+                MANAGE_ROLES: false,
+                MANAGE_WEBHOOKS: false,
+                MANAGE_THREADS: false,
+                USE_PUBLIC_THREADS: false,
+            });
+
+            CREATED_CHANNEL.send({ content: `${DISCORD_USER}, welcome to your session request channel!` }).then(async () => {
+            })
+
+            SESSION_REQUEST_CHANNEL.send({ embeds: [createSessionChannelEmbed(DISCORD_USER, session_date, [userID], session_objective, USER_CHARACTER.picture_url, session_location)], components: [MESSAGE_COMPONENTS.REQUEST_SESSION] }).then(async MESSAGE => {
+                const GAME_SESSION = await createSession(userID, serverID, session_objective, session_location, session_date, MESSAGE.id, CREATED_CHANNEL.id)
+                // Add the session to a json database.
+                BOT.sessionAddUserRequest['sessions'][BOT.sessionAddUserRequest['sessions'].length] = {
+                    session_channel_id: CREATED_CHANNEL.id,
+                    requested: [],
+                    denied: []
+                }
+                writeToJsonDb("./bot/jsonDb/sessionAddUserRequest.json", BOT.sessionAddUserRequest);
+                resolve((await editAllGameSessionsForWebsite([GAME_SESSION.__old]))[0]);
+            })
+        })
+        DISCORD_USER.send({ content: `Session request created! You can find it back in this channel: ${SESSION_REQUEST_CHANNEL}` });
+    })
+
+}
+
 
 async function approveGameSession(sessionData, serverID, userID) {
 
@@ -147,14 +259,21 @@ async function declineGameSession(sessionData, serverID, userID) {
 }
 
 async function joinGameSession(sessionData, serverID, userID) {
-    // console.log(sessionData)
-    const USER_ID = sessionData.userID ? sessionData.userID : userID;
-    const DISCORD_USER = getUserFromBot(USER_ID);
-    let GAME_SESSION = await GameSession.findOne({ where: { id: sessionData.gameSessionID, server: serverID } });
-    const isPlayerAlreadyInParty = GAME_SESSION.session_party.includes(USER_ID);
     return new Promise(async (resolve, reject) => {
+        
+        const USER_ID = sessionData.userID ? sessionData.userID : userID;
+
+        if (!sessionData.gameSessionID) return reject("No gameSessionID provided");
+        if (!USER_ID) return reject("No userID provided");
+
+        const DISCORD_USER = getUserFromBot(USER_ID);
+
+        let GAME_SESSION = await GameSession.findOne({ where: { id: sessionData.gameSessionID, server: serverID } });
         if (!GAME_SESSION) return reject('Session can not be found in the database!');
+
         if (isDungeonMaster(USER_ID, getGuildFromBot(serverID))) return reject('Dungeon Masters can not join a sessions party!');
+
+        const isPlayerAlreadyInParty = GAME_SESSION.session_party.includes(USER_ID);
         if (isPlayerAlreadyInParty) return reject('Player is already in the party!');
         const isPartyFull = GAME_SESSION.session_party.length >= 5;
         if (isPartyFull) return reject('The party capacity has reached the limit!');
@@ -162,7 +281,7 @@ async function joinGameSession(sessionData, serverID, userID) {
         if (!USER_CHARACTER) return reject('No character found in the database!');
         const BOT = getBot();
 
-
+        
         const SESSION_REQUEST_CHANNEL = getGuildFromBot(serverID)?.channels.cache.find(c => c.name.includes("session-request") && c.type == "GUILD_TEXT");
         const PLANNED_SESSIONS_CHANNEL = getGuildFromBot(serverID)?.channels.cache.find(c => c.name.includes("planned-session") && c.type == "GUILD_TEXT");
         const GAME_SESSION_MESSAGE = await fetchGameSessionMessage(SESSION_REQUEST_CHANNEL, PLANNED_SESSIONS_CHANNEL, GAME_SESSION?.message_id_discord)
@@ -314,9 +433,44 @@ async function updatePartyOnSessionEmbed(message, sessionParty) {
     return message;
 }
 
+function createSessionChannelEmbed(messageAuthor, sessionDate, sessionParticipants, sessionObjective, sessionCommanderAvatar, sessionLocation) {
+    return new MessageEmbed()
+        .setThumbnail(sessionCommanderAvatar)
+        .setColor(0x333333)
+        .setTitle(`**Session Request**`)
+        .addFields(
+            { name: `**Session Commander:**`, value: `<@!${sessionParticipants[0]}>\n`, inline: false },
+            { name: `**Players(${sessionParticipants.length}/5):**`, value: `${sessionParticipants.map(id => `<@!${id}>`).join(', ')}`, inline: false },
+            { name: `**DM:**`, value: `*TBD*`, inline: false },
+            { name: `**Location:**`, value: `*${sessionLocation}*`, inline: false },
+            { name: `**Date & Time:**`, value: `\`${getPrettyDateString(new Date(sessionDate))}\``, inline: false },
+            { name: `**Objective:**`, value: `>>> *${sessionObjective}*`, inline: false },
+        )
+        .setTimestamp()
+        .setFooter({ text: `Requested by ${messageAuthor.username}`, iconURL: messageAuthor.avatarURL() });
+}
+
+async function createSession(userID, guildID, objective, session_location, date, message_id, session_channel_id) {
+    const TIMESTAMP = Date.now();
+    return await GameSession.create({
+        id: `GS${TIMESTAMP}`,
+        message_id_discord: message_id,
+        session_commander: userID,
+        session_party: [userID],
+        date: date,
+        dungeon_master_id_discord: '',
+        objective: objective,
+        location: session_location,
+        session_number: 0,
+        session_channel: session_channel_id,
+        session_status: 'CREATED',
+        server: guildID,
+    })
+}
+
 module.exports = {
     getAllGameSessions, getAllServerGameSessions,
-    approveGameSession, declineGameSession, joinGameSession,
+    createGameSession, approveGameSession, declineGameSession, joinGameSession,
     fetchGameSessionMessage,
     updateGameSessionStatus, updateGameSessionMessageId, updateGameSessionNumber, updateGameSessionParty, updateGameSessionDungeonMaster, updateGeneralServerSessionNumber,
     editRequestSessionEmbedToPlannedSessionEmbed, updatePartyNextSessionId

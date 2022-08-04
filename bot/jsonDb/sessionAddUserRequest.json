@@ -9,6 +9,95 @@
             "session_channel_id": "997417184668164197",
             "requested": [],
             "denied": []
+        },
+        {
+            "session_channel_id": "997540124562817116",
+            "requested": [],
+            "denied": []
+        },
+        {
+            "session_channel_id": "997540609042677911",
+            "requested": [],
+            "denied": []
+        },
+        {
+            "session_channel_id": "997540889478054038",
+            "requested": [],
+            "denied": []
+        },
+        {
+            "session_channel_id": "997541624739541112",
+            "requested": [],
+            "denied": []
+        },
+        {
+            "session_channel_id": "997541749977272370",
+            "requested": [],
+            "denied": []
+        },
+        {
+            "session_channel_id": "997541882651480076",
+            "requested": [],
+            "denied": []
+        },
+        {
+            "session_channel_id": "997542312018190406",
+            "requested": [],
+            "denied": []
+        },
+        {
+            "session_channel_id": "997543173578571776",
+            "requested": [],
+            "denied": []
+        },
+        {
+            "session_channel_id": "997543247784185927",
+            "requested": [],
+            "denied": []
+        },
+        {
+            "session_channel_id": "997543343556927519",
+            "requested": [],
+            "denied": []
+        },
+        {
+            "session_channel_id": "997543461433647144",
+            "requested": [],
+            "denied": []
+        },
+        {
+            "session_channel_id": "997543536222285894",
+            "requested": [],
+            "denied": []
+        },
+        {
+            "session_channel_id": "997543635421769759",
+            "requested": [],
+            "denied": []
+        },
+        {
+            "session_channel_id": "997544095612407878",
+            "requested": [],
+            "denied": []
+        },
+        {
+            "session_channel_id": "997544513599971359",
+            "requested": [],
+            "denied": []
+        },
+        {
+            "session_channel_id": "997546910472741004",
+            "requested": [],
+            "denied": []
+        },
+        {
+            "session_channel_id": "1003232926936350860",
+            "requested": [
+                {
+                    "user_id": "241273372892200963"
+                }
+            ],
+            "denied": []
         }
     ]
 }

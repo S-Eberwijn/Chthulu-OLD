@@ -3,6 +3,24 @@ const { MessageActionRow, MessageButton } = require('discord.js');
 const SESSION_BUTTON_IDS = ['approve-session-request-button', 'decline-session-request-button', 'join-session-button', 'played-session-button', 'cancel-session-button', 'join-accepted-button', 'join-denied-button']
 
 const MESSAGE_COMPONENTS = {
+    REQUEST_SESSION: new MessageActionRow()
+        .addComponents(
+            new MessageButton()
+                .setCustomId(SESSION_BUTTON_IDS[0])
+                .setLabel('Approve')
+                .setStyle('SUCCESS')
+                .setEmoji('👍'),
+            new MessageButton()
+                .setCustomId(SESSION_BUTTON_IDS[1])
+                .setLabel('Decline')
+                .setStyle('DANGER')
+                .setEmoji('✖️'),
+            new MessageButton()
+                .setCustomId(SESSION_BUTTON_IDS[2])
+                .setLabel('Join')
+                .setStyle('SECONDARY')
+                .setEmoji('🙋‍♂️'),
+        ),
     PLANNED_SESSION: new MessageActionRow()
         .addComponents(
             new MessageButton()

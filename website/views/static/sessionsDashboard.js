@@ -1,3 +1,4 @@
+
 const sections = ["requested", "planned", "past"]
 
 
@@ -85,6 +86,57 @@ const selectDotBtn = (dotsArray, embla) => () => {
     dotsArray[selected].classList.add("is-selected");
 };
 
+function addUsernamesToElement(users, element) {
+    for (const user of users) {
+        if (users.length > 1) {
+            const COMMA = document.createElement('span');
+            COMMA.textContent = ", ";
+            element.insertBefore(COMMA, element.lastChild);
+        }
+        const USERNAME = document.createElement('span');
+        USERNAME.classList.add("user");
+        USERNAME.textContent = `@${user.username}`;
+
+
+        element.insertBefore(USERNAME, element.lastChild);
+    }
+}
+
+async function createGameSession(button) {
+
+    const USER_ARRAY = [{ username: "test" }, { username: "test2" }, { username: "test3" }];
+
+    let clonedElement = document.querySelector(`.embla[data-type="requested"] .embla__slide`)?.cloneNode(true);
+    console.log(clonedElement);
+
+    let requestedSessionsContainer = document.querySelector(`.embla[data-type="requested"] .embla__container`)
+    clonedElement.querySelector('.slideItem').id = "Test"
+    clonedElement.querySelector('.addPlayer').setAttribute("onclick", `joinGameSession(Test, '241273372892200963')`)
+    clonedElement.querySelector('#userList').parentNode.querySelector('h5').textContent = `Players (${USER_ARRAY.length}/5)`
+    addUsernamesToElement(USER_ARRAY, clonedElement.querySelector('#userList'))
+    addUsernamesToElement([USER_ARRAY[0]], clonedElement.querySelector('.sessionCommander'))
+    requestedSessionsContainer.append(clonedElement);
+    // setTimeout(() => {
+    //     try {
+    //         axios.post(`/dashboard/${guildID}/informational/sessions/create`, {
+    //             "session_objective": `Looking around`,
+    //             "session_date_text": `12/12/2023 14:00`,
+    //             "session_location": `Roll20 (online)`,
+    //         }).then(response => {
+    //             if (response.status === 200) {
+    //                 console.log(response)
+    let requestedSessionCounter = document.querySelector(`summary[data-type="requested"] span.count`)
+    requestedSessionCounter.textContent = parseInt(requestedSessionCounter.textContent) + 1;
+
+    //                 pushNotify('success', 'Session approved', 'response.data.message');
+    //             }
+    //         })
+    //     } catch (error) {
+    //         console.log("error occured during creation of session: " + button);
+    //     };
+    // }, 250);
+}
+
 async function approveGameSession(gameSessionElement) {
 
     setTimeout(() => {
@@ -124,9 +176,12 @@ async function declineGameSession(gameSessionElement) {
 }
 
 async function joinGameSession(gameSessionElement, userID = null) {
-    console.log(gameSessionElement.querySelector('#userList'))
+    console.log(gameSessionElement)
+    console.log(userID)
+
     setTimeout(() => {
         try {
+            console.log(guildID)
             axios.put(`/dashboard/${guildID}/informational/sessions/join`, {
                 "gameSessionID": gameSessionElement.id,
                 "userID": userID,
@@ -134,22 +189,26 @@ async function joinGameSession(gameSessionElement, userID = null) {
                 console.log(response)
                 if (response.status === 200) {
                     // updateSessionRequestToPlannedSession(gameSessionElement, response.data)
-                    const USER_LIST = gameSessionElement.querySelector('#userList')
-                    let comma = document.createElement('span')
-                    comma.textContent = ', '
-                    let user = document.createElement('span')
-                    user.classList.add('user')
-                    //TODO: Change later to use username
-                    user.textContent = '@Stephan'
+                    if (userID) {
+                        const USER_LIST = gameSessionElement.querySelector('#userList')
+                        let comma = document.createElement('span')
+                        comma.textContent = ', '
+                        let user = document.createElement('span')
+                        user.classList.add('user')
+                        //TODO: Change later to use username
+                        user.textContent = `@${response.data.session_party[response.data.session_party.length - 1]}`
 
-                    USER_LIST.parentNode.querySelector('h5').textContent = `Players (${response.data.session_party.length}/5)`
+                        USER_LIST.parentNode.querySelector('h5').textContent = `Players (${response.data.session_party.length}/5)`
 
-                    USER_LIST.insertBefore(comma, USER_LIST.lastChild)
-                    USER_LIST.insertBefore(user, USER_LIST.lastChild)
+                        USER_LIST.insertBefore(comma, USER_LIST.lastChild)
+                        USER_LIST.insertBefore(user, USER_LIST.lastChild)
 
-                    if (response.data.session_party.length >= 5) {
-                        USER_LIST.removeChild(USER_LIST.lastChild)
+                        // Remove 'Add Player' button
+                        if (response.data.session_party.length >= 5) {
+                            USER_LIST.removeChild(USER_LIST.lastChild)
+                        }
                     }
+ 
 
                     pushNotify('success', 'Session join', response.data.message);
                 }

@@ -4,12 +4,14 @@ let globalIDstorage;
 let globalQuestID;
 document.addEventListener('DOMContentLoaded', (event) => {
     //Edit to use multiple custom select boxes
-    document.querySelector('.modal .select-wrapper').addEventListener('click', function () {
-        this.querySelector('.select').classList.toggle('open');
+    document.querySelectorAll('.modal .select-wrapper').forEach(element => {
+        element.addEventListener('click', function () {
+            this.querySelector('.select').classList.toggle('open');
+        })
     })
-    document.querySelector('.editQuestModal .select-wrapper').addEventListener('click', function () {
-        this.querySelector('.select').classList.toggle('open');
-    })
+    // document.querySelector('.modal[action="edit"] .select-wrapper').addEventListener('click', function () {
+    //     this.querySelector('.select').classList.toggle('open');
+    // })
 
     for (const option of document.querySelectorAll(".custom-option")) {
         option.addEventListener('click', function () {
@@ -30,7 +32,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     });
 
     document.getElementById('quest_description').addEventListener('input', () => {
-        text = document.getElementById('quest_description').value;
+        let text = document.getElementById('quest_description').value;
         document.getElementById('quest_description').value = text.charAt(0).toUpperCase() + text.slice(1);
     });
 
@@ -271,10 +273,10 @@ function searchQuest(searchBar) {
 }
 
 function updateInput(input) {
-    let characterCountElement = input.parentNode.querySelector('p.characterCount');
-    // let maxCharacterCount = parseInt(input.parentNode.querySelector('p.maxCharacterCount').innerText);
+    // let characterCountElement = input.parentNode.querySelector('p.characterCount');
+    // // let maxCharacterCount = parseInt(input.parentNode.querySelector('p.maxCharacterCount').innerText);
 
-    characterCountElement.innerText = input.value.length;
+    // characterCountElement.innerText = input.value.length;
 
     checkIfFormIsReady(input.parentNode.parentNode.querySelector('.custom-option.selected'), input.parentNode.parentNode.querySelector('input[type="text"]'), input.parentNode.parentNode.querySelector('textarea'));
 
@@ -300,7 +302,7 @@ function createQuest(buttonElement) {
     let description = document.getElementById('quest_description')?.value?.trim();
 
     buttonElement.value = '';
-    document.querySelector(`.createButton>i.fa-spinner`).classList.add('active')
+    buttonElement.parentNode.querySelector(`i.fa-spinner`).classList.add('active')
     buttonElement.setAttribute('disabled', 'true')
 
     // console.log(`Clicking "Create"-button`)
@@ -318,18 +320,18 @@ function createQuest(buttonElement) {
                     let selectDiv = document.querySelector(`#addNewQuestDiv .select`)
                     selectDiv.querySelector(`.custom-option.selected`).classList.remove('selected');
                     selectDiv.querySelector(`#quest_priority`).textContent = 'Select a priority';
-                    
+
                     document.querySelector(`#quest_title`).value = '';
                     updateInput(document.querySelector(`#quest_title`))
-                    
+
                     document.querySelector(`#quest_description`).value = '';
                     updateInput(document.querySelector(`#quest_description`))
 
 
 
                     let uncompletedQuestsBox = document.querySelector('.questBox[id="uncompletedQuestsBox"]');
-                    uncompletedQuestsBox.insertBefore(createQuestDiv(response.data.data), uncompletedQuestsBox.childNodes[uncompletedQuestsBox.childNodes.length -1])     
-                    
+                    uncompletedQuestsBox.insertBefore(createQuestDiv(response.data.data), uncompletedQuestsBox.childNodes[uncompletedQuestsBox.childNodes.length - 1])
+
                     let uncompletedQuestCountElement = document.querySelector(`#uncompletedQuestsCount`);
                     uncompletedQuestCountElement.textContent = parseInt(uncompletedQuestCountElement.textContent) + 1;
 
@@ -342,14 +344,14 @@ function createQuest(buttonElement) {
             console.log("error occured during create");
         };
         buttonElement.value = 'Create';
-        document.querySelector(`.createButton>i.fa-spinner`).classList.remove('active')
+        buttonElement.parentNode.querySelector(`i.fa-spinner`).classList.remove('active')
         buttonElement.removeAttribute('disabled')
 
     }, 250);
 
 }
 
-function createQuestDiv(quest_data){
+function createQuestDiv(quest_data) {
     // console.log(quest_data)
     let questDiv = document.createElement('div');
     questDiv.classList.add('questDiv', 'quest');
@@ -362,14 +364,14 @@ function createQuestDiv(quest_data){
     let questTitleDiv = document.createElement('div');
     questTitleDiv.classList.add('questTitleDiv');
     questDiv.appendChild(questTitleDiv);
-    
+
     let questTitleP = document.createElement('p');
     questTitleP.classList.add('title');
     questTitleP.textContent = quest_data.quest_name;
     questTitleDiv.appendChild(questTitleP);
 
 
-    let questDescriptionSpan = document.createElement('span'); 
+    let questDescriptionSpan = document.createElement('span');
     questDescriptionSpan.classList.add('description');
     questDescriptionSpan.textContent = quest_data.quest_description;
     quest_data.quest_description ? questTitleDiv.appendChild(questDescriptionSpan) : questDiv.classList.add('onlyTitle');
@@ -408,12 +410,12 @@ function createQuestDiv(quest_data){
 function editQuest(buttonElement) {
     let questElement = document.querySelector(`.quest[id="${globalQuestID}"]`);
 
-    let priority = document.querySelector('.editQuestModal .custom-option.selected')?.getAttribute('data-value');
+    let priority = document.querySelector('.modal[action="edit"] .custom-option.selected')?.getAttribute('data-value');
     let title = document.getElementById('edit_quest_title')?.value?.trim();
     let description = document.getElementById('edit_quest_description')?.value?.trim();
 
     buttonElement.value = '';
-    document.querySelector(`.editButton>i.fa-spinner`).classList.add('active')
+    buttonElement.parentNode.querySelector(`i.fa-spinner`).classList.add('active')
     buttonElement.setAttribute('disabled', 'true')
 
     setTimeout(() => {
@@ -424,18 +426,22 @@ function editQuest(buttonElement) {
                 "title": title,
                 "description": description
             }).then(response => {
-                if (response.status === 201) {
+                if (response.status === 201 || response.status === 200) {
                     document.querySelector(`input[action="edit"]`).checked = false;
                     questElement.querySelector(`p.title`).textContent = title;
                     questElement.querySelector(`span.description`).textContent = description;
                     questElement.setAttribute('quest_importance_value', priority);
                     pushNotify('success', 'Quest edited', 'The quest has been edited successfully.');
                 }
+            }).catch((err) => {
+                console.log(err)
+                pushNotify('error', 'Quest edited', 'Something went wrong!')
+
             })
         } catch (error) {
             console.log("error occured during edit of quest: " + globalQuestID);
         };
-        document.querySelector(`.editButton>i.fa-spinner`).classList.remove('active')
+        buttonElement.parentNode.querySelector(`i.fa-spinner`).classList.remove('active')
         buttonElement.removeAttribute('disabled')
         buttonElement.value = 'Edit';
 
@@ -446,7 +452,7 @@ function deleteQuest(buttonElement) {
     let questElement = document.querySelector(`.quest[id="${globalQuestID}"]`);
 
     buttonElement.value = '';
-    document.querySelector(`.deleteButton>i.fa-spinner`).classList.add('active')
+    buttonElement.parentNode.querySelector(`i.fa-spinner`).classList.add('active')
     buttonElement.setAttribute('disabled', 'true')
 
     setTimeout(() => {
@@ -463,7 +469,7 @@ function deleteQuest(buttonElement) {
             console.log("error occured during delete");
         };
         buttonElement.value = 'Delete';
-        document.querySelector(`.deleteButton>i.fa-spinner`).classList.remove('active')
+        buttonElement.parentNode.querySelector(`i.fa-spinner`).classList.remove('active')
         buttonElement.removeAttribute('disabled')
 
 
@@ -493,17 +499,16 @@ async function statusChangeQuest(buttonValue) {
 async function updateGlobalQuestId(iconElement) {
     let questElement = iconElement.parentNode.parentNode;
     globalQuestID = questElement.getAttribute('id');
-    let quest_title = document.querySelector(`.quest[id="${globalQuestID}"] .questTitleDiv p.title`).textContent.split('started')[0]
+    let quest_title = document.querySelector(`.quest[id="${globalQuestID}"] .questTitleDiv p.title`).childNodes[0].nodeValue;
     let quest_description = document.querySelector(`.quest[id="${globalQuestID}"] .questTitleDiv span.description`)?.textContent || '';
-    // console.log(document.querySelector(`.quest[id="${globalQuestID}"] .questTitleDiv p.title span.description`))
     if (iconElement.className.includes('trash')) {
         // console.log(`Delete "${document.querySelector(`.quest[id="${globalQuestID}"] .questTitleDiv p.title`).textContent.split('started')[0]}"?`)
         document.querySelector('p.questDeleteTitle').textContent = `Delete "${quest_title}"?`;
     } else if (iconElement.className.includes('edit')) {
         document.querySelector('input[id="edit_quest_title"]').value = quest_title;
         document.querySelector('textarea[id="edit_quest_description"]').value = quest_description;
-        document.querySelector(`.editQuestModal .custom-option[data-value="${document.querySelector(`.quest[id="${globalQuestID}"]`).getAttribute("quest_importance_value")}"]`).classList.add('selected')
-        document.querySelector('.editQuestModal .select_trigger span').textContent = document.querySelector(`.editQuestModal .custom-option[data-value="${document.querySelector(`.quest[id="${globalQuestID}"]`).getAttribute("quest_importance_value")}"]`).textContent.replace('|', '').trim();
+        document.querySelector(`.modal[action="edit"] .custom-option[data-value="${document.querySelector(`.quest[id="${globalQuestID}"]`).getAttribute("quest_importance_value")}"]`).classList.add('selected')
+        document.querySelector('.modal[action="edit"] .select_trigger span').textContent = document.querySelector(`.modal[action="edit"] .custom-option[data-value="${document.querySelector(`.quest[id="${globalQuestID}"]`).getAttribute("quest_importance_value")}"]`).textContent.replace('|', '').trim();
 
         // console.log(document.querySelector('input[id="edit_quest_title"]'))
     }

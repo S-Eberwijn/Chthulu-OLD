@@ -13,7 +13,6 @@ const fs = require("fs");
 const { getBot } = require('../../../functions/api/bot');
 const { getPrettyDateString } = require('../../../functions/api/misc');
 
- 
 const { fetchGameSessionMessage, editRequestSessionEmbedToPlannedSessionEmbed, updatePartyNextSessionId, updateGameSessionStatus, updateGameSessionMessageId, updateGameSessionNumber, updateGameSessionParty, updateGeneralServerSessionNumber, updateGameSessionDungeonMaster } = require('../../../functions/api/sessions');
 
 const DATE_REGEX_PATTERN = /[0-3]\d\/(0[1-9]|1[0-2])\/\d{4} [0-2]\d:[0-5]\d(?:\.\d+)?Z?/g;
@@ -139,8 +138,8 @@ module.exports.modalSubmit = async (modal) => {
     const SESSION_REQUEST_CHANNEL = modal.guild.channels.cache.find(c => c.name.includes("session-request") && c.type == "GUILD_TEXT");
 
     const session_objective = modal.fields?.getTextInputValue('sessionObjective'),
-        session_date_text = modal.fields?.getTextInputValue('sessionDate');
-    session_location = modal.fields?.getTextInputValue('sessionLocation') || `Roll20 (online)`;
+        session_date_text = modal.fields?.getTextInputValue('sessionDate'),
+        session_location = modal.fields?.getTextInputValue('sessionLocation') || `Roll20 (online)`;
 
     if (session_date_text.match(DATE_REGEX_PATTERN) === null) return logger.debug(`Invalid date format, ${session_date_text} does not comply with the regex pattern.`);
     let date_year = session_date_text.split(' ')[0].split('/')[2],

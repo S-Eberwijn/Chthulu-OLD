@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { dashboardPage, guildDashboardPage, constructionDashboardPage, sessionsPage, approveGameSession, declineGameSession, joinGameSession, guildInformationalCharactersDashboardPage, guildInformationalNonPlayableCharactersDashboardPage, guildInformationalQuestsDashboardPage, guildInformationalMapDashboardPage, createQuestPost, deleteQuestRequest, editQuestRequest, guildSettingsPage, editSettingsRequest } = require('../controllers/dashboard');
+const { dashboardPage, guildDashboardPage, constructionDashboardPage, sessionsPage, createGameSession, approveGameSession, declineGameSession, joinGameSession, guildInformationalCharactersDashboardPage, guildInformationalNonPlayableCharactersDashboardPage, guildInformationalQuestsDashboardPage, guildInformationalMapDashboardPage, createQuestPost, deleteQuestRequest, editQuestRequest, guildSettingsPage, editSettingsRequest } = require('../controllers/dashboard');
 const { isAuthorized, centralizedData } = require('./middleware/middleware');
 
 router.get('/chthulu', isAuthorized, centralizedData, dashboardPage);
@@ -17,6 +17,7 @@ router.put('/:id/informational/quests', isAuthorized, centralizedData, editQuest
 router.get('/:id/informational/map', isAuthorized, centralizedData, guildInformationalMapDashboardPage);
 
 router.get('/:id/informational/sessions', isAuthorized, centralizedData, sessionsPage);
+router.post('/:id/informational/sessions/create', isAuthorized, centralizedData, createGameSession);
 router.put('/:id/informational/sessions/approve', isAuthorized, centralizedData, approveGameSession);
 router.put('/:id/informational/sessions/decline', isAuthorized, centralizedData, declineGameSession);
 router.put('/:id/informational/sessions/join', isAuthorized, centralizedData, joinGameSession);

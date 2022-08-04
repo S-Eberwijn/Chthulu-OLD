@@ -1,25 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
 
-.theme-dark {
-    --text-color: #ddd;
-    --navbar-text-color: #fff;
-    --sidebar-color: #202225;
-    --menu-color: #2F3136;
-    --content-color: #36393F;
-    --placeholder-text-color: #8e8e8e;
-    --clr-border: #202225;
-    --error-color: #eb5757;
-}
-
-/* .theme-light {
-    --text-color: #272727;
-    --navbar-text-color: #000;
-    --primary-bg-color: #e0e0e0;
-    --secondary-bg-color: #ececec;
-    --tertiary-bg-color: #d8d8d8;
-    --placeholder-text-color: #202020;
-} */
-
 * {
     --menu-width: 16em;
     --header-height: 75px;
@@ -32,8 +12,55 @@
     --kpi-sub-font-size: .65rem;
     --scrollbar-width: 15px;
     --scrollbar-border-width: 5px;
+    --modal-side-padding: 7%;
+    --modal-title-font-size: 1.2rem;
+    --modal-border-radius: 5px;
     font-family: 'Poppins', sans-serif;
 }
+
+.theme-dark {
+    --text-color: #ddd;
+    --navbar-text-color: #fff;
+    --sidebar-color: #202225;
+    --menu-color: #2F3136;
+    --content-color: #36393F;
+    --placeholder-text-color: #8e8e8e;
+    --clr-border: #202225;
+    --error-color: #eb5757;
+    --success-color: rgba(111, 207, 151,1);
+    --disabled-success-color: rgba(111, 207, 151,0.4);
+
+    --edit-color: rgba(88, 101, 242, 1);
+    --disabled-edit-color: rgba(88, 101, 242, 0.4);
+
+    --delete-color: #eb5757;
+}
+
+.notify {
+    /* defaults */
+    --notify-error: #eb5757;
+    --notify-success: #6fcf97;
+    --notify-warning: #f2c94c;
+    --notify-gray: #333333;
+    --notify-gray-2: #4d4d4d;
+    --notify-gray-3: #828282;
+    --notify-white: #333333;
+    --notify-white-2: #4d4d4d;
+    --notify-padding: 0.75rem;
+    --notify-icon-size: 32px;
+    --notify-close-icon-size: 16px;
+}
+
+/* .theme-light {
+    --text-color: #272727;
+    --navbar-text-color: #000;
+    --primary-bg-color: #e0e0e0;
+    --secondary-bg-color: #ececec;
+    --tertiary-bg-color: #d8d8d8;
+    --placeholder-text-color: #202020;
+} */
+
+
 
 body, html {
     margin: 0;
@@ -138,7 +165,7 @@ svg>g>g:last-child {
     justify-content: space-between;
     align-items: center;
     gap: 15px;
-    
+
     /* transform: translateX(-10px); */
     /* position: fixed;
     top: 20px;
@@ -515,19 +542,3 @@ svg>g>g:last-child {
         -moz-transform: translateX(-39px);
     }
 } */
-
-
-.notify {
-    /* defaults */
-    --notify-error: #eb5757;
-    --notify-success: #6fcf97;
-    --notify-warning: #f2c94c;
-    --notify-gray: #333333;
-    --notify-gray-2: #4d4d4d;
-    --notify-gray-3: #828282;
-    --notify-white: #333333;
-    --notify-white-2: #4d4d4d;
-    --notify-padding: 0.75rem;
-    --notify-icon-size: 32px;
-    --notify-close-icon-size: 16px;
-}

@@ -34,3 +34,4 @@ async function getNonPlayableCharacters(guildId = null) {
 module.exports = {
     getAliveCharacters, getNonPlayableCharacters, getDeadCharacters, getUserCharacter,
 };
+

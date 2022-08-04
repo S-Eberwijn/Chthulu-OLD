@@ -54,19 +54,19 @@ async function deleteQuest(questID, serverID) {
 }
 
 async function updateQuest(questData, serverID) {
-    const quest = await Quest.findOne({ where: { quest_identifier: questData?.quest_id, server: serverID } })
+    const QUEST = await Quest.findOne({ where: { quest_identifier: questData?.quest_id, server: serverID } })
     return new Promise((resolve, reject) => {
-        if (!quest) return reject()
+        if (!QUEST) return reject()
         if (questData.status) {
-            quest.quest_status = questData?.status;
-            quest.save();
+            QUEST.quest_status = questData?.status;
+            QUEST.save();
             return resolve();
         } else if (!questData.status) {
-            quest.quest_name = questData?.title;
-            quest.quest_description = questData?.description;
-            quest.quest_importance_value = questData?.priority;
-            quest.quest_importance = Importance[questData?.priority];
-            quest.save();
+            QUEST.quest_name = questData?.title;
+            QUEST.quest_description = questData?.description;
+            QUEST.quest_importance_value = questData?.priority;
+            QUEST.quest_importance = Importance[questData?.priority];
+            QUEST.save();
             return resolve();
         }
         return reject();

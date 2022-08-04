@@ -8,8 +8,6 @@ block scripts
         | var completedQuests = !{JSON.stringify(completedQuests)};
         //- | console.log(completedQuests)
         | var guildID = !{JSON.stringify(selectedGuildId)};
-        
-        
 
 block styles 
     style 
@@ -17,17 +15,13 @@ block styles
         include ./assets/css/sidebar.css
         include ./assets/css/menu.css
         include ./assets/css/dashboard.css
-        include ./assets/css/createQuestPopup.css
-        include ./assets/css/editQuestPopup.css
-        include ./assets/css/statusQuestPopup.css
-        include ./assets/css/deleteQuestPopup.css
         include ./assets/css/questDashboard.css
-
-
+        include ./assets/css/modal.css
 
 block dashboardContent
-    include ./components/deleteQuestPopup.pug
     include ./components/editQuestPopup.pug
+    include ./components/deleteQuestPopup.pug
+
     .dashboardContent(quests=true)
         h1 
             span(id="uncompletedQuestsCount").questCount #{uncompletedQuests.length}

@@ -8,6 +8,7 @@ const { getGuildFromBot, getUserFromGuild } = require("./api/guild");
  */
 async function editAllGameSessionsForWebsite(sessions) {
     for (const session of sessions) {
+
         const guild = await getGuildFromBot(session.server);
 
         // Get the user information from each party member.

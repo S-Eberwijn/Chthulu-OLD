@@ -1,15 +1,16 @@
 input(action="delete" type="checkbox" id="deleteQuestModal")
-label(for="deleteQuestModal" class="delete-modal-background")
-.deleteQuestModal 
+label(for="deleteQuestModal" action="delete").modal-background
+.modal(action="delete")
     .modal-header
+        .icon
+            .bot-icon
+                img(src=bot_icon alt="Chthulu Avatar")
         h3 Are you sure?
         label(for="deleteQuestModal")
-            i.fas.fa-times
+            i.fa-solid.fa-xmark.fa-xl
     .modal-content
         p.questDeleteTitle 
-        form
-            .deleteButton
+        form.delete
+            .button-wrapper
                 input(id="delete_quest" type="button" value="Delete" onclick="deleteQuest(this)")
                 i.fa.fa-spinner.fa-spin.fa-align-center
-            .cancelButton
-                label(for="deleteQuestModal") Cancel

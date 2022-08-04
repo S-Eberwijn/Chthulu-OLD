@@ -4,7 +4,7 @@ const { getServerDisabledCommands, editServerCommands } = require('../../functio
 const { getAliveCharacters, getNonPlayableCharacters } = require('../../functions/api/characters');
 const { getServerQuestsByStatuses, getQuestsByStatuses, createQuest, deleteQuest, updateQuest } = require('../../functions/api/quests');
 const { getBotCommandsByCategory } = require('../../functions/api/bot');
-const { approveGameSession, declineGameSession, joinGameSession, getAllGameSessions, getAllServerGameSessions } = require('../../functions/api/sessions');
+const { createGameSession, approveGameSession, declineGameSession, joinGameSession, getAllGameSessions, getAllServerGameSessions } = require('../../functions/api/sessions');
 
 const { editAllGameSessionsForWebsite } = require('../../functions/website');
 
@@ -122,19 +122,25 @@ exports.sessionsPage = async (req, res) => {
     });
 }
 
+exports.createGameSession = async (req, res) => {
+    await createGameSession(req.body, req.params?.id, req.user?.discordID).then(message => { return res.json(message); }).catch((err) => { return res.status(400).json(err) });
+}
+
 //TODO: Add validation with express validation
 exports.approveGameSession = async (req, res) => {
-    await approveGameSession(req.body, req.params?.id, req.user?.discordID).then(message => { return res.json(message); }).catch(() => { return res.sendStatus(400) });
+    await approveGameSession(req.body, req.params?.id, req.user?.discordID).then(message => { return res.json(message); }).catch((err) => { return res.status(400).json(err) });
 }
 
 //TODO: Add validation with express validation
 exports.declineGameSession = async (req, res) => {
-    await declineGameSession(req.body, req.params?.id, req.user?.discordID).then(message => { return res.json(message); }).catch(() => { return res.sendStatus(400) });
+    await declineGameSession(req.body, req.params?.id, req.user?.discordID).then(message => { return res.json(message); }).catch((err) => { return res.status(400).json(err) });
 }
 
 exports.joinGameSession = async (req, res) => {
-    await joinGameSession(req.body, req.params?.id, req.user?.discordID).then(message => { return res.json(message); }).catch((err) => { return res.status(400).json(err); });
+    console.log(req.params?.id)
+    await joinGameSession(req.body, req.params?.id, req.user?.discordID).then(message => { return res.json(message); }).catch((err) => { return res.status(400).json(err) });
 }
+
 
 //SETTINGS PAGE
 exports.guildSettingsPage = async (req, res) => {

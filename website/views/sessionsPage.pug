@@ -25,7 +25,7 @@ block styles
         include ./assets/css/sessionsDashboard.css
 
 
-block dashboardContent
+block dashboardContent 
     .dashboardContent(sessions=true)
         section
             details
@@ -34,7 +34,7 @@ block dashboardContent
                         i.fas.fa-chevron-right.fa-xs
                         span.count #{sessions.filter(session => session.session_status === 'CREATED').length}
                         span.title Requested Sessions
-                        p(id=`createSessionRequest`) + Create Session
+                        p(id=`createSessionRequest` onclick=`createGameSession(this)`) + Create Session
                 .embla(data-type="requested")
                     .embla__viewport
                         .embla__container

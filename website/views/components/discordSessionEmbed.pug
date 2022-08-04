@@ -12,7 +12,7 @@
             img.embedThumbnail(src=`${session.session_commander.picture_url}`, alt="")
             .embedField 
                 h5 #{'Session Commander:'}
-                p.embedFieldValue 
+                p.embedFieldValue.sessionCommander 
                     span.user #{`@${session.session_party[0].nickname}`}
             .embedField 
                 h5 #{`Players (${session.session_party.length}/5):`}

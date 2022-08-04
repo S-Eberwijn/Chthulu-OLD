@@ -1,8 +1,11 @@
 const { MessageEmbed } = require('discord.js');
+const { logger } = require(`../../../functions/logger`)
 
 module.exports.run = async (interaction) => {
+    logger.debug(`${interaction.user.username}#${interaction.user.discriminator} used the roll-dice command.`);
     let diceSet = new Map();
     let resultSet = new Map();
+
     diceSet.set("d4", interaction.options.getNumber('d4') == null ? 0 : interaction.options.getNumber('d4'));
     diceSet.set("d6", interaction.options.getNumber('d6') == null ? 0 : interaction.options.getNumber('d6'));
     diceSet.set("d8", interaction.options.getNumber('d8') == null ? 0 : interaction.options.getNumber('d8'));
@@ -10,6 +13,8 @@ module.exports.run = async (interaction) => {
     diceSet.set("d12", interaction.options.getNumber('d12') == null ? 0 : interaction.options.getNumber('d12'));
     diceSet.set("d20", interaction.options.getNumber('d20') == null ? 0 : interaction.options.getNumber('d20'));
     diceSet.set("d100", interaction.options.getNumber('d100') == null ? 0 : interaction.options.getNumber('d100'));
+
+    console.log(diceSet);
     let additionalModifier = interaction.options.getNumber('additional-modifier') == null ? 0 : interaction.options.getNumber('additional-modifier');
     //error handling
     if (tooManyDice(diceSet)) { return interaction.reply({ content: `Total number of dice you want to roll can not be higher than 24!`, ephemeral: true }) }
@@ -92,7 +97,7 @@ function constructCommand(diceSet, additionalModifier) {
     let command = "";
     let counter = 0;
     for (let key of diceSet.keys()) {
-        if (counter == 0) {
+        if (counter == 0 && diceSet.get(key) > 0) {
             command += diceSet.get(key) + key;
             counter++;
         } else {
