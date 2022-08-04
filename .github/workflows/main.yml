@@ -4,23 +4,23 @@ on:
     branches: [ "main" ]
 
 jobs:
-  # tests:
-  #   name: 'Jest Unit Tests'
-  #   runs-on: ubuntu-latest
+  tests:
+    name: 'Jest Unit Tests'
+    runs-on: ubuntu-latest
 
-  #   strategy:
-  #     matrix:
-  #       node-version: [16.x]
+    strategy:
+      matrix:
+        node-version: [16.x]
 
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #     - name: Use Node.js ${{ matrix.node-version }}
-  #       uses: actions/setup-node@v3
-  #       with:
-  #         node-version: ${{ matrix.node-version }}
-  #     - run: npm i
-  #     - run: npm run build --if-present
-  #     - run: npm test
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm i
+      - run: npm run build --if-present
+      # - run: npm test
 
   sonarcloud:
     name: SonarCloud
