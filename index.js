@@ -151,7 +151,7 @@ bot.login(BOT_TOKEN).then(async () => {
         const HEROKU_OPTIONS = {
             interval: 29,
             logging: false,
-            // stopTimes: { start: '00:00', end: '06:00' }
+            stopTimes: { start: '04:00', end: '23:00' }
         }
         wakeDyno(DYNO_URL, HEROKU_OPTIONS); // Use this function when only needing to wake a single Heroku app.
         logger.info(`Website is up and running at ${WB_BASE_URL}:${WB_PORT || 5000}`)
