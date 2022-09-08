@@ -53,6 +53,7 @@ label(for="createQuestModal" action="create").modal-background
                     //-     p /
                     //-     p.maxCharacterCount 400
                 textarea(cols="5" rows="5" maxlength="400" spellcheck="false" autocomplete="off" id="quest_description" oninput="updateInput(this)").description-field
-            .button-wrapper
-                input(id="create_quest" type="button" value="Create" disabled="true" onclick="createQuest(this)")
-                i.fa.fa-spinner.fa-spin.fa-align-center
+    .modal-footer           
+        .button-wrapper
+            input(id="create_quest" type="button" value="Create" disabled="true" onclick="createQuest(this)")
+            i.fa.fa-spinner.fa-spin.fa-align-center

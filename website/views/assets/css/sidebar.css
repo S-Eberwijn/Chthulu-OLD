@@ -58,7 +58,7 @@ header.sidebarHeader {
     border-radius: 15px;
 }
 
-header.sidebarHeader.icon::before {
+header.sidebarContent.icon::before {
     content: '';
     position: absolute;
     top: 50%;

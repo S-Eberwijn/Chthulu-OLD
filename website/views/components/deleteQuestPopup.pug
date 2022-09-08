@@ -11,6 +11,8 @@ label(for="deleteQuestModal" action="delete").modal-background
     .modal-content
         p.questDeleteTitle 
         form.delete
-            .button-wrapper
-                input(id="delete_quest" type="button" value="Delete" onclick="deleteQuest(this)")
-                i.fa.fa-spinner.fa-spin.fa-align-center
+            
+    .modal-footer   
+        .button-wrapper
+            input(id="delete_quest" type="button" value="Delete" onclick="deleteQuest(this)")
+            i.fa.fa-spinner.fa-spin.fa-align-center

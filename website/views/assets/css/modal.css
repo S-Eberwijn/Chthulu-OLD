@@ -16,6 +16,38 @@ input[action="status"]:checked~.modal-background[action="status"] {
     display: block;
 }
 
+input {
+    /* border: 2px solid var(--menu-color);*/
+    border: none;
+    box-shadow: inset 0 0 0 2px var(--menu-color);
+    /* color: var(--text-color); */
+    background-color: var(--content-color);
+    padding-left: .8rem;
+    border-radius: 20px;
+    margin-left: 40px;
+    color: var(--placeholder-text-color);
+    transition: color 0.1s ease-out;
+    caret-color: var(--menu-color);
+}
+
+input:focus {
+    outline: 0;
+    color: var(--text-color);
+}
+
+input:hover::placeholder {
+    color: var(--text-color);
+}
+
+input:hover {
+    color: var(--text-color);
+}
+
+input::placeholder {
+    transition: color 0.1s ease-out;
+    color: var(--placeholder-text-color);
+}
+
 /* Modals */
 .modal-background {
     width: 100%;
@@ -36,7 +68,7 @@ input[action="status"]:checked~.modal-background[action="status"] {
     bottom: 0;
     margin: auto;
     width: 400px;
-    height: 500px;
+    height: 550px;
     background-color: var(--content-color);
     display: none;
     flex-direction: column;
@@ -46,9 +78,14 @@ input[action="status"]:checked~.modal-background[action="status"] {
     overflow: hidden;
 }
 
+.modal.session {
+    width: 400px;
+    height: 650px;
+}
+
 .modal-content {
     box-sizing: border-box;
-    padding: 0 var(--modal-side-padding);
+    padding: var(--modal-side-padding);
     height: calc(100% - 50px);
     display: flex;
     flex-direction: column;
@@ -56,10 +93,19 @@ input[action="status"]:checked~.modal-background[action="status"] {
     width: calc(100%);
 }
 
-.button-wrapper {
+.modal-footer {
+    background-color: var(--menu-color);
+    height: 80px;
     width: 100%;
-    height: 10%;
-    margin-top: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.button-wrapper {
+    width: 75%;
+    height: 60%;
+    /* margin-top: 15px; */
     background-color: var(--menu-color);
     position: relative;
     display: flex;
@@ -67,7 +113,7 @@ input[action="status"]:checked~.modal-background[action="status"] {
     justify-content: center;
 }
 
-.button-wrapper::after {
+/* .button-wrapper::after {
     content: '';
     position: absolute;
     top: 0;
@@ -77,7 +123,7 @@ input[action="status"]:checked~.modal-background[action="status"] {
     background-color: var(--menu-color);
     z-index: -1;
     transform: translate(-50px, -15px);
-}
+} */
 
 .button-wrapper>i.fa-spinner {
     position: absolute;
@@ -95,7 +141,7 @@ input[action="status"]:checked~.modal-background[action="status"] {
     padding: 5px;
 }
 
-.modal .modal-content input[type="button"] {
+.modal input[type="button"] {
     padding-left: revert;
     border-radius: var(--modal-border-radius);
     cursor: pointer;
@@ -106,6 +152,10 @@ input[action="status"]:checked~.modal-background[action="status"] {
     height: 100%;
     width: 100%;
     box-shadow: none;
+}
+
+.modal .modal-footer input[type="button"] {
+    margin-left: unset;
 }
 
 .modal[action="status"] .modal-content input[type="button"] {
@@ -154,7 +204,7 @@ input[action="status"]:checked~.modal-background[action="status"] {
     width: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
+    justify-content: space-between;
 }
 
 .modal[action="delete"],
@@ -172,7 +222,8 @@ input[action="status"]:checked~.modal-background[action="status"] {
 
 
 .modal-header {
-    background-color: var(--content-color);
+    background-color: var(--menu-color);
+    /* background-color: var(--content-color); */
     color: var(--text-color);
     padding-top: 10px;
     /* border-bottom: 1px solid #dddddd; */
@@ -476,3 +527,85 @@ input[action="status"]:checked~.modal-background[action="status"] {
     cursor: pointer;
     background-color: var(--sidebar-color);
 }
+label#players {
+    max-height: 150px;
+    position: relative;
+}
+
+.addUserDisplay {
+    height: 25px;
+    width: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--placeholder-text-color);
+    background-color: var(--sidebar-color);
+    font-size: 1.3rem;
+    border-radius: 50%;
+    box-sizing: border-box;
+    padding: 2px;
+    /* font-size: var(--menu-sub-font-size); */
+    transition: color .2s ease;
+    
+}
+.userDisplay#addPlayer:hover,
+.userDisplay#addPlayer:hover .addUserDisplay {
+    color: var(--text-color);
+    cursor: pointer;
+    
+}
+.userDisplay#addPlayer {
+    background-color: var(--sidebar-color);
+    border-radius: var(--modal-border-radius);
+    padding-right: 10px;
+}
+.userDisplay{
+    margin-left: 5px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 25px;
+    width: fit-content;
+    text-align: center;
+}
+
+.userDisplay.locked::after {
+    content: "🔒";
+    font-size: .8rem;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transform: translate(120%, 10%);
+}
+
+.userDisplay .userAvatarWrapper{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    height: 100%;
+    width: 25px;
+}
+
+.userDisplay .userAvatarWrapper img,
+.userDisplay .userAvatarWrapper i{
+    height: 90%;
+    width: auto;
+    border-radius: 50%;
+}
+
+.userDisplay .userAvatarWrapper i {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.userDisplay .userName{
+    margin-left: 1rem;
+    white-space: nowrap;
+    text-transform: none;
+    margin-top: auto;
+    margin-bottom: auto;
+    transition: color .2s ease;
+}
+

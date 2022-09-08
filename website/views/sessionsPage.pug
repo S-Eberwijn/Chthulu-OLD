@@ -23,9 +23,11 @@ block styles
         include ./assets/css/menu.css
         include ./assets/css/dashboard.css
         include ./assets/css/sessionsDashboard.css
+        include ./assets/css/modal.css
 
 
 block dashboardContent 
+    include ./components/createSessionPopup.pug
     .dashboardContent(sessions=true)
         section
             details
@@ -34,7 +36,7 @@ block dashboardContent
                         i.fas.fa-chevron-right.fa-xs
                         span.count #{sessions.filter(session => session.session_status === 'CREATED').length}
                         span.title Requested Sessions
-                        p(id=`createSessionRequest` onclick=`createGameSession(this)`) + Create Session
+                        #createSessionRequest + Create Session
                 .embla(data-type="requested")
                     .embla__viewport
                         .embla__container

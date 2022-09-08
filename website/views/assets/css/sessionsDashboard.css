@@ -67,7 +67,7 @@
 
 }
 
-.dashboardContent[sessions] section details summary h1 p {
+.dashboardContent[sessions] section details summary h1 #createSessionRequest {
     position: absolute;
     margin: 0;
     right: 0;
@@ -79,8 +79,12 @@
     padding: 3px 5px;
     font-size: var(--menu-sub-font-size);
     transition: color .2s ease;
-    cursor: pointer;
+    cursor: pointer !important;
 
+}
+
+label.new-session-label {
+    cursor: pointer !important;
 }
 
 .dashboardContent[sessions] section details summary h1 p:hover {
@@ -428,7 +432,7 @@ details.closing .embla__dots {
     background-color: rgba(88, 101, 242, 1);
 }
 
-.embedWrapper span#addPlayer {
+.embedWrapper span#addPlayer { 
     /* position: absolute; */
     /* margin: 0; */
     /* right: 0; */
@@ -489,7 +493,7 @@ details.closing .embla__dots {
     transform: translate(0, 25%);
 }
 
-.embedWrapper .embedFooter .imgWrapper img {
+.embedWrapper .embedFooter .imgWrapper img { 
     width: 100%;
     height: 100%;
     object-fit: cover;

@@ -44,6 +44,7 @@ label(for="editQuestModal" action="edit").modal-background
             .label-input-section
                 label.optional Description
                 textarea(cols="5" rows="5" maxlength="400" spellcheck="false" autocomplete="off" id="edit_quest_description" oninput="updateInput(this)").description-field
-            .button-wrapper
-                input(id="edit_quest" type="button" value="Edit" onclick="editQuest(this)")
-                i.fa.fa-spinner.fa-spin.fa-align-center
+    .modal-footer   
+        .button-wrapper
+            input(id="edit_quest" type="button" value="Edit" onclick="editQuest(this)")
+            i.fa.fa-spinner.fa-spin.fa-align-center
