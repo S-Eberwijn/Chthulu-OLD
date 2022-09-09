@@ -117,8 +117,8 @@ jobs:
               "embeds": [
                 {
                   "type": "rich",
-                  "title": 'New version of 'Chthulu' is ready!',
-                  "description": 'Version '${{ steps.extract_version.outputs.version }}'\nClick [here](https://github.com/S-Eberwijn/Chthulu#readme) to see!',
+                  "title": 'New version of \`Chthulu\` is ready!',
+                  "description": 'Version \`${{ steps.extract_version.outputs.version }}\`\nClick [here](https://github.com/S-Eberwijn/Chthulu#readme) to see!',
                   "color": 0x01ff01,
                   "fields": [
                     {
