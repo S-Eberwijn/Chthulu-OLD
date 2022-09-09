@@ -110,8 +110,8 @@ jobs:
           key: ${{ secrets.DISCORD_WEBHOOK }}
 #           nodetail: true
           payload: |
-            embeds[0].title: "Hello World!"
-            embeds[0].description: "Hello World!"
+            embeds[0].title: "Hello World!",
+            embeds[0].description: "Hello World!",
             embeds[0].footer.text: "Hello World!"
 #           payload: |
 #             {
