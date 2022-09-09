@@ -26,36 +26,35 @@ jobs:
     runs-on: ubuntu-latest
     name: Request Metrics
     steps:
-      - uses: fjogeleit/http-request-action@v1.11.0
+      - uses: Satak/webrequest-action@v1.2.3
       - name: Bugs
         id: bug-request
-        uses: fjogeleit/http-request-action@v1
         with:
           url: 'https://sonarcloud.io/api/issues/search'
           method: 'GET'
-          customHeaders: '{"Content-Type": "application/json"}'
-          data: '{"projects": "chthulu", "types": "BUG", "statuses": ["OPEN", "REOPENED"]}'
+          headers: '{"Content-Type": "application/json"}'
+          payload: '{"projects": "chthulu", "types": "BUG", "statuses": ["OPEN", "REOPENED"]}'
       - name: Code Smells
         id: smells-request
         uses: fjogeleit/http-request-action@v1
         with:
           url: 'https://sonarcloud.io/api/issues/search'
           method: 'GET'
-          customHeaders: '{"Content-Type": "application/json"}'
-          data: '{"projects": "chthulu", "types": "CODE_SMELL", "statuses": ["OPEN", "REOPENED"]}'
+          headers: '{"Content-Type": "application/json"}'
+          payload: '{"projects": "chthulu", "types": "CODE_SMELL", "statuses": ["OPEN", "REOPENED"]}'
       - name: Security Hotspots
         id: security-request
         uses: fjogeleit/http-request-action@v1
         with:
           url: 'https://sonarcloud.io/api/issues/search'
           method: 'GET'
-          customHeaders: '{"Content-Type": "application/json"}'
-          data: '{"projects": "chthulu", "types": "VULNERABILITY", "statuses": ["OPEN", "REOPENED"]}'
+          headers: '{"Content-Type": "application/json"}'
+          payload: '{"projects": "chthulu", "types": "VULNERABILITY", "statuses": ["OPEN", "REOPENED"]}'
       - name: Show Response
         run: |
-          echo ${{ fromJson(steps.bug-request.outputs.response).total }}
-          echo ${{ fromJson(steps.smells-request.outputs.response).total }}
-          echo ${{ fromJson(steps.security-request.outputs.response).total }}
+          echo ${{ fromJson(steps.bug-request.outputs.output).total }}
+          echo ${{ fromJson(steps.smells-request.outputs.output).total }}
+          echo ${{ fromJson(steps.security-request.outputs.output).total }}
         
   sonarcloud:
     name: SonarCloud
