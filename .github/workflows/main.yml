@@ -110,33 +110,35 @@ jobs:
           key: ${{ secrets.DISCORD_WEBHOOK }}
 #           nodetail: true
           payload: |
-            {
-              "username": 'GitHub',
-              "content": "",
-              "tts": false,
-              "embeds": [
-                {
-                  "type": "rich",
-                  "title": 'New version of \`Chthulu\` is ready!',
-                  "description": 'Version \`${{ steps.extract_version.outputs.version }}\`\nClick [here](https://github.com/S-Eberwijn/Chthulu#readme) to see!',
-                  "color": 0x01ff01,
-                  "fields": [
-                    {
-                      "name": 'Bugs',
-                      "value": '${{env.BUG_AMOUNT}}',
-                      "inline": true
-                    },
-                    {
-                      "name": 'Code Smells',
-                      "value": '${{env.CODE_SMELL_AMOUNT}}',
-                      "inline": true
-                    },
-                    {
-                      "name": 'Security',
-                      "value": '${{env.SECURITY_HOTSPOT_AMOUNT}}',
-                      "inline": true
-                    }
-                  ]
-                }
-              ]
-            }
+            content: "Hello World!"
+#           payload: |
+#             {
+#               "username": 'GitHub',
+#               "content": "",
+#               "tts": false,
+#               "embeds": [
+#                 {
+#                   "type": "rich",
+#                   "title": 'New version of \`Chthulu\` is ready!',
+#                   "description": 'Version \`${{ steps.extract_version.outputs.version }}\`\nClick [here](https://github.com/S-Eberwijn/Chthulu#readme) to see!',
+#                   "color": 0x01ff01,
+#                   "fields": [
+#                     {
+#                       "name": 'Bugs',
+#                       "value": '${{env.BUG_AMOUNT}}',
+#                       "inline": true
+#                     },
+#                     {
+#                       "name": 'Code Smells',
+#                       "value": '${{env.CODE_SMELL_AMOUNT}}',
+#                       "inline": true
+#                     },
+#                     {
+#                       "name": 'Security',
+#                       "value": '${{env.SECURITY_HOTSPOT_AMOUNT}}',
+#                       "inline": true
+#                     }
+#                   ]
+#                 }
+#               ]
+#             }
