@@ -117,6 +117,7 @@ jobs:
                 {
                   "title": "New version of `Chthulu` available!",
                   "description": "Text message. You can use Markdown here. *Italic* **bold** __underline__ ~~strikeout~~ [hyperlink](https://google.com) `code`",
+                  "color": 0x01ff01,
                 }
               ]
             }
