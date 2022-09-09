@@ -69,9 +69,9 @@ jobs:
 #           payload: '{"projects": "chthulu", "types": "VULNERABILITY", "statuses": ["OPEN", "REOPENED"]}'
       - name: Show Response
         run: |
-          echo ${{ steps.bug-request.outputs }}
-          echo ${{ steps.smells-request.outputs }}
-          echo ${{ steps.security-request.outputs }}
+          echo ${{ steps.bug-request.outputs.total }}
+          echo ${{ steps.smells-request.outputs.total }}
+          echo ${{ steps.security-request.outputs.total }}
         
   sonarcloud:
     name: SonarCloud
