@@ -121,7 +121,7 @@ jobs:
                   "fields": [
                     {
                       "name": 'Bugs',
-                      "value": '${{env.BUG_AMOUNT}}',
+                      "value": '${{env.BUG_AMOUNT || 'test'}}',
                       "inline": true
                     },
                   ],
