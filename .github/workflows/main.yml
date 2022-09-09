@@ -105,7 +105,7 @@ jobs:
 #           nodetail: true
           payload: |
             {
-              "username": "Webhook",
+              "username": "GitHub",
               "embeds": [
                 {
                   "title": "New version of `Chthulu` available!",
@@ -113,52 +113,24 @@ jobs:
                   "color": 0x01ff01,
                   "fields": [
                     {
-                      "name": 'Bugs',
-                      "value": '${{env.BUG_AMOUNT || 'No data'}}',
+                      "name": '🪲Bugs🪲',
+                      "value": '`${{env.BUG_AMOUNT || 'No data'}}`',
                       "inline": true
                     },
                     {
-                      "name": 'Code Smells',
-                      "value": '${{env.CODE_SMELL_AMOUNT}}',
+                      "name": '💩Code Smells💩',
+                      "value": '`${{env.CODE_SMELL_AMOUNT || 'No data'}}`',
                       "inline": true
                     },
                     {
-                      "name": 'Security',
-                      "value": '${{env.SECURITY_HOTSPOT_AMOUNT}}',
+                      "name": '🛡️Alerts🛡️',
+                      "value": '`${{env.SECURITY_HOTSPOT_AMOUNT || 'No data'}}`',
                       "inline": true
                     },
                   ],
+                  footer: {
+                    "text": 'v.${{env.SECURITY_HOTSPOT_AMOUNT || 'No data'}}',
+                  },
                 }
               ]
             }
-#           payload: |
-#             {
-#               "username": 'GitHub',
-#               "content": "",
-#               "tts": false,
-#               "embeds": [
-#                 {
-#                   "type": "rich",
-#                   "title": 'New version of \`Chthulu\` is ready!',
-#                   "description": 'Version \`${{ steps.extract_version.outputs.version }}\`\nClick [here](https://github.com/S-Eberwijn/Chthulu#readme) to see!',
-#                   "color": 0x01ff01,
-#                   "fields": [
-#                     {
-#                       "name": 'Bugs',
-#                       "value": '${{env.BUG_AMOUNT}}',
-#                       "inline": true
-#                     },
-#                     {
-#                       "name": 'Code Smells',
-#                       "value": '${{env.CODE_SMELL_AMOUNT}}',
-#                       "inline": true
-#                     },
-#                     {
-#                       "name": 'Security',
-#                       "value": '${{env.SECURITY_HOTSPOT_AMOUNT}}',
-#                       "inline": true
-#                     }
-#                   ]
-#                 }
-#               ]
-#             }
