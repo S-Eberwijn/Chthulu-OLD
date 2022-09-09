@@ -4,97 +4,97 @@ on:
     branches: [ "main" ]
 
 jobs:
-  tests:
-    name: 'Jest Unit Tests'
-    runs-on: ubuntu-latest
+#   tests:
+#     name: 'Jest Unit Tests'
+#     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [16.x]
+#     strategy:
+#       matrix:
+#         node-version: [16.x]
 
-    steps:
-      - uses: actions/checkout@v3
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-      - run: npm i
-      - run: npm run build --if-present
-      # - run: npm test
+#     steps:
+#       - uses: actions/checkout@v3
+#       - name: Use Node.js ${{ matrix.node-version }}
+#         uses: actions/setup-node@v3
+#         with:
+#           node-version: ${{ matrix.node-version }}
+#       - run: npm i
+#       - run: npm run build --if-present
+#       # - run: npm test
   
-  get-request:
-    runs-on: ubuntu-latest
-    name: Request Metrics
-    steps:
-      - name: Fetch Bugs Data 📦
-        uses: JamesIves/fetch-api-data-action@releases/v1
-        with:
-          ENDPOINT: https://sonarcloud.io/api/issues/search?projects=chthulu&types=BUG&statuses=OPEN,REOPENED
-          retry: true
-      - run: echo "BUG_AMOUNT=$(echo "${{ fromJson(env.FETCH_API_DATA).total }}")" >> $GITHUB_ENV
-      - name: Fetch Code Smells Data 📦
-        uses: JamesIves/fetch-api-data-action@releases/v1
-        with:
-          ENDPOINT: https://sonarcloud.io/api/issues/search?projects=chthulu&types=CODE_SMELL&statuses=OPEN,REOPENED
-          retry: true
-      - run: echo "CODE_SMELL_AMOUNT=$(echo "${{ fromJson(env.FETCH_API_DATA).total }}")" >> $GITHUB_ENV
-      - name: Fetch Security Hotspots Data 📦
-        uses: JamesIves/fetch-api-data-action@releases/v1
-        with:
-#           ENDPOINT: https://sonarcloud.io/api/hotspots/search?projectKey=chthulu
-          ENDPOINT: https://sonarcloud.io/api/issues/search?projects=chthulu&types=VULNERABILITY&statuses=OPEN,REOPENED
-          retry: true
-      - run: echo "SECURITY_HOTSPOT_AMOUNT=$(echo "${{ fromJson(env.FETCH_API_DATA).total }}")" >> $GITHUB_ENV
-      - name: Show Response
-        run: |
-          echo ${{ env.BUG_AMOUNT }}
-          echo ${{ env.CODE_SMELL_AMOUNT }}
-          echo ${{ env.SECURITY_HOTSPOT_AMOUNT }}
+#   get-request:
+#     runs-on: ubuntu-latest
+#     name: Request Metrics
+#     steps:
+#       - name: Fetch Bugs Data 📦
+#         uses: JamesIves/fetch-api-data-action@releases/v1
+#         with:
+#           ENDPOINT: https://sonarcloud.io/api/issues/search?projects=chthulu&types=BUG&statuses=OPEN,REOPENED
+#           retry: true
+#       - run: echo "BUG_AMOUNT=$(echo "${{ fromJson(env.FETCH_API_DATA).total }}")" >> $GITHUB_ENV
+#       - name: Fetch Code Smells Data 📦
+#         uses: JamesIves/fetch-api-data-action@releases/v1
+#         with:
+#           ENDPOINT: https://sonarcloud.io/api/issues/search?projects=chthulu&types=CODE_SMELL&statuses=OPEN,REOPENED
+#           retry: true
+#       - run: echo "CODE_SMELL_AMOUNT=$(echo "${{ fromJson(env.FETCH_API_DATA).total }}")" >> $GITHUB_ENV
+#       - name: Fetch Security Hotspots Data 📦
+#         uses: JamesIves/fetch-api-data-action@releases/v1
+#         with:
+# #           ENDPOINT: https://sonarcloud.io/api/hotspots/search?projectKey=chthulu
+#           ENDPOINT: https://sonarcloud.io/api/issues/search?projects=chthulu&types=VULNERABILITY&statuses=OPEN,REOPENED
+#           retry: true
+#       - run: echo "SECURITY_HOTSPOT_AMOUNT=$(echo "${{ fromJson(env.FETCH_API_DATA).total }}")" >> $GITHUB_ENV
+#       - name: Show Response
+#         run: |
+#           echo ${{ env.BUG_AMOUNT }}
+#           echo ${{ env.CODE_SMELL_AMOUNT }}
+#           echo ${{ env.SECURITY_HOTSPOT_AMOUNT }}
         
-  sonarcloud:
-    name: SonarCloud
-    needs: [tests]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        with:
-          # Additional arguments for the sonarcloud scanner
-          args:             
-            # Unique keys of your project and organization. You can find them in SonarCloud > Information (bottom-left menu)
-            # mandatory
-            -Dsonar.projectKey=chthulu
-            -Dsonar.organization=chthulu
-            -Dsonar.verbose=true
-            # Comma-separated paths to directories containing main source files.
-            #-Dsonar.sources= # optional, default is project base directory
-            # When you need the analysis to take place in a directory other than the one from which it was launched
-            #-Dsonar.projectBaseDir= # optional, default is .
-            # Comma-separated paths to directories containing test source files.
-            #-Dsonar.tests= # optional. For more info about Code Coverage, please refer to https://docs.sonarcloud.io/enriching/test-coverage/overview/
-            # Adds more detail to both client and server-side analysis logs, activating DEBUG mode for the scanner, and adding client-side environment variables and system properties to the server-side log of analysis report processing.
-            # optional, default is false   
-  heroku:
-    name: 'Heroku'
-    needs: [sonarcloud]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
-        with:
-          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: "chthulu" #Must be unique in Heroku
-          heroku_email: "stephan.eberwijn@hotmail.com"
+#   sonarcloud:
+#     name: SonarCloud
+#     needs: [tests]
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v2
+#         with:
+#           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+#       - name: SonarCloud Scan
+#         uses: SonarSource/sonarcloud-github-action@master
+#         env:
+#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+#           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+#         with:
+#           # Additional arguments for the sonarcloud scanner
+#           args:             
+#             # Unique keys of your project and organization. You can find them in SonarCloud > Information (bottom-left menu)
+#             # mandatory
+#             -Dsonar.projectKey=chthulu
+#             -Dsonar.organization=chthulu
+#             -Dsonar.verbose=true
+#             # Comma-separated paths to directories containing main source files.
+#             #-Dsonar.sources= # optional, default is project base directory
+#             # When you need the analysis to take place in a directory other than the one from which it was launched
+#             #-Dsonar.projectBaseDir= # optional, default is .
+#             # Comma-separated paths to directories containing test source files.
+#             #-Dsonar.tests= # optional. For more info about Code Coverage, please refer to https://docs.sonarcloud.io/enriching/test-coverage/overview/
+#             # Adds more detail to both client and server-side analysis logs, activating DEBUG mode for the scanner, and adding client-side environment variables and system properties to the server-side log of analysis report processing.
+#             # optional, default is false   
+#   heroku:
+#     name: 'Heroku'
+#     needs: [sonarcloud]
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v2
+#       - uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
+#         with:
+#           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+#           heroku_app_name: "chthulu" #Must be unique in Heroku
+#           heroku_email: "stephan.eberwijn@hotmail.com"
           
   discord-message:
     name: 'Discord Webhook 🤖'
-    needs: [sonarcloud, heroku]
+#     needs: [sonarcloud, heroku]
     runs-on: ubuntu-latest
 
     steps:
@@ -110,7 +110,9 @@ jobs:
           key: ${{ secrets.DISCORD_WEBHOOK }}
 #           nodetail: true
           payload: |
-            content: "Hello World!"
+            embeds[0].title: "Hello World!"
+            embeds[0].description: "Hello World!"
+            embeds[0].footer.text: "Hello World!"
 #           payload: |
 #             {
 #               "username": 'GitHub',
