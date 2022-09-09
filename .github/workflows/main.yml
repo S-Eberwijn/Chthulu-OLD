@@ -26,7 +26,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Request Metrics
     steps:
-      - uses: Satak/webrequest-action@v1.2.3
+      - uses: Satak/webrequest-action@v1.2.2
       - name: Bugs
         uses: satak/webrequest-action@master
         id: bug-request
