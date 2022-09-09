@@ -24,16 +24,18 @@ jobs:
   
   get-request:
     runs-on: ubuntu-latest
-    - uses: fjogeleit/http-request-action@v1.11.0
-    - name: Request Metrics
-      uses: fjogeleit/http-request-action@v1
-      with:
-        url: 'https://sonarcloud.io/api/measures/component'
-        method: 'GET'
-        #username: ${{ secrets.AWX_USER }}
-        #password: ${{ secrets.AWX_PASSWORD }}
-        customHeaders: '{"Content-Type": "application/json"}'
-        data: '{"metricKeys": ["ncloc","complexity","violations"]}'
+    name: Request Metrics
+    steps:
+      - uses: fjogeleit/http-request-action@v1.11.0
+      - name: Components
+        uses: fjogeleit/http-request-action@v1
+        with:
+          url: 'https://sonarcloud.io/api/measures/component'
+          method: 'GET'
+          #username: ${{ secrets.AWX_USER }}
+          #password: ${{ secrets.AWX_PASSWORD }}
+          customHeaders: '{"Content-Type": "application/json"}'
+          data: '{"metricKeys": ["ncloc","complexity","violations"]}'
         
   sonarcloud:
     name: SonarCloud
