@@ -109,7 +109,7 @@ jobs:
               "embeds": [
                 {
                   "title": 'New version of `Chthulu` available: `v.${{steps.extract_version.outputs.version || 'No data'}}`!',
-                  "description": '> Current status',
+                  "description": '>>> Current status',
                   "color": 0x01ff01,
                   "thumbnail": {
                     "url": 'https://cdn.discordapp.com/avatars/532524817740464138/ef7ad87c0f26dd6c873bc3d9e19c8f15.webp',
@@ -117,17 +117,17 @@ jobs:
                   "fields": [
                     {
                       "name": '🪲Bugs🪲',
-                      "value": '`${{env.BUG_AMOUNT || 'No data'}}`',
+                      "value": '> `${{env.BUG_AMOUNT || 'No data'}}`',
                       "inline": true
                     },
                     {
                       "name": '💩Code Smells💩',
-                      "value": '`${{env.CODE_SMELL_AMOUNT || 'No data'}}`',
+                      "value": '> `${{env.CODE_SMELL_AMOUNT || 'No data'}}`',
                       "inline": true
                     },
                     {
                       "name": '🛡️Alerts🛡️',
-                      "value": '`${{env.SECURITY_HOTSPOT_AMOUNT || 'No data'}}`',
+                      "value": '> `${{env.SECURITY_HOTSPOT_AMOUNT || 'No data'}}`',
                       "inline": true
                     },
                   ],
