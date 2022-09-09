@@ -110,9 +110,16 @@ jobs:
           key: ${{ secrets.DISCORD_WEBHOOK }}
 #           nodetail: true
           payload: |
-            embeds[0].title: "Hello World!",
-            embeds[0].description: "Hello World!",
-            embeds[0].footer.text: "Hello World!"
+            {
+              "username": "Webhook",
+              "embeds": [
+                {
+                  "title": "New version of Chthulu available!",
+                  "url": "https://google.com/",
+                  "description": "Text message. You can use Markdown here. *Italic* **bold** __underline__ ~~strikeout~~ [hyperlink](https://google.com) `code`",
+                }
+              ]
+            }
 #           payload: |
 #             {
 #               "username": 'GitHub',
