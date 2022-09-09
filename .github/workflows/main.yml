@@ -26,31 +26,47 @@ jobs:
     runs-on: ubuntu-latest
     name: Request Metrics
     steps:
-      - uses: Satak/webrequest-action@v1.2.2
-      - name: Bugs
-        uses: satak/webrequest-action@master
+      - name: Fetch Bug Data 📦
         id: bug-request
+        uses: JamesIves/fetch-api-data-action@releases/v1
         with:
-          url: 'https://sonarcloud.io/api/issues/search'
-          method: 'GET'
-          headers: '{"Content-Type": "application/json"}'
-          payload: '{"projects": "chthulu", "types": "BUG", "statuses": ["OPEN", "REOPENED"]}'
-      - name: Code Smells
+          ENDPOINT: https://sonarcloud.io/api/issues/search?projects=chthulu&types=BUG&statuses=OPEN,REOPENED
+          retry: true
+      - name: Fetch Code Smell Data 📦
         id: smells-request
-        uses: satak/webrequest-action@master
+        uses: JamesIves/fetch-api-data-action@releases/v1
         with:
-          url: 'https://sonarcloud.io/api/issues/search'
-          method: 'GET'
-          headers: '{"Content-Type": "application/json"}'
-          payload: '{"projects": "chthulu", "types": "CODE_SMELL", "statuses": ["OPEN", "REOPENED"]}'
-      - name: Security Hotspots
+          ENDPOINT: https://sonarcloud.io/api/issues/search?projects=chthulu&types=CODE_SMELL&statuses=OPEN,REOPENED
+          retry: true
+      - name: Fetch Security Hotspot Data 📦
         id: security-request
-        uses: satak/webrequest-action@master
+        uses: JamesIves/fetch-api-data-action@releases/v1
         with:
-          url: 'https://sonarcloud.io/api/issues/search'
-          method: 'GET'
-          headers: '{"Content-Type": "application/json"}'
-          payload: '{"projects": "chthulu", "types": "VULNERABILITY", "statuses": ["OPEN", "REOPENED"]}'
+          ENDPOINT: https://sonarcloud.io/api/issues/search?projects=chthulu&types=VULNERABILITY&statuses=OPEN,REOPENED
+          retry: true
+#       - name: Bugs
+#         uses: satak/webrequest-action@master
+#         with:
+#           url: 'https://sonarcloud.io/api/issues/search'
+#           method: 'GET'
+#           headers: '{"Content-Type": "application/json"}'
+#           payload: '{"projects": "chthulu", "types": "BUG", "statuses": ["OPEN", "REOPENED"]}'
+#       - name: Code Smells
+#         id: smells-request
+#         uses: satak/webrequest-action@master
+#         with:
+#           url: 'https://sonarcloud.io/api/issues/search'
+#           method: 'GET'
+#           headers: '{"Content-Type": "application/json"}'
+#           payload: '{"projects": "chthulu", "types": "CODE_SMELL", "statuses": ["OPEN", "REOPENED"]}'
+#       - name: Security Hotspots
+#         id: security-request
+#         uses: satak/webrequest-action@master
+#         with:
+#           url: 'https://sonarcloud.io/api/issues/search'
+#           method: 'GET'
+#           headers: '{"Content-Type": "application/json"}'
+#           payload: '{"projects": "chthulu", "types": "VULNERABILITY", "statuses": ["OPEN", "REOPENED"]}'
       - name: Show Response
         run: |
           echo ${{ fromJson(steps.bug-request.outputs.output).total }}
