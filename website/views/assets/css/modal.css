@@ -225,14 +225,13 @@ input::placeholder {
     background-color: var(--menu-color);
     /* background-color: var(--content-color); */
     color: var(--text-color);
-    padding-top: 10px;
     /* border-bottom: 1px solid #dddddd; */
     display: flex;
     /* justify-content: space-between; */
     align-items: center;
     height: 50px;
     user-select: none;
-    padding: 5px var(--modal-side-padding);
+    padding: 10px var(--modal-side-padding) 5px var(--modal-side-padding);
 
 
 }
@@ -582,7 +581,6 @@ label#players {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: auto;
     height: 100%;
     width: 25px;
 }
