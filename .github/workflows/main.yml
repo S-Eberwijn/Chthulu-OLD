@@ -117,23 +117,6 @@ jobs:
                 {
                   "title": "New version of `Chthulu` available!",
                   "description": "Text message. You can use Markdown here. *Italic* **bold** __underline__ ~~strikeout~~ [hyperlink](https://google.com) `code`",
-                  "fields": [
-                    {
-                      "name": 'Bugs',
-                      "value": '${{env.BUG_AMOUNT}}',
-                      "inline": true
-                    },
-                    {
-                      "name": 'Code Smells',
-                      "value": '${{env.CODE_SMELL_AMOUNT}}',
-                      "inline": true
-                    },
-                    {
-                      "name": 'Security',
-                      "value": '${{env.SECURITY_HOTSPOT_AMOUNT}}',
-                      "inline": true
-                    }
-                  ]
                 }
               ]
             }
