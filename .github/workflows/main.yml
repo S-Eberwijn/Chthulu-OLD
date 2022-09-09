@@ -41,9 +41,9 @@ jobs:
       - name: Fetch Security Hotspots Data 📦
         uses: JamesIves/fetch-api-data-action@releases/v1
         with:
-          ENDPOINT: https://sonarcloud.io/api/issues/search?projects=chthulu&types=VULNERABILITY&statuses=OPEN,REOPENED
+          ENDPOINT: https://sonarcloud.io/api/hotspots/search?projectKey=chthulu
           retry: true
-      - run: echo "SECURITY_HOTSPOT_AMOUNT=$(echo "${{ fromJson(env.FETCH_API_DATA).total }}")" >> $GITHUB_ENV
+      - run: echo "SECURITY_HOTSPOT_AMOUNT=$(echo "${{ fromJson(env.FETCH_API_DATA).hotspots[@] }}")" >> $GITHUB_ENV
       - name: Show Response
         run: |
           echo ${{ env.BUG_AMOUNT }}
