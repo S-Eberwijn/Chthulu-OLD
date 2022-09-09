@@ -117,23 +117,23 @@ jobs:
               "embeds": [
                 {
                   "title": "New version of `Chthulu` is ready!",
-                  "description": `Version \`${{ steps.extract_version.outputs.version }}\`
-                  Click [here](https://github.com/S-Eberwijn/Chthulu#readme) to see!`,
+                  "description": "Version `${{ steps.extract_version.outputs.version }}`
+                  Click [here](https://github.com/S-Eberwijn/Chthulu#readme) to see!",
                   "color": 15258703,
                   "fields": [
                     {
                       "name": "Bugs",
-                      "value": `${env.BUG_AMOUNT}`,
+                      "value": "${{env.BUG_AMOUNT}}",
                       "inline": true
                     },
                     {
                       "name": "Code Smells",
-                      "value": `${env.CODE_SMELL_AMOUNT}`,
+                      "value": "${{env.CODE_SMELL_AMOUNT}}",
                       "inline": true
                     },
                     {
                       "name": "Security",
-                      "value": `${env.SECURITY_HOTSPOT_AMOUNT}`,
+                      "value": "${{env.SECURITY_HOTSPOT_AMOUNT}}",
                       "inline": true
                     }
                   ],
