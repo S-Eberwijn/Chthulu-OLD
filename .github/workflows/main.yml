@@ -133,6 +133,7 @@ jobs:
                       "value": '${{env.SECURITY_HOTSPOT_AMOUNT}}',
                       "inline": true
                     }
+                  ]
                 }
               ]
             }
