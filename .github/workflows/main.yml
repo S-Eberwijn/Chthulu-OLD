@@ -111,6 +111,9 @@ jobs:
                   "title": "New version of `Chthulu` available!",
                   "description": "Text message. You can use Markdown here. *Italic* **bold** __underline__ ~~strikeout~~ [hyperlink](https://google.com) `code`",
                   "color": 0x01ff01,
+                  "thumbnail": {
+                    "url": 'https://cdn.discordapp.com/avatars/532524817740464138/ef7ad87c0f26dd6c873bc3d9e19c8f15.webp',
+                  },
                   "fields": [
                     {
                       "name": '🪲Bugs🪲',
@@ -129,7 +132,7 @@ jobs:
                     },
                   ],
                   footer: {
-                    "text": 'v.${{env.SECURITY_HOTSPOT_AMOUNT || 'No data'}}',
+                    "text": 'v.${{steps.extract_version.outputs.version || 'No data'}}',
                   },
                 }
               ]
