@@ -21,6 +21,17 @@ jobs:
       - run: npm i
       - run: npm run build --if-present
       # - run: npm test
+  
+  get-request:
+    name: Request Metrics
+    uses: fjogeleit/http-request-action@v1
+    with:
+      url: 'https://sonarcloud.io/api/measures/component'
+      method: 'GET'
+      #username: ${{ secrets.AWX_USER }}
+      #password: ${{ secrets.AWX_PASSWORD }}
+      customHeaders: '{"Content-Type": "application/json"}'
+      data: '{"metricKeys": ["ncloc","complexity","violations"]}'
 
   sonarcloud:
     name: SonarCloud
