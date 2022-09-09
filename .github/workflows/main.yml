@@ -34,7 +34,7 @@ jobs:
           retry: true
       - name: Show Response
         run: |
-          echo ${{ env.FETCH_API_DATA.total }}
+          echo "${{ fromJson(env.FETCH_API_DATA).total }}"
         
   sonarcloud:
     name: SonarCloud
