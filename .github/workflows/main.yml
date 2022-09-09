@@ -108,8 +108,8 @@ jobs:
               "username": "GitHub",
               "embeds": [
                 {
-                  "title": "New version of `Chthulu` available: `v.${{steps.extract_version.outputs.version || 'No data'}}`!",
-                  "description": "Text message. You can use Markdown here. *Italic* **bold** __underline__ ~~strikeout~~ [hyperlink](https://google.com) `code`",
+                  "title": 'New version of `Chthulu` available: `v.${{steps.extract_version.outputs.version || 'No data'}}`!',
+                  "description": '> Current status',
                   "color": 0x01ff01,
                   "thumbnail": {
                     "url": 'https://cdn.discordapp.com/avatars/532524817740464138/ef7ad87c0f26dd6c873bc3d9e19c8f15.webp',
