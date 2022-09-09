@@ -28,6 +28,7 @@ jobs:
     steps:
       - uses: Satak/webrequest-action@v1.2.3
       - name: Bugs
+        uses: satak/webrequest-action@master
         id: bug-request
         with:
           url: 'https://sonarcloud.io/api/issues/search'
@@ -36,7 +37,7 @@ jobs:
           payload: '{"projects": "chthulu", "types": "BUG", "statuses": ["OPEN", "REOPENED"]}'
       - name: Code Smells
         id: smells-request
-        uses: fjogeleit/http-request-action@v1
+        uses: satak/webrequest-action@master
         with:
           url: 'https://sonarcloud.io/api/issues/search'
           method: 'GET'
@@ -44,7 +45,7 @@ jobs:
           payload: '{"projects": "chthulu", "types": "CODE_SMELL", "statuses": ["OPEN", "REOPENED"]}'
       - name: Security Hotspots
         id: security-request
-        uses: fjogeleit/http-request-action@v1
+        uses: satak/webrequest-action@master
         with:
           url: 'https://sonarcloud.io/api/issues/search'
           method: 'GET'
