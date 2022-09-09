@@ -27,15 +27,35 @@ jobs:
     name: Request Metrics
     steps:
       - uses: fjogeleit/http-request-action@v1.11.0
-      - name: Components
+      - name: Bugs
+        id: bug-request
         uses: fjogeleit/http-request-action@v1
         with:
-          url: 'https://sonarcloud.io/api/measures/component'
+          url: 'https://sonarcloud.io/api/issues/search'
           method: 'GET'
-          #username: ${{ secrets.AWX_USER }}
-          #password: ${{ secrets.AWX_PASSWORD }}
           customHeaders: '{"Content-Type": "application/json"}'
-          data: '{"metricKeys": ["ncloc","complexity","violations"]}'
+          data: '{"projects": "chthulu", "types": "BUG", "statuses": ["OPEN", "REOPENED"]}'
+      - name: Code Smells
+        id: smells-request
+        uses: fjogeleit/http-request-action@v1
+        with:
+          url: 'https://sonarcloud.io/api/issues/search'
+          method: 'GET'
+          customHeaders: '{"Content-Type": "application/json"}'
+          data: '{"projects": "chthulu", "types": "CODE_SMELL", "statuses": ["OPEN", "REOPENED"]}'
+      - name: Security Hotspots
+        id: security-request
+        uses: fjogeleit/http-request-action@v1
+        with:
+          url: 'https://sonarcloud.io/api/issues/search'
+          method: 'GET'
+          customHeaders: '{"Content-Type": "application/json"}'
+          data: '{"projects": "chthulu", "types": "VULNERABILITY", "statuses": ["OPEN", "REOPENED"]}'
+      - name: Show Response
+        run: |
+          echo ${{ fromJson(steps.bug-request.outputs.response).total }}
+          echo ${{ fromJson(steps.smells-request.outputs.response).total }}
+          echo ${{ fromJson(steps.security-request.outputs.response).total }}
         
   sonarcloud:
     name: SonarCloud
