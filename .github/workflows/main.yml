@@ -32,9 +32,9 @@ jobs:
         with:
           ENDPOINT: https://sonarcloud.io/api/issues/search?projects=chthulu&types=BUG,CODE_SMELL,VULNERABILITY&statuses=OPEN,REOPENED
           retry: true
+      - run: echo "BUG_AMOUNT=$(echo "${{ fromJson(env.FETCH_API_DATA).total }}")" >> $GITHUB_ENV
       - name: Show Response
-        run: |
-          echo "${{ fromJson(env.FETCH_API_DATA).total }}"
+        run: echo ${{ env.BUG_AMOUNT }}
         
   sonarcloud:
     name: SonarCloud
