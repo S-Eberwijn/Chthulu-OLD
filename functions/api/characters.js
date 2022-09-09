@@ -1,5 +1,3 @@
-const { logger } = require(`../../functions/logger`)
-
 const { PlayerCharacter } = require('../../database/models/PlayerCharacter');
 const { NonPlayableCharacter } = require('../../database/models/NonPlayableCharacter');
 

@@ -8,7 +8,7 @@ const { sendCharacterEmbedMessageInChannel, getAverageColor } = require('../../o
 module.exports.run = async (interaction) => {
     const bot = require('../../../index');
 
-    const characterCreateCategory = interaction.guild.channels.cache.find(c => c.name == "--CHARACTER CREATION--" && c.type == "GUILD_CATEGORY")
+    const characterCreateCategory = interaction.guild.channels.cache.find(c => (c.name == "--CHARACTER CREATION--" && c.type == "GUILD_CATEGORY"))
     let foundPlayer = await Player.findOne({ where: { player_id_discord: interaction.user.id, server: interaction.guild.id } })
     if (!foundPlayer) {
         await Player.create({
@@ -22,14 +22,12 @@ module.exports.run = async (interaction) => {
             .then((character) => {
                 let name = interaction.user.username + "-" + interaction.user.discriminator;
                 let tmpchannel = interaction.guild.channels.cache.find(channel => channel.name == name.toLowerCase());
-                if (!tmpchannel) { if (character) { tmpchannel = interaction.guild.channels.cache.find(channel => channel.name == character.name); } }
-                if (tmpchannel) { tmpchannel.delete(); }
-                if (character) { character.destroy(); }
+                if (!tmpchannel && character) { tmpchannel = interaction.guild.channels.cache.find(channel => channel.name == character.name); }
+                tmpchannel?.delete();
+                character?.destroy();
             });
     }
     let timestamp = Date.now()
-    // console.log(timestamp)
-
 
     if (!characterCreateCategory) {
         return interaction.channel.send({ content: 'There is no category named \"--CHARACTER CREATION--\"!' })
@@ -54,32 +52,33 @@ module.exports.run = async (interaction) => {
         status: "CREATING"
     }).then(async () => {
         let newCharacter = await PlayerCharacter.findOne({ where: { id: `C${timestamp}`, server: interaction.guild.id, player_id_discord: interaction.user.id } });
-        interaction.guild.channels.create(`${interaction.user.username}-${interaction.user.discriminator}`, "text").then(async createdChannel => {
-            createdChannel.setParent(characterCreateCategory, { lockPermission: false });
-            createdChannel.permissionOverwrites.set([{ id: interaction.user, allow: ['VIEW_CHANNEL'] }, { id: interaction.guild.roles.cache.find(role => role.name.includes('Dungeon Master')), allow: ['VIEW_CHANNEL'] }, { id: interaction.channel.guild.roles.everyone, deny: ['VIEW_CHANNEL'] }]);
-            createdChannel.send({ embeds: [createCreatedChannelEmbed(bot, interaction)] }).then(async () => {
-                for (let index = 0; index < QUESTIONS_ARRAY.length; index++) {
-                    await characterCreationQuestion(QUESTIONS_ARRAY[index], createdChannel, newCharacter, interaction, bot, index)
-                }
-                const messageComponents = new MessageActionRow()
-                    .addComponents(
-                        new MessageButton()
-                            .setCustomId('approve-character-button')
-                            .setLabel('Approve')
-                            .setStyle('SUCCESS'),
-                        new MessageButton()
-                            .setCustomId('decline-character-button')
-                            .setLabel('Decline')
-                            .setStyle('DANGER')
-                    );
-                await sendCharacterEmbedMessageInChannel(createdChannel, newCharacter, 'Is this correct?', [messageComponents])
+        interaction.guild.channels.create(`${interaction.user.username}-${interaction.user.discriminator}`, "text")
+            .then(async createdChannel => {
+                createdChannel.setParent(characterCreateCategory, { lockPermission: false });
+                createdChannel.permissionOverwrites.set([{ id: interaction.user, allow: ['VIEW_CHANNEL'] }, { id: interaction.guild.roles.cache.find(role => role.name.includes('Dungeon Master')), allow: ['VIEW_CHANNEL'] }, { id: interaction.channel.guild.roles.everyone, deny: ['VIEW_CHANNEL'] }]);
+                createdChannel.send({ embeds: [createCreatedChannelEmbed(bot, interaction)] })
                     .then(async () => {
-                        await createdChannel.setName(newCharacter.name);
-                        await newCharacter.save()
-
+                        for (let index = 0; index < QUESTIONS_ARRAY.length; index++) {
+                            await characterCreationQuestion(QUESTIONS_ARRAY[index], createdChannel, newCharacter, interaction, bot, index)
+                        }
+                        const messageComponents = new MessageActionRow()
+                            .addComponents(
+                                new MessageButton()
+                                    .setCustomId('approve-character-button')
+                                    .setLabel('Approve')
+                                    .setStyle('SUCCESS'),
+                                new MessageButton()
+                                    .setCustomId('decline-character-button')
+                                    .setLabel('Decline')
+                                    .setStyle('DANGER')
+                            );
+                        await sendCharacterEmbedMessageInChannel(createdChannel, newCharacter, 'Is this correct?', [messageComponents])
+                            .then(async () => {
+                                await createdChannel.setName(newCharacter.name);
+                                await newCharacter.save()
+                            });
                     });
             });
-        });
     })
 
 }
@@ -107,7 +106,7 @@ async function characterCreationQuestion(QUESTION_OBJECT, createdChannel, newCha
         if (typeof QUESTION_OBJECT.answers[0] === 'object' && !Array.isArray(QUESTION_OBJECT.answers[0])) {
             let messageSelectMenuOptionsArray = [];
             QUESTION_OBJECT.answers[0].values.forEach(async key => {
-                await messageSelectMenuOptionsArray.push({
+                messageSelectMenuOptionsArray.push({
                     label: `${key}`,
                     value: `${key}`
                 })
@@ -196,14 +195,9 @@ async function characterCreationQuestion(QUESTION_OBJECT, createdChannel, newCha
             }).then(async (interaction) => {
                 interaction.deferUpdate();
                 newCharacter[`${QUESTION_OBJECT.databaseTable}`] = interaction.values[0];
-                // newCharacter.save();
-                console.log(newCharacter)
-
+                console.log(newCharacter);
             }).catch(function (error) {
-                console.error(error)
-                // createdChannel.delete().then(() => {
-                // interaction.user.send({ content: 'Times up! You took too long to respond. Try again by requesting a new character creation channel.' });
-                // });
+                console.error(error);
             })
         });
     } else {
@@ -232,34 +226,18 @@ async function characterCreationQuestion(QUESTION_OBJECT, createdChannel, newCha
                     if (collected.first().attachments.size > 0) {
                         newCharacter[`${QUESTION_OBJECT.databaseTable}`] = collected.first().attachments?.first()?.url;
                         newCharacter[`average_color`] = await getAverageColor(collected.first().attachments?.first()?.url);
-                        // newCharacter.save();
                         console.log(newCharacter)
-
                     } else {
                         newCharacter[`${QUESTION_OBJECT.databaseTable}`] = collected.first().content;
                         newCharacter[`average_color`] = await getAverageColor(collected.first().content);
-
-                        // newCharacter.save();
                         console.log(newCharacter)
-
                     }
                 } else {
-                    // console.log(collected.first().content)
-                    // console.log(`${QUESTION_OBJECT.databaseTable}`)
-                    // console.log(newCharacter[`${'character_id'}`])
-                    // newCharacter[`${'character_id'}`] = 'test';
-
                     newCharacter[`${QUESTION_OBJECT.databaseTable}`] = collected.first().content;
-                    // newCharacter.save();
                     console.log(newCharacter)
                 }
-
             }).catch(function (error) {
                 console.error(error)
-
-                // createdChannel.delete().then(() => {
-                // interaction.user.send({ content: 'Times up! You took too long to respond. Try again by requesting a new character creation channel.' });
-                // });
             })
         });
     }

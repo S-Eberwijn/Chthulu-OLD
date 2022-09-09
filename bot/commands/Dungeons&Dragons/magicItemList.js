@@ -12,8 +12,8 @@ module.exports.run = async (interaction) => {
             if (err) { return logger.error(err); }
             let data = body.results
             let response = [];
-            for (let i = 0; i < data.length; i++) {
-                response.push(data[i].name)
+            for(const item of data){
+                response.push(item.name);
             }
             interaction.editReply(response.join())
         });

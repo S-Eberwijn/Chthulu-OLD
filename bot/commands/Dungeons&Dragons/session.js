@@ -17,7 +17,7 @@ const { fetchGameSessionMessage, editRequestSessionEmbedToPlannedSessionEmbed, u
 
 const DATE_REGEX_PATTERN = /[0-3]\d\/(0[1-9]|1[0-2])\/\d{4} [0-2]\d:[0-5]\d(?:\.\d+)?Z?/g;
 const COMMAND_OPTIONS = ['request', 'board'];
-// const QUESTIONS_ARRAY = require('../../jsonDb/sessionChannelQuestion.json');
+//- const QUESTIONS_ARRAY = require('../../jsonDb/sessionChannelQuestion.json');
 const MODAL_IDS = ['session-request-modal'];
 const BUTTON_IDS = ['approve-session-request-button', 'decline-session-request-button', 'join-session-button', 'played-session-button', 'cancel-session-button', 'join-accepted-button', 'join-denied-button']
 
@@ -93,7 +93,7 @@ module.exports.run = async (interaction) => {
     if (!messageAuthorCharacter) return interaction.reply({ content: `You do not have a character in the database!\nCreate one by using the "/createcharacter" command.` }).then(() => { setTimeout(() => interaction.deleteReply(), 3000) }).catch(err => logger.error(err));
 
     if (!SESSIONS_CATEGORY) return interaction.reply({ content: `There is no category named \"--SESSIONS--\"!` }).then(() => { setTimeout(() => interaction.deleteReply(), 3000) }).catch(err => logger.error(err));
-    // if (!interaction.options.get('action').value) return interaction.channel.send({ content: "Not enough valid arguments\nCorrect format: !session [request]" });
+    //- if (!interaction.options.get('action').value) return interaction.channel.send({ content: "Not enough valid arguments\nCorrect format: !session [request]" });
     if (!COMMAND_OPTIONS.includes(interaction.options.get('action').value)) return interaction.channel.send({ content: `Not a valid session option\nCorrect format: !session [${COMMAND_OPTIONS.map(option => option).join(', ')}]` });
 
     switch (interaction.options.get('action').value) {
@@ -111,8 +111,6 @@ module.exports.run = async (interaction) => {
             break;
     }
 }
-
-
 
 module.exports.help = {
     category: "Dungeons & Dragons",
@@ -255,8 +253,8 @@ module.exports.buttonSubmit = async (button) => {
     if (!GENERAL_SERVER_INFO) return message.channel.send({ content: 'Something went wrong; Cannot find general info of this server in the database!' }).then(msg => { setTimeout(() => msg.delete(), 3000) }).catch(err => console.log(err));
 
     if (!BUTTON_IDS.includes(button.customId)) return console.log("Something went wrong")
-    switch (button.customId) {
-        // 'approved'
+    switch (button.customId) {//put switch case into new method
+        // approved
         case BUTTON_IDS[0]:
             if (!isDungeonMaster) return button.reply({ content: 'Only Dungeon Masters can approve sessions!', ephemeral: true })
             PLANNED_SESSIONS_CHANNEL.send({ embeds: [editRequestSessionEmbedToPlannedSessionEmbed(button.user.id, GENERAL_SERVER_INFO.session_number, button.message.embeds[0])], components: [MESSAGE_COMPONENTS_PLANNED] }).then(async PLANNED_SESSION_MESSAGE => {
@@ -371,8 +369,8 @@ module.exports.buttonSubmit = async (button) => {
             break;
         // 'join denied'
         case BUTTON_IDS[6]:
-            // const FOUND_GAME_SESSION = await GameSession.findOne({ where: { message_id_discord: button.message.id } });
-            // const isSessionCommander = FOUND_GAME_SESSION.session_commander === button.user.id;
+            //- const FOUND_GAME_SESSION = await GameSession.findOne({ where: { message_id_discord: button.message.id } });
+            //- const isSessionCommander = FOUND_GAME_SESSION.session_commander === button.user.id;
             if (!isSessionCommander) return console.log("You are not the session commander!")
             if (!targetUser) return console.log("No target user!")
 
@@ -390,8 +388,7 @@ module.exports.buttonSubmit = async (button) => {
 
 async function createSession(modal, objective, session_location, date, message_id, session_channel_id) {
     const TIMESTAMP = Date.now();
-    // const DATE = new Date(date);
-    // const GENERAL_INFO = await GeneralInfo.findOne({ where: { server: modal.guildId } });
+    //- const GENERAL_INFO = await GeneralInfo.findOne({ where: { server: modal.guildId } });
     await GameSession.create({
         id: `GS${TIMESTAMP}`,
         message_id_discord: message_id,
@@ -405,10 +402,7 @@ async function createSession(modal, objective, session_location, date, message_i
         session_channel: session_channel_id,
         session_status: 'CREATED',
         server: modal.guild.id,
-    }).then(async () => {
-        // GENERAL_INFO.session_number += 1; 
-        // await GENERAL_INFO.save() 
-    })
+    });
 }
 
 function createSessionChannelEmbed(messageAuthor, sessionDate, sessionParticipants, sessionObjective, sessionCommanderAvatar, sessionLocation) {
@@ -478,7 +472,7 @@ async function createModal(MODAL_ID) {
         .setRequired(false)
 
     // An action row only holds one text input,
-    const firstActionRow = new MessageActionRow().addComponents(sessionTitle),
+    const firstActionRow = new MessageActionRow().addComponents(sessionTitle),//???
         secondActionRow = new MessageActionRow().addComponents(sessionObjective),
         thirdActionRow = new MessageActionRow().addComponents(sessionDate),
         fourthActionRow = new MessageActionRow().addComponents(sessionLocation);

@@ -16,13 +16,11 @@ module.exports.run = async (interaction) => {
     await NonPlayableCharacter.findOne({ where: { creator: interaction.user.id, server: interaction.guild.id, status: "CREATING" } }).then((character) => {
         let name = interaction.user.username + "-" + interaction.user.discriminator;
         let tmpchannel = interaction.guild.channels.cache.find(channel => channel.name == name.toLowerCase());
-        if (!tmpchannel) {
-            if (character) {
+        if (!tmpchannel && character) {
                 tmpchannel = interaction.guild.channels.cache.find(channel => channel.name == character.get("name"));
-            }
         }
-        if (tmpchannel) { tmpchannel.delete(); }
-        if (character) { character.destroy() }
+        tmpchannel?.delete();
+        character?.destroy();
     });
     let timestamp = Date.now();
     if (!characterCreateCategory) {
@@ -39,7 +37,7 @@ module.exports.run = async (interaction) => {
         server: interaction.guild.id,
         status: "CREATING"
     }).then(async () => {
-        let newCharacter = await NonPlayableCharacter.findOne({ where: { id: `N${timestamp}`, server: interaction.guild.id, creator: interaction.user.id } });;
+        let newCharacter = await NonPlayableCharacter.findOne({ where: { id: `N${timestamp}`, server: interaction.guild.id, creator: interaction.user.id } });
 
         interaction.guild.channels.create(`${interaction.user.username}-${interaction.user.discriminator}`, "text").then(async createdChannel => {
             createdChannel.setParent(characterCreateCategory, { lockPermission: false });
@@ -78,21 +76,21 @@ module.exports.help = {
     description: "Creates a new channel with questions about your new NPC",
     options: [],
 }
-
+//check for duplicate code with characterCreation
 async function characterCreationQuestion(QUESTION_OBJECT, createdChannel, newCharacter, interaction, bot, index) {
     let questionEmbed = new MessageEmbed()
         .setAuthor({name: `${bot.user.username}`, iconURL: bot.user.displayAvatarURL()})
         .setColor("GREEN")
         .setDescription(QUESTION_OBJECT.question)
 
-    if (QUESTION_OBJECT.answers.length > 0) {
+    if (QUESTION_OBJECT.answers.length > 0) {//split in methods
         let messageComponentsArray = [];
         let categorySelectionId = '';
 
         if (typeof QUESTION_OBJECT.answers[0] === 'object' && !Array.isArray(QUESTION_OBJECT.answers[0])) {
             let messageSelectMenuOptionsArray = [];
             QUESTION_OBJECT.answers[0].values.forEach(async key => {
-                await messageSelectMenuOptionsArray.push({
+                messageSelectMenuOptionsArray.push({
                     label: `${key}`,
                     value: `${key}`
                 })
@@ -142,8 +140,7 @@ async function characterCreationQuestion(QUESTION_OBJECT, createdChannel, newCha
             ))
         }
 
-
-        const filter = response => {
+        const filter = response => {//filter should be defined somewhere else
             if (response.user.id === bot.user.id) return false;
             if (response.customId === categorySelectionId) {
                 let newSelectionMenu = response.message;
@@ -175,9 +172,6 @@ async function characterCreationQuestion(QUESTION_OBJECT, createdChannel, newCha
                 newCharacter.save();
             }).catch(function (error) {
                 logger.error(error)
-                // createdChannel.delete().then(() => {
-                //     interaction.user.send({ content: 'Times up! You took too long to respond. Try again by requesting a new character creation channel.' });
-                // });
             })
         });
     } else {

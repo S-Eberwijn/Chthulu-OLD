@@ -7,16 +7,16 @@ const request = require('request');
 module.exports.run = async (interaction) => {
     let condition = interaction.options.getString('condition-name')?.toLowerCase();
 
-    request(api, { json: true }, async (err, res, body) => {
+    request(api, { json: true }, async (err, body) => {
         if (err) { return logger.error(err); }
         let data = body.results
 
-        for (let i = 0; i < data.length; i++) {
-            if (data[i].slug == condition) {
-                return interaction.reply({ embeds: [createEmbed(data[i])] })
+        for (const item of data){
+            if (condition == item.slug) {
+                return interaction.reply({ embeds: [createEmbed(item)] })
             }
         }
-        return await useSelectionMenu(interaction, data);
+        return useSelectionMenu(interaction, data);
     });
 }
 
@@ -45,11 +45,12 @@ async function useSelectionMenu(interaction, conditions) {
             errors: ['time']
         }).then(async (interaction) => {
             interaction.deferUpdate();
-            for (let i = 0; i < conditions.length; i++) {
-                if (conditions[i].name == interaction.values[0]) {
-                    return interaction.channel.send({ embeds: [createEmbed(conditions[i])] })
+            for(const condition of conditions) {
+                if (condition.name == interaction.values[0]) {
+                    return interaction.channel.send({ embeds: [createEmbed(condition)] })                
                 }
             }
+
         }).catch(function () {
             interaction.channel.send({
                 content: "This poll has been open for too long, it no longer accepts answers."
