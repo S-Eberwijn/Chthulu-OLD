@@ -26,15 +26,29 @@ jobs:
     runs-on: ubuntu-latest
     name: Request Metrics
     steps:
-      - name: Fetch SonarCloud Analyses Data 📦
-        id: bug-request
+      - name: Fetch Bugs Data 📦
         uses: JamesIves/fetch-api-data-action@releases/v1
         with:
-          ENDPOINT: https://sonarcloud.io/api/issues/search?projects=chthulu&types=BUG,CODE_SMELL,VULNERABILITY&statuses=OPEN,REOPENED
+          ENDPOINT: https://sonarcloud.io/api/issues/search?projects=chthulu&types=BUG&statuses=OPEN,REOPENED
           retry: true
       - run: echo "BUG_AMOUNT=$(echo "${{ fromJson(env.FETCH_API_DATA).total }}")" >> $GITHUB_ENV
+      - name: Fetch Code Smells Data 📦
+        uses: JamesIves/fetch-api-data-action@releases/v1
+        with:
+          ENDPOINT: https://sonarcloud.io/api/issues/search?projects=chthulu&types=CODE_SMELL&statuses=OPEN,REOPENED
+          retry: true
+      - run: echo "CODE_SMELL_AMOUNT=$(echo "${{ fromJson(env.FETCH_API_DATA).total }}")" >> $GITHUB_ENV
+      - name: Fetch Security Hotspots Data 📦
+        uses: JamesIves/fetch-api-data-action@releases/v1
+        with:
+          ENDPOINT: https://sonarcloud.io/api/issues/search?projects=chthulu&types=VULNERABILITY&statuses=OPEN,REOPENED
+          retry: true
+      - run: echo "SECURITY_HOTSPOT_AMOUNT=$(echo "${{ fromJson(env.FETCH_API_DATA).total }}")" >> $GITHUB_ENV
       - name: Show Response
-        run: echo ${{ env.BUG_AMOUNT }}
+        run: |
+          echo ${{ env.BUG_AMOUNT }}
+          echo ${{ env.CODE_SMELL_AMOUNT }}
+          echo ${{ env.SECURITY_HOTSPOT_AMOUNT }}
         
   sonarcloud:
     name: SonarCloud
