@@ -26,9 +26,6 @@ jobs:
           patch-wording:  'patch,fixes,fix,fixed'     # Providing patch-wording will override commits
                                             # defaulting to a patch bump.
           commit-message: 'CI: bumps version to {{version}} [skip ci]'
-      - run: echo "NEW_VERSION=$(echo "${{ steps.bump.version }}")" >> $GITHUB_ENV
-    
-  
   tests:
     name: 'Jest Unit Tests'
     runs-on: ubuntu-latest
@@ -119,9 +116,9 @@ jobs:
           echo ${{ env.SECURITY_HOTSPOT_AMOUNT }}
       - uses: actions/checkout@v3
       #Get project version
-#       - name: Extract version
-#         id: extract_version
-#         uses: Saionaro/extract-package-version@v1.0.6
+      - name: Extract version
+        id: extract_version
+        uses: Saionaro/extract-package-version@v1.0.6
       # Send a messgase to Discord    
       - uses: hugoalh/send-discord-webhook-ghaction@v4.2.4
         with:
@@ -131,7 +128,7 @@ jobs:
               "username": "GitHub",
               "embeds": [
                 {
-                  "title": 'New version of `Chthulu` available: `v.${{env.NEW_VERSION || 'No data'}}`!',
+                  "title": 'New version of `Chthulu` available: `v.${{steps.extract_version.outputs.version || 'No data'}}`!',
                   "color": 0x01ff01,
                   "thumbnail": {
                     "url": 'https://cdn.discordapp.com/avatars/532524817740464138/ef7ad87c0f26dd6c873bc3d9e19c8f15.webp',
