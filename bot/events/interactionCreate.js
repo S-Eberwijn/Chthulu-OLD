@@ -93,26 +93,21 @@ const messageComponents6 = new MessageActionRow().addComponents(
 );
 
 
+// 470 lines of legacy code, I'm too scared to touch it
 module.exports = async (bot, interaction) => {
-
     if (interaction.isCommand()) {
         const slashCommands = bot.slashCommands.get(interaction.commandName)
         if (slashCommands) slashCommands.run(interaction)
     }
-
     if (interaction.isModalSubmit()) {
         const [slashCommand] = bot.slashCommands.filter(command => { return command.help.modalIds?.includes(interaction.customId) }).values()
         if (slashCommand) return slashCommand.modalSubmit(interaction)
     }
-
     if (interaction.isButton()) {
         const [slashCommand] = bot.slashCommands.filter(command => { return command.help.buttonIds?.includes(interaction.customId) }).values()
         if (slashCommand) return slashCommand.buttonSubmit(interaction)
     }
-
-
-    //TODO: Might change later when applying buttons to character creation 
-    // if (!(interaction.user.id === interaction.message.author.id)) return interaction.reply({ content: `These buttons are not meant for you!`, ephemeral: true})
+    //TODO: Might change later when applying buttons to character creation
     try {
         // !chthulu
         switch (interaction.customId) {
@@ -128,7 +123,6 @@ module.exports = async (bot, interaction) => {
                 const { sendHelpEmbedFunction } = require('../otherFunctions/sendHelpEmbedFunction.js')
                 sendHelpEmbedFunction(bot, interaction.guildId, interaction.channelId, interaction.user.id);
                 return interaction.deferUpdate();
-
         }
     } catch (error) {
         logger.error(error);
@@ -165,8 +159,6 @@ module.exports = async (bot, interaction) => {
         }
     } catch (error) {
         logger.error(error)
-    } finally {
-        // interaction.deferUpdate();
     }
     //edit npc buttons
     try {
@@ -562,8 +554,6 @@ module.exports = async (bot, interaction) => {
                 return;
         }
     } catch (err) { logger.error(err) }
-
-
 };
 
 async function npcEditTextField(interaction, charId, QUESTION_OBJECT, bot) {
@@ -636,6 +626,7 @@ async function npcEditTextField(interaction, charId, QUESTION_OBJECT, bot) {
         });
     });
 }
+
 async function characterEditTextField(interaction, QUESTION_OBJECT, bot) {
     interaction.deferUpdate();
     let questionEmbed = new MessageEmbed()

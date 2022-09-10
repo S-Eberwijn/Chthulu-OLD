@@ -10,12 +10,12 @@ module.exports.run = async (interaction) => {
         if (err) { return logger.error(err); }
         let data = body.results
 
-        for (let i = 0; i < data.length; i++) {
-            if (data[i].slug == weapon) {
-                return interaction.reply({ embeds: [createEmbed(data[i])] })
+        for(let item of data) {
+            if(item.slug.toLowerCase() == weapon) {
+                return interaction.reply({ embeds: [createEmbed(item)] })
             }
         }
-        return await useSelectionMenu(interaction, data);
+        return useSelectionMenu(interaction, data);
     });
 }
 
@@ -59,9 +59,9 @@ async function useSelectionMenu(interaction, weapons) {
             errors: ['time']
         }).then(async (interaction) => {
             interaction.deferUpdate();
-            for (let i = 0; i < weapons.length; i++) {
-                if (weapons[i].name == interaction.values[0]) {
-                    return interaction.channel.send({ embeds: [createEmbed(weapons[i])] })
+            for(let weapon of weapons){
+                if(weapon.name == interaction.values[0]){
+                    return interaction.editReply({ embeds: [createEmbed(weapon)] })
                 }
             }
         }).catch(function () {
@@ -88,13 +88,10 @@ function createEmbed(weapon) {
             { name: 'additional properties', value: properties == "" ? "none" : properties, inline: true },
         )
         .setTimestamp()
-        .setFooter(weapon.document__slug + " • " + weapon.document__title);
+        .setFooter(weapon.document__slug + " • " + weapon.document__title);//?? this appears to be deprecated, not sure why.
 }
 
 module.exports.help = {
-    // name: 'weapon',
-    // permission: [],
-    // alias: [],
     category: "Dungeons & Dragons",
     name: 'weapon',
     description: 'look up a weapon',

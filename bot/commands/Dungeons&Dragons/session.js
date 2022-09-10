@@ -472,7 +472,7 @@ async function createModal(MODAL_ID) {
         .setRequired(false)
 
     // An action row only holds one text input,
-    const firstActionRow = new MessageActionRow().addComponents(sessionTitle),//???
+    const firstActionRow = new MessageActionRow().addComponents(sessionTitle),//??->does this work?
         secondActionRow = new MessageActionRow().addComponents(sessionObjective),
         thirdActionRow = new MessageActionRow().addComponents(sessionDate),
         fourthActionRow = new MessageActionRow().addComponents(sessionLocation);
@@ -482,16 +482,13 @@ async function createModal(MODAL_ID) {
     return modal;
 }
 
-
+//this method seems realy simular to the next method, refacator posible.
 function playerAlreadyRequestedForSession(sessions, userID, sessionChannelID) {
     // TODO: Make this per server.
-    for (let i = 0; i < sessions.length; i++) {
-        if (sessions[i].session_channel_id === sessionChannelID) {
-            // console.log('inside')
-            for (let j = 0; j < sessions[i].requested.length; j++) {
-                if (sessions[i].requested[j].user_id === userID) {
-                    return true;
-                }
+    for(let session of sessions) {
+        if (session.session_channel === sessionChannelID) {
+            for(sessionRequest of session.requested){
+                if(sessionRequest.user_id === userID) return true;
             }
         }
     }
@@ -500,65 +497,45 @@ function playerAlreadyRequestedForSession(sessions, userID, sessionChannelID) {
 
 function playerAlreadyDenied(sessions, userID, sessionChannelID) {
     // TODO: Make this per server.
-    for (let i = 0; i < sessions.length; i++) {
-        if (sessions[i].session_channel_id === sessionChannelID) {
-            for (let j = 0; j < sessions[i].denied.length; j++) {
-                if (sessions[i].denied[j].user_id === userID) {
-                    return true;
-                }
+    for(let session of sessions) {
+        if (session.session_channel === sessionChannelID) {
+            for(sessionDenied of session.denied){
+                if(sessionRequest.user_id === userID) return true;
             }
-            break;
         }
     }
     return false;
 }
 
 function giveUserRequestedStatus(sessions, gameSessionChannel, userID, jsonDB) {
-    // const bot = require('../../../index');
-
-    // console.log(gameSessionChannel, userID);
-    for (let i = 0; i < sessions.length; i++) {
-        if (sessions[i].session_channel_id === gameSessionChannel) {
-            // console.log('inside')
-            sessions[i].requested[sessions[i].requested.length] = { "user_id": `${userID}` };
-            break;
+    for(let session of sessions) {
+        if (session.session_channel === gameSessionChannel) {
+            session.requested.push({ user_id: userID });
+            writeToJsonDb('./sessionAddUserRequest.json', jsonDB);
+            return;
         }
     }
-    // Write the edited data to designated JSON database.
-    writeToJsonDb("./bot/jsonDb/sessionAddUserRequest.json", jsonDB);
 }
 
 function removeUserRequestStatus(sessions, gameSessionChannel, userID, jsonDB) {
-    for (let i = 0; i < sessions.length; i++) {
-        if (sessions[i].session_channel_id === gameSessionChannel) {
-            for (let j = 0; j < sessions[i].requested.length; j++) {
-                if (sessions[i].requested[j].user_id === userID) {
-                    // bot.sessionAddUserRequest['sessions'][i].requested[j].user_id = "";
-                    sessions[i].requested.splice(j, 1);
-                    break;
-                }
-            }
+    for(let session of sessions) {
+        if (session.session_channel === gameSessionChannel) {
+            session.requested = session.requested.filter(request => request.user_id !== userID);//remove user from requested list
+            writeToJsonDb("./bot/jsonDb/sessionAddUserRequest.json", jsonDB);
+            return;
         }
     }
-    // Write the edited data to designated JSON database.
-    writeToJsonDb("./bot/jsonDb/sessionAddUserRequest.json", jsonDB);
 }
 
 function giveUserDeniedStatus(sessions, gameSessionChannel, userID, jsonDB) {
-    console.log(gameSessionChannel, userID);
-    for (let i = 0; i < sessions.length; i++) {
-        if (sessions[i].session_channel_id === gameSessionChannel) {
-            for (let j = 0; j < sessions[i].requested.length; j++) {
-                if (sessions[i].requested[j].user_id === userID) {
-                    sessions[i].requested.splice(j, 1);
-                    sessions[i].denied[sessions[i].denied.length] = { "user_id": `${userID}` };
-                    break;
-                }
-            }
+    for(let session of sessions) {
+        if (session.session_channel === gameSessionChannel) {
+            session.requested = session.requested.filter(request => request.user_id !== userID);//remove user from requested list
+            session.denied.push({ user_id: userID });//add user to denied list
+            writeToJsonDb("./bot/jsonDb/sessionAddUserRequest.json", jsonDB);
+            return;
         }
     }
-    // Write the edited data to designated JSON database.
-    writeToJsonDb("./bot/jsonDb/sessionAddUserRequest.json", jsonDB);
 }
 
 async function updatePartyOnSessionEmbed(message, sessionParty) {
@@ -567,6 +544,7 @@ async function updatePartyOnSessionEmbed(message, sessionParty) {
     return message;
 }
 
+//??why is this commented out?, it has some references to it in the code.
 // async function fetchGameSessionMessage(SESSION_REQUEST_CHANNEL, PLANNED_SESSIONS_CHANNEL, messageID) {
 //     try {
 //         let foundMessage = await SESSION_REQUEST_CHANNEL.messages.fetch(messageID).catch(() => console.log('Message not found'));
@@ -598,7 +576,9 @@ function createSessionsOverviewEmbedPages(sessions) {
     for (let index = 0; index < Math.ceil(sessions.length / MAX_SESSIONS_SHOWN_PER_PAGE); index++) {
         pages.push(new MessageEmbed()
             .setAuthor({ name: 'Session board', iconURL: getBot().user.displayAvatarURL() })
-            .setDescription(`${sessions.slice(index * 5, 5 * (index + 1))?.map(session => `> **Session ${session.session_number}:** \u200b \`${getPrettyDateString(new Date(session.date))}\` \n\`\`\`${session.objective}\`\`\` `).join('\n\n')}`)
+            .setDescription(`${sessions.slice(index * 5, 5 * (index + 1))
+                ?.map(session => `> **Session ${session.session_number}:** \u200b \`
+                ${getPrettyDateString(new Date(session.date))}\` \n\`\`\`${session.objective}\`\`\` `).join('\n\n')}`)
             .setFooter({ text: `${1}/${Math.ceil(sessions.length / MAX_SESSIONS_SHOWN_PER_PAGE)} page` })
             .setTimestamp())
     }

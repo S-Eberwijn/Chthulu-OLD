@@ -1,5 +1,7 @@
 const { MessageEmbed } = require('discord.js');
 const moment = require('moment');
+
+//this should probably come from a config file
 const regions = { brazil: 'Brazil', EUROPE: 'Europe', hongkong: 'Hong Kong', india: 'India', japan: 'Japan', russia: 'Russia', singapore: 'Singapore', southafrica: 'South Africa', sydeny: 'Sydeny', 'us-central': 'US Central', 'us-east': 'US Eastside', 'us-west': 'US Westside', 'us-south': 'US Southside' };
 
 module.exports.run = async (interaction) => {
@@ -23,14 +25,10 @@ module.exports.run = async (interaction) => {
             { name: "You Joined:", value: `${userJoinedAt}`, inline: true },
             { name: "Created:", value: `${guildCreatedAt}`, inline: true },
         ])
-
-    return await interaction.reply({ embeds: [serverembed]/*, ephemeral: true*/ });
+    return interaction.reply({ embeds: [serverembed]/*, ephemeral: true*/ });
 }
 
 module.exports.help = {
-    // name: 'server',
-    // permission: [],
-    // alias: [],
     category: "Information",
     name: 'server',
     description: 'Gives information about the server.',

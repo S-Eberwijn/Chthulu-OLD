@@ -13,9 +13,9 @@ module.exports.run = async (interaction) => {
         agentOptions: {
             rejectUnauthorized: false
         }
-    }, function (error, response, body) {
+    }, function (body) {
         let data = ProcesRequest(body)
-        if (data == "404") {
+        if (data.status == 404) {
             ritual(interaction, stringMessage)
         }
         else {
@@ -26,9 +26,6 @@ module.exports.run = async (interaction) => {
 }
 
 module.exports.help = {
-    // name: 'spell',
-    // permission: [],
-    // alias: [],
     category: "Dungeons & Dragons",
     name: 'spell',
     description: 'Gives information about a spell.',
@@ -52,7 +49,7 @@ function ProcesRequest(body) {
     let i = 8;
 
     if (pageArray.length <= 9) {
-        return "404";
+        return {status: 404};
     }
     do {//append all spell description
         spellDescription += pageArray[i++].trim();
@@ -71,6 +68,7 @@ function ProcesRequest(body) {
     } while (pageArray[i].trim() != 'spell' && i < pageArray.length)
 
     return {
+        "status": 200,
         "title": pageArray[1].trim(),
         "school": pageArray[2].split(" ").slice(-1)[0].trim(),
         "level": pageArray[3].split(":")[1].trim(),
@@ -92,7 +90,7 @@ function ritual(interaction, stringMessage) {
         agentOptions: {
             rejectUnauthorized: false
         }
-    }, function (error, response, body) {
+    }, function (body) {
         let data = ProcesRequest(body)
         if (data == "404") {
             interaction.reply({ content: "That spell was not found in the database", ephemeral: true });
@@ -101,10 +99,9 @@ function ritual(interaction, stringMessage) {
             let sigilImage = './bot/images/DnD/SpellSigils/' + data.school + '.png';
             interaction.reply({ embeds: [EmbedSpellInMessage(data, stringMessage)], files: [sigilImage] });
         }
-
     });
-    return;
 }
+
 function EmbedSpellInMessage(data, message) {
     let shortDescription;
     if (data.description.length > 1020) {
