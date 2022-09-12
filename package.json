@@ -59,8 +59,8 @@
     ]
   },
   "scripts": {
-    "test": "SET TZ=\"UTC\" && jest --coverage",
-    "ci-test": "TZ=UTC jest --coverage --reporters=default --reporters=jest-junit",
+    "test": "SET TZ=\"UTC\" && jest --coverage --reporters=default --reporters=jest-junit --maxWorkers=2",
+    "ci-test": "TZ=UTC jest --coverage --reporters=default --reporters=jest-junit --maxWorkers=2",
     "start": "node index.js"
   },
   "license": "MIT",
