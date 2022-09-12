@@ -29,6 +29,7 @@
     "firestore-store": "^2.0.2",
     "heroku-keep-awake": "^1.1.2",
     "https": "^1.0.0",
+    "jest-junit": "^14.0.1",
     "mariadb": "^2.5.4",
     "moment": "^2.29.1",
     "mongoose": "^6.0.2",
