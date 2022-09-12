@@ -52,6 +52,7 @@
     "testEnvironment": "node",
     "collectCoverage": true,
     "coverageReporters": [
+      "json",
       "html"
     ]
   },
