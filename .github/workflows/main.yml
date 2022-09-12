@@ -15,7 +15,7 @@ jobs:
       - name: JEST Report
         uses: RedaktionsNetzwerk-Deutschland/action-jest-reporter@v1.0.0
         env:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
@@ -142,7 +142,6 @@ jobs:
         node-version: [16.x]
     steps:
       - uses: actions/checkout@v2
-      - uses: phips28/gh-action-bump-version@v9.0.31
       - name:  'Automated Version Bump'
         uses:  'phips28/gh-action-bump-version@master'
         env:
