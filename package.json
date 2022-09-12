@@ -50,10 +50,7 @@
   "jest": {
     "verbose": true,
     "testEnvironment": "node",
-    "collectCoverage": true,
-    "coverageReporters": [
-      "json"
-    ]
+    "collectCoverage": true
   },
   "nodemonConfig": {
     "ignore": [
@@ -62,7 +59,7 @@
   },
   "scripts": {
     "test": "SET TZ=\"UTC\" && jest --coverage",
-    "ci-test": "TZ=UTC jest --coverage",
+    "ci-test": "TZ=UTC jest --coverage --reporters=default --reporters=jest-junit",
     "start": "node index.js"
   },
   "license": "MIT",
