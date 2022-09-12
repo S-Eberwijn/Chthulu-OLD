@@ -29,7 +29,6 @@
     "firestore-store": "^2.0.2",
     "heroku-keep-awake": "^1.1.2",
     "https": "^1.0.0",
-    "jest-junit": "^14.0.1",
     "mariadb": "^2.5.4",
     "moment": "^2.29.1",
     "mongoose": "^6.0.2",
@@ -59,8 +58,8 @@
     ]
   },
   "scripts": {
-    "test": "SET TZ=\"UTC\" && jest --coverage --reporters=default --reporters=jest-junit --maxWorkers=2",
-    "ci-test": "TZ=UTC jest --coverage --reporters=default --reporters=jest-junit --maxWorkers=2",
+    "test": "SET TZ=\"UTC\" && jest --coverage --maxWorkers=2",
+    "ci-test": "TZ=UTC jest --coverage --maxWorkers=2",
     "start": "node index.js"
   },
   "license": "MIT",
