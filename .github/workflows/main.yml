@@ -30,7 +30,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        json-glob: "**/coverage-final.json"
+        json-glob: "coverage/coverage-final.json"
   sonarcloud:
     name: SonarCloud
     needs: [tests]
