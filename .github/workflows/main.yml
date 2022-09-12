@@ -29,6 +29,8 @@ jobs:
       uses: RedaktionsNetzwerk-Deutschland/action-jest-reporter@v1.0.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        json-glob: "**/coverage-final.json"
   sonarcloud:
     name: SonarCloud
     needs: [tests]
