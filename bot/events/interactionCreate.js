@@ -605,7 +605,6 @@ async function npcEditTextField(interaction, charId, QUESTION_OBJECT, bot) {
                         try {
                             interaction.channel.bulkDelete(30);
                         } catch (e) {
-                            // console.log(e);
                             logger.error("Problem with deleting messages after updating npc.");
                         }
                         interaction.channel.send("The " + QUESTION_OBJECT.databaseTable + " of " + character.name + " has been changed to.")
@@ -638,10 +637,8 @@ async function characterEditTextField(interaction, QUESTION_OBJECT, bot) {
         let regExp = new RegExp(QUESTION_OBJECT.regex);
         const filter = response => {
             if (response.author.id === bot.user.id) return false;
-            if (QUESTION_OBJECT.question.includes('picture')) {
-                if (response.attachments.size > 0) {
-                    return true;
-                }
+            if (QUESTION_OBJECT.question.includes('picture') && response.attachments.size > 0) {
+                return true;
             }
             if (regExp.exec(response.content) === null) {
                 createdChannel.send({ content: QUESTION_OBJECT.errorMessage });
@@ -667,12 +664,6 @@ async function characterEditTextField(interaction, QUESTION_OBJECT, bot) {
                         character[`${QUESTION_OBJECT.databaseTable}`] = collected.first().content;
                     }
                     character.save().then(async () => {
-                        // // try {character[`${CHARACTER_QUESTIONS_ARRAY[1].databaseTable}`]
-                        // //     interaction.channel.bulkDelete(30);
-                        // // } catch (e) {
-                        // //     console.log(e);
-                        // //     console.log("problem with deleting messages");
-                        // // }
                         interaction.channel.send("The " + QUESTION_OBJECT.databaseTable + " of " + character.name + " has been changed")
                             .then(msg => { setTimeout(() => msg.delete(), 3000) })
                             .catch(err => logger.error(err));

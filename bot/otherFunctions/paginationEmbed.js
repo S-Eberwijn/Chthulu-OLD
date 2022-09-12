@@ -1,20 +1,15 @@
 const {
     MessageActionRow,
-    Message,
-    MessageEmbed,
-    MessageButton,
 } = require("discord.js");
 
 
 exports.paginationEmbed = async function (channel, pages, buttonList, timeout = 120000) {
-    //if (!msg && !msg.channel) throw new Error("Channel is inaccessible.");
-    if (!pages) throw new Error("Pages are not given.");
-    if (!buttonList) throw new Error("Buttons are not given.");
-    if (buttonList[0].style === "LINK" || buttonList[1].style === "LINK")
-        throw new Error(
-            "Link buttons are not supported with discordjs-button-pagination"
-        );
-    if (buttonList.length !== 2) throw new Error("Need two buttons.");
+    try{
+        isValidCall();
+    }catch(e){
+        console.log(e);
+        return;
+    }
 
     let page = 0;
 
@@ -68,18 +63,14 @@ exports.paginationEmbed = async function (channel, pages, buttonList, timeout = 
     return curPage;
 }
 
-
 // TODO: Make SELECT MENU FOR ALL POSSIBLE NPCS
 exports.paginationEmbedForNPC = async function (interaction, pages, buttonList, selectMenu, timeout = 120000) {
-    //if (!msg && !msg.channel) throw new Error("Channel is inaccessible.");
-    if (!pages) throw new Error("Pages are not given.");
-    if (!buttonList) throw new Error("Buttons are not given.");
-    if (buttonList[0].style === "LINK" || buttonList[1].style === "LINK")
-        throw new Error(
-            "Link buttons are not supported with discordjs-button-pagination"
-        );
-    if (buttonList.length !== 2) throw new Error("Need two buttons.");
-
+    try{
+        isValidCall();
+    }catch(e){
+        console.log(e);
+        return;
+    }
     let page = 0;
 
     const row = new MessageActionRow().addComponents(buttonList);
@@ -128,9 +119,15 @@ exports.paginationEmbedForNPC = async function (interaction, pages, buttonList, 
             });
         }
     });
-
     return curPage;
 }
 
-
-
+function isValidCall(){
+    if (!pages) throw new Error("Pages are not given.");
+    if (!buttonList) throw new Error("Buttons are not given.");
+    if (buttonList[0].style === "LINK" || buttonList[1].style === "LINK")
+        throw new Error(
+            "Link buttons are not supported with discordjs-button-pagination"
+        );
+    if (buttonList.length !== 2) throw new Error("Need two buttons.");
+}

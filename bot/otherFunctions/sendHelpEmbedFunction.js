@@ -5,7 +5,6 @@ exports.sendHelpEmbedFunction = async function (bot, guildId, messageChannelId, 
     // TypeError: Cannot read property 'channels' of undefined
     
     const messageChannel = bot.guilds.cache.get(guildId).channels.cache.get(messageChannelId)
-    // bot.guilds.get(message.guild.id).id
     const categorizedCommands = bot.slashCommands.reduce((r, a) => {
         r[a.help.category] = [...r[a.help.category] || [], a];
         return r;
@@ -50,14 +49,14 @@ exports.sendHelpEmbedFunction = async function (bot, guildId, messageChannelId, 
         //TODO: SET THE SELECTED AS DEFAULT
         let selectedValue = interaction.values[0];
         Object.keys(categorizedCommands).forEach(async key => {
-            if (!(selectedValue === key.replaceAll(' ', '').toLowerCase())) return;
+            if (selectedValue !== key.replaceAll(' ', '').toLowerCase()) return;
             const uniqueCommands = new Map();
             for (const item of categorizedCommands[`${key}`]) {
                 if (!uniqueCommands.has(item.help.name)) {
                     uniqueCommands.set(item.help.name, item.help.description);    // set any value to Map
                 }
             }
-            var result = optionsArray.filter(obj => {
+            let result = optionsArray.filter(obj => {
                 return obj.label === `${key}`
             })
             const categoryEmbed = new MessageEmbed()

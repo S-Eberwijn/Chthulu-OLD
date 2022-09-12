@@ -25,21 +25,19 @@ module.exports = async bot => {
         type: "WATCHING",
         // url: 'Test',
         // emoji: '💩',
-        // // state: state,
+        // state: state,
         // timestamps: {
         //     start: Date.now(),
         // },
     };
     bot.user.setPresence({
         // pid: process.pid,
-        
         activities: [activity],
         status: 'online',
     });
 
     // const JUST_A_CHANNEL = bot.guilds.cache.get('532525442201026580').channels.cache.find(c => c.id === '634844140500418570' && c.type == "text");
     // JUST_A_CHANNEL.send('Bot is online');
-
     //Initialize databases
 
 
@@ -50,7 +48,6 @@ module.exports = async bot => {
     // fs.writeFile("./bot/jsonDb/ressurection.json", JSON.stringify(bot.ressurection, null, 4), err => {
     //     if (err) throw err;
     // });
-
 
     //setting slash command for all guilds
     //todo change to for loop
