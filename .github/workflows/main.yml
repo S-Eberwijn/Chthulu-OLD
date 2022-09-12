@@ -12,17 +12,17 @@ jobs:
         node-version: [16.x]
     steps:
       - uses: actions/checkout@v3
-      - name: JEST Report
-        uses: RedaktionsNetzwerk-Deutschland/action-jest-reporter@v1.0.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
       - run: npm i
       - run: npm run build --if-present
-      - run: npm test
+      - run: npm cli-test
+      - name: JEST Report
+        uses: RedaktionsNetzwerk-Deutschland/action-jest-reporter@v1.0.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   sonarcloud:
     name: SonarCloud
     needs: [tests]

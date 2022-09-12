@@ -62,6 +62,7 @@
   },
   "scripts": {
     "test": "SET TZ=\"UTC\" && jest --coverage",
+    "cli-test": "TZ=UTC jest --coverage",
     "start": "node index.js"
   },
   "license": "MIT",
