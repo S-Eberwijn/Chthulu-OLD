@@ -1,4 +1,4 @@
-const api = require('../../functions/api');
+const api = require('../../functions/api/misc');
 
 describe(`Tests for function 'onlyUnique'`, () => {
     const numberArray = [1, 2, 3, 3, 4, 4, 6, 6];

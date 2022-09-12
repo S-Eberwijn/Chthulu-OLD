@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1662972736245" clover="3.2.0">
+  <project timestamp="1662972736246" name="All files">
+    <metrics statements="49" coveredstatements="18" conditionals="18" coveredconditionals="7" methods="12" coveredmethods="3" elements="79" coveredelements="28" complexity="0" loc="49" ncloc="49" packages="3" files="3" classes="3"/>
+    <package name="bot.otherFunctions">
+      <metrics statements="22" coveredstatements="2" conditionals="8" coveredconditionals="0" methods="4" coveredmethods="0"/>
+      <file name="botEmbed.js" path="C:\Users\Stephan Eberwijn\Documents\GitHub\Chthulu\bot\otherFunctions\botEmbed.js">
+        <metrics statements="22" coveredstatements="2" conditionals="8" coveredconditionals="0" methods="4" coveredmethods="0"/>
+        <line num="1" count="1" type="stmt"/>
+        <line num="3" count="1" type="stmt"/>
+        <line num="5" count="0" type="stmt"/>
+        <line num="6" count="0" type="stmt"/>
+        <line num="8" count="0" type="stmt"/>
+        <line num="10" count="0" type="stmt"/>
+        <line num="30" count="0" type="stmt"/>
+        <line num="32" count="0" type="stmt"/>
+        <line num="40" count="0" type="stmt"/>
+        <line num="41" count="0" type="stmt"/>
+        <line num="42" count="0" type="stmt"/>
+        <line num="43" count="0" type="stmt"/>
+        <line num="44" count="0" type="stmt"/>
+        <line num="45" count="0" type="stmt"/>
+        <line num="47" count="0" type="stmt"/>
+        <line num="49" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="50" count="0" type="stmt"/>
+        <line num="52" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="53" count="0" type="stmt"/>
+        <line num="55" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="56" count="0" type="stmt"/>
+        <line num="59" count="0" type="stmt"/>
+      </file>
+    </package>
+    <package name="functions">
+      <metrics statements="11" coveredstatements="8" conditionals="4" coveredconditionals="1" methods="2" coveredmethods="0"/>
+      <file name="logger.js" path="C:\Users\Stephan Eberwijn\Documents\GitHub\Chthulu\functions\logger.js">
+        <metrics statements="11" coveredstatements="8" conditionals="4" coveredconditionals="1" methods="2" coveredmethods="0"/>
+        <line num="1" count="1" type="stmt"/>
+        <line num="2" count="1" type="stmt"/>
+        <line num="4" count="1" type="stmt"/>
+        <line num="5" count="0" type="stmt"/>
+        <line num="8" count="1" type="stmt"/>
+        <line num="9" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="10" count="0" type="stmt"/>
+        <line num="13" count="1" type="stmt"/>
+        <line num="14" count="1" type="stmt"/>
+        <line num="27" count="1" type="stmt"/>
+        <line num="41" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="functions.api">
+      <metrics statements="16" coveredstatements="8" conditionals="6" coveredconditionals="6" methods="6" coveredmethods="3"/>
+      <file name="misc.js" path="C:\Users\Stephan Eberwijn\Documents\GitHub\Chthulu\functions\api\misc.js">
+        <metrics statements="16" coveredstatements="8" conditionals="6" coveredconditionals="6" methods="6" coveredmethods="3"/>
+        <line num="1" count="1" type="stmt"/>
+        <line num="3" count="1" type="stmt"/>
+        <line num="6" count="0" type="stmt"/>
+        <line num="7" count="0" type="stmt"/>
+        <line num="8" count="0" type="stmt"/>
+        <line num="9" count="0" type="stmt"/>
+        <line num="13" count="8" type="stmt"/>
+        <line num="17" count="1" type="stmt"/>
+        <line num="21" count="0" type="stmt"/>
+        <line num="25" count="8" type="cond" truecount="4" falsecount="0"/>
+        <line num="26" count="7" type="cond" truecount="2" falsecount="0"/>
+        <line num="27" count="5" type="stmt"/>
+        <line num="31" count="0" type="stmt"/>
+        <line num="32" count="0" type="stmt"/>
+        <line num="34" count="0" type="stmt"/>
+        <line num="37" count="1" type="stmt"/>
+      </file>
+    </package>
+  </project>
+</coverage>

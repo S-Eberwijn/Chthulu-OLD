@@ -3,29 +3,6 @@ on:
   push:
     branches: [ "main" ]
 jobs:
-  version-bump:
-    name: 'Automated Version Bump'
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [16.x]
-    steps:
-      - uses: actions/checkout@v2
-      - uses: phips28/gh-action-bump-version@v9.0.31
-      - name:  'Automated Version Bump'
-        uses:  'phips28/gh-action-bump-version@master'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          target-branch: 'main'
-          skip-tag: 'true'
-          minor-wording:  'add,Adds,new,minor'
-          major-wording:  'MAJOR,cut-major,major'
-          patch-wording:  'patch,fixes,fix,fixed'     # Providing patch-wording will override commits
-                                            # defaulting to a patch bump.
-          commit-message: 'CI: bumps version to {{version}} [skip ci]'
-      
-  
   tests:
     name: 'Jest Unit Tests'
     runs-on: ubuntu-latest
@@ -35,13 +12,15 @@ jobs:
         node-version: [16.x]
     steps:
       - uses: actions/checkout@v3
+      - name: JEST Report
+        uses: RedaktionsNetzwerk-Deutschland/action-jest-reporter@v1.0.0
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
       - run: npm i
       - run: npm run build --if-present
-      # - run: npm test
+      - run: npm test
   sonarcloud:
     name: SonarCloud
     needs: [tests]
@@ -135,17 +114,17 @@ jobs:
                   },
                   "fields": [
                     {
-                      "name": '🪲Bugs🪲',
+                      "name": '🪲 Bugs',
                       "value": '> `${{env.BUG_AMOUNT || 'No data'}}`',
                       "inline": true
                     },
                     {
-                      "name": '💩Code Smells💩',
+                      "name": '💩 Code Smells',
                       "value": '> `${{env.CODE_SMELL_AMOUNT || 'No data'}}`',
                       "inline": true
                     },
                     {
-                      "name": '🛡️Alerts🛡️',
+                      "name": '🛡️ Alerts',
                       "value": '> `${{env.SECURITY_HOTSPOT_AMOUNT || 'No data'}}`',
                       "inline": true
                     },
@@ -153,3 +132,24 @@ jobs:
                 }
               ]
             }
+  version-bump:
+    name: 'Automated Version Bump'
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16.x]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: phips28/gh-action-bump-version@v9.0.31
+      - name:  'Automated Version Bump'
+        uses:  'phips28/gh-action-bump-version@master'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          target-branch: 'main'
+          skip-tag: 'true'
+          minor-wording:  'add,Adds,new,minor'
+          major-wording:  'MAJOR,cut-major,major'
+          patch-wording:  'patch,fixes,fix,fixed'     # Providing patch-wording will override commits
+                                            # defaulting to a patch bump.
+          commit-message: 'CI: bumps version to {{version}} [skip ci]'
