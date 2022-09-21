@@ -1,6 +1,6 @@
 {
   "name": "chthulu",
-  "version": "1.1.22",
+  "version": "1.2.11",
   "description": "Ready to serve my master Khthonios",
   "engines": {
     "node": "16.14.2"
@@ -49,7 +49,8 @@
   },
   "jest": {
     "verbose": true,
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "collectCoverage": true
   },
   "nodemonConfig": {
     "ignore": [
@@ -57,7 +58,8 @@
     ]
   },
   "scripts": {
-    "test": "jest",
+    "test": "SET TZ=\"UTC\" && jest --coverage --maxWorkers=2",
+    "ci-test": "TZ=UTC jest --coverage --maxWorkers=2",
     "start": "node index.js"
   },
   "license": "MIT",
