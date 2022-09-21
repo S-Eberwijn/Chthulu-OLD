@@ -6,7 +6,7 @@ async function getServerMap(serverID) {
 }
 
 async function getAllMaps() {
-    return await Map.findAll()
+    return Map.findAll()
 }
 
 module.exports = {

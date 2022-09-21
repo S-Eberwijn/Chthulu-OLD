@@ -5,12 +5,11 @@ const { getUserFromBot } = require(`./bot`);
 
 
 async function getAliveCharacters(guildId = null) {
-    if (guildId === null) return await PlayerCharacter.findAll({ where: { alive: 1 } })
+    if (guildId === null) return PlayerCharacter.findAll({ where: { alive: 1 } })
     const characters = await PlayerCharacter.findAll({ where: { alive: 1, server: guildId } })
     if (!characters) return []
-    for (let index = 0; index < characters.length; index++) {
-        const character = characters[index];
-        character.playerIcon = await getUserFromBot(character.player_id_discord)?.displayAvatarURL();
+    for (const character of characters) {   
+        character.playerIcon = getUserFromBot(character.player_id_discord)?.displayAvatarURL();
     }
     return characters
 }
@@ -20,13 +19,13 @@ async function getUserCharacter(userID, guildID) {
 }
 
 async function getDeadCharacters(guildId = null) {
-    if (guildId === null) return await PlayerCharacter.findAll({ where: { alive: 0 } })
-    return await PlayerCharacter.findAll({ where: { alive: 0, server: guildId } })
+    if (guildId === null) return PlayerCharacter.findAll({ where: { alive: 0 } })
+    return PlayerCharacter.findAll({ where: { alive: 0, server: guildId } })
 }
 
 async function getNonPlayableCharacters(guildId = null) {
-    if (guildId === null) return await NonPlayableCharacter.findAll({ where: { status: "VISIBLE" } })
-    return await NonPlayableCharacter.findAll({ where: { status: "VISIBLE", server: guildId } })
+    if (guildId === null) return NonPlayableCharacter.findAll({ where: { status: "VISIBLE" } })
+    return NonPlayableCharacter.findAll({ where: { status: "VISIBLE", server: guildId } })
 }
 
 module.exports = {

@@ -23,14 +23,11 @@ module.exports.run = async (interaction) => {
     switch (interaction.options.get('action').value) {
         case 'request':
             let sessionDate, sessionObjective, sessionParticipants = [interaction.user.id];
-
             // Makes a request channel for the message author
             interaction.guild.channels.create(`${interaction.user.username}s-request`, "text").then(async createdChannel => {
                 // TODO: Add right permission to the right people (DM'S, Players, Session Part)
-
                 // Puts the channel under the "--SESSIONS--" category
                 createdChannel.setParent(SESSIONS_CATEGORY, { lockPermission: false });
-
                 // Update channel permissions so everyone can't see it.
                 createdChannel.permissionOverwrites.edit(interaction.channel.guild.roles.everyone, {
                     CREATE_INSTANT_INVITE: false,
