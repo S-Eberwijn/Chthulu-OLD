@@ -2,7 +2,7 @@ const fadeAnimationDuration = 200;
 let globalIDstorage;
 
 let globalQuestID;
-document.addEventListener('DOMContentLoaded', (event) => {
+document.addEventListener('DOMContentLoaded', () => {
     //Edit to use multiple custom select boxes
     document.querySelectorAll('.modal .select-wrapper').forEach(element => {
         element.addEventListener('click', function () {
@@ -36,6 +36,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
         document.getElementById('quest_description').value = text.charAt(0).toUpperCase() + text.slice(1);
     });
 
+    //?? could these methods be moved outside the top-level method (upto line 160), not sure if posible that's why I didnt try yet
     function handleDragStart(e) {
         this.style.opacity = '0.4';
 
@@ -59,13 +60,13 @@ document.addEventListener('DOMContentLoaded', (event) => {
         return false;
     }
 
-    function handleDragEnter(e) {
+    function handleDragEnter() {
         if (this !== document.getElementById("uncompletedQuestsBox")) {
             this.classList.add('over');
         }
     }
 
-    function handleDragLeave(e) {
+    function handleDragLeave() {
         if (this.classList.contains('over')) {
             this.classList.remove('over');
         }
@@ -124,7 +125,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
         questBox.addEventListener('drop', handleDrop);
     });
 
-    document.getElementById('sortingIcon').addEventListener('click', function (e) {
+    document.getElementById('sortingIcon').addEventListener('click', function () {
 
         let sortingIcon = document.getElementById('sortingIcon')
         sortingIcon.classList.toggle('desc');
@@ -273,21 +274,17 @@ function searchQuest(searchBar) {
 }
 
 function updateInput(input) {
-    // let characterCountElement = input.parentNode.querySelector('p.characterCount');
-    // // let maxCharacterCount = parseInt(input.parentNode.querySelector('p.maxCharacterCount').innerText);
-
-    // characterCountElement.innerText = input.value.length;
-
-    checkIfFormIsReady(input.parentNode.parentNode.querySelector('.custom-option.selected'), input.parentNode.parentNode.querySelector('input[type="text"]'), input.parentNode.parentNode.querySelector('textarea'));
-
+    checkIfFormIsReady(
+        input.parentNode.parentNode.querySelector('.custom-option.selected'), 
+        input.parentNode.parentNode.querySelector('input[type="text"]'), 
+        input.parentNode.parentNode.querySelector('textarea')
+        );
 }
 
 
 function checkIfFormIsReady(priorityElement, titleElement, descriptionElement) {
-    // console.log()
     let priority = priorityElement?.getAttribute('data-value');
     let title = titleElement.value?.trim();
-    let description = descriptionElement.value?.trim();
 
     if ((priority != undefined && priority != null) && (title != undefined && title != null && title !== '')) {
         titleElement.parentNode.parentNode.querySelector('input[type="button"]').removeAttribute('disabled');
@@ -327,8 +324,6 @@ function createQuest(buttonElement) {
                     document.querySelector(`#quest_description`).value = '';
                     updateInput(document.querySelector(`#quest_description`))
 
-
-
                     let uncompletedQuestsBox = document.querySelector('.questBox[id="uncompletedQuestsBox"]');
                     uncompletedQuestsBox.insertBefore(createQuestDiv(response.data.data), uncompletedQuestsBox.childNodes[uncompletedQuestsBox.childNodes.length - 1])
 
@@ -342,7 +337,7 @@ function createQuest(buttonElement) {
             })
         } catch (error) {
             console.log("error occured during create");
-        };
+        }
         buttonElement.value = 'Create';
         buttonElement.parentNode.querySelector(`i.fa-spinner`).classList.remove('active')
         buttonElement.removeAttribute('disabled')
@@ -440,7 +435,7 @@ function editQuest(buttonElement) {
             })
         } catch (error) {
             console.log("error occured during edit of quest: " + globalQuestID);
-        };
+        }
         buttonElement.parentNode.querySelector(`i.fa-spinner`).classList.remove('active')
         buttonElement.removeAttribute('disabled')
         buttonElement.value = 'Edit';
@@ -467,7 +462,7 @@ function deleteQuest(buttonElement) {
             })
         } catch (error) {
             console.log("error occured during delete");
-        };
+        }
         buttonElement.value = 'Delete';
         buttonElement.parentNode.querySelector(`i.fa-spinner`).classList.remove('active')
         buttonElement.removeAttribute('disabled')
@@ -492,7 +487,7 @@ async function statusChangeQuest(buttonValue) {
         } catch (error) {
             console.log(error)
             console.log("error occured during status update");
-        };
+        }
     }, 250);
 }
 

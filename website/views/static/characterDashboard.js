@@ -5,12 +5,12 @@ document.addEventListener("DOMContentLoaded", function () {
     characterListItems[0].classList.add('selected');
 
     characterListItems.forEach(item => {
-        item.addEventListener('click', function (event) {
+        item.addEventListener('click', function () {
             let characterCardStack = document.getElementById("characterCardStack");
-            var children = characterCardStack.children,
+            let children = characterCardStack.children,
                 firstChild = children[0]
 
-            var target = document.querySelector('.characterItem.selected');
+            let target = document.querySelector('.characterItem.selected');
             target.classList.remove('selected');
             this.classList.add('selected');
 
@@ -41,7 +41,7 @@ function updateCircleIcons(element) {
     element.classList.add("fas");
 }
 
-var slice = function (elements, start, end) {
-    var sliced = Array.prototype.slice.call(elements, start, end);
+let slice = function (elements, start, end) {
+    let sliced = Array.prototype.slice.call(elements, start, end);
     return sliced;
 }

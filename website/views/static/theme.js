@@ -68,7 +68,7 @@ function toggleSwitch() {
 
 // TOGGLE MENU
 
-
+//!!this one can go I think
 // function toggleMenu() {
 //     document.querySelector('.dashboard').classList.toggle('menuIsExtended')
 //     document.querySelector('.dashboard').classList.toggle('menuClosed')
@@ -101,9 +101,7 @@ function setMenuState(menuState) {
     const element = document.querySelector('.dashboard')
 
     if (element) element.classList = `dashboard ${menuState}`;
-    // document.documentElement.className = menuState;
 }
-
 
 function profileMenuToggle() {
     const toggleProfileMenu = document.querySelector('.action .profileMenu');

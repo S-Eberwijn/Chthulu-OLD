@@ -30,8 +30,6 @@
     transition: transform 0.2s ease-in-out;
 }
 
-
-
 .dashboardContent[sessions] section details[open] h1 i {
     transform: rotate(90deg);
 }
@@ -328,6 +326,14 @@ details.closing .embla__dots {
     position: relative;
     transition: all .5s ease;
 
+    position: relative;
+    width: 300px;
+    height: 400px;
+    border-radius: 5px;
+    padding: 15px;
+    box-sizing: border-box;
+    background-color: var(--content-color);
+    box-shadow: inset 0 0 5px var(--sidebar-color);
     /* transform: scale(0.95); */
 }
 
@@ -346,18 +352,6 @@ details.closing .embla__dots {
     position: relative;
     height: 100%;
 }
-
-.embedWrapper {
-    position: relative;
-    width: 300px;
-    height: 400px;
-    border-radius: 5px;
-    padding: 15px;
-    box-sizing: border-box;
-    background-color: var(--content-color);
-    box-shadow: inset 0 0 5px var(--sidebar-color);
-}
-
 
 .embedWrapper h4 {
     margin: 0;
