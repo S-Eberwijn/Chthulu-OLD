@@ -180,7 +180,7 @@ module.exports = async (bot, interaction) => {
                 }
                 //TODO may need some revision
                 charId = interaction.channel.id;
-                await NonPlayableCharacter.findOne({ where: { id: charId, server: interaction.guildId } }).then((character) => {
+                await NonPlayableCharacter.findOne({ where: { character_id: charId, server: interaction.guildId } }).then((character) => {
                     if (character) {
                         if (character.status == "VISIBLE") {
                             character.status = 'INVISIBLE';
