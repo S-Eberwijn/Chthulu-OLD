@@ -289,22 +289,19 @@ function updateInput(input) {
         input.parentNode.parentNode.querySelector("#session_location"),
         input.parentNode.parentNode.querySelector("#session_date")
     );
-}
+} 
 
 function checkIfFormIsReady(objectiveElement, locationElement, dateElement) {
-    // console.log()
     // let priority = priorityElement?.getAttribute('data-value');
     let date = dateElement.value?.trim();
     // let location = locationElement.value?.trim();
     let objective = objectiveElement.value?.trim();
 
-    // console.log(objective, location, date)
-
     if (
         date != undefined && date != null && date !== "" && objective != undefined && objective != null && objective !== ""
     ) {
-        objectiveElement.parentNode.parentNode.querySelector('input[type="button"]').removeAttribute("disabled");
+        objectiveElement.parentNode.parentNode.parentNode.parentNode.querySelector('.modal-footer input[type="button"]').removeAttribute("disabled");
     } else {
-        objectiveElement.parentNode.parentNode.querySelector('input[type="button"]').setAttribute("disabled", "true");
+        objectiveElement.parentNode.parentNode.parentNode.parentNode.querySelector('.modal-footer input[type="button"]').setAttribute("disabled", "true");
     }
 }

@@ -33,7 +33,8 @@ async function createQuest(quest, guildID, creatorID) {
     let timestamp = Date.now();
     return await Quest.create({
         id: `Q${timestamp}`,
-        quest_identifier: `Q${timestamp}`, quest_giver: creatorID,
+        quest_identifier: `Q${timestamp}`,
+        quest_giver: creatorID,
         quest_description: quest.description,
         quest_name: quest.title,
         quest_importance_value: quest.priority,

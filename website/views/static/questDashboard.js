@@ -284,15 +284,15 @@ function updateInput(input) {
 
 
 function checkIfFormIsReady(priorityElement, titleElement, descriptionElement) {
-    // console.log()
+    // console.log(titleElement.parentNode.parentNode.parentNode) 
     let priority = priorityElement?.getAttribute('data-value');
     let title = titleElement.value?.trim();
     let description = descriptionElement.value?.trim();
 
     if ((priority != undefined && priority != null) && (title != undefined && title != null && title !== '')) {
-        titleElement.parentNode.parentNode.querySelector('input[type="button"]').removeAttribute('disabled');
+        titleElement.parentNode.parentNode.parentNode.parentNode.querySelector('.modal-footer input[type="button"]').removeAttribute('disabled');
     } else {
-        titleElement.parentNode.parentNode.querySelector('input[type="button"]').setAttribute('disabled', 'true');
+        titleElement.parentNode.parentNode.parentNode.parentNode.querySelector('.modal-footer input[type="button"]').setAttribute('disabled', 'true');
     }
 }
 

@@ -14,7 +14,7 @@ module.exports.run = async (interaction) => {
     //If no character is linked to the user, return an error message
     if (!character) return interaction.editReply({ content: 'This user does not have a character!', ephemeral: true })
     // await interaction.deferReply({ content: 'Test'})
-    await sendCharacterEmbedMessageFromInteraction(interaction, character, null, null);
+    sendCharacterEmbedMessageFromInteraction(interaction, character, null, null);
     // await interaction.reply({ embeds: [await getCharacterEmbed(character)], files: [  await getCharacterLevelImage(character), await getCharacterPicture(character)] });
 }
 

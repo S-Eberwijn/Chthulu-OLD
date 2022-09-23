@@ -2,7 +2,6 @@ const api = require('../../functions/api/misc');
 
 describe(`Tests for function 'onlyUnique'`, () => {
     const numberArray = [1, 2, 3, 3, 4, 4, 6, 6];
-    ;
 
     test("array contains only unique items", () => {
         expect(numberArray.filter(api.onlyUnique)).toEqual([1, 2, 3, 4, 6]);

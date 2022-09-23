@@ -7,11 +7,11 @@ router.get('/login', passport.authenticate('discord'));
 router.get('/login/redirect', passport.authenticate('discord', {
     failureRedirect: '/',
 }), async (req, res) => {
-    setTimeout(async () => {await new Promise((resolve, reject) => req.session.save(err => (err ? reject(err) : res.redirect('/dashboard/chthulu'))))}, 500)
+    setTimeout(async () => { await new Promise((resolve, reject) => req.session.save(err => (err ? reject(err) : res.redirect('/dashboard/chthulu')))) }, 500)
 });
 router.get('/logout', (req, res) => {
     if (req.session) {
-        req.session.destroy(err =>  res.redirect('/'));
+        req.session.destroy(err => res.redirect('/'));
     } else {
         res.redirect('/')
     }
