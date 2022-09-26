@@ -84,9 +84,6 @@ module.exports.run = async (interaction) => {
 }
 
 module.exports.help = {
-    // name: "cc",
-    // alias: ["cc"],
-    // description: "Creates a new channel with questions about your new character",
     category: "Dungeons & Dragons",
     name: 'cc',
     description: 'Create a new character!',
@@ -134,7 +131,6 @@ async function characterCreationQuestion(QUESTION_OBJECT, createdChannel, newCha
         } else if (QUESTION_OBJECT.answers.length > 25) {
             for (let index = 0; index < Math.ceil(QUESTION_OBJECT.answers.length / 25); index++) {
                 const elements = QUESTION_OBJECT.answers.slice(index * 25, 25 * (index + 1));
-                // console.log(elements)
                 messageComponentsArray.push(new MessageActionRow().addComponents(
                     new MessageSelectMenu()
                         .setCustomId(`characterQuestion${index}`)
@@ -195,7 +191,6 @@ async function characterCreationQuestion(QUESTION_OBJECT, createdChannel, newCha
             }).then(async (interaction) => {
                 interaction.deferUpdate();
                 newCharacter[`${QUESTION_OBJECT.databaseTable}`] = interaction.values[0];
-                console.log(newCharacter);
             }).catch(function (error) {
                 console.error(error);
             })
@@ -226,15 +221,12 @@ async function characterCreationQuestion(QUESTION_OBJECT, createdChannel, newCha
                     if (collected.first().attachments.size > 0) {
                         newCharacter[`${QUESTION_OBJECT.databaseTable}`] = collected.first().attachments?.first()?.url;
                         newCharacter[`average_color`] = await getAverageColor(collected.first().attachments?.first()?.url);
-                        console.log(newCharacter)
                     } else {
                         newCharacter[`${QUESTION_OBJECT.databaseTable}`] = collected.first().content;
                         newCharacter[`average_color`] = await getAverageColor(collected.first().content);
-                        console.log(newCharacter)
                     }
                 } else {
                     newCharacter[`${QUESTION_OBJECT.databaseTable}`] = collected.first().content;
-                    console.log(newCharacter)
                 }
             }).catch(function (error) {
                 console.error(error)

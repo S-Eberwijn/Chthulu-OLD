@@ -10,7 +10,7 @@ const NAME_OF_DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'F
 
 module.exports.run = async (interaction) => {
     const bot = require('../../index');
- 
+
     // VARIABLES
     const SESSIONS_CATEGORY = interaction.member.guild.channels.cache.find(c => c.name == "--SESSIONS--" && c.type == "GUILD_CATEGORY");
     const SESSION_REQUEST_CHANNEL = interaction.member.guild.channels.cache.find(c => c.name.includes("session-request") && c.type == "GUILD_TEXT");

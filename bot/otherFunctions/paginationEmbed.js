@@ -5,7 +5,7 @@ const {
 
 exports.paginationEmbed = async function (channel, pages, buttonList, timeout = 120000) {
     try{
-        isValidCall();
+        isValidCall(pages,buttonList);
     }catch(e){
         console.log(e);
         return;
@@ -66,7 +66,7 @@ exports.paginationEmbed = async function (channel, pages, buttonList, timeout = 
 // TODO: Make SELECT MENU FOR ALL POSSIBLE NPCS
 exports.paginationEmbedForNPC = async function (interaction, pages, buttonList, selectMenu, timeout = 120000) {
     try{
-        isValidCall();
+        isValidCall(pages,buttonList);
     }catch(e){
         console.log(e);
         return;
@@ -122,12 +122,9 @@ exports.paginationEmbedForNPC = async function (interaction, pages, buttonList, 
     return curPage;
 }
 
-function isValidCall(){
+function isValidCall(pages,buttonList){
     if (!pages) throw new Error("Pages are not given.");
     if (!buttonList) throw new Error("Buttons are not given.");
-    if (buttonList[0].style === "LINK" || buttonList[1].style === "LINK")
-        throw new Error(
-            "Link buttons are not supported with discordjs-button-pagination"
-        );
+    if (buttonList[0].style === "LINK" || buttonList[1].style === "LINK") throw new Error("Link buttons are not supported with discordjs-button-pagination" );
     if (buttonList.length !== 2) throw new Error("Need two buttons.");
 }

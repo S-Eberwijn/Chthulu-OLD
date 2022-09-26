@@ -17,9 +17,6 @@ module.exports.run = async (interaction) => {
 }
 
 module.exports.help = {
-    // name: 'set-level',
-    // permission: [],
-    // alias: [],
     category: "Dungeons & Dragons",
     name: 'set-level',
     description: 'Change a characters level.',

@@ -1,4 +1,3 @@
-const api = require("../../functions/api")
 const api = require('../../functions/api/misc');
 
 describe(`Tests for function 'onlyUnique'`, () => {

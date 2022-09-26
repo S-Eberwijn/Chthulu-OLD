@@ -7,10 +7,9 @@ const request = require('request');
 module.exports.run = async (interaction) => {
     let condition = interaction.options.getString('condition-name')?.toLowerCase();
 
-    request(api, { json: true }, async (err, body) => {
+    request(api, { json: true }, async (err,res, body) => {//! res is unused but needs to be here else it breaks
         if (err) { return logger.error(err); }
         let data = body.results
-
         for (const item of data){
             if (condition == item.slug) {
                 return interaction.reply({ embeds: [createEmbed(item)] })

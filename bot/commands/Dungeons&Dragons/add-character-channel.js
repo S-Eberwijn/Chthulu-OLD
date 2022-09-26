@@ -26,9 +26,6 @@ module.exports.run = async (interaction) => {
 }
 
 module.exports.help = {
-    // name: 'add-character-channel',
-    // permission: [],
-    // alias: [],
     category: "Dungeons & Dragons",
     name: 'add-character-channel',
     description: 'Add in-character channel',

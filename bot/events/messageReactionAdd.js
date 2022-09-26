@@ -1,3 +1,5 @@
+//? is this still used?
+
 module.exports = async (bot, messageReaction, user) => {
     const { message } = messageReaction;
     //chro When we receive a reaction we check if the reaction is partial or not

@@ -2,8 +2,9 @@ const tagSelector = require('cheerio');
 const request = require('request');
 const baseURL = "https://www.dnd-spells.com/spell/"
 const { MessageEmbed } = require('discord.js');
-
+//TODO: fix this
 module.exports.run = async (interaction) => {
+    return interaction.reply({ content: 'This command is currently disabled!', ephemeral: true });
     let stringMessage = interaction.options.getString('spell-name');
     stringMessage = stringMessage.replace(/ /g, "-");
 
@@ -13,7 +14,7 @@ module.exports.run = async (interaction) => {
         agentOptions: {
             rejectUnauthorized: false
         }
-    }, function (body) {
+    }, function (err, resp, body) {
         let data = ProcesRequest(body)
         if (data.status == 404) {
             ritual(interaction, stringMessage)
@@ -42,6 +43,7 @@ function ProcesRequest(body) {
     let page = tagSelector.load(body);
     let content = page('h1[class=classic-title]').parent().text();
     let pageArray = content.split("\n");
+
     pageArray = pageArray.filter(item => item.trim());
     let casters = "";
     let spellDescription = "";

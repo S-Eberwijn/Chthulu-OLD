@@ -1,5 +1,4 @@
-const { logger } = require(`../../../functions/logger`)
-const { Player } = require('../../../database/models/Player');
+const { logger } = require(`../../../functions/logger`);
 const { NonPlayableCharacter } = require('../../../database/models/NonPlayableCharacter');
 const { MessageEmbed, MessageActionRow, MessageButton, MessageSelectMenu } = require('discord.js');
 
@@ -38,7 +37,6 @@ module.exports.run = async (interaction) => {
         status: "CREATING"
     }).then(async () => {
         let newCharacter = await NonPlayableCharacter.findOne({ where: { id: `N${timestamp}`, server: interaction.guild.id, creator: interaction.user.id } });
-
         interaction.guild.channels.create(`${interaction.user.username}-${interaction.user.discriminator}`, "text").then(async createdChannel => {
             createdChannel.setParent(characterCreateCategory, { lockPermission: false });
             createdChannel.permissionOverwrites.set([{ id: interaction.user, allow: ['VIEW_CHANNEL'] }, { id: interaction.guild.roles.cache.find(role => role.name.includes('Dungeon Master')), allow: ['VIEW_CHANNEL'] }, { id: interaction.channel.guild.roles.everyone, deny: ['VIEW_CHANNEL'] }]);
@@ -46,7 +44,6 @@ module.exports.run = async (interaction) => {
                 for (let index = 0; index < QUESTIONS_ARRAY.length; index++) {
                     await characterCreationQuestion(QUESTIONS_ARRAY[index], createdChannel, newCharacter, interaction, bot, index)
                 }
-
                 const messageComponents = new MessageActionRow()
                     .addComponents(
                         new MessageButton()
@@ -63,16 +60,11 @@ module.exports.run = async (interaction) => {
             });
         });
     })
-
 }
 
 module.exports.help = {
-    // name: "create-npc",
-    // alias: ["cNPC"],
-    // description: "Creates a new channel with questions about your new NPC",
     category: "Dungeons & Dragons",
     name: "create-npc",
-    // alias: [],
     description: "Creates a new channel with questions about your new NPC",
     options: [],
 }
@@ -208,9 +200,6 @@ async function characterCreationQuestion(QUESTION_OBJECT, createdChannel, newCha
                 newCharacter.save();
             }).catch(function (error) {
                 logger.error(error)
-                // createdChannel.delete().then(() => {
-                //     interaction.author.send({ content: 'Times up! You took too long to respond. Try again by requesting a new character creation channel.' });
-                // });
             })
         });
     }

@@ -170,7 +170,7 @@ module.exports = async (bot, interaction) => {
                     interaction.channel.send("Only Dm's can set NPC's to visible").then(msg => { setTimeout(() => msg.delete(), 3000) }).catch(err => logger.error(err));
                     return;
                 }
-                //TODO may need some revision
+                //! TODO Broken Id has been removed from channelname should be refactored in a different branch
                 charId = interaction.channel.name.split("⼁")[0];
                 await NonPlayableCharacter.findOne({ where: { id: charId, server: interaction.guildId } }).then((character) => {
                     if (character) {

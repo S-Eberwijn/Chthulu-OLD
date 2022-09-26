@@ -5,6 +5,7 @@ const { NonPlayableCharacter } = require('../../../database/models/NonPlayableCh
 
 
 module.exports.run = async (interaction) => {
+    let successfull = true;
     if (!interaction.member.roles.cache.has(interaction.guild.roles.cache.find(role => role.name.includes('Dungeon Master')).id)) {
         await interaction.reply({
             content: "Only Dungeon Masters can use this command",
@@ -22,12 +23,15 @@ module.exports.run = async (interaction) => {
                 character.save()
             }
         })
-    await NonPlayableCharacter.findAll({ where: { server: interaction.guildId, status: "visible" } }).then((npcs) => {
+    await NonPlayableCharacter.findAll({ where: { server: interaction.guildId, status: "VISIBLE" } }).then((npcs) => {
+        console.log(npcs)
         if (npcs.length < 1) {
             interaction.reply({
                 content: "Your server has no visible npcs, add a new ncp using the !cnpc command and set it to visible.",
                 ephemeral: true,
             });
+            successfull = false;
+            return
         }
         else if (npcs.length <= 25)//create new method
             messageComponentsArray.push(
@@ -117,7 +121,7 @@ module.exports.run = async (interaction) => {
         }
     });
     //TODO revision this since id can't be used to call from database
-
+    if(!successfull) {return}
     await interaction.reply({
         content: "chose an npc to impersonate",
         components: messageComponentsArray,
@@ -153,9 +157,6 @@ module.exports.run = async (interaction) => {
 }
 
 module.exports.help = {
-    // name: 'impersonate',
-    // permission: [],
-    // alias: [],
     category: "Dungeons & Dragons",
     name: 'impersonate',
     description: 'Allows a dm to talk as if he/she is that npc.',

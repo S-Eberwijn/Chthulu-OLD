@@ -155,7 +155,6 @@ module.exports.modalSubmit = async (modal) => {
 
         // Update channel permissions so everyone can't see it.
         await CREATED_CHANNEL.permissionOverwrites.create(CREATED_CHANNEL.guild.roles.everyone, { VIEW_CHANNEL: false });
-
         // Update channel permissions so Dungeon Masters can see it.
         CREATED_CHANNEL.permissionOverwrites.edit(modal.guild.roles.cache.find(role => role.name.toLowerCase().includes('dungeon master')), {
             CREATE_INSTANT_INVITE: false,
@@ -248,11 +247,11 @@ module.exports.buttonSubmit = async (button) => {
     const USER_MENTION_ARRAY = Array.from(button.message.mentions.users.values())
     const targetUser = USER_MENTION_ARRAY[1] ? USER_MENTION_ARRAY[1] : USER_MENTION_ARRAY[0];
     // Return if no session request has been found in the database corresponding to the server id.
-    if (!FOUND_GAME_SESSION) return button.message.channel.send({ content: 'Something went wrong; Cannot find this session request in the database!' }).then(msg => { setTimeout(() => msg.delete(), 3000) }).catch(err => console.log(err));
+    if (!FOUND_GAME_SESSION) return button.message.channel.send({ content: 'Something went wrong; Cannot find this session request in the database!' }).then(msg => { setTimeout(() => msg.delete(), 3000) }).catch(err => console.error(err));
     // Return if no server info has been found in the database corresponding to the server id.
-    if (!GENERAL_SERVER_INFO) return message.channel.send({ content: 'Something went wrong; Cannot find general info of this server in the database!' }).then(msg => { setTimeout(() => msg.delete(), 3000) }).catch(err => console.log(err));
+    if (!GENERAL_SERVER_INFO) return message.channel.send({ content: 'Something went wrong; Cannot find general info of this server in the database!' }).then(msg => { setTimeout(() => msg.delete(), 3000) }).catch(err => console.error(err));
 
-    if (!BUTTON_IDS.includes(button.customId)) return console.log("Something went wrong")
+    if (!BUTTON_IDS.includes(button.customId)) return console.error("Something went wrong")
     switch (button.customId) {//put switch case into new method
         // approved
         case BUTTON_IDS[0]:
@@ -304,7 +303,7 @@ module.exports.buttonSubmit = async (button) => {
             break;
         // 'played'
         case BUTTON_IDS[3]:
-            if (!isDungeonMaster) return console.log("You are not a dungeon master!")
+            if (!isDungeonMaster) return button.reply({ content: "You are not a dungeon master!"});
             // Update session database status.
             updateGameSessionStatus(FOUND_GAME_SESSION, 'PLAYED')
             // Delete session channel.
@@ -316,7 +315,7 @@ module.exports.buttonSubmit = async (button) => {
             break;
         // 'cancel'
         case BUTTON_IDS[4]:
-            if (!isDungeonMaster) return console.log("You are not a dungeon master!")
+            if (!isDungeonMaster) return button.reply({ content: "You are not a dungeon master!"});
             // Update session database status.
             updateGameSessionStatus(FOUND_GAME_SESSION, 'CANCELED')
             // Delete session channel.
@@ -328,9 +327,9 @@ module.exports.buttonSubmit = async (button) => {
             break;
         // 'join accepted'
         case BUTTON_IDS[5]:
-            if (!isSessionCommander) return console.log("You are not the session commander!")
-            if (!targetUser) return console.log("No target user!")
-            if (!(FOUND_GAME_SESSION.session_party.length < 5)) return button.reply({ content: 'The session party has reached its maximum allowed players. This user is not added to the party!' });
+            if (!isSessionCommander) return button.reply({ content: "You are not the session commander!"})
+            if (!targetUser) return console.error("No target user!")
+            if (FOUND_GAME_SESSION.session_party.length >= 5) return button.reply({ content: 'The session party has reached its maximum allowed players. This user is not added to the party!' });
             // Send the person who wants to join the session he / she got accepted.
             targetUser.send({ content: `Your request to join ${bot.users.cache.get(FOUND_GAME_SESSION.session_commander).username}'s session has been **ACCEPTED**` });
             // Add user to session channel.
@@ -371,8 +370,8 @@ module.exports.buttonSubmit = async (button) => {
         case BUTTON_IDS[6]:
             //- const FOUND_GAME_SESSION = await GameSession.findOne({ where: { message_id_discord: button.message.id } });
             //- const isSessionCommander = FOUND_GAME_SESSION.session_commander === button.user.id;
-            if (!isSessionCommander) return console.log("You are not the session commander!")
-            if (!targetUser) return console.log("No target user!")
+            if (!isSessionCommander) return console.error("You are not the session commander!")
+            if (!targetUser) return console.error("No target user!")
 
             // Send the person who requested to join the session, he/she got declined.
             targetUser.send({ content: `Your request to join ${bot.users.cache.get(FOUND_GAME_SESSION.session_commander).username}'s session has been **DECLINED**` });
@@ -577,8 +576,7 @@ function createSessionsOverviewEmbedPages(sessions) {
         pages.push(new MessageEmbed()
             .setAuthor({ name: 'Session board', iconURL: getBot().user.displayAvatarURL() })
             .setDescription(`${sessions.slice(index * 5, 5 * (index + 1))
-                ?.map(session => `> **Session ${session.session_number}:** \u200b \`
-                ${getPrettyDateString(new Date(session.date))}\` \n\`\`\`${session.objective}\`\`\` `).join('\n\n')}`)
+                ?.map(session => `> **Session ${session.session_number}:** \u200b \` ${getPrettyDateString(new Date(session.date))}\` \n\`\`\`${session.objective}\`\`\` `).join('\n\n')}`)
             .setFooter({ text: `${1}/${Math.ceil(sessions.length / MAX_SESSIONS_SHOWN_PER_PAGE)} page` })
             .setTimestamp())
     }
