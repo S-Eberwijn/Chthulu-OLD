@@ -1,6 +1,6 @@
 {
   "name": "chthulu",
-  "version": "1.2.11",
+  "version": "1.2.14",
   "description": "Ready to serve my master Khthonios",
   "engines": {
     "node": "16.14.2"

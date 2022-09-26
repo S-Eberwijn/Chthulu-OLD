@@ -87,16 +87,16 @@ exports.guildInformationalQuestsDashboardPage = async (req, res) => {
 //CREATE QUEST POST
 exports.createQuestPost = async (req, res) => {
     // TODO add validator on backend level
-    createQuest(req.body, res.locals.renderData?.selectedGuildId, req.user?.discordID).then((quest) => { res.json(quest); }).catch(() => { res.sendStatus(401) });
+    createQuest(req.body, req.params?.id, req.user?.discordID).then((quest) => { res.json(quest); }).catch((error) => { res.status(400).send({ message: `${error.message}` }) });
 }
 
 exports.deleteQuestRequest = async (req, res) => {
-    await deleteQuest(req.body?.quest_id, req.params?.id).then(() => { return res.sendStatus(201) }).catch(() => { return res.sendStatus(400) });
+    await deleteQuest(req.body?.quest_id, req.params?.id).then(() => { return res.sendStatus(200) }).catch(() => { return res.sendStatus(400) });
 }
 
 //TODO: Add validation with express validation
 exports.editQuestRequest = async (req, res) => {
-    await updateQuest(req.body, req.params?.id).then(() => { return res.sendStatus(201) }).catch(() => { return res.sendStatus(400) });
+    await updateQuest(req.body, req.params?.id).then(() => { return res.sendStatus(200) }).catch(() => { return res.sendStatus(400) });
 }
 
 exports.guildInformationalMapDashboardPage = async (req, res) => {
@@ -137,7 +137,6 @@ exports.declineGameSession = async (req, res) => {
 }
 
 exports.joinGameSession = async (req, res) => {
-    console.log(req.params?.id)
     await joinGameSession(req.body, req.params?.id, req.user?.discordID).then(message => { return res.json(message); }).catch((err) => { return res.status(400).json(err) });
 }
 

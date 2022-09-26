@@ -31,13 +31,14 @@ module.exports.run = async (interaction) => {
 
     await NonPlayableCharacter.create({
         id: `N${timestamp}`,
-        character_id: `N${timestamp}`,
         creator: interaction.user.id,
         server: interaction.guild.id,
         status: "CREATING"
     }).then(async () => {
         let newCharacter = await NonPlayableCharacter.findOne({ where: { id: `N${timestamp}`, server: interaction.guild.id, creator: interaction.user.id } });
         interaction.guild.channels.create(`${interaction.user.username}-${interaction.user.discriminator}`, "text").then(async createdChannel => {
+            newCharacter.character_identifier = createdChannel.id;
+            newCharacter.save();
             createdChannel.setParent(characterCreateCategory, { lockPermission: false });
             createdChannel.permissionOverwrites.set([{ id: interaction.user, allow: ['VIEW_CHANNEL'] }, { id: interaction.guild.roles.cache.find(role => role.name.includes('Dungeon Master')), allow: ['VIEW_CHANNEL'] }, { id: interaction.channel.guild.roles.everyone, deny: ['VIEW_CHANNEL'] }]);
             createdChannel.send({ embeds: [createCreatedChannelEmbed(bot, interaction)] }).then(async () => {
@@ -71,7 +72,7 @@ module.exports.help = {
 //check for duplicate code with characterCreation
 async function characterCreationQuestion(QUESTION_OBJECT, createdChannel, newCharacter, interaction, bot, index) {
     let questionEmbed = new MessageEmbed()
-        .setAuthor({name: `${bot.user.username}`, iconURL: bot.user.displayAvatarURL()})
+        .setAuthor({ name: `${bot.user.username}`, iconURL: bot.user.displayAvatarURL() })
         .setColor("GREEN")
         .setDescription(QUESTION_OBJECT.question)
 
@@ -207,7 +208,7 @@ async function characterCreationQuestion(QUESTION_OBJECT, createdChannel, newCha
 
 function createCreatedChannelEmbed(bot, interaction) {
     let embedCreatedChannel = new MessageEmbed()
-        .setAuthor({name: `${bot.user.username}`, iconURL: bot.user.displayAvatarURL()})
+        .setAuthor({ name: `${bot.user.username}`, iconURL: bot.user.displayAvatarURL() })
         .setColor("GREEN")
         .addField(`Hello traveler!`, `<@${interaction.user.id.toString()}>, welcome to your character creation channel!`, true);
     return embedCreatedChannel;

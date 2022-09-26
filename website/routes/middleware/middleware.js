@@ -20,6 +20,8 @@ async function centralizedData(req, res, next) {
     //?? i dont fully understand what this line does, but it's a blocking error
     const loggedInUser = req.user ? { username, discriminator, avatar, discordID } = req.user : undefined;
 
+    // console.log(req)
+
     updateGuildsToAddNotification(req.user?.guildsToAddNotification, selectedGuildID).then(guildArray => { req.user.guildsToAddNotification = guildArray; req.session.save() }).catch(() => { });
 
     res.locals.renderData = {

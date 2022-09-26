@@ -106,7 +106,7 @@ async function createGameSession(sessionData, serverID, userID) {
 	const DISCORD_USER = getUserFromBot(userID);
 	return new Promise(async (resolve, reject) => {
 		const USER_CHARACTER = await getUserCharacter(userID, serverID);
-
+		if (!USER_CHARACTER) return reject("No playable character found for user");
 		const SESSIONS_CATEGORY = GUILD?.channels.cache.find(
 			(c) => c.name == "--SESSIONS--" && c.type == "GUILD_CATEGORY",
 		);
@@ -119,9 +119,7 @@ async function createGameSession(sessionData, serverID, userID) {
 			session_location = sessionData.session_location || `Roll20 (online)`;
 
 		if (session_date_text.match(DATE_REGEX_PATTERN) === null)
-			return reject(
-				`Invalid date format, ${session_date_text} does not comply with the regex pattern.`,
-			);
+			return reject(`Invalid date format, ${session_date_text} does not comply with the regex pattern.`);
 		let date_year = session_date_text.split(" ")[0].split("/")[2],
 			date_month = session_date_text.split(" ")[0].split("/")[1],
 			date_day = session_date_text.split(" ")[0].split("/")[0],
