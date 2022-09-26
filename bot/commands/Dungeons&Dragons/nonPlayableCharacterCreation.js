@@ -41,7 +41,7 @@ module.exports.run = async (interaction) => {
         let newCharacter = await NonPlayableCharacter.findOne({ where: { id: `N${timestamp}`, server: interaction.guild.id, creator: interaction.user.id } });;
 
         interaction.guild.channels.create(`${interaction.user.username}-${interaction.user.discriminator}`, "text").then(async createdChannel => {
-            newCharacter.character_id = createdChannel.id;
+            newCharacter.character_identifier = createdChannel.id;
             newCharacter.save();
             createdChannel.setParent(characterCreateCategory, { lockPermission: false });
             createdChannel.permissionOverwrites.set([{ id: interaction.user, allow: ['VIEW_CHANNEL'] }, { id: interaction.guild.roles.cache.find(role => role.name.includes('Dungeon Master')), allow: ['VIEW_CHANNEL'] }, { id: interaction.channel.guild.roles.everyone, deny: ['VIEW_CHANNEL'] }]);

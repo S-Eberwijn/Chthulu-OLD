@@ -178,9 +178,8 @@ module.exports = async (bot, interaction) => {
                     interaction.channel.send("Only Dm's can set NPC's to visible").then(msg => { setTimeout(() => msg.delete(), 3000) }).catch(err => logger.error(err));
                     return;
                 }
-                //TODO may need some revision
                 charId = interaction.channel.id;
-                await NonPlayableCharacter.findOne({ where: { character_id: charId, server: interaction.guildId } }).then((character) => {
+                await NonPlayableCharacter.findOne({ where: { character_identifier: charId, server: interaction.guildId } }).then((character) => {
                     if (character) {
                         if (character.status == "VISIBLE") {
                             character.status = 'INVISIBLE';
