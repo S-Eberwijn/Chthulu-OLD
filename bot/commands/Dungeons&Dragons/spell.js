@@ -2,9 +2,8 @@ const tagSelector = require('cheerio');
 const request = require('request');
 const baseURL = "https://www.dnd-spells.com/spell/"
 const { MessageEmbed } = require('discord.js');
-//TODO: fix this
+
 module.exports.run = async (interaction) => {
-    return interaction.reply({ content: 'This command is currently disabled!', ephemeral: true });
     let stringMessage = interaction.options.getString('spell-name');
     stringMessage = stringMessage.replace(/ /g, "-");
 
@@ -26,33 +25,22 @@ module.exports.run = async (interaction) => {
     });
 }
 
-module.exports.help = {
-    category: "Dungeons & Dragons",
-    name: 'spell',
-    description: 'Gives information about a spell.',
-    ephemeral: true,
-    options: [{
-        name: 'spell-name',
-        type: 'STRING',
-        description: 'Give the name of the spell',
-        required: true
-    }],
-}
-
 function ProcesRequest(body) {
     let page = tagSelector.load(body);
     let content = page('h1[class=classic-title]').parent().text();
+    if (content.length == 0) {
+        return {status: 404};
+    }
+    content = content.split("Remove the adds")[1];
     let pageArray = content.split("\n");
 
     pageArray = pageArray.filter(item => item.trim());
+    console.log(pageArray);
     let casters = "";
     let spellDescription = "";
     let atHigherLevel = "Cannot be cast at higher level";
-    let i = 8;
+    let i = 7;
 
-    if (pageArray.length <= 9) {
-        return {status: 404};
-    }
     do {//append all spell description
         spellDescription += pageArray[i++].trim();
     } while ((!pageArray[i].includes("Page: ")) && (!pageArray[i].includes("At higher level")) && i < pageArray.length - 1)
@@ -71,13 +59,13 @@ function ProcesRequest(body) {
 
     return {
         "status": 200,
-        "title": pageArray[1].trim(),
-        "school": pageArray[2].split(" ").slice(-1)[0].trim(),
-        "level": pageArray[3].split(":")[1].trim(),
-        "castTime": pageArray[4].split(":")[1].trim(),
-        "range": pageArray[5].split(":")[1].trim(),
-        "comp": pageArray[6].split(":")[1].trim(),
-        "duration": pageArray[7].split(":")[1].trim(),
+        "title": pageArray[0].trim(),
+        "school": pageArray[1].split(" ").slice(-1)[0].trim(),
+        "level": pageArray[2].split(":")[1].trim(),
+        "castTime": pageArray[3].split(":")[1].trim(),
+        "range": pageArray[4].split(":")[1].trim(),
+        "comp": pageArray[5].split(":")[1].trim(),
+        "duration": pageArray[6].split(":")[1].trim(),
         "description": spellDescription,
         "higherLevel": atHigherLevel,
         "casters": casters.substring(0, casters.length - 2)
@@ -92,9 +80,9 @@ function ritual(interaction, stringMessage) {
         agentOptions: {
             rejectUnauthorized: false
         }
-    }, function (body) {
+    }, function (err, resp, body) {
         let data = ProcesRequest(body)
-        if (data == "404") {
+        if (data.status == 404) {
             interaction.reply({ content: "That spell was not found in the database", ephemeral: true });
         }
         else {
@@ -125,4 +113,17 @@ function EmbedSpellInMessage(data, message) {
         .setTimestamp()
         .setFooter({ text: data.casters });
     return msg;
+}
+
+module.exports.help = {
+    category: "Dungeons & Dragons",
+    name: 'spell',
+    description: 'Gives information about a spell.',
+    ephemeral: true,
+    options: [{
+        name: 'spell-name',
+        type: 'STRING',
+        description: 'Give the name of the spell',
+        required: true
+    }],
 }
