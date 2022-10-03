@@ -2,57 +2,58 @@ const tagSelector = require('cheerio');
 const request = require('request');
 const baseURL = "https://www.dnd-spells.com/spell/"
 const { MessageEmbed } = require('discord.js');
-//TODO: fix this
+
+/*
+* This function receives an Interaction,
+* The interaction allways contains the name of the spell.
+* The function will then search for the spell on dnd-spells.com
+* The function assumes everything is a normal spell.
+* If the spell is found, it will return the spell description.
+* If the spell is not found, It will assume that the spell is a ritual spell.
+* If the spell is still not found, it will send error message to the user.
+*/
 module.exports.run = async (interaction) => {
-    return interaction.reply({ content: 'This command is currently disabled!', ephemeral: true });
     let stringMessage = interaction.options.getString('spell-name');
     stringMessage = stringMessage.replace(/ /g, "-");
-
+    
     let url = baseURL + stringMessage;
     request({
         url: url,
         agentOptions: {
             rejectUnauthorized: false
         }
-    }, function (err, resp, body) {
-        let data = ProcesRequest(body)
+    }, async function (err, resp, body) {
+        let data = procesSpellRequest(body)
         if (data.status == 404) {
-            ritual(interaction, stringMessage)
+            data = await processRitualSpell(stringMessage)
+            if (data.status == 404) {
+                return interaction.reply({ content: "That spell was not found in the database", ephemeral: true });
+            }
         }
-        else {
-            let sigilImage = './bot/images/DnD/SpellSigils/' + data.school + '.png';
-            interaction.reply({ embeds: [EmbedSpellInMessage(data, stringMessage)], files: [sigilImage] });
-        }
+        let sigilImage = './bot/images/DnD/SpellSigils/' + data.school + '.png';
+        return  interaction.reply({ embeds: [EmbedSpellInMessage(data, stringMessage)], files: [sigilImage] });
     });
 }
 
-module.exports.help = {
-    category: "Dungeons & Dragons",
-    name: 'spell',
-    description: 'Gives information about a spell.',
-    ephemeral: true,
-    options: [{
-        name: 'spell-name',
-        type: 'STRING',
-        description: 'Give the name of the spell',
-        required: true
-    }],
-}
-
-function ProcesRequest(body) {
+function procesSpellRequest(body) {
     let page = tagSelector.load(body);
     let content = page('h1[class=classic-title]').parent().text();
+    if (content.length == 0) {
+        return { status: 404 };
+    }
+    content = content.split("Remove the adds")[1];
     let pageArray = content.split("\n");
 
     pageArray = pageArray.filter(item => item.trim());
+    return createSpellObject(pageArray);
+}
+
+function createSpellObject(pageArray) {
     let casters = "";
     let spellDescription = "";
     let atHigherLevel = "Cannot be cast at higher level";
-    let i = 8;
+    let i = 7;
 
-    if (pageArray.length <= 9) {
-        return {status: 404};
-    }
     do {//append all spell description
         spellDescription += pageArray[i++].trim();
     } while ((!pageArray[i].includes("Page: ")) && (!pageArray[i].includes("At higher level")) && i < pageArray.length - 1)
@@ -71,37 +72,36 @@ function ProcesRequest(body) {
 
     return {
         "status": 200,
-        "title": pageArray[1].trim(),
-        "school": pageArray[2].split(" ").slice(-1)[0].trim(),
-        "level": pageArray[3].split(":")[1].trim(),
-        "castTime": pageArray[4].split(":")[1].trim(),
-        "range": pageArray[5].split(":")[1].trim(),
-        "comp": pageArray[6].split(":")[1].trim(),
-        "duration": pageArray[7].split(":")[1].trim(),
+        "title": pageArray[0].trim(),
+        "school": pageArray[1].split(" ").slice(-1)[0].trim(),
+        "level": pageArray[2].split(":")[1].trim(),
+        "castTime": pageArray[3].split(":")[1].trim(),
+        "range": pageArray[4].split(":")[1].trim(),
+        "comp": pageArray[5].split(":")[1].trim(),
+        "duration": pageArray[6].split(":")[1].trim(),
         "description": spellDescription,
         "higherLevel": atHigherLevel,
         "casters": casters.substring(0, casters.length - 2)
     };
 }
 
-function ritual(interaction, stringMessage) {
+async function processRitualSpell(stringMessage) {
     stringMessage = stringMessage.replace(/ /g, "-").toLowerCase() + "-ritual";
     let url = baseURL + stringMessage;
-    request({
-        url: url,
-        agentOptions: {
-            rejectUnauthorized: false
-        }
-    }, function (body) {
-        let data = ProcesRequest(body)
-        if (data == "404") {
-            interaction.reply({ content: "That spell was not found in the database", ephemeral: true });
-        }
-        else {
-            let sigilImage = './bot/images/DnD/SpellSigils/' + data.school + '.png';
-            interaction.reply({ embeds: [EmbedSpellInMessage(data, stringMessage)], files: [sigilImage] });
-        }
-    });
+    let body = await new Promise(
+        resolve => {
+            request({
+                url: url,
+                agentOptions: {
+                    rejectUnauthorized: false
+                }
+            }, async function (err, resp, body) {
+                return resolve(body);
+            });
+        })
+    let data = procesSpellRequest(body)
+    return data;
+
 }
 
 function EmbedSpellInMessage(data, message) {
@@ -125,4 +125,24 @@ function EmbedSpellInMessage(data, message) {
         .setTimestamp()
         .setFooter({ text: data.casters });
     return msg;
+}
+
+module.exports.help = {
+    category: "Dungeons & Dragons",
+    name: 'spell',
+    description: 'Gives information about a spell.',
+    ephemeral: true,
+    options: [{
+        name: 'spell-name',
+        type: 'STRING',
+        description: 'Give the name of the spell',
+        required: true
+    }],
+}
+module.exports.exportedForTesting = {
+    procesSpellRequest,
+    createSpellObject,
+    processRitualSpell,
+    EmbedSpellInMessage,
+    baseURL
 }
