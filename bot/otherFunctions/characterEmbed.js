@@ -48,7 +48,6 @@ exports.createNPCPaginationEmbedInChannel = async function (channel,characters,c
 }
 
 async function getCharacterEmbed(character) {
-    // console.log(character);
     return new MessageEmbed()
         .setColor(await getAverageImageColor(character.picture_url))
         .setThumbnail(`attachment://${character.level}.png`)
@@ -63,7 +62,6 @@ async function getCharacterEmbed(character) {
 }
 
 async function getNonPlayableCharacterEmbed(npc) {
-    //console.log(npc);
     return new MessageEmbed()
         .setColor("#2C2F33")
         .setTitle(`${npc.name} (${npc.age || '?'})`)
@@ -105,20 +103,18 @@ function hasWhiteSpace(s) {
 }
 
 async function getCharacterPicture(character) {
-    // const background = await loadImage(character.get('picture_url').toLowerCase());
 
     const canvas = createCanvas(1200, 900);
     const context = canvas.getContext('2d');
 
     const url = character.picture_url
-    // console.log(url);
     const image = await loadImage(url)
 
-    var hRatio = canvas.width / image.width;
-    var vRatio = canvas.height / image.height;
-    var ratio = Math.min(hRatio, vRatio);
-    var centerShift_x = (canvas.width - image.width * ratio) / 2;
-    var centerShift_y = (canvas.height - image.height * ratio) / 2;
+    let hRatio = canvas.width / image.width;
+    let vRatio = canvas.height / image.height;
+    let ratio = Math.min(hRatio, vRatio);
+    let centerShift_x = (canvas.width - image.width * ratio) / 2;
+    let centerShift_y = (canvas.height - image.height * ratio) / 2;
     context.clearRect(0, 0, canvas.width, canvas.height);
     context.drawImage(image, 0, 0, image.width, image.height,
         centerShift_x, centerShift_y, image.width * ratio, image.height * ratio);
@@ -127,7 +123,7 @@ async function getCharacterPicture(character) {
 }
 
 exports.getAverageColor = async function (url) {
-    return await getAverageImageColor(url);
+    return getAverageImageColor(url);
 }
 
 async function getAverageImageColor(imageUrl) {

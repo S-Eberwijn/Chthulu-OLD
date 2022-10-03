@@ -1,11 +1,4 @@
-// const { logger } = require(`../../functions/logger`)
-const {
-	MessageEmbed,
-	Modal,
-	TextInputComponent,
-	MessageActionRow,
-	MessageButton,
-} = require("discord.js");
+const { MessageEmbed } = require("discord.js");
 
 const { GameSession } = require("../../database/models/GameSession");
 const { GeneralInfo } = require("../../database/models/GeneralInfo");
@@ -23,14 +16,14 @@ const DATE_REGEX_PATTERN =
 	/[0-3]\d\/(0[1-9]|1[0-2])\/\d{4} [0-2]\d:[0-5]\d(?:\.\d+)?Z?/g;
 
 async function getAllGameSessions() {
-	return await GameSession.findAll();
+	return GameSession.findAll();
 }
 
 /**
  * @param {"532525442201026580"} serverID - The ID of a Discord server.
  */
 async function getAllServerGameSessions(serverID) {
-	return await GameSession.findAll({ where: { server: serverID } });
+	return GameSession.findAll({ where: { server: serverID } });
 }
 
 /**
@@ -52,8 +45,8 @@ async function fetchGameSessionMessage(
 			foundMessage != null
 				? foundMessage
 				: await PLANNED_SESSIONS_CHANNEL.messages
-						.fetch(messageID)
-						.catch(() => console.log("Message not found"));
+					.fetch(messageID)
+					.catch(() => console.log("Message not found"));
 		return foundMessage;
 	} catch (error) {
 		console.log(error);
@@ -216,7 +209,7 @@ async function createGameSession(sessionData, serverID, userID) {
 
 				CREATED_CHANNEL.send({
 					content: `${DISCORD_USER}, welcome to your session request channel!`,
-				}).then(async () => {});
+				}).then(async () => { });
 
 				SESSION_REQUEST_CHANNEL.send({
 					embeds: [
@@ -396,15 +389,12 @@ async function joinGameSession(sessionData, serverID, userID) {
 		let GAME_SESSION = await GameSession.findOne({
 			where: { id: sessionData.gameSessionID, server: serverID },
 		});
-		if (!GAME_SESSION)
-			return reject("Session can not be found in the database!");
+		if (!GAME_SESSION) return reject("Session can not be found in the database!");
 
-		if (isDungeonMaster(USER_ID, getGuildFromBot(serverID)))
-			return reject("Dungeon Masters can not join a sessions party!");
+		if (isDungeonMaster(USER_ID, getGuildFromBot(serverID))) return reject("Dungeon Masters can not join a sessions party!");
 
 		const isPlayerAlreadyInParty = GAME_SESSION.session_party.includes(USER_ID);
-		if (isPlayerAlreadyInParty)
-			return reject("Player is already in the party!");
+		if (isPlayerAlreadyInParty) return reject("Player is already in the party!");
 		const isPartyFull = GAME_SESSION.session_party.length >= 5;
 		if (isPartyFull) return reject("The party capacity has reached the limit!");
 		const USER_CHARACTER = await getUserCharacter(USER_ID, serverID);
@@ -483,9 +473,8 @@ async function joinGameSession(sessionData, serverID, userID) {
 				return reject("Only session commanders can add players to the party!");
 			// Send the person who wants to join the session he / she got accepted.
 			DISCORD_USER?.send({
-				content: `You have been added by ${
-					BOT.users.cache.get(GAME_SESSION.session_commander).username
-				} to a session`,
+				content: `You have been added by ${BOT.users.cache.get(GAME_SESSION.session_commander).username
+					} to a session`,
 			});
 			// // Add user to session channel.
 			GAME_SESSION_CHANNEL?.permissionOverwrites.edit(DISCORD_USER, {
@@ -572,18 +561,19 @@ function giveUserRequestedStatus(sessions, gameSessionChannel, userID, jsonDB) {
 }
 
 function removeUserRequestStatus(sessions, gameSessionChannel, userID, jsonDB) {
-	for (let i = 0; i < sessions.length; i++) {
-		if (sessions[i].session_channel_id === gameSessionChannel) {
-			for (let j = 0; j < sessions[i].requested.length; j++) {
-				if (sessions[i].requested[j].user_id === userID) {
-					// bot.sessionAddUserRequest['sessions'][i].requested[j].user_id = "";
-					sessions[i].requested.splice(j, 1);
+	for (let session of sessions) {
+		if (session.session_channel === gameSessionChannel) {
+			for (let requested of session.requested) {
+				if (requested.user_id === userID) {
+					session.requested[session.requested.length] = {
+						user_id: `${userID}`,
+					};
 					break;
 				}
 			}
 		}
 	}
-	// Write the edited data to designated JSON database.
+	// Write the edited data to designated JSON database. -> doet dit iets?
 	writeToJsonDb("./bot/jsonDb/sessionAddUserRequest.json", jsonDB);
 }
 // ./bot/jsonDb/sessionAddUserRequest.json
@@ -597,11 +587,10 @@ function writeToJsonDb(location, data) {
 
 function playerAlreadyRequestedForSession(sessions, userID, sessionChannelID) {
 	// TODO: Make this per server.
-	for (let i = 0; i < sessions.length; i++) {
-		if (sessions[i].session_channel_id === sessionChannelID) {
-			// console.log('inside')
-			for (let j = 0; j < sessions[i].requested.length; j++) {
-				if (sessions[i].requested[j].user_id === userID) {
+	for (let session of sessions) {
+		if (session.session_channel === sessionChannelID) {
+			for (let requested of session.requested) {
+				if (requested.user_id === userID) {
 					return true;
 				}
 			}
@@ -612,10 +601,10 @@ function playerAlreadyRequestedForSession(sessions, userID, sessionChannelID) {
 
 function playerAlreadyDenied(sessions, userID, sessionChannelID) {
 	// TODO: Make this per server.
-	for (let i = 0; i < sessions.length; i++) {
-		if (sessions[i].session_channel_id === sessionChannelID) {
-			for (let j = 0; j < sessions[i].denied.length; j++) {
-				if (sessions[i].denied[j].user_id === userID) {
+	for (let session of sessions) {
+		if (session.session_channel === sessionChannelID) {
+			for (let denied of session.denied) {
+				if (denied.user_id === userID) {
 					return true;
 				}
 			}
@@ -686,7 +675,7 @@ async function createSession(
 	session_channel_id,
 ) {
 	const TIMESTAMP = Date.now();
-	return await GameSession.create({
+	return GameSession.create({
 		id: `GS${TIMESTAMP}`,
 		message_id_discord: message_id,
 		session_commander: userID,

@@ -121,6 +121,31 @@
             "session_channel_id": "1016331645315465276",
             "requested": [],
             "denied": []
+        },
+        {
+            "session_channel_id": "1022857571717095494",
+            "requested": [],
+            "denied": []
+        },
+        {
+            "session_channel_id": "1022860008167321672",
+            "requested": [],
+            "denied": []
+        },
+        {
+            "session_channel_id": "1022861044588220496",
+            "requested": [],
+            "denied": []
+        },
+        {
+            "session_channel_id": "1023859789199065130",
+            "requested": [],
+            "denied": []
+        },
+        {
+            "session_channel_id": "1023860221002649610",
+            "requested": [],
+            "denied": []
         }
     ]
 }

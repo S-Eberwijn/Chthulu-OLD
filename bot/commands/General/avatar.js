@@ -8,14 +8,9 @@ module.exports.run = async (interaction) => {
         .setAuthor({ name: user.username })
         .setImage(userAvatarURL);
     interaction.reply({ embeds: [avatarEmbed] });
-    // const text = interaction.options.getString('text');
-    // return await interaction.reply({ content: text , ephemeral: true});
 }
 
 module.exports.help = {
-    // name: 'avatar',
-    // permission: [],
-    // alias: [],
     category: "General",
     name: 'avatar',
     description: 'Shows the avatar of an user.',

@@ -1,5 +1,4 @@
-const router = require('express').Router(),
-    { loginPage, } = require('../controllers/home');
+const router = require('express').Router();
 const passport = require('passport');
 
 router.get('/login', passport.authenticate('discord'));

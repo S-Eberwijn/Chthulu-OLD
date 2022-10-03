@@ -7,13 +7,14 @@ const request = require('request');
 
 module.exports.run = async (interaction) => {
     interaction.reply("processing")
+    //TODO: refactor so it's actually useful
     for (let i = 1; i < 6; i++) {
-        await request(api + "?page=" + i, { json: true }, async (err, res, body) => {
+        request(api + "?page=" + i, { json: true }, async (err, res, body) => {
             if (err) { return logger.error(err); }
             let data = body.results
             let response = [];
-            for (let i = 0; i < data.length; i++) {
-                response.push(data[i].name)
+            for(const item of data){
+                response.push(item.name);
             }
             interaction.editReply(response.join())
         });
@@ -22,12 +23,8 @@ module.exports.run = async (interaction) => {
 }
 
 module.exports.help = {
-    // name: "magic-item-list",
-    // alias: [],
-    // description: "gives a list of all default magic items.",
     category: "Dungeons & Dragons",
     name: "magic-item-list",
-    // alias: [],
     description: "gives a list of all default magic items.",
     options: [],
 }

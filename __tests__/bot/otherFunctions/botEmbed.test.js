@@ -4,7 +4,7 @@ const { getBotEmbed } = require('../../../bot/otherFunctions/botEmbed');
 
 describe(`Tests for function 'getBotEmbed'`, () => {
     test("bot owner is found", () => {
-        var owner = { username: 'Khthonios', discriminator: '4384' };
+        let owner = { username: 'Khthonios', discriminator: '4384' };
 
         expect(owner.username).toMatch("Khthonios");
 

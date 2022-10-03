@@ -17,7 +17,7 @@ const { fetchGameSessionMessage, editRequestSessionEmbedToPlannedSessionEmbed, u
 
 const DATE_REGEX_PATTERN = /[0-3]\d\/(0[1-9]|1[0-2])\/\d{4} [0-2]\d:[0-5]\d(?:\.\d+)?Z?/g;
 const COMMAND_OPTIONS = ['request', 'board'];
-// const QUESTIONS_ARRAY = require('../../jsonDb/sessionChannelQuestion.json');
+//- const QUESTIONS_ARRAY = require('../../jsonDb/sessionChannelQuestion.json');
 const MODAL_IDS = ['session-request-modal'];
 const BUTTON_IDS = ['approve-session-request-button', 'decline-session-request-button', 'join-session-button', 'played-session-button', 'cancel-session-button', 'join-accepted-button', 'join-denied-button']
 
@@ -93,7 +93,7 @@ module.exports.run = async (interaction) => {
     if (!messageAuthorCharacter) return interaction.reply({ content: `You do not have a character in the database!\nCreate one by using the "/createcharacter" command.` }).then(() => { setTimeout(() => interaction.deleteReply(), 3000) }).catch(err => logger.error(err));
 
     if (!SESSIONS_CATEGORY) return interaction.reply({ content: `There is no category named \"--SESSIONS--\"!` }).then(() => { setTimeout(() => interaction.deleteReply(), 3000) }).catch(err => logger.error(err));
-    // if (!interaction.options.get('action').value) return interaction.channel.send({ content: "Not enough valid arguments\nCorrect format: !session [request]" });
+    //- if (!interaction.options.get('action').value) return interaction.channel.send({ content: "Not enough valid arguments\nCorrect format: !session [request]" });
     if (!COMMAND_OPTIONS.includes(interaction.options.get('action').value)) return interaction.channel.send({ content: `Not a valid session option\nCorrect format: !session [${COMMAND_OPTIONS.map(option => option).join(', ')}]` });
 
     switch (interaction.options.get('action').value) {
@@ -111,8 +111,6 @@ module.exports.run = async (interaction) => {
             break;
     }
 }
-
-
 
 module.exports.help = {
     category: "Dungeons & Dragons",
@@ -157,7 +155,6 @@ module.exports.modalSubmit = async (modal) => {
 
         // Update channel permissions so everyone can't see it.
         await CREATED_CHANNEL.permissionOverwrites.create(CREATED_CHANNEL.guild.roles.everyone, { VIEW_CHANNEL: false });
-
         // Update channel permissions so Dungeon Masters can see it.
         CREATED_CHANNEL.permissionOverwrites.edit(modal.guild.roles.cache.find(role => role.name.toLowerCase().includes('dungeon master')), {
             CREATE_INSTANT_INVITE: false,
@@ -250,13 +247,13 @@ module.exports.buttonSubmit = async (button) => {
     const USER_MENTION_ARRAY = Array.from(button.message.mentions.users.values())
     const targetUser = USER_MENTION_ARRAY[1] ? USER_MENTION_ARRAY[1] : USER_MENTION_ARRAY[0];
     // Return if no session request has been found in the database corresponding to the server id.
-    if (!FOUND_GAME_SESSION) return button.message.channel.send({ content: 'Something went wrong; Cannot find this session request in the database!' }).then(msg => { setTimeout(() => msg.delete(), 3000) }).catch(err => console.log(err));
+    if (!FOUND_GAME_SESSION) return button.message.channel.send({ content: 'Something went wrong; Cannot find this session request in the database!' }).then(msg => { setTimeout(() => msg.delete(), 3000) }).catch(err => console.error(err));
     // Return if no server info has been found in the database corresponding to the server id.
-    if (!GENERAL_SERVER_INFO) return message.channel.send({ content: 'Something went wrong; Cannot find general info of this server in the database!' }).then(msg => { setTimeout(() => msg.delete(), 3000) }).catch(err => console.log(err));
+    if (!GENERAL_SERVER_INFO) return message.channel.send({ content: 'Something went wrong; Cannot find general info of this server in the database!' }).then(msg => { setTimeout(() => msg.delete(), 3000) }).catch(err => console.error(err));
 
-    if (!BUTTON_IDS.includes(button.customId)) return console.log("Something went wrong")
-    switch (button.customId) {
-        // 'approved'
+    if (!BUTTON_IDS.includes(button.customId)) return console.error("Something went wrong")
+    switch (button.customId) {//put switch case into new method
+        // approved
         case BUTTON_IDS[0]:
             if (!isDungeonMaster) return button.reply({ content: 'Only Dungeon Masters can approve sessions!', ephemeral: true })
             PLANNED_SESSIONS_CHANNEL.send({ embeds: [editRequestSessionEmbedToPlannedSessionEmbed(button.user.id, GENERAL_SERVER_INFO.session_number, button.message.embeds[0])], components: [MESSAGE_COMPONENTS_PLANNED] }).then(async PLANNED_SESSION_MESSAGE => {
@@ -306,7 +303,7 @@ module.exports.buttonSubmit = async (button) => {
             break;
         // 'played'
         case BUTTON_IDS[3]:
-            if (!isDungeonMaster) return console.log("You are not a dungeon master!")
+            if (!isDungeonMaster) return button.reply({ content: "You are not a dungeon master!"});
             // Update session database status.
             updateGameSessionStatus(FOUND_GAME_SESSION, 'PLAYED')
             // Delete session channel.
@@ -318,7 +315,7 @@ module.exports.buttonSubmit = async (button) => {
             break;
         // 'cancel'
         case BUTTON_IDS[4]:
-            if (!isDungeonMaster) return console.log("You are not a dungeon master!")
+            if (!isDungeonMaster) return button.reply({ content: "You are not a dungeon master!"});
             // Update session database status.
             updateGameSessionStatus(FOUND_GAME_SESSION, 'CANCELED')
             // Delete session channel.
@@ -330,9 +327,9 @@ module.exports.buttonSubmit = async (button) => {
             break;
         // 'join accepted'
         case BUTTON_IDS[5]:
-            if (!isSessionCommander) return console.log("You are not the session commander!")
-            if (!targetUser) return console.log("No target user!")
-            if (!(FOUND_GAME_SESSION.session_party.length < 5)) return button.reply({ content: 'The session party has reached its maximum allowed players. This user is not added to the party!' });
+            if (!isSessionCommander) return button.reply({ content: "You are not the session commander!"})
+            if (!targetUser) return console.error("No target user!")
+            if (FOUND_GAME_SESSION.session_party.length >= 5) return button.reply({ content: 'The session party has reached its maximum allowed players. This user is not added to the party!' });
             // Send the person who wants to join the session he / she got accepted.
             targetUser.send({ content: `Your request to join ${bot.users.cache.get(FOUND_GAME_SESSION.session_commander).username}'s session has been **ACCEPTED**` });
             // Add user to session channel.
@@ -371,10 +368,10 @@ module.exports.buttonSubmit = async (button) => {
             break;
         // 'join denied'
         case BUTTON_IDS[6]:
-            // const FOUND_GAME_SESSION = await GameSession.findOne({ where: { message_id_discord: button.message.id } });
-            // const isSessionCommander = FOUND_GAME_SESSION.session_commander === button.user.id;
-            if (!isSessionCommander) return console.log("You are not the session commander!")
-            if (!targetUser) return console.log("No target user!")
+            //- const FOUND_GAME_SESSION = await GameSession.findOne({ where: { message_id_discord: button.message.id } });
+            //- const isSessionCommander = FOUND_GAME_SESSION.session_commander === button.user.id;
+            if (!isSessionCommander) return console.error("You are not the session commander!")
+            if (!targetUser) return console.error("No target user!")
 
             // Send the person who requested to join the session, he/she got declined.
             targetUser.send({ content: `Your request to join ${bot.users.cache.get(FOUND_GAME_SESSION.session_commander).username}'s session has been **DECLINED**` });
@@ -390,8 +387,7 @@ module.exports.buttonSubmit = async (button) => {
 
 async function createSession(modal, objective, session_location, date, message_id, session_channel_id) {
     const TIMESTAMP = Date.now();
-    // const DATE = new Date(date);
-    // const GENERAL_INFO = await GeneralInfo.findOne({ where: { server: modal.guildId } });
+    //- const GENERAL_INFO = await GeneralInfo.findOne({ where: { server: modal.guildId } });
     await GameSession.create({
         id: `GS${TIMESTAMP}`,
         message_id_discord: message_id,
@@ -405,10 +401,7 @@ async function createSession(modal, objective, session_location, date, message_i
         session_channel: session_channel_id,
         session_status: 'CREATED',
         server: modal.guild.id,
-    }).then(async () => {
-        // GENERAL_INFO.session_number += 1; 
-        // await GENERAL_INFO.save() 
-    })
+    });
 }
 
 function createSessionChannelEmbed(messageAuthor, sessionDate, sessionParticipants, sessionObjective, sessionCommanderAvatar, sessionLocation) {
@@ -478,7 +471,7 @@ async function createModal(MODAL_ID) {
         .setRequired(false)
 
     // An action row only holds one text input,
-    const firstActionRow = new MessageActionRow().addComponents(sessionTitle),
+    const firstActionRow = new MessageActionRow().addComponents(sessionTitle),//??->does this work?
         secondActionRow = new MessageActionRow().addComponents(sessionObjective),
         thirdActionRow = new MessageActionRow().addComponents(sessionDate),
         fourthActionRow = new MessageActionRow().addComponents(sessionLocation);
@@ -488,16 +481,13 @@ async function createModal(MODAL_ID) {
     return modal;
 }
 
-
+//this method seems realy simular to the next method, refacator posible.
 function playerAlreadyRequestedForSession(sessions, userID, sessionChannelID) {
     // TODO: Make this per server.
-    for (let i = 0; i < sessions.length; i++) {
-        if (sessions[i].session_channel_id === sessionChannelID) {
-            // console.log('inside')
-            for (let j = 0; j < sessions[i].requested.length; j++) {
-                if (sessions[i].requested[j].user_id === userID) {
-                    return true;
-                }
+    for(let session of sessions) {
+        if (session.session_channel === sessionChannelID) {
+            for(sessionRequest of session.requested){
+                if(sessionRequest.user_id === userID) return true;
             }
         }
     }
@@ -506,65 +496,45 @@ function playerAlreadyRequestedForSession(sessions, userID, sessionChannelID) {
 
 function playerAlreadyDenied(sessions, userID, sessionChannelID) {
     // TODO: Make this per server.
-    for (let i = 0; i < sessions.length; i++) {
-        if (sessions[i].session_channel_id === sessionChannelID) {
-            for (let j = 0; j < sessions[i].denied.length; j++) {
-                if (sessions[i].denied[j].user_id === userID) {
-                    return true;
-                }
+    for(let session of sessions) {
+        if (session.session_channel === sessionChannelID) {
+            for(sessionDenied of session.denied){
+                if(sessionRequest.user_id === userID) return true;
             }
-            break;
         }
     }
     return false;
 }
 
 function giveUserRequestedStatus(sessions, gameSessionChannel, userID, jsonDB) {
-    // const bot = require('../../../index');
-
-    // console.log(gameSessionChannel, userID);
-    for (let i = 0; i < sessions.length; i++) {
-        if (sessions[i].session_channel_id === gameSessionChannel) {
-            // console.log('inside')
-            sessions[i].requested[sessions[i].requested.length] = { "user_id": `${userID}` };
-            break;
+    for(let session of sessions) {
+        if (session.session_channel === gameSessionChannel) {
+            session.requested.push({ user_id: userID });
+            writeToJsonDb('./sessionAddUserRequest.json', jsonDB);
+            return;
         }
     }
-    // Write the edited data to designated JSON database.
-    writeToJsonDb("./bot/jsonDb/sessionAddUserRequest.json", jsonDB);
 }
 
 function removeUserRequestStatus(sessions, gameSessionChannel, userID, jsonDB) {
-    for (let i = 0; i < sessions.length; i++) {
-        if (sessions[i].session_channel_id === gameSessionChannel) {
-            for (let j = 0; j < sessions[i].requested.length; j++) {
-                if (sessions[i].requested[j].user_id === userID) {
-                    // bot.sessionAddUserRequest['sessions'][i].requested[j].user_id = "";
-                    sessions[i].requested.splice(j, 1);
-                    break;
-                }
-            }
+    for(let session of sessions) {
+        if (session.session_channel === gameSessionChannel) {
+            session.requested = session.requested.filter(request => request.user_id !== userID);//remove user from requested list
+            writeToJsonDb("./bot/jsonDb/sessionAddUserRequest.json", jsonDB);
+            return;
         }
     }
-    // Write the edited data to designated JSON database.
-    writeToJsonDb("./bot/jsonDb/sessionAddUserRequest.json", jsonDB);
 }
 
 function giveUserDeniedStatus(sessions, gameSessionChannel, userID, jsonDB) {
-    console.log(gameSessionChannel, userID);
-    for (let i = 0; i < sessions.length; i++) {
-        if (sessions[i].session_channel_id === gameSessionChannel) {
-            for (let j = 0; j < sessions[i].requested.length; j++) {
-                if (sessions[i].requested[j].user_id === userID) {
-                    sessions[i].requested.splice(j, 1);
-                    sessions[i].denied[sessions[i].denied.length] = { "user_id": `${userID}` };
-                    break;
-                }
-            }
+    for(let session of sessions) {
+        if (session.session_channel === gameSessionChannel) {
+            session.requested = session.requested.filter(request => request.user_id !== userID);//remove user from requested list
+            session.denied.push({ user_id: userID });//add user to denied list
+            writeToJsonDb("./bot/jsonDb/sessionAddUserRequest.json", jsonDB);
+            return;
         }
     }
-    // Write the edited data to designated JSON database.
-    writeToJsonDb("./bot/jsonDb/sessionAddUserRequest.json", jsonDB);
 }
 
 async function updatePartyOnSessionEmbed(message, sessionParty) {
@@ -573,6 +543,7 @@ async function updatePartyOnSessionEmbed(message, sessionParty) {
     return message;
 }
 
+//??why is this commented out?, it has some references to it in the code.
 // async function fetchGameSessionMessage(SESSION_REQUEST_CHANNEL, PLANNED_SESSIONS_CHANNEL, messageID) {
 //     try {
 //         let foundMessage = await SESSION_REQUEST_CHANNEL.messages.fetch(messageID).catch(() => console.log('Message not found'));
@@ -604,7 +575,8 @@ function createSessionsOverviewEmbedPages(sessions) {
     for (let index = 0; index < Math.ceil(sessions.length / MAX_SESSIONS_SHOWN_PER_PAGE); index++) {
         pages.push(new MessageEmbed()
             .setAuthor({ name: 'Session board', iconURL: getBot().user.displayAvatarURL() })
-            .setDescription(`${sessions.slice(index * 5, 5 * (index + 1))?.map(session => `> **Session ${session.session_number}:** \u200b \`${getPrettyDateString(new Date(session.date))}\` \n\`\`\`${session.objective}\`\`\` `).join('\n\n')}`)
+            .setDescription(`${sessions.slice(index * 5, 5 * (index + 1))
+                ?.map(session => `> **Session ${session.session_number}:** \u200b \` ${getPrettyDateString(new Date(session.date))}\` \n\`\`\`${session.objective}\`\`\` `).join('\n\n')}`)
             .setFooter({ text: `${1}/${Math.ceil(sessions.length / MAX_SESSIONS_SHOWN_PER_PAGE)} page` })
             .setTimestamp())
     }

@@ -1,3 +1,4 @@
+//?? can this go or na, seems to be for old db?
 // const { DataTypes, Model } = require('sequelize');
 
 // module.exports = class PlayerCharacter extends Model {

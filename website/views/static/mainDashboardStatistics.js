@@ -1,5 +1,5 @@
 google.load("visualization", "1", { packages: ["corechart"] });
-var timeout;
+let timeout;
 const sections = ["characters", "sessions", "quests", "locations", "interactions"]
 
 async function addValueToElement(elementID, value) {
@@ -62,12 +62,12 @@ document.addEventListener("DOMContentLoaded", async function () {
 
 
 function drawChart(elementId, title, chartData, headerData) {
-    var dataForGoogleChart = [headerData];
+    let dataForGoogleChart = [headerData];
     chartData.slice(0, 5).forEach(cClass => {
         dataForGoogleChart.push(cClass)
     });
-    var data = google.visualization.arrayToDataTable(dataForGoogleChart, false);
-    var options = {
+    let data = google.visualization.arrayToDataTable(dataForGoogleChart, false);
+    let options = {
         title: title,
         width: 340,
         height: 180,
@@ -96,7 +96,7 @@ function drawChart(elementId, title, chartData, headerData) {
         is3D: true
     };
 
-    var chart = new google.visualization.PieChart(document.getElementById(elementId));
+    let chart = new google.visualization.PieChart(document.getElementById(elementId));
     chart.draw(data, options);
 }
 
@@ -162,12 +162,12 @@ async function createCarousel(sectionName) {
     if (!(items.length >= 1)) return;
     const dots = wrap.parentElement.querySelector(".embla__dots");
 
-    var options = { align: "start", loop: false, skipSnaps: false, slidesToScroll: 4 }
-    var plugins = [
+    let options = { align: "start", loop: false, skipSnaps: false, slidesToScroll: 4 }
+    let plugins = [
         // EmblaCarouselAutoplay()
     ] // Plugins
 
-    var embla = EmblaCarousel(viewPort, options, plugins)
+    let embla = EmblaCarousel(viewPort, options, plugins)
     const dotsArray = generateDotBtns(dots, embla);
     const setSelectedDotBtn = selectDotBtn(dotsArray, embla);
     setupDotBtns(dotsArray, embla);

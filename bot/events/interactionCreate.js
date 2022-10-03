@@ -93,26 +93,21 @@ const messageComponents6 = new MessageActionRow().addComponents(
 );
 
 
+// 470 lines of legacy code, I'm too scared to touch it
 module.exports = async (bot, interaction) => {
-
     if (interaction.isCommand()) {
         const slashCommands = bot.slashCommands.get(interaction.commandName)
         if (slashCommands) slashCommands.run(interaction)
     }
-
     if (interaction.isModalSubmit()) {
         const [slashCommand] = bot.slashCommands.filter(command => { return command.help.modalIds?.includes(interaction.customId) }).values()
         if (slashCommand) return slashCommand.modalSubmit(interaction)
     }
-
     if (interaction.isButton()) {
         const [slashCommand] = bot.slashCommands.filter(command => { return command.help.buttonIds?.includes(interaction.customId) }).values()
         if (slashCommand) return slashCommand.buttonSubmit(interaction)
     }
-
-
-    //TODO: Might change later when applying buttons to character creation 
-    // if (!(interaction.user.id === interaction.message.author.id)) return interaction.reply({ content: `These buttons are not meant for you!`, ephemeral: true})
+    //TODO: Might change later when applying buttons to character creation
     try {
         // !chthulu
         switch (interaction.customId) {
@@ -128,7 +123,6 @@ module.exports = async (bot, interaction) => {
                 const { sendHelpEmbedFunction } = require('../otherFunctions/sendHelpEmbedFunction.js')
                 sendHelpEmbedFunction(bot, interaction.guildId, interaction.channelId, interaction.user.id);
                 return interaction.deferUpdate();
-
         }
     } catch (error) {
         logger.error(error);
@@ -165,8 +159,6 @@ module.exports = async (bot, interaction) => {
         }
     } catch (error) {
         logger.error(error)
-    } finally {
-        // interaction.deferUpdate();
     }
     //edit npc buttons
     try {
@@ -178,8 +170,9 @@ module.exports = async (bot, interaction) => {
                     interaction.channel.send("Only Dm's can set NPC's to visible").then(msg => { setTimeout(() => msg.delete(), 3000) }).catch(err => logger.error(err));
                     return;
                 }
-                charId = interaction.channel.id;
-                await NonPlayableCharacter.findOne({ where: { character_identifier: charId, server: interaction.guildId } }).then((character) => {
+                //! TODO Broken Id has been removed from channelname should be refactored in a different branch
+                charId = interaction.channel.name.split("⼁")[0];
+                await NonPlayableCharacter.findOne({ where: { id: charId, server: interaction.guildId } }).then((character) => {
                     if (character) {
                         if (character.status == "VISIBLE") {
                             character.status = 'INVISIBLE';
@@ -561,8 +554,6 @@ module.exports = async (bot, interaction) => {
                 return;
         }
     } catch (err) { logger.error(err) }
-
-
 };
 
 async function npcEditTextField(interaction, charId, QUESTION_OBJECT, bot) {
@@ -614,7 +605,6 @@ async function npcEditTextField(interaction, charId, QUESTION_OBJECT, bot) {
                         try {
                             interaction.channel.bulkDelete(30);
                         } catch (e) {
-                            // console.log(e);
                             logger.error("Problem with deleting messages after updating npc.");
                         }
                         interaction.channel.send("The " + QUESTION_OBJECT.databaseTable + " of " + character.name + " has been changed to.")
@@ -635,6 +625,7 @@ async function npcEditTextField(interaction, charId, QUESTION_OBJECT, bot) {
         });
     });
 }
+
 async function characterEditTextField(interaction, QUESTION_OBJECT, bot) {
     interaction.deferUpdate();
     let questionEmbed = new MessageEmbed()
@@ -646,10 +637,8 @@ async function characterEditTextField(interaction, QUESTION_OBJECT, bot) {
         let regExp = new RegExp(QUESTION_OBJECT.regex);
         const filter = response => {
             if (response.author.id === bot.user.id) return false;
-            if (QUESTION_OBJECT.question.includes('picture')) {
-                if (response.attachments.size > 0) {
-                    return true;
-                }
+            if (QUESTION_OBJECT.question.includes('picture') && response.attachments.size > 0) {
+                return true;
             }
             if (regExp.exec(response.content) === null) {
                 createdChannel.send({ content: QUESTION_OBJECT.errorMessage });
@@ -675,12 +664,6 @@ async function characterEditTextField(interaction, QUESTION_OBJECT, bot) {
                         character[`${QUESTION_OBJECT.databaseTable}`] = collected.first().content;
                     }
                     character.save().then(async () => {
-                        // // try {character[`${CHARACTER_QUESTIONS_ARRAY[1].databaseTable}`]
-                        // //     interaction.channel.bulkDelete(30);
-                        // // } catch (e) {
-                        // //     console.log(e);
-                        // //     console.log("problem with deleting messages");
-                        // // }
                         interaction.channel.send("The " + QUESTION_OBJECT.databaseTable + " of " + character.name + " has been changed")
                             .then(msg => { setTimeout(() => msg.delete(), 3000) })
                             .catch(err => logger.error(err));

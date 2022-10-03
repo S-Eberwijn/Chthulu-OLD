@@ -19,19 +19,17 @@ module.exports.run = async (interaction) => {
         questEmbed.setFooter({ text: `Create new quests on the Chthulu website!` })
 
     })
-    return await interaction.reply({ embeds: [questEmbed] })
+    return interaction.reply({ embeds: [questEmbed] })
 }
 
 module.exports.help = {
-    // name: 'quests',
-    // permission: [],
-    // alias: [],
     category: "Dungeons & Dragons",
     name: 'quests',
     description: 'Get information of quests in this campaign (server).',
     options: [],
 }
 
+//refactor to enum?
 function getRightEmoji(quest_importance_value) {
     switch (quest_importance_value) {
         case 5:

@@ -37,7 +37,7 @@ async function editServerCommands(serverID, commands) {
 }
 
 async function getServerGeneralInfo(serverID) {
-    return await GeneralInfo.findOne({ where: { id: serverID } })
+    return GeneralInfo.findOne({ where: { id: serverID } })
 }
 
 function getMutualGuilds(userID) {

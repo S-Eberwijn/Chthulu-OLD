@@ -10,7 +10,7 @@ const NAME_OF_DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'F
 
 module.exports.run = async (interaction) => {
     const bot = require('../../index');
- 
+
     // VARIABLES
     const SESSIONS_CATEGORY = interaction.member.guild.channels.cache.find(c => c.name == "--SESSIONS--" && c.type == "GUILD_CATEGORY");
     const SESSION_REQUEST_CHANNEL = interaction.member.guild.channels.cache.find(c => c.name.includes("session-request") && c.type == "GUILD_TEXT");
@@ -23,14 +23,11 @@ module.exports.run = async (interaction) => {
     switch (interaction.options.get('action').value) {
         case 'request':
             let sessionDate, sessionObjective, sessionParticipants = [interaction.user.id];
-
             // Makes a request channel for the message author
             interaction.guild.channels.create(`${interaction.user.username}s-request`, "text").then(async createdChannel => {
                 // TODO: Add right permission to the right people (DM'S, Players, Session Part)
-
                 // Puts the channel under the "--SESSIONS--" category
                 createdChannel.setParent(SESSIONS_CATEGORY, { lockPermission: false });
-
                 // Update channel permissions so everyone can't see it.
                 createdChannel.permissionOverwrites.edit(interaction.channel.guild.roles.everyone, {
                     CREATE_INSTANT_INVITE: false,

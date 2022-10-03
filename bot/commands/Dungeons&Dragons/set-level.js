@@ -12,14 +12,11 @@ module.exports.run = async (interaction) => {
     USER_CHARACTER.level = interaction.options.getNumber('level');
     USER_CHARACTER.save();
 
-    return await interaction.reply({ content: `${USER_CHARACTER.name}'s level changed from \*\*${oldCharacterLevel}\*\* to \*\*${interaction.options.getNumber('level')}\*\*!`, ephemeral: true });
+    return interaction.reply({ content: `${USER_CHARACTER.name}'s level changed from \*\*${oldCharacterLevel}\*\* to \*\*${interaction.options.getNumber('level')}\*\*!`, ephemeral: true });
 
 }
 
 module.exports.help = {
-    // name: 'set-level',
-    // permission: [],
-    // alias: [],
     category: "Dungeons & Dragons",
     name: 'set-level',
     description: 'Change a characters level.',

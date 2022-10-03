@@ -3,7 +3,7 @@ const { PlayerCharacter } = require('../../database/models/PlayerCharacter.js');
 const { NonPlayableCharacter } = require('../../database/models/NonPlayableCharacter.js');
 const { MessageEmbed, Permissions } = require('discord.js');
 
-
+//?? delete this file
 
 module.exports = async (bot, message) => {
     //Do nothing when bot sends message

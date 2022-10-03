@@ -33,9 +33,9 @@ function createEmbed(command, resultSet, additionalModifier) {
     let counter = 0;
     let embed = new MessageEmbed().setTitle(command)
     for (let key of resultSet.keys()) {
-        for (let i = 0; i < resultSet.get(key).length; i++) {
-            embed.addField("**" + key + "**", `${showRightColourOfRolledDie(resultSet.get(key)[i], key.replace(/\D/g, ''))}`, true)
-            total += resultSet.get(key)[i]
+        for( let item of resultSet.get(key)){
+            embed.addField("**" + key + "**", `${showRightColourOfRolledDie(item, key.replace(/\D/g, ''))}`, true)
+            total += item;
             counter++;
         }
     }

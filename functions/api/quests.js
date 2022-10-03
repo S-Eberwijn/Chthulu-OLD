@@ -1,11 +1,9 @@
-const { logger } = require(`../../functions/logger`)
-
 const { Quest } = require('../../database/models/Quest');
 const Importance = Object.freeze({ 1: 'Very low', 2: 'Low', 3: 'Normal', 4: 'High', 5: 'Very high', });
 
 
 async function getServerQuestsPerStatus(serverID, status) {
-    return await Quest.findAll({ where: { quest_status: status, server: serverID } })
+    return Quest.findAll({ where: { quest_status: status, server: serverID } })
 }
 
 async function getServerQuestsByStatuses(serverID, statuses) {
@@ -17,7 +15,7 @@ async function getServerQuestsByStatuses(serverID, statuses) {
 }
 
 async function getQuestsPerStatus(status) {
-    return await Quest.findAll({ where: { quest_status: status, } })
+    return Quest.findAll({ where: { quest_status: status, } })
 }
 
 async function getQuestsByStatuses(statuses) {
@@ -31,7 +29,7 @@ async function getQuestsByStatuses(statuses) {
 
 async function createQuest(quest, guildID, creatorID) {
     let timestamp = Date.now();
-    return await Quest.create({
+    return Quest.create({
         id: `Q${timestamp}`,
         quest_identifier: `Q${timestamp}`,
         quest_giver: creatorID,

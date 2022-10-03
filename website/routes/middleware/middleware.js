@@ -16,6 +16,8 @@ async function centralizedData(req, res, next) {
     const selectedGuildID = req.params.id || '';
     const guild = getGuildFromBot(selectedGuildID);
     const mutualGuilds = getMutualGuilds(req.user?.discordID);
+
+    //?? i dont fully understand what this line does, but it's a blocking error
     const loggedInUser = req.user ? { username, discriminator, avatar, discordID } = req.user : undefined;
 
     // console.log(req)

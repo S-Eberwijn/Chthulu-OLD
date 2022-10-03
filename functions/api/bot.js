@@ -1,5 +1,3 @@
-const { logger } = require(`../../functions/logger`)
-
 const Category = Object.freeze({ 'information': 'Information', 'dnd': 'Dungeons & Dragons', 'general': 'General', 'miscellaneous': 'Miscellaneous', });
 
 function getBot() {

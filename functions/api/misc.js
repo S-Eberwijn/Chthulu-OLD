@@ -27,9 +27,9 @@ function getDoubleDigitNumber(number) {
     return `${number}`;
 }
 
-async function addCreatedDate(array) {
+function addCreatedDate(array) {
     for (const object of array) {
-        object.data.created_date = await getSimpleDateString(new Date(parseInt(object.data.quest_identifier.slice(1))));
+        object.data.created_date = getSimpleDateString(new Date(parseInt(object.data.quest_identifier.slice(1))));
     }
     return array
 }

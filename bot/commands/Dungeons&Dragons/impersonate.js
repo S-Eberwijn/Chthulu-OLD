@@ -5,6 +5,7 @@ const { NonPlayableCharacter } = require('../../../database/models/NonPlayableCh
 
 
 module.exports.run = async (interaction) => {
+    let successfull = true;
     if (!interaction.member.roles.cache.has(interaction.guild.roles.cache.find(role => role.name.includes('Dungeon Master')).id)) {
         await interaction.reply({
             content: "Only Dungeon Masters can use this command",
@@ -22,15 +23,17 @@ module.exports.run = async (interaction) => {
                 character.save()
             }
         })
-    await NonPlayableCharacter.findAll({ where: { server: interaction.guildId, status: "visible" } }).then((npcs) => {
+    await NonPlayableCharacter.findAll({ where: { server: interaction.guildId, status: "VISIBLE" } }).then((npcs) => {
+        console.log(npcs)
         if (npcs.length < 1) {
             interaction.reply({
                 content: "Your server has no visible npcs, add a new ncp using the !cnpc command and set it to visible.",
                 ephemeral: true,
             });
-            return;
+            successfull = false;
+            return
         }
-        else if (npcs.length <= 25)
+        else if (npcs.length <= 25)//create new method
             messageComponentsArray.push(
                 new MessageActionRow().addComponents(
                     new MessageSelectMenu()
@@ -43,15 +46,15 @@ module.exports.run = async (interaction) => {
                             .map(function (key) { return { label: `${npcs[key].name}`, value: `${npcs[key].character_id}` } }))
                 )
             )
-        else {
+        else {//create new method, should resolve quality gate issue
             let groups = Math.ceil(npcs.length / 25);
             let npcsObject = [];
             let charactersGroupedByLetter = [];
             let charsPerGroup = Math.ceil(npcs.length / groups);
             let grouplabel = "";
             let messageSelectMenuOptionsArray = [];
-            for (let i = 0; i < npcs.length; i++) {
-                npcsObject.push([npcs[i].name, npcs[i].character_id]);
+            for (const npc of npcs){
+                npcsObject.push([npc.name, npc.character_id]);
             }
             npcsObject.sort((a, b) => a[0].localeCompare(b[0]));
             let npcgroup = [];
@@ -70,11 +73,9 @@ module.exports.run = async (interaction) => {
                 }
                 grouplabel = npcgroup[0][0].toUpperCase().charAt(0) + " - " + npcgroup[npcgroup.length - 1][0].toUpperCase().charAt(0);
                 charactersGroupedByLetter.push({ "label": grouplabel, "characters": npcgroup });
-
             }
-
             charactersGroupedByLetter[0].characters.forEach(async key => {
-                await messageSelectMenuOptionsArray.push({
+                messageSelectMenuOptionsArray.push({
                     label: `${key[0]}`,
                     value: `${key[1]}`
                 })
@@ -97,7 +98,7 @@ module.exports.run = async (interaction) => {
                     .setDisabled(true)
                     .addOptions(messageSelectMenuOptionsArray)
             ))
-            categorySelectionId = messageComponentsArray[0].components[0].customId;
+            const categorySelectionId = messageComponentsArray[0].components[0].customId;
             myFilter = response => {
                 if (response.customId === categorySelectionId) {
                     let newSelectionMenu = response.message;
@@ -119,8 +120,8 @@ module.exports.run = async (interaction) => {
             };
         }
     });
-    //TODO revision this since id can't be used to call fro mdatabase
-
+    //TODO revision this since id can't be used to call from database
+    if(!successfull) {return}
     await interaction.reply({
         content: "chose an npc to impersonate",
         components: messageComponentsArray,
@@ -156,9 +157,6 @@ module.exports.run = async (interaction) => {
 }
 
 module.exports.help = {
-    // name: 'impersonate',
-    // permission: [],
-    // alias: [],
     category: "Dungeons & Dragons",
     name: 'impersonate',
     description: 'Allows a dm to talk as if he/she is that npc.',

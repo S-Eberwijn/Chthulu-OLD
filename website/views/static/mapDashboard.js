@@ -1,14 +1,13 @@
-
 window.addEventListener('DOMContentLoaded', async (event) => {
     databaseMap = databaseMap[0];
     let img = await getMeta(databaseMap.data.map_url);
 
-    var imgHeight = img.height,
+    let imgHeight = img.height,
         imgWidth = img.width;
 
     // console.log(imgHeight, imgWidth);
-    var center = [0, -imgWidth]
-    var map = L.map('map', {
+    let center = [0, -imgWidth]
+    let map = L.map('map', {
         zoomControl: false,
         minZoom: -1,
         maxZoom: 2,
@@ -17,12 +16,12 @@ window.addEventListener('DOMContentLoaded', async (event) => {
         crs: L.CRS.Simple
     });
 
-    var southWest = map.unproject([0, imgHeight], map.getZoom());
-    var northEast = map.unproject([imgWidth, 0], map.getZoom());
-    var bounds = new L.LatLngBounds(southWest, northEast);
+    let southWest = map.unproject([0, imgHeight], map.getZoom());
+    let northEast = map.unproject([imgWidth, 0], map.getZoom());
+    let bounds = new L.LatLngBounds(southWest, northEast);
 
 
-    var imgOv = L.imageOverlay(databaseMap.data.map_url, bounds, { interactive: true }).addTo(map);
+    let imgOv = L.imageOverlay(databaseMap.data.map_url, bounds, { interactive: true }).addTo(map);
     imgOv.bringToFront();
 
     map.setMaxBounds(bounds);
@@ -82,11 +81,7 @@ window.addEventListener('DOMContentLoaded', async (event) => {
         if (location.visited === true) marker._icon.classList.add('huechange');
     })
 
-
-    // map.fitBounds(imgOv.getBounds());
-
-
-    var mapSidebar = L.control.sidebar({
+    let mapSidebar = L.control.sidebar({
         autopan: false,       // whether to maintain the centered map point when opening the sidebar
         closeButton: false,    // whether t add a close button to the panes
         container: 'map-sidebar', // the DOM container or #ID of a predefined sidebar container that should be used
@@ -95,7 +90,7 @@ window.addEventListener('DOMContentLoaded', async (event) => {
         .addTo(map);
 
     /* add a new panel */
-    var welcomeContent = {
+    let welcomeContent = {
         id: 'welcomePanel',                     // UID, used to access the panel
         tab: '<i class="fas fa-home"></i>',  // content can be passed as HTML string,
         pane: 'someDomNode.innerHTML',        // DOM elements can be passed, too
@@ -106,7 +101,7 @@ window.addEventListener('DOMContentLoaded', async (event) => {
 
     let locationDOMString = `${uniqueTypes.map(type => { return `<div class="locationCategory"><div class="locationCategoryHeader"><span class="locationCategoryName">${type.charAt(0).toUpperCase() + type.slice(1)}</span><div><span class="amountOfLocations">${databaseMap.data.locations.filter(location => location.type === type).length}</span><i class="fas fa-chevron-right"></i></div></div>${databaseMap.data.locations.filter(location => location.type === type).map(location => { return `<div class="location" id="${location.id}"><span class="locationName">${location.description}</span></div>` }).join('')}</div>` }).join('')}`;
     // console.log(locationDOMString);
-    var locationContent = {
+    let locationContent = {
         id: 'locationPanel',                     // UID, used to access the panel
         tab: '<i class="fas fa-map-marker-alt"></i>',  // content can be passed as HTML string,
         pane: locationDOMString,
@@ -114,7 +109,7 @@ window.addEventListener('DOMContentLoaded', async (event) => {
         position: 'top'                  // optional vertical alignment, defaults to 'top'
     };
     mapSidebar.addPanel(locationContent);
-    var filterContent = {
+    let filterContent = {
         id: 'filterPanel',                     // UID, used to access the panel
         tab: '<i class="fas fa-filter"></i>',  // content can be passed as HTML string,
         pane: `${uniqueTypes.filter(type => type != 'players').map(type => { return `<div class="filter"><span>${type.charAt(0).toUpperCase() + type.slice(1)}</span><label class="switch" for="${type}-checkbox"><input type="checkbox" action="filter" id="${type}-checkbox" checked=true> </input><div class="slider round"></div></label></div>` }).join('')}`,
@@ -122,7 +117,7 @@ window.addEventListener('DOMContentLoaded', async (event) => {
         position: 'top'                  // optional vertical alignment, defaults to 'top'
     };
     mapSidebar.addPanel(filterContent);
-    var fullscreenContent = {
+    let fullscreenContent = {
         id: 'click',
         tab: '<i class="fas fa-expand"></i>',
         position: 'bottom',                  // optional vertical alignment, defaults to 'top'
@@ -140,7 +135,7 @@ window.addEventListener('DOMContentLoaded', async (event) => {
         }
     };
     mapSidebar.addPanel(fullscreenContent);
-    var settingsContent = {
+    let settingsContent = {
         id: 'settingsPanel',                     // UID, used to access the panel
         tab: '<i class="fa fa-gear"></i>',  // content can be passed as HTML string,
         pane: 'someDomNode.innerHTML',        // DOM elements can be passed, too
@@ -151,9 +146,6 @@ window.addEventListener('DOMContentLoaded', async (event) => {
 
     // mapSidebar.open('welcomePanel');
     mapSidebar.open('filterPanel');
-
-
-
     // databaseMap.data.locations.forEach(location => {
     //     console.log(location)
 
@@ -195,42 +187,30 @@ window.addEventListener('DOMContentLoaded', async (event) => {
     //             .bindPopup(`${location.description}`);
     //     }
     //     if (location.visited === true) marker._icon.classList.add('huechange');
-
     // })
-
-    // var imageUrl = databaseMap.data.map_url,
+    // let imageUrl = databaseMap.data.map_url,
     //     imageBounds = [northEast, southWest];
-
     // let imgOverlay = L.imageOverlay(imageUrl, imageBounds, {
     //     interactive: true,
     // }).addTo(map);
-
     // L.imageOverlay(imageUrl, imageBounds).bringToFront();
-
-    // // map.on('click', function (e) {
-    // //     // console.log(L.popup().isOpen());
-
-    // //     // map.setMaxBounds(map.getBounds() * 2);
-    // //     var popLocation = e.latlng;
-    // //     let x = popLocation.lng / map.getBounds().getEast()
-    // //     let y = popLocation.lat / map.getBounds().getNorth()
-    // //     L.popup()
-    // //         .setLatLng(popLocation)
-    // //         .setContent(`x: ${x} \n y: ${y}`)
-    // //         .openOn(map);
-
-    // //     mapSidebar.close()
-    // // });
-
+    // map.on('click', function (e) {
+    // console.log(L.popup().isOpen());
+    // map.setMaxBounds(map.getBounds() * 2);
+    //     let popLocation = e.latlng;
+    //     let x = popLocation.lng / map.getBounds().getEast()
+    //     let y = popLocation.lat / map.getBounds().getNorth()
+    //     L.popup()
+    //         .setLatLng(popLocation)
+    //         .setContent(`x: ${x} \n y: ${y}`)
+    //         .openOn(map);
+    //     mapSidebar.close()
+    // });
 
     imgOv.on('click', async (e) => {
-        var latLng = e.latlng;
-        var x = e.latlng.lat;
-        var y = e.latlng.lng;
+        let latLng = e.latlng;
         console.log(latLng);
-
         mapSidebar.close()
-
     });
 
 
@@ -257,7 +237,6 @@ window.addEventListener('DOMContentLoaded', async (event) => {
 
     document.querySelectorAll('input[action="filter"]').forEach(filter => {
         filter.addEventListener('click', function (e) {
-            // markers = map.getMarkersByType(filter.id.split('-')[0]); // returns marker instances
             document.querySelectorAll(`img[src*="${filter.id.split('-')[0]}"]`).forEach(img => {
                 img.classList.toggle('hidden');
             })
@@ -265,28 +244,9 @@ window.addEventListener('DOMContentLoaded', async (event) => {
     })
 });
 
-// function createForm(x, y) {
-//     x = Math.round(x * 100_000_000_000) / 100_000_000_000;
-//     y = Math.round(y * 100_000_000_000) / 100_000_000_000;
-//     let form =
-//         "<form class='mapPopUpForm'>" +
-//         "<h1>new location</h1>" +
-//         "<label class='mapPopUplabel'>Lat : </label>" +
-//         "<input class='mapPopUpinput' type='number' step='0.000001' disabled value=" + y + "><br/>" +
-//         "<label class='mapPopUplabel'>Long: </label>" +
-//         "<input class='mapPopUpinput' type='number' step='0.000001' disabled value=" + x + "><br/>" +
-//         "<label class='mapPopUplabel'>Location name: </label>" +
-//         "<input class='mapPopUpinput' type='text'/><br/>" +
-//         "<label class='mapPopUplabel'>Description: </label>" +
-//         "<textarea class='mapPopUpinput' type='text' rows='4' cols='50'></textarea><br/>" +
-//         "<button class='mapPopUpinput' type='submit'>submit</button>" +
-//         "</form>"
-//     return form;
-// }
-
 L.Map.include({
     getMarkerById: function (id) {
-        var marker = null;
+        let marker = null;
         this.eachLayer(function (layer) {
             if (layer instanceof L.Marker) {
                 if (layer.options.id === id) {
@@ -300,7 +260,7 @@ L.Map.include({
 
 L.Map.include({
     getMarkersByType: function (type) {
-        var markers = [];
+        let markers = [];
         this.eachLayer(function (layer) {
             if (layer instanceof L.Marker) {
                 if (layer.options.type === type) {
@@ -320,3 +280,22 @@ function getMeta(url) {
         img.src = url;
     });
 }
+
+// function createForm(x, y) {
+//     x = Math.round(x * 100_000_000_000) / 100_000_000_000;
+//     y = Math.round(y * 100_000_000_000) / 100_000_000_000;
+//     let form =
+//         "<form class='mapPopUpForm'>" +
+//         "<h1>new location</h1>" +
+//         "<label class='mapPopUplabel'>Lat : </label>" +
+//         "<input class='mapPopUpinput' type='number' step='0.000001' disabled value=" + y + "><br/>" +
+//         "<label class='mapPopUplabel'>Long: </label>" +
+//         "<input class='mapPopUpinput' type='number' step='0.000001' disabled value=" + x + "><br/>" +
+//         "<label class='mapPopUplabel'>Location name: </label>" +
+//         "<input class='mapPopUpinput' type='text'/><br/>" +
+//         "<label class='mapPopUplabel'>Description: </label>" +
+//         "<textarea class='mapPopUpinput' type='text' rows='4' cols='50'></textarea><br/>" +
+//         "<button class='mapPopUpinput' type='submit'>submit</button>" +
+//         "</form>"
+//     return form;
+// }

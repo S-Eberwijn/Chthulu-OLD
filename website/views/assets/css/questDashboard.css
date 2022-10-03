@@ -373,6 +373,7 @@ select>option {
 
 option {
     position: relative;
+    color: var(--text-color);
 }
 
 .sorting-div {
@@ -406,10 +407,6 @@ option {
 }
 
 .sorting-div i.fas.fa-exchange-alt:hover {
-    color: var(--text-color);
-}
-
-option {
     color: var(--text-color);
 }
 

@@ -39,22 +39,20 @@ document.addEventListener("DOMContentLoaded", async function () {
     });
 
     document.querySelectorAll(`.addPlayer`).forEach((element) => {
-        element.addEventListener("click", function (e) {
-            // e.preventDefault();
+        element.addEventListener("click", function () {
             console.log(`Add Player`);
         });
     });
- 
-    // const details = document.querySelectorAll("details");
     const summaries = document.querySelectorAll("summary");
     summaries.forEach((summary) => {
         const detail = summary.parentNode;
         summary.addEventListener("click", function (e) {
             if (e.target.id === null || e.target.id === "") return;
-            if (e.target.id === "createSessionRequest")
-                return (document.querySelector(`#createSessionModal`).checked = true);
+            if (e.target.id === "createSessionRequest") {
+                document.querySelector(`#createSessionModal`).checked = true;
+                return
+            }
 
-            console.log("test");
             if (detail.hasAttribute("open")) {
                 // since it's not closed yet, it's open!
                 e.preventDefault(); // stop the default behavior, meaning - the hiding
@@ -77,20 +75,20 @@ async function createCarousel(sectionName) {
     const viewPort = wrap.querySelector(".embla__viewport");
     const container = viewPort.querySelector(".embla__container");
     const items = container.querySelectorAll(".embla__slide");
-    if (!(items.length >= 1)) return;
+    if (items.length < 1) return;
     const dots = wrap.parentElement.querySelector(".embla__dots");
 
-    var options = {
+    let options = {
         align: "start",
         loop: false,
         skipSnaps: false,
         slidesToScroll: 5,
     };
-    var plugins = [
+    let plugins = [
         // EmblaCarouselAutoplay()
     ]; // Plugins
 
-    var embla = EmblaCarousel(viewPort, options, plugins);
+    let embla = EmblaCarousel(viewPort, options, plugins);
     const dotsArray = generateDotBtns(dots, embla);
     const setSelectedDotBtn = selectDotBtn(dotsArray, embla);
     setupDotBtns(dotsArray, embla);
@@ -163,7 +161,6 @@ async function createGameSession(button) {
 
                     let requestedSessionCounter = document.querySelector(`summary[data-type="requested"] span.count`);
                     requestedSessionCounter.textContent = parseInt(requestedSessionCounter.textContent) + 1;
-
                     // Add embed, close modal
 
                     pushNotify("success", "Session created", response.data.message);

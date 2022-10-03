@@ -22,7 +22,6 @@ module.exports.run = async (interaction) => {
     if (dropLowest != 0) { command = command + ", drop lowest " + dropLowest; }
     if (dropHighest != 0) { command = command + ", drop highest " + dropHighest; }
 
-
     //rolling the dice
     for (let i = 0; i < 6; i++) {
         singleStat = [];
@@ -33,7 +32,7 @@ module.exports.run = async (interaction) => {
         singleStat = singleStat.slice(dropLowest, amountOfDice - dropHighest);
         statArray.push(singleStat.reduce(reducer) + additionalModifier);
     }
-    return interaction.reply({ embeds: [createEmbed(command, statArray.sort((a, b) => b - a))] })
+    return interaction.reply({ embeds: [createEmbed(command, sortedArray = statArray.sort((a, b) => b - a))] })
 }
 
 function createEmbed(command, statArray) {
@@ -51,9 +50,6 @@ function createEmbed(command, statArray) {
 }
 
 module.exports.help = {
-    // name: 'roll-stats',
-    // permission: [],
-    // alias: [],
     category: "Dungeons & Dragons",
     name: 'roll-stats',
     description: 'create a stat array',

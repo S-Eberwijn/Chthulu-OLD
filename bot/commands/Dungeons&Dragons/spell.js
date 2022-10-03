@@ -2,8 +2,9 @@ const tagSelector = require('cheerio');
 const request = require('request');
 const baseURL = "https://www.dnd-spells.com/spell/"
 const { MessageEmbed } = require('discord.js');
-
+//TODO: fix this
 module.exports.run = async (interaction) => {
+    return interaction.reply({ content: 'This command is currently disabled!', ephemeral: true });
     let stringMessage = interaction.options.getString('spell-name');
     stringMessage = stringMessage.replace(/ /g, "-");
 
@@ -13,9 +14,9 @@ module.exports.run = async (interaction) => {
         agentOptions: {
             rejectUnauthorized: false
         }
-    }, function (error, response, body) {
+    }, function (err, resp, body) {
         let data = ProcesRequest(body)
-        if (data == "404") {
+        if (data.status == 404) {
             ritual(interaction, stringMessage)
         }
         else {
@@ -26,9 +27,6 @@ module.exports.run = async (interaction) => {
 }
 
 module.exports.help = {
-    // name: 'spell',
-    // permission: [],
-    // alias: [],
     category: "Dungeons & Dragons",
     name: 'spell',
     description: 'Gives information about a spell.',
@@ -45,6 +43,7 @@ function ProcesRequest(body) {
     let page = tagSelector.load(body);
     let content = page('h1[class=classic-title]').parent().text();
     let pageArray = content.split("\n");
+
     pageArray = pageArray.filter(item => item.trim());
     let casters = "";
     let spellDescription = "";
@@ -52,7 +51,7 @@ function ProcesRequest(body) {
     let i = 8;
 
     if (pageArray.length <= 9) {
-        return "404";
+        return {status: 404};
     }
     do {//append all spell description
         spellDescription += pageArray[i++].trim();
@@ -71,6 +70,7 @@ function ProcesRequest(body) {
     } while (pageArray[i].trim() != 'spell' && i < pageArray.length)
 
     return {
+        "status": 200,
         "title": pageArray[1].trim(),
         "school": pageArray[2].split(" ").slice(-1)[0].trim(),
         "level": pageArray[3].split(":")[1].trim(),
@@ -92,7 +92,7 @@ function ritual(interaction, stringMessage) {
         agentOptions: {
             rejectUnauthorized: false
         }
-    }, function (error, response, body) {
+    }, function (body) {
         let data = ProcesRequest(body)
         if (data == "404") {
             interaction.reply({ content: "That spell was not found in the database", ephemeral: true });
@@ -101,10 +101,9 @@ function ritual(interaction, stringMessage) {
             let sigilImage = './bot/images/DnD/SpellSigils/' + data.school + '.png';
             interaction.reply({ embeds: [EmbedSpellInMessage(data, stringMessage)], files: [sigilImage] });
         }
-
     });
-    return;
 }
+
 function EmbedSpellInMessage(data, message) {
     let shortDescription;
     if (data.description.length > 1020) {

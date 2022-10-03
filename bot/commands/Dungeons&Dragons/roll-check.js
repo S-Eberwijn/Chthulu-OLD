@@ -3,7 +3,7 @@ module.exports.run = async (interaction) => {
     let rolltwice = interaction.options.getString('roll-twice') != null ? true : false;
     let additionalModifier = interaction.options.getNumber('additional-modifier') == null ? 0 : interaction.options.getNumber('additional-modifier');
 
-    singleStat = [];
+    let singleStat = [];
     singleStat.push(Math.ceil(Math.random() * 20));
     if (rolltwice) {
         singleStat.push(Math.ceil(Math.random() * 20));
@@ -41,9 +41,6 @@ function showRightColourOfRolledDie(roll, modifier) {
     }
 }
 module.exports.help = {
-    // name: 'roll-check',
-    // permission: [],
-    // alias: [],
     category: "Dungeons & Dragons",
     name: 'roll-check',
     description: 'Rolls 1d20',
@@ -60,5 +57,6 @@ module.exports.help = {
             type: 'STRING',
             description: 'fill in anything in this field to have 2 rolls, this can be used for advantage or disadvantage',
             required: false
-        }]
+        }
+    ]
 }

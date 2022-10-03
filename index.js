@@ -79,14 +79,13 @@ app.use('/dashboard/', require('./website/routes/dashboard'));
 app.use('/auth', require('./website/routes/auth'));
 
 app.post("/refresh", async (req, res) => {
-    var readline = require('readline');
-    var rl = readline.createInterface(
+    let readline = require('readline');
+    let rl = readline.createInterface(
         process.stdin, process.stdout);
     console.log("repl.deploy" + req?.body + req?.get("Signature"))
     rl.on('line', async (result) => {
         result = JSON.parse(result)
-        await res.status(result.status || 500).end(result.body || "Internal Server Error")
-        console.log("repl.deploy-success")
+        res.status(result.status || 500).end(result.body || "Internal Server Error").then(console.log("repl.deploy-success"))
     });
 })
 
@@ -109,16 +108,16 @@ fs.readdir("./bot/commands/", async (err, dirs) => {
     dirs.forEach((d, i) => {
         fs.readdir(`./bot/commands/${d}`, async (err, files) => {
             if (err) console.log(err);
-            var jsFiles = files.filter(f => f.split(".").pop() === "js");
+            let jsFiles = files.filter(f => f.split(".").pop() === "js");
             if (dirs.length <= 0) {
                 logger.warn("Empty folder in bot/commands!");
                 return;
             }
             jsFiles.forEach((f, i) => {
-                var fileGet = require(`./bot/commands/${d}/${f}`);
+                let fileGet = require(`./bot/commands/${d}/${f}`);
                 logger.info(`Command ${f} is loaded`);
-                var commandName = fileGet.help.name;
-                var commandAlias = fileGet.help.alias;
+                let commandName = fileGet.help.name;
+                let commandAlias = fileGet.help.alias;
                 bot.slashCommands.set(commandName.toLowerCase(), fileGet);
                 commandAlias?.forEach(alias => {
                     bot.slashCommands.set(alias.toLowerCase(), fileGet);
