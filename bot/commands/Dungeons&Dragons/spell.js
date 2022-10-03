@@ -3,39 +3,52 @@ const request = require('request');
 const baseURL = "https://www.dnd-spells.com/spell/"
 const { MessageEmbed } = require('discord.js');
 
+/*
+* This function receives an Interaction,
+* The interaction allways contains the name of the spell.
+* The function will then search for the spell on dnd-spells.com
+* The function assumes everything is a normal spell.
+* If the spell is found, it will return the spell description.
+* If the spell is not found, It will assume that the spell is a ritual spell.
+* If the spell is still not found, it will send error message to the user.
+*/
 module.exports.run = async (interaction) => {
     let stringMessage = interaction.options.getString('spell-name');
     stringMessage = stringMessage.replace(/ /g, "-");
-
+    
     let url = baseURL + stringMessage;
     request({
         url: url,
         agentOptions: {
             rejectUnauthorized: false
         }
-    }, function (err, resp, body) {
-        let data = ProcesRequest(body)
+    }, async function (err, resp, body) {
+        let data = procesSpellRequest(body)
         if (data.status == 404) {
-            ritual(interaction, stringMessage)
+            data = await processRitualSpell(stringMessage)
+            if (data.status == 404) {
+                return interaction.reply({ content: "That spell was not found in the database", ephemeral: true });
+            }
         }
-        else {
-            let sigilImage = './bot/images/DnD/SpellSigils/' + data.school + '.png';
-            interaction.reply({ embeds: [EmbedSpellInMessage(data, stringMessage)], files: [sigilImage] });
-        }
+        let sigilImage = './bot/images/DnD/SpellSigils/' + data.school + '.png';
+        return  interaction.reply({ embeds: [EmbedSpellInMessage(data, stringMessage)], files: [sigilImage] });
     });
 }
 
-function ProcesRequest(body) {
+function procesSpellRequest(body) {
     let page = tagSelector.load(body);
     let content = page('h1[class=classic-title]').parent().text();
     if (content.length == 0) {
-        return {status: 404};
+        return { status: 404 };
     }
     content = content.split("Remove the adds")[1];
     let pageArray = content.split("\n");
 
     pageArray = pageArray.filter(item => item.trim());
-    console.log(pageArray);
+    return createSpellObject(pageArray);
+}
+
+function createSpellObject(pageArray) {
     let casters = "";
     let spellDescription = "";
     let atHigherLevel = "Cannot be cast at higher level";
@@ -72,24 +85,23 @@ function ProcesRequest(body) {
     };
 }
 
-function ritual(interaction, stringMessage) {
+async function processRitualSpell(stringMessage) {
     stringMessage = stringMessage.replace(/ /g, "-").toLowerCase() + "-ritual";
     let url = baseURL + stringMessage;
-    request({
-        url: url,
-        agentOptions: {
-            rejectUnauthorized: false
-        }
-    }, function (err, resp, body) {
-        let data = ProcesRequest(body)
-        if (data.status == 404) {
-            interaction.reply({ content: "That spell was not found in the database", ephemeral: true });
-        }
-        else {
-            let sigilImage = './bot/images/DnD/SpellSigils/' + data.school + '.png';
-            interaction.reply({ embeds: [EmbedSpellInMessage(data, stringMessage)], files: [sigilImage] });
-        }
-    });
+    let body = await new Promise(
+        resolve => {
+            request({
+                url: url,
+                agentOptions: {
+                    rejectUnauthorized: false
+                }
+            }, async function (err, resp, body) {
+                return resolve(body);
+            });
+        })
+    let data = procesSpellRequest(body)
+    return data;
+
 }
 
 function EmbedSpellInMessage(data, message) {
@@ -126,4 +138,11 @@ module.exports.help = {
         description: 'Give the name of the spell',
         required: true
     }],
+}
+module.exports.exportedForTesting = {
+    procesSpellRequest,
+    createSpellObject,
+    processRitualSpell,
+    EmbedSpellInMessage,
+    baseURL
 }
