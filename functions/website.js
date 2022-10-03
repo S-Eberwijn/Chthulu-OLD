@@ -1,7 +1,7 @@
 const { getPrettyDateString, getDoubleDigitNumber } = require("./api/misc");
 const { getUserCharacter } = require("./api/characters");
 
-const { getGuildFromBot, getUserFromGuild } = require("./api/guild");
+const { getGuildFromBot, getUserFromGuild, getUsersFromGuild } = require("./api/guild");
 
 /**
  * @param {[]} sessions - An array of game sessions.
@@ -35,8 +35,11 @@ async function editAllGameSessionsForWebsite(sessions) {
     return sessions
 }
 
+async function getPlayersIDsWithNames(guildID){
+    return getUsersFromGuild(guildID).filter(user => user.user.bot == false).map(user => {return {id: user.id, username: user.user.username}});
+} 
 
 
 module.exports = {
-    editAllGameSessionsForWebsite
+    editAllGameSessionsForWebsite, getPlayersIDsWithNames
 };

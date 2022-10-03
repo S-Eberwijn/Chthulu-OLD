@@ -183,7 +183,7 @@ details.closing {
     height: calc(var(--title-height) + var(--title-height) / 2) !important;
 }
 
-/* calc(var(--title-height) + 28px) */
+/* calc(var(--title-height) + 28px) */ 
 details.closing .embla__dots {
     opacity: 0 !important;
     /* height: auto !important; */

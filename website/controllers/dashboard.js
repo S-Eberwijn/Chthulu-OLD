@@ -6,7 +6,7 @@ const { getServerQuestsByStatuses, getQuestsByStatuses, createQuest, deleteQuest
 const { getBotCommandsByCategory } = require('../../functions/api/bot');
 const { createGameSession, approveGameSession, declineGameSession, joinGameSession, getAllGameSessions, getAllServerGameSessions } = require('../../functions/api/sessions');
 
-const { editAllGameSessionsForWebsite } = require('../../functions/website');
+const { editAllGameSessionsForWebsite, getPlayersIDsWithNames } = require('../../functions/website');
 
 exports.dashboardPage = async (req, res) => {
     res.render('dashboardPage', {
@@ -118,6 +118,7 @@ exports.sessionsPage = async (req, res) => {
             isGuildDashboardPage: true,
             headerTitle: `Sessions`,
             sessions: await editAllGameSessionsForWebsite(await getAllServerGameSessions(res.locals.renderData?.selectedGuildId)),
+            possiblePlayers: await getPlayersIDsWithNames(req.params?.id),
         }
     });
 }

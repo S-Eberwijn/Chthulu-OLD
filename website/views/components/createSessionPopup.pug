@@ -17,10 +17,15 @@ label(for="createSessionModal" action="create").modal-background
                         .userAvatarWrapper 
                             img(src=loggedInUser.avatar alt="Chthulu Avatar") 
                         .userName #{`${loggedInUser.username}`}
-                    .userDisplay#addPlayer
-                        .addUserDisplay +
-                        .userName Add Player
-                //textarea(cols="5" rows="5" maxlength="400" spellcheck="false" autocomplete="off" id="session_players" oninput="updateInput(this)" placeholder=`e.g. "Defeat the BBEG at his lair."`).description-field
+                    .select-wrapper 
+                        .select 
+                            .select_trigger 
+                                span( id="quest_priority") Select players
+                                i.fas.fa-chevron-down
+                            .custom-options 
+                                each player in possiblePlayers
+                                    span.custom-option(data-value=`${player.id}`) 
+                                        span.text #{player.username}
             .label-input-section
                 label.required Objective
                 textarea(cols="5" rows="5" maxlength="400" spellcheck="false" autocomplete="off" id="session_objective" oninput="updateInput(this)" placeholder=`e.g. "Defeat the BBEG at his lair."`).description-field

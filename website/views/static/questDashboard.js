@@ -281,7 +281,7 @@ function updateInput(input) {
     checkIfFormIsReady(input.parentNode.parentNode.querySelector('.custom-option.selected'), input.parentNode.parentNode.querySelector('input[type="text"]'), input.parentNode.parentNode.querySelector('textarea'));
 
 }
-
+ 
 
 function checkIfFormIsReady(priorityElement, titleElement, descriptionElement) {
     // console.log(titleElement.parentNode.parentNode.parentNode) 
