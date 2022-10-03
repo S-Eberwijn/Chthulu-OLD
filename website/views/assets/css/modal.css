@@ -547,13 +547,20 @@ label#players {
     transition: color .2s ease;
     
 }
-.userDisplay#addPlayer:hover,
-.userDisplay#addPlayer:hover .addUserDisplay {
+div#addPlayer:hover,
+div#addPlayer:hover .addUserDisplay {
     color: var(--text-color);
     cursor: pointer;
     
 }
-.userDisplay#addPlayer {
+div#addPlayer {
+    margin-left: 5px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 25px;
+    width: fit-content;
+    text-align: center;
     background-color: var(--sidebar-color);
     border-radius: var(--modal-border-radius);
     padding-right: 10px;

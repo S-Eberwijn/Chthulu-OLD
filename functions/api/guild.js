@@ -55,6 +55,10 @@ function getUserFromGuild(userID, guild) {
     return guild?.members?.cache.get(userID)
 }
 
+function getUsersFromGuild(guildID) {
+    return getGuildFromBot(guildID)?.members?.cache
+}
+
 function isDungeonMaster(userID, guild) {
     const DUNGEON_MASTER_ROLE = guild?.roles.cache.find(role => role.name.toLowerCase().includes('dungeon master'));
     return guild?.members.cache.get(userID)?.roles.cache.has(DUNGEON_MASTER_ROLE?.id) || false;
@@ -62,5 +66,5 @@ function isDungeonMaster(userID, guild) {
 
 module.exports = {
     getBotGuilds, getGuildFromBot, cacheAllUsers, getServerDisabledCommands, getServerGeneralInfo,
-    getMutualGuilds, isUserInGuild, isUserAdminInGuild, getUserFromGuild, isDungeonMaster, editServerCommands
+    getMutualGuilds, isUserInGuild, isUserAdminInGuild, getUserFromGuild, getUsersFromGuild, isDungeonMaster, editServerCommands
 };

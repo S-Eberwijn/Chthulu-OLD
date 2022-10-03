@@ -280,7 +280,7 @@ function updateInput(input) {
         input.parentNode.parentNode.querySelector('textarea')
         );
 }
-
+ 
 
 function checkIfFormIsReady(priorityElement, titleElement, descriptionElement) {
     let priority = priorityElement?.getAttribute('data-value');

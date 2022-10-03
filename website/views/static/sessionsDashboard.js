@@ -1,6 +1,32 @@
 const sections = ["requested", "planned", "past"];
 
 document.addEventListener("DOMContentLoaded", async function () {
+    document.querySelectorAll('.modal .select-wrapper').forEach(element => {
+        element.addEventListener('click', function () {
+            this.querySelector('.select').classList.add('open');
+        })
+    })
+
+    for (const option of document.querySelectorAll(".custom-option")) {
+        option.addEventListener('click', function () {
+            if (this.classList.contains('selected')) {
+                this.classList.remove('selected');
+                
+                //this.parentNode.parentNode.querySelector('.select_trigger span').textContent = this.textContent.replace('|', '').trim();
+                //checkIfFormIsReady(this, this.parentNode.parentNode.parentNode.parentNode.parentNode.querySelector('input[type="text"]'), this.parentNode.parentNode.parentNode.parentNode.parentNode.querySelector('textarea'));
+            } else {
+                this.classList.add('selected');
+            }
+        })
+    }
+
+    window.addEventListener('click', function (e) {
+        const select = document.querySelector('.select')
+        if (!select.contains(e.target)) {
+            select.classList.remove('open');
+        }
+    });
+
     for (const key in sections) {
         if (Object.hasOwnProperty.call(sections, key)) {
             const section = sections[key];
@@ -17,7 +43,6 @@ document.addEventListener("DOMContentLoaded", async function () {
             console.log(`Add Player`);
         });
     });
-
     const summaries = document.querySelectorAll("summary");
     summaries.forEach((summary) => {
         const detail = summary.parentNode;
