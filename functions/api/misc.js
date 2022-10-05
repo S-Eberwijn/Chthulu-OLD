@@ -37,5 +37,7 @@ function addCreatedDate(array) {
 module.exports = {
     loadAllJSONFiles,
     getDoubleDigitNumber,
-    getPrettyDateString, onlyUnique, addCreatedDate,
+    getPrettyDateString,
+    onlyUnique, 
+    addCreatedDate,
 };
