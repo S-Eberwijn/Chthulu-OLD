@@ -1,7 +1,6 @@
 const request = require('request');
 const spellPrivateMethods = require('../../../../bot/commands/Dungeons&Dragons/spell.js');
 const { MessageEmbed } = require('discord.js');
-const { options } = require('../../../../index.js');
 
 const AID_SPELLNAME = "aid";
 const ALARM_SPELLNAME = "alarm-ritual";
