@@ -1,5 +1,5 @@
 const { getPrettyDateString, getDoubleDigitNumber } = require("./api/misc");
-const { getUserCharacter } = require("./api/characters");
+const { getUserCharacter, getAliveCharacters } = require("./api/characters");
 
 const { getGuildFromBot, getUserFromGuild, getUsersFromGuild } = require("./api/guild");
 
@@ -14,14 +14,14 @@ async function editAllGameSessionsForWebsite(sessions) {
         // Get the user information from each party member.
         for (const key in session.session_party) {
             if (Object.hasOwnProperty.call(session.session_party, key)) {
-                const element = session.session_party[key];
-                session.session_party[key] = (await getUserFromGuild(element, guild)) || { username: 'Unknown' };
+                const playerID = session.session_party[key];
+                session.session_party[key] = (await getUserFromGuild(playerID, guild)).user || { username: 'Unknown' };
             }
         }
 
         // Set session commander player character.
         session.session_commander = await getUserCharacter(session.session_commander, guild.id);
-
+        session.session_commander.player = (await getUserFromGuild(session.session_commander.player_id_discord, guild)).user;
         // Get the user information from the DM.
         session.dungeon_master_id_discord = await getUserFromGuild(session.dungeon_master_id_discord, guild);
         // Get the correct date string output.
@@ -32,14 +32,17 @@ async function editAllGameSessionsForWebsite(sessions) {
         session.created = `${getDoubleDigitNumber(createdDate.getUTCDate())}/${getDoubleDigitNumber(createdDate.getUTCMonth() + 1)}/${createdDate.getUTCFullYear()}`;
 
     }
+    // console.log(sessions)
     return sessions
 }
 
-async function getPlayersIDsWithNames(guildID){
-    return getUsersFromGuild(guildID).filter(user => user.user.bot == false).map(user => {return {id: user.id, username: user.user.username}});
+async function getPlayersData(guildID){
+    const CHARACTER_INFO = (await getAliveCharacters(guildID)).map(character => {return {id:character.player_id_discord, name:character.name}})
+    const PLAYER_IDS = CHARACTER_INFO.map(character => character.id)
+    return getUsersFromGuild(guildID).filter(user => user.user.bot == false && PLAYER_IDS.includes(user.id)).map(user => {return {id: user.id, username: user.user.username, avatarURL: user.displayAvatarURL({dynamic: true}), characterName: CHARACTER_INFO.find(character => character.id == user.id).name}});
 } 
 
 
 module.exports = {
-    editAllGameSessionsForWebsite, getPlayersIDsWithNames
+    editAllGameSessionsForWebsite, getPlayersData
 };

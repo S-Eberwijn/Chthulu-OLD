@@ -1,9 +1,8 @@
 const sections = ["requested", "planned", "past"];
-
 document.addEventListener("DOMContentLoaded", async function () {
     document.querySelectorAll('.modal .select-wrapper').forEach(element => {
-        element.addEventListener('click', function () {
-            this.querySelector('.select').classList.add('open');
+        element.addEventListener('click', function (e) {
+            if (e.target.classList.contains('select_trigger') || e.target.parentNode.classList.contains('select_trigger')) element.querySelector('.select').classList.toggle('open');
         })
     })
 
@@ -11,12 +10,29 @@ document.addEventListener("DOMContentLoaded", async function () {
         option.addEventListener('click', function () {
             if (this.classList.contains('selected')) {
                 this.classList.remove('selected');
-                
-                //this.parentNode.parentNode.querySelector('.select_trigger span').textContent = this.textContent.replace('|', '').trim();
-                //checkIfFormIsReady(this, this.parentNode.parentNode.parentNode.parentNode.parentNode.querySelector('input[type="text"]'), this.parentNode.parentNode.parentNode.parentNode.parentNode.querySelector('textarea'));
+                document.querySelector(`.userListBox .userDisplay[data-user-id="${this.getAttribute('data-value')}"]`).remove();
             } else {
+                if (document.querySelectorAll(`.userListBox .userDisplay`).length >= 5) return
                 this.classList.add('selected');
+                let clickedUser = {
+                    id: this.getAttribute('data-value'),
+                    username: this.querySelector('span.text').textContent,
+                    avatarURL: this.querySelector('.playerIcon img').src
+                }
+                let leftSide = document.querySelector('#players .userListBox .leftSide');
+                let rightSide = document.querySelector('#players .userListBox .rightSide');
+
+                rightSide.children.length >= leftSide.children.length ? leftSide.appendChild(createUserDisplayElement(clickedUser)) : rightSide.appendChild(createUserDisplayElement(clickedUser));
             }
+
+            for (const node of document.querySelector('label#players').childNodes) {
+                if (node.nodeName === '#text') {
+                    node.textContent = `Players (${option.parentElement.querySelectorAll('.custom-option.selected').length}/5)`;
+                }
+            }
+
+
+
         })
     }
 
@@ -135,6 +151,7 @@ async function createGameSession(button) {
     let sessionObjectiveElement = document.querySelector('#session_objective')
     let sessionLocationElement = document.querySelector('#session_location')
     let sessionDateElement = document.querySelector('#session_date')
+    let sessionPartyElements = document.querySelectorAll('span.custom-option.selected')
 
     // const USER_ARRAY = [{ username: "test" }, { username: "test2" }, { username: "test3" }];
 
@@ -149,29 +166,32 @@ async function createGameSession(button) {
     // addUsernamesToElement([USER_ARRAY[0]], clonedElement.querySelector('.sessionCommander'))
     // requestedSessionsContainer.append(clonedElement);
 
-    setTimeout(() => {
-        try {
-            axios.post(`/dashboard/${guildID}/informational/sessions/create`, {
-                session_objective: sessionObjectiveElement.value?.trim(),
-                session_date_text: sessionDateElement.value?.trim(),
-                session_location: sessionLocationElement.value?.trim(),
-            }).then((response) => {
-                if (response.status === 200) {
-                    console.log(response);
+    // setTimeout(() => {
+    try {
+        console.log(guildID)
+        axios.post(`/dashboard/${guildID}/informational/sessions/create`, {
+            session_objective: sessionObjectiveElement.value?.trim(),
+            session_date_text: sessionDateElement.value?.trim(),
+            session_location: sessionLocationElement.value?.trim(),
+            session_party: Array.from(sessionPartyElements).map((element) => element.getAttribute('data-value')),
+        }).then((response) => {
+            if (response.status === 200) {
+                console.log(response);
 
-                    let requestedSessionCounter = document.querySelector(`summary[data-type="requested"] span.count`);
-                    requestedSessionCounter.textContent = parseInt(requestedSessionCounter.textContent) + 1;
-                    // Add embed, close modal
+                let requestedSessionCounter = document.querySelector(`summary[data-type="requested"] span.count`);
+                requestedSessionCounter.textContent = parseInt(requestedSessionCounter.textContent) + 1;
+                // Add embed, close modal
 
-                    pushNotify("success", "Session created", response.data.message);
-                }
-            }).catch((error) => {
-                pushNotify("error", "Session not created", error.response.data);
-            });
-        } catch (error) {
-            console.log("error occured during creation of session: " + button);
-        }
-    }, 250);
+                pushNotify("success", "Session created", response.data.message);
+            }
+        }).catch((error) => {
+            pushNotify("error", "Session not created", error.response.data);
+        });
+    } catch (error) {
+        console.log(error);
+        console.log("error occured during creation of session: " + button);
+    }
+    // }, 250);
 }
 
 async function approveGameSession(gameSessionElement) {
@@ -312,7 +332,7 @@ function updateInput(input) {
         input.parentNode.parentNode.querySelector("#session_location"),
         input.parentNode.parentNode.querySelector("#session_date")
     );
-} 
+}
 
 function checkIfFormIsReady(objectiveElement, locationElement, dateElement) {
     // let priority = priorityElement?.getAttribute('data-value');
@@ -327,4 +347,23 @@ function checkIfFormIsReady(objectiveElement, locationElement, dateElement) {
     } else {
         objectiveElement.parentNode.parentNode.parentNode.parentNode.querySelector('.modal-footer input[type="button"]').setAttribute("disabled", "true");
     }
+}
+
+function createUserDisplayElement(user = { id: undefined, username: undefined, avatarURL: undefined }) {
+    let userDisplay = document.createElement("div");
+    userDisplay.classList.add("userDisplay");
+    // userDisplay.classList.add("unlocked");
+    userDisplay.setAttribute("data-user-id", user.id);
+    let userAvatarWrapper = document.createElement("div");
+    userAvatarWrapper.classList.add("userAvatarWrapper");
+    userDisplay.appendChild(userAvatarWrapper);
+    let userDisplayImage = document.createElement("img");
+    userDisplayImage.alt = "User Avatar";
+    userDisplayImage.src = user?.avatarURL || 'test';
+    userAvatarWrapper.appendChild(userDisplayImage);
+    let userDisplayName = document.createElement("p");
+    userDisplayName.classList.add("userName");
+    userDisplayName.textContent = user?.username || "User Name";
+    userDisplay.appendChild(userDisplayName);
+    return userDisplay;
 }

@@ -1,0 +1,56 @@
+function pug_attr(t,e,n,r){if(!1===e||null==e||!e&&("class"===t||"style"===t))return"";if(!0===e)return" "+(r?t:t+'="'+t+'"');var f=typeof e;return"object"!==f&&"function"!==f||"function"!=typeof e.toJSON||(e=e.toJSON()),"string"==typeof e||(e=JSON.stringify(e),n||-1===e.indexOf('"'))?(n&&(e=pug_escape(e))," "+t+'="'+e+'"'):" "+t+"='"+e.replace(/'/g,"&#39;")+"'"}
+function pug_escape(e){var a=""+e,t=pug_match_html.exec(a);if(!t)return e;var r,c,n,s="";for(r=t.index,c=0;r<a.length;r++){switch(a.charCodeAt(r)){case 34:n="&quot;";break;case 38:n="&amp;";break;case 60:n="&lt;";break;case 62:n="&gt;";break;default:continue}c!==r&&(s+=a.substring(c,r)),c=r+1,s+=n}return c!==r?s+a.substring(c,r):s}
+var pug_has_own_property=Object.prototype.hasOwnProperty;
+var pug_match_html=/["&<>]/;
+function pug_rethrow(n,e,r,t){if(!(n instanceof Error))throw n;if(!("undefined"==typeof window&&e||t))throw n.message+=" on line "+r,n;try{t=t||require("fs").readFileSync(e,"utf8")}catch(e){pug_rethrow(n,null,r)}var i=3,a=t.split("\n"),o=Math.max(r-i,0),h=Math.min(a.length,r+i),i=a.slice(o,h).map(function(n,e){var t=e+o+1;return(t==r?"  > ":"    ")+t+"| "+n}).join("\n");throw n.path=e,n.message=(e||"Pug")+":"+r+"\n"+i+"\n\n"+n.message,n}
+function pug_style(r){if(!r)return"";if("object"==typeof r){var t="";for(var e in r)pug_has_own_property.call(r,e)&&(t=t+e+":"+r[e]+";");return t}return r+""}function charactercardTemplate(locals) {var pug_html = "", pug_mixins = {}, pug_interp;var pug_debug_filename, pug_debug_line;try {var pug_debug_sources = {"website\u002Fviews\u002Fcomponents\u002F\u002FcharacterCard.pug":".characterCardHolder\r\n    .characterCard(id=`card-${character.character_id}` unselectable=\"on\" style=`--character-count: ${index \u003E 0 ? index * (30 + 5) : index * 15}px;`)\r\n        .characterImageHolder(style=`--average-color: ${character.average_color || '#000000'}`)\r\n            img(src=character.picture_url alt=\"Character Image\")\r\n        .characterInformation\r\n            span.characterName #{character.name} (#{character.age})\r\n            \r\n\r\n            span.characterLevel \r\n                img(src=`..\u002F..\u002F..\u002F${character.level}.png`, alt=\"icon\")\r\n            span.characterDescription #{character.description}\r\n            .infoBundle\r\n                span(--race=character.race) Race\r\n                    \u002F\u002F- span.characterRace #{}\r\n                span(--class=character.class) Class \r\n                span Icon\r\n                    img(src=`..\u002F..\u002F..\u002F${character.class}.png`, alt=\"icon\").classIcon\r\n\r\n                    \u002F\u002F- span.characterClass #{character.class} \r\n                span(--background=character.background) Background \r\n                \u002F\u002F- img(src=`..\u002F..\u002F..\u002F${character.class}.png`, alt=\"icon\") \r\n                    \u002F\u002F- span.characterBackground #{character.background}\r\n        "};
+;var locals_for_with = (locals || {});(function (character, index) {;pug_debug_line = 1;pug_debug_filename = "website\u002Fviews\u002Fcomponents\u002F\u002FcharacterCard.pug";
+pug_html = pug_html + "\u003Cdiv class=\"characterCardHolder\"\u003E";
+;pug_debug_line = 2;pug_debug_filename = "website\u002Fviews\u002Fcomponents\u002F\u002FcharacterCard.pug";
+pug_html = pug_html + "\u003Cdiv" + (" class=\"characterCard\""+pug_attr("id", `card-${character.character_id}`, true, false)+" unselectable=\"on\""+pug_attr("style", pug_style(`--character-count: ${index > 0 ? index * (30 + 5) : index * 15}px;`), true, false)) + "\u003E";
+;pug_debug_line = 3;pug_debug_filename = "website\u002Fviews\u002Fcomponents\u002F\u002FcharacterCard.pug";
+pug_html = pug_html + "\u003Cdiv" + (" class=\"characterImageHolder\""+pug_attr("style", pug_style(`--average-color: ${character.average_color || '#000000'}`), true, false)) + "\u003E";
+;pug_debug_line = 4;pug_debug_filename = "website\u002Fviews\u002Fcomponents\u002F\u002FcharacterCard.pug";
+pug_html = pug_html + "\u003Cimg" + (pug_attr("src", character.picture_url, true, false)+" alt=\"Character Image\"") + "\u002F\u003E\u003C\u002Fdiv\u003E";
+;pug_debug_line = 5;pug_debug_filename = "website\u002Fviews\u002Fcomponents\u002F\u002FcharacterCard.pug";
+pug_html = pug_html + "\u003Cdiv class=\"characterInformation\"\u003E";
+;pug_debug_line = 6;pug_debug_filename = "website\u002Fviews\u002Fcomponents\u002F\u002FcharacterCard.pug";
+pug_html = pug_html + "\u003Cspan class=\"characterName\"\u003E";
+;pug_debug_line = 6;pug_debug_filename = "website\u002Fviews\u002Fcomponents\u002F\u002FcharacterCard.pug";
+pug_html = pug_html + (pug_escape(null == (pug_interp = character.name) ? "" : pug_interp));
+;pug_debug_line = 6;pug_debug_filename = "website\u002Fviews\u002Fcomponents\u002F\u002FcharacterCard.pug";
+pug_html = pug_html + " (";
+;pug_debug_line = 6;pug_debug_filename = "website\u002Fviews\u002Fcomponents\u002F\u002FcharacterCard.pug";
+pug_html = pug_html + (pug_escape(null == (pug_interp = character.age) ? "" : pug_interp));
+;pug_debug_line = 6;pug_debug_filename = "website\u002Fviews\u002Fcomponents\u002F\u002FcharacterCard.pug";
+pug_html = pug_html + ")\u003C\u002Fspan\u003E";
+;pug_debug_line = 9;pug_debug_filename = "website\u002Fviews\u002Fcomponents\u002F\u002FcharacterCard.pug";
+pug_html = pug_html + "\u003Cspan class=\"characterLevel\"\u003E";
+;pug_debug_line = 9;pug_debug_filename = "website\u002Fviews\u002Fcomponents\u002F\u002FcharacterCard.pug";
+pug_html = pug_html + " ";
+;pug_debug_line = 10;pug_debug_filename = "website\u002Fviews\u002Fcomponents\u002F\u002FcharacterCard.pug";
+pug_html = pug_html + "\u003Cimg" + (pug_attr("src", `../../../${character.level}.png`, true, false)+" alt=\"icon\"") + "\u002F\u003E\u003C\u002Fspan\u003E";
+;pug_debug_line = 11;pug_debug_filename = "website\u002Fviews\u002Fcomponents\u002F\u002FcharacterCard.pug";
+pug_html = pug_html + "\u003Cspan class=\"characterDescription\"\u003E";
+;pug_debug_line = 11;pug_debug_filename = "website\u002Fviews\u002Fcomponents\u002F\u002FcharacterCard.pug";
+pug_html = pug_html + (pug_escape(null == (pug_interp = character.description) ? "" : pug_interp)) + "\u003C\u002Fspan\u003E";
+;pug_debug_line = 12;pug_debug_filename = "website\u002Fviews\u002Fcomponents\u002F\u002FcharacterCard.pug";
+pug_html = pug_html + "\u003Cdiv class=\"infoBundle\"\u003E";
+;pug_debug_line = 13;pug_debug_filename = "website\u002Fviews\u002Fcomponents\u002F\u002FcharacterCard.pug";
+pug_html = pug_html + "\u003Cspan" + (pug_attr("--race", character.race, true, false)) + "\u003E";
+;pug_debug_line = 13;pug_debug_filename = "website\u002Fviews\u002Fcomponents\u002F\u002FcharacterCard.pug";
+pug_html = pug_html + "Race\u003C\u002Fspan\u003E";
+;pug_debug_line = 15;pug_debug_filename = "website\u002Fviews\u002Fcomponents\u002F\u002FcharacterCard.pug";
+pug_html = pug_html + "\u003Cspan" + (pug_attr("--class", character.class, true, false)) + "\u003E";
+;pug_debug_line = 15;pug_debug_filename = "website\u002Fviews\u002Fcomponents\u002F\u002FcharacterCard.pug";
+pug_html = pug_html + "Class \u003C\u002Fspan\u003E";
+;pug_debug_line = 16;pug_debug_filename = "website\u002Fviews\u002Fcomponents\u002F\u002FcharacterCard.pug";
+pug_html = pug_html + "\u003Cspan\u003E";
+;pug_debug_line = 16;pug_debug_filename = "website\u002Fviews\u002Fcomponents\u002F\u002FcharacterCard.pug";
+pug_html = pug_html + "Icon";
+;pug_debug_line = 17;pug_debug_filename = "website\u002Fviews\u002Fcomponents\u002F\u002FcharacterCard.pug";
+pug_html = pug_html + "\u003Cimg" + (" class=\"classIcon\""+pug_attr("src", `../../../${character.class}.png`, true, false)+" alt=\"icon\"") + "\u002F\u003E\u003C\u002Fspan\u003E";
+;pug_debug_line = 20;pug_debug_filename = "website\u002Fviews\u002Fcomponents\u002F\u002FcharacterCard.pug";
+pug_html = pug_html + "\u003Cspan" + (pug_attr("--background", character.background, true, false)) + "\u003E";
+;pug_debug_line = 20;pug_debug_filename = "website\u002Fviews\u002Fcomponents\u002F\u002FcharacterCard.pug";
+pug_html = pug_html + "Background \u003C\u002Fspan\u003E\u003C\u002Fdiv\u003E\u003C\u002Fdiv\u003E\u003C\u002Fdiv\u003E\u003C\u002Fdiv\u003E";}.call(this,"character" in locals_for_with?locals_for_with.character:typeof character!=="undefined"?character:undefined,"index" in locals_for_with?locals_for_with.index:typeof index!=="undefined"?index:undefined));} catch (err) {pug_rethrow(err, pug_debug_filename, pug_debug_line, pug_debug_sources[pug_debug_filename]);};return pug_html;}

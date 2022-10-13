@@ -12,20 +12,35 @@ label(for="createSessionModal" action="create").modal-background
     .modal-content
         form
             .label-input-section
-                label.optional#players Players
-                    .userDisplay.locked
-                        .userAvatarWrapper 
-                            img(src=loggedInUser.avatar alt="Chthulu Avatar") 
-                        .userName #{`${loggedInUser.username}`}
+                label.optional#players Players (1/5)
+                    .userListBox
+                        .leftSide
+                            .userDisplay.locked
+                                .userAvatarWrapper 
+                                    img(src=loggedInUser.avatar alt="User Avatar") 
+                                .userName #{`${loggedInUser.username}`}
+                            
+                        .rightSide
+                            
                     .select-wrapper 
                         .select 
                             .select_trigger 
-                                span( id="quest_priority") Select players
+                                span( id="quest_priority") Select players 
                                 i.fas.fa-chevron-down
                             .custom-options 
-                                each player in possiblePlayers
-                                    span.custom-option(data-value=`${player.id}`) 
-                                        span.text #{player.username}
+                                each player, index in possiblePlayers
+                                    if player.id === loggedInUser.discordID
+                                        span.custom-option(data-value=`${player.id}` style=`--index:${index};`).selected.locked 
+                                            .playerIcon
+                                                img(src=`${player.avatarURL}` alt="User Avatar")
+                                            span.text #{`${player.username}`}
+                                            span.character #{`[${player.characterName}]`}
+                                    else 
+                                        span.custom-option(data-value=`${player.id}` style=`--index:${index};`) 
+                                            .playerIcon
+                                                img(src=`${player.avatarURL}` alt="User Avatar")
+                                            span.text #{`${player.username}`}
+                                            span.character #{`[${player.characterName}]`}
             .label-input-section
                 label.required Objective
                 textarea(cols="5" rows="5" maxlength="400" spellcheck="false" autocomplete="off" id="session_objective" oninput="updateInput(this)" placeholder=`e.g. "Defeat the BBEG at his lair."`).description-field
