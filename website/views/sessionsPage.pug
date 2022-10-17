@@ -46,8 +46,7 @@ block dashboardContent
                     .embla__viewport
                         .embla__container
                             each session in sessions.filter(session => session.session_status === 'CREATED')
-                                .embla__slide 
-                                    include ./components/discordSessionEmbed.pug
+                                include ./components/discordSessionEmbed.pug
                 .embla__dots
                 script(type='text/template', id='embla-dot-template')
                     button(class="embla__dot" type='button')
@@ -62,8 +61,7 @@ block dashboardContent
                     .embla__viewport
                         .embla__container
                             each session in sessions.filter(session => session.session_status === 'PLANNED')
-                                .embla__slide 
-                                    include ./components/discordSessionEmbed.pug
+                                include ./components/discordSessionEmbed.pug
                 .embla__dots
                 script(type='text/template', id='embla-dot-template')
                     button(class="embla__dot" type='button')
@@ -78,8 +76,7 @@ block dashboardContent
                     .embla__viewport
                         .embla__container
                             each session in sessions.filter(session => session.session_status === 'PLAYED' || session.session_status === 'CANCELED').reverse()
-                                .embla__slide 
-                                    include ./components/discordSessionEmbed.pug
+                                include ./components/discordSessionEmbed.pug
                 .embla__dots
                 script(type='text/template', id='embla-dot-template')
                     button(class="embla__dot" type='button')

@@ -1,3 +1,4 @@
+
 const sections = ["requested", "planned", "past"];
 document.addEventListener("DOMContentLoaded", async function () {
     document.querySelectorAll('.modal .select-wrapper').forEach(element => {
@@ -83,22 +84,38 @@ document.addEventListener("DOMContentLoaded", async function () {
     });
 });
 
+//listen for window resize event
+window.addEventListener('resize', async function (event) {
+    for (const key in sections) {
+        if (Object.hasOwnProperty.call(sections, key)) {
+            const section = sections[key];
+            await createCarousel(section);
+        }
+    }
+});
+
 // Carousel for section
 async function createCarousel(sectionName) {
     const wrap = document.querySelector(`.embla[data-type="${sectionName}"]`);
     if (!wrap) return;
-
     const viewPort = wrap.querySelector(".embla__viewport");
     const container = viewPort.querySelector(".embla__container");
     const items = container.querySelectorAll(".embla__slide");
     if (items.length < 1) return;
     const dots = wrap.parentElement.querySelector(".embla__dots");
 
+    let item = items[0];
+    let itemWidth = item.getBoundingClientRect().width;
+    let slidesToScrollAmount = viewPort.getBoundingClientRect().width / itemWidth < 1 ? 1 : Math.floor(viewPort.getBoundingClientRect().width / itemWidth);
+
+    if(dots.childNodes.length === Math.ceil(items.length/slidesToScrollAmount)) return;
+    // console.log(`Slides to scroll: ${Math.ceil(items.length/slidesToScrollAmount)}\nCurrent slides to scroll: ${dots.childNodes.length}`);
+
     let options = {
         align: "start",
         loop: false,
         skipSnaps: false,
-        slidesToScroll: 5,
+        slidesToScroll: slidesToScrollAmount,
     };
     let plugins = [
         // EmblaCarouselAutoplay()
@@ -153,45 +170,36 @@ async function createGameSession(button) {
     let sessionDateElement = document.querySelector('#session_date')
     let sessionPartyElements = document.querySelectorAll('span.custom-option.selected')
 
-    // const USER_ARRAY = [{ username: "test" }, { username: "test2" }, { username: "test3" }];
+    setTimeout(() => {
+        try {
+            axios.post(`/dashboard/${guildID}/informational/sessions/create`, {
+                session_objective: sessionObjectiveElement.value?.trim(),
+                session_date_text: sessionDateElement.value?.trim(),
+                session_location: sessionLocationElement.value?.trim(),
+                session_party: Array.from(sessionPartyElements).map((element) => element.getAttribute('data-value')),
+            }).then((response) => {
+                if (response.status === 200) {
+                    toggleModal('create')
 
-    // let clonedElement = document.querySelector(`.embla[data-type="requested"] .embla__slide`)?.cloneNode(true);
-    // console.log(clonedElement);
+                    let requestedSessionsElement = document.querySelector('.embla[data-type="requested"] .embla__container')
+                    requestedSessionsElement.appendChild(createElementFromHTML(response.data.HTMLElement))
 
-    // let requestedSessionsContainer = document.querySelector(`.embla[data-type="requested"] .embla__container`)
-    // clonedElement.querySelector('.slideItem').id = "Test"
-    // clonedElement.querySelector('.addPlayer').setAttribute("onclick", `joinGameSession(Test, '241273372892200963')`)
-    // clonedElement.querySelector('#userList').parentNode.querySelector('h5').textContent = `Players (${USER_ARRAY.length}/5)`
-    // addUsernamesToElement(USER_ARRAY, clonedElement.querySelector('#userList'))
-    // addUsernamesToElement([USER_ARRAY[0]], clonedElement.querySelector('.sessionCommander'))
-    // requestedSessionsContainer.append(clonedElement);
+                    let detailsElement = document.querySelector('.embla[data-type="requested"]').parentNode;
+                    detailsElement.open = true;
 
-    // setTimeout(() => {
-    try {
-        console.log(guildID)
-        axios.post(`/dashboard/${guildID}/informational/sessions/create`, {
-            session_objective: sessionObjectiveElement.value?.trim(),
-            session_date_text: sessionDateElement.value?.trim(),
-            session_location: sessionLocationElement.value?.trim(),
-            session_party: Array.from(sessionPartyElements).map((element) => element.getAttribute('data-value')),
-        }).then((response) => {
-            if (response.status === 200) {
-                console.log(response);
+                    let requestedSessionCounter = document.querySelector(`summary[data-type="requested"] span.count`);
+                    requestedSessionCounter.textContent = parseInt(requestedSessionCounter.textContent) + 1;
 
-                let requestedSessionCounter = document.querySelector(`summary[data-type="requested"] span.count`);
-                requestedSessionCounter.textContent = parseInt(requestedSessionCounter.textContent) + 1;
-                // Add embed, close modal
-
-                pushNotify("success", "Session created", response.data.message);
-            }
-        }).catch((error) => {
-            pushNotify("error", "Session not created", error.response.data);
-        });
-    } catch (error) {
-        console.log(error);
-        console.log("error occured during creation of session: " + button);
-    }
-    // }, 250);
+                    pushNotify("success", "Session created", response.data.message);
+                }
+            }).catch((error) => {
+                pushNotify("error", "Session not created", error.message);
+            });
+        } catch (error) {
+            console.log(error);
+            console.log("error occured during creation of session: " + button);
+        }
+    }, 250);
 }
 
 async function approveGameSession(gameSessionElement) {
@@ -349,6 +357,8 @@ function checkIfFormIsReady(objectiveElement, locationElement, dateElement) {
     }
 }
 
+
+
 function createUserDisplayElement(user = { id: undefined, username: undefined, avatarURL: undefined }) {
     let userDisplay = document.createElement("div");
     userDisplay.classList.add("userDisplay");
@@ -366,4 +376,10 @@ function createUserDisplayElement(user = { id: undefined, username: undefined, a
     userDisplayName.textContent = user?.username || "User Name";
     userDisplay.appendChild(userDisplayName);
     return userDisplay;
+}
+
+function toggleModal(action) {
+    const modal = document.querySelector(`input[action="${action}"]`);
+    modal.checked = !modal.checked;
+    // modal.checked === true ? modal.checked = false : modal.checked = true;
 }

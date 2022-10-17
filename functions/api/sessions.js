@@ -17,7 +17,7 @@ const DATE_REGEX_PATTERN =
 
 async function getAllGameSessions() {
 	return GameSession.findAll();
-}
+} 
 
 /**
  * @param {"532525442201026580"} serverID - The ID of a Discord server.

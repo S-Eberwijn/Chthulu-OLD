@@ -6,7 +6,7 @@ const { getServerQuestsByStatuses, getQuestsByStatuses, createQuest, deleteQuest
 const { getBotCommandsByCategory } = require('../../functions/api/bot');
 const { createGameSession, approveGameSession, declineGameSession, joinGameSession, getAllGameSessions, getAllServerGameSessions } = require('../../functions/api/sessions');
 const { editAllGameSessionsForWebsite, getPlayersData } = require('../../functions/website');
-const { QUEST_ELEMENT_TEMPLATE } = require('../../functions/templating');
+const { QUEST_ELEMENT_TEMPLATE, SESSION_EMBED_ELEMENT_TEMPLATE } = require('../../functions/templating');
 
 exports.dashboardPage = async (req, res) => {
     res.render('dashboardPage', {
@@ -99,7 +99,7 @@ exports.deleteQuestRequest = async (req, res) => {
 
 //TODO: Add validation with express validation
 exports.editQuestRequest = async (req, res) => {
-    await updateQuest(req.body, req.params?.id).then((quest) => { 
+    await updateQuest(req.body, req.params?.id).then((quest) => {
         quest.HTMLElement = QUEST_ELEMENT_TEMPLATE({ quest: quest });
         res.json(quest);
     }).catch((error) => { res.status(400).send({ message: `${error.message}` }) });
@@ -130,7 +130,10 @@ exports.sessionsPage = async (req, res) => {
 }
 
 exports.createGameSession = async (req, res) => {
-    await createGameSession(req.body, req.params?.id, req.user?.discordID).then(message => { return res.json(message); }).catch((err) => { return res.status(400).json(err) });
+    await createGameSession(req.body, req.params?.id, req.user?.discordID).then(session => {
+        session.HTMLElement = SESSION_EMBED_ELEMENT_TEMPLATE({ session: session });
+        return res.json(session);
+    }).catch((err) => { console.log(err); return res.status(400).json(err) });
 }
 
 //TODO: Add validation with express validation

@@ -297,6 +297,7 @@ function createQuest(buttonElement) {
                     document.querySelector(`#quest_description`).value = '';
                     updateInput(document.querySelector(`#quest_description`))
 
+                    
                     let uncompletedQuestsBox = document.querySelector('.questBox[id="uncompletedQuestsBox"]');
                     uncompletedQuestsBox.insertBefore(createElementFromHTML(response.data.HTMLElement), uncompletedQuestsBox.childNodes[uncompletedQuestsBox.childNodes.length - 1])
 
@@ -440,3 +441,4 @@ function toggleModal(action) {
     modal.checked = !modal.checked;
     // modal.checked === true ? modal.checked = false : modal.checked = true;
 }
+ 
