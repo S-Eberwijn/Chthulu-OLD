@@ -49,3 +49,11 @@ If you want to add the Chthulu to your Discord server, click [here](https://disc
 | /nonPlayableCharacterCreation |   | A Dungeon Master can use this command to create a new NPC. Chthulu will create a new channel and ask questions about the new, soon to be, NPC. Once finished, the NPC will be stored in the database and the Dungeon Master can start impersonating the creature. |
 | /set-level  | \<@User> \<1-20> | A Dungeon Master can use this command to set a new level to the provided user, considering the user has an active character configured.  |
 | /stop-impersonating   | &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| A Dungeon Master can use this command to stop impersonating the previously chosen creature.   |
+
+# Feedback
+
+Your feedback is important to us, we are only a small team who intensively use the bot and therefore might just miss some things. You can leave your feedback [in this form](https://forms.gle/bi1Kng7JG2UkW9618) so we can implement it when suited.
+
+# Contribution
+
+No formal way to contribute *yet* Just leave a message and we'll figure things out.
