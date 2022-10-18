@@ -15,7 +15,7 @@
     --modal-side-padding: 6%;
     --modal-title-font-size: 1.2rem;
     --modal-border-radius: 5px;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Poppins', 'FontAwesome', sans-serif;
 }
 
 .theme-dark {
@@ -69,6 +69,8 @@ body, html {
     overflow: hidden;
     scroll-behavior: smooth;
     color: var(--text-color);
+
+    counter-reset: player-list-counter;
 }
 
 a {

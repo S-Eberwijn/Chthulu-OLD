@@ -1,70 +1,71 @@
-.slideItem(id=session.id)    
-    .embedWrapper   
-        .embed
-            if(session.session_status === 'CREATED')
-                h4 #{'Session Request'}
-            else if(session.session_status === 'PLANNED')
-                h4 #{`Session ${session.session_number}`}
-            else if(session.session_status === 'PLAYED')
-                h4 #{`Session ${session.session_number}: PLAYED`}
-            else if(session.session_status === 'CANCELED')
-                h4 #{`Session ${session.session_number}: CANCELED`}
-            img.embedThumbnail(src=`${session.session_commander.picture_url}`, alt="")
-            .embedField 
-                h5 #{'Session Commander:'}
-                p.embedFieldValue.sessionCommander 
-                    span.user #{`@${session.session_party[0].nickname}`}
-            .embedField 
-                h5 #{`Players (${session.session_party.length}/5):`}
-                p.embedFieldValue(id="userList") 
-                    span.user #{`@${session.session_party[0].nickname}`}
-                    each member in session.session_party.slice(1)
-                        span ,#{' '}
-                        span.user #{`@${member.nickname || 'Unknown'}`}
-                    if (session.session_party.length < 5 && ["CREATED", "PLANNED"].includes(session.session_status) && loggedInUser.discordID === session.session_commander.data.player_id_discord) 
-                        span(id="addPlayer" onclick=`joinGameSession(${session.id},'241273372892200963')`).addPlayer + Add Player
-                        
-                        
-            .embedField 
-                h5 #{'DM:'}
-                if (session.dungeon_master_id_discord != undefined)
-                    p.embedFieldValue(data-attribute="DM")
-                        span.user #{`@${session.dungeon_master_id_discord.nickname || session.dungeon_master_id_discord.user.username}`}
-                else 
-                    p.embedFieldValue.italic(data-attribute="DM") #{'TBD'}
-            .embedField 
-                h5 #{'Location:'}
-                p.embedFieldValue.italic #{session.location || 'Roll20 (online)'}
-            .embedField 
-                h5 #{'Date & Time:'}
-                code #{session.date}
-                //- p.embedFieldValue #{'Saturday (10/12/2022) 13:00'}
-            .embedField 
-                h5 #{'Objective:'}
-                p.embedFieldValue.italic.objective #{session.objective || 'No data avaialable.'}
-        .embedFooterWrapper    
-            .embedFooter 
-                .imgWrapper
-                    img(src=`${session.session_party[0].displayAvatarURL()}`, alt="")
-                p.footerText #{`Requested by ${session.session_party[0].user.username} - ${session.created}`}    
+.embla__slide     
+    .slideItem(id=session.id)    
+        .embedWrapper   
+            .embed
+                if(session.session_status === 'CREATED')
+                    h4 #{'Session Request'}
+                else if(session.session_status === 'PLANNED')
+                    h4 #{`Session ${session.session_number}`}
+                else if(session.session_status === 'PLAYED')
+                    h4 #{`Session ${session.session_number}: PLAYED`}
+                else if(session.session_status === 'CANCELED')
+                    h4 #{`Session ${session.session_number}: CANCELED`}
+                img.embedThumbnail(src=`${session.session_commander.data.picture_url || 'undefined'}`, alt="")
+                .embedField 
+                    h5 #{'Session Commander:'}
+                    p.embedFieldValue.sessionCommander 
+                        span.user #{`@${session.session_commander.player.username || 'Unknown'}`}
+                .embedField 
+                    h5 #{`Players (${session.session_party.length}/5):`}
+                    p.embedFieldValue(id="userList") 
+                        span.user #{`@${session.session_commander.player.username || 'Unknown'}`}
+                        each member in session.session_party.filter((member, index) => member != session.session_commander.player.id)
+                            span ,#{' '}
+                            span.user #{`@${member.username || 'Unknown'}`}
+                        //- if (session.session_party.length < 5 && ["CREATED", "PLANNED"].includes(session.session_status) && loggedInUser.discordID === session.session_commander.player.id) 
+                        //-     span(id="addPlayer" onclick=`joinGameSession(${session.id},'241273372892200963')`).addPlayer + Add Player
+                            
+                            
+                .embedField 
+                    h5 #{'DM:'}
+                    if (session.dungeon_master_id_discord != undefined)
+                        p.embedFieldValue(data-attribute="DM")
+                            span.user #{`@${session.dungeon_master_id_discord.nickname || session.dungeon_master_id_discord.user.username || 'Unknown'}`}
+                    else 
+                        p.embedFieldValue.italic(data-attribute="DM") #{'TBD'}
+                .embedField 
+                    h5 #{'Location:'}
+                    p.embedFieldValue.italic #{session.location || 'Roll20 (online)'}
+                .embedField 
+                    h5 #{'Date & Time:'}
+                    code #{session.date}
+                    //- p.embedFieldValue #{'Saturday (10/12/2022) 13:00'}
+                .embedField 
+                    h5 #{'Objective:'}
+                    p.embedFieldValue.italic.objective #{session.objective || 'No data avaialable.'}
+            .embedFooterWrapper    
+                .embedFooter 
+                    .imgWrapper
+                        img(src=`${session.session_commander.player.displayAvatarURL() || 'undefined'}`, alt="")
+                    p.footerText #{`Requested by ${session.session_commander.player.username || 'Unknown'} - ${session.created || 'No date'}`}    
 
-    .embedButtons 
-        if(isDungeonMaster)
-            if(session.session_status === 'CREATED')
-                .button.approve(onclick=`approveGameSession(${session.id})`)
-                    i(class="fas fa-thumbs-up")
-                    p Approve
-                .button.decline(onclick=`declineGameSession(${session.id})`)
-                    i(class="fas fa-times")
-                    p Decline
-            else if (session.session_status === 'PLANNED')
-                .button.approve(onclick=`doneGameSession(${session.id})`)
-                    i(class="fas fa-thumbs-up")
-                    p Played
-                .button.decline
-                    i(class="fas fa-times")
-                    p Canceled
-        else if(userCharacter && (session.session_party.length < 5 && !["PLAYED", "CANCELED"].includes(session.session_status) &&  !session.session_party.map(user => user.id).includes(loggedInUser.discordID)) && session.session_commander.data.player_id_discord != loggedInUser.discordID)
-            .button.join(onclick=`joinGameSession(${session.id})`)
-                i(class="fas fa-handshake")
-                p Join
+        .embedButtons 
+            if(isDungeonMaster)
+                if(session.session_status === 'CREATED')
+                    .button.approve(onclick=`approveGameSession(${session.id})`)
+                        i(class="fas fa-thumbs-up")
+                        p Approve
+                    .button.decline(onclick=`declineGameSession(${session.id})`)
+                        i(class="fas fa-times")
+                        p Decline
+                else if (session.session_status === 'PLANNED')
+                    .button.approve(onclick=`doneGameSession(${session.id})`)
+                        i(class="fas fa-thumbs-up")
+                        p Played
+                    .button.decline
+                        i(class="fas fa-times")
+                        p Canceled
+            else if(userCharacter && (session.session_party.length < 5 && !["PLAYED", "CANCELED"].includes(session.session_status) &&  !session.session_party.map(user => user.id).includes(loggedInUser.discordID)) && session.session_commander.player.id != loggedInUser.discordID)
+                .button.join(onclick=`joinGameSession(${session.id})`)
+                    i(class="fas fa-handshake")
+                    p Join

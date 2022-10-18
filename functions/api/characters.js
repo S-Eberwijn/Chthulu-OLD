@@ -28,6 +28,8 @@ async function getNonPlayableCharacters(guildId = null) {
     return NonPlayableCharacter.findAll({ where: { status: "VISIBLE", server: guildId } })
 }
 
+
+
 module.exports = {
     getAliveCharacters, getNonPlayableCharacters, getDeadCharacters, getUserCharacter,
 };

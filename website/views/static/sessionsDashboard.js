@@ -1,9 +1,9 @@
-const sections = ["requested", "planned", "past"];
 
+const sections = ["requested", "planned", "past"];
 document.addEventListener("DOMContentLoaded", async function () {
     document.querySelectorAll('.modal .select-wrapper').forEach(element => {
-        element.addEventListener('click', function () {
-            this.querySelector('.select').classList.add('open');
+        element.addEventListener('click', function (e) {
+            if (e.target.classList.contains('select_trigger') || e.target.parentNode.classList.contains('select_trigger')) element.querySelector('.select').classList.toggle('open');
         })
     })
 
@@ -11,12 +11,29 @@ document.addEventListener("DOMContentLoaded", async function () {
         option.addEventListener('click', function () {
             if (this.classList.contains('selected')) {
                 this.classList.remove('selected');
-                
-                //this.parentNode.parentNode.querySelector('.select_trigger span').textContent = this.textContent.replace('|', '').trim();
-                //checkIfFormIsReady(this, this.parentNode.parentNode.parentNode.parentNode.parentNode.querySelector('input[type="text"]'), this.parentNode.parentNode.parentNode.parentNode.parentNode.querySelector('textarea'));
+                document.querySelector(`.userListBox .userDisplay[data-user-id="${this.getAttribute('data-value')}"]`).remove();
             } else {
+                if (document.querySelectorAll(`.userListBox .userDisplay`).length >= 5) return
                 this.classList.add('selected');
+                let clickedUser = {
+                    id: this.getAttribute('data-value'),
+                    username: this.querySelector('span.text').textContent,
+                    avatarURL: this.querySelector('.playerIcon img').src
+                }
+                let leftSide = document.querySelector('#players .userListBox .leftSide');
+                let rightSide = document.querySelector('#players .userListBox .rightSide');
+
+                rightSide.children.length >= leftSide.children.length ? leftSide.appendChild(createUserDisplayElement(clickedUser)) : rightSide.appendChild(createUserDisplayElement(clickedUser));
             }
+
+            for (const node of document.querySelector('label#players').childNodes) {
+                if (node.nodeName === '#text') {
+                    node.textContent = `Players (${option.parentElement.querySelectorAll('.custom-option.selected').length}/5)`;
+                }
+            }
+
+
+
         })
     }
 
@@ -67,22 +84,38 @@ document.addEventListener("DOMContentLoaded", async function () {
     });
 });
 
+//listen for window resize event
+window.addEventListener('resize', async function (event) {
+    for (const key in sections) {
+        if (Object.hasOwnProperty.call(sections, key)) {
+            const section = sections[key];
+            await createCarousel(section);
+        }
+    }
+});
+
 // Carousel for section
 async function createCarousel(sectionName) {
     const wrap = document.querySelector(`.embla[data-type="${sectionName}"]`);
     if (!wrap) return;
-
     const viewPort = wrap.querySelector(".embla__viewport");
     const container = viewPort.querySelector(".embla__container");
     const items = container.querySelectorAll(".embla__slide");
     if (items.length < 1) return;
     const dots = wrap.parentElement.querySelector(".embla__dots");
 
+    let item = items[0];
+    let itemWidth = item.getBoundingClientRect().width;
+    let slidesToScrollAmount = viewPort.getBoundingClientRect().width / itemWidth < 1 ? 1 : Math.floor(viewPort.getBoundingClientRect().width / itemWidth);
+
+    if(dots.childNodes.length === Math.ceil(items.length/slidesToScrollAmount)) return;
+    // console.log(`Slides to scroll: ${Math.ceil(items.length/slidesToScrollAmount)}\nCurrent slides to scroll: ${dots.childNodes.length}`);
+
     let options = {
         align: "start",
         loop: false,
         skipSnaps: false,
-        slidesToScroll: 5,
+        slidesToScroll: slidesToScrollAmount,
     };
     let plugins = [
         // EmblaCarouselAutoplay()
@@ -135,19 +168,7 @@ async function createGameSession(button) {
     let sessionObjectiveElement = document.querySelector('#session_objective')
     let sessionLocationElement = document.querySelector('#session_location')
     let sessionDateElement = document.querySelector('#session_date')
-
-    // const USER_ARRAY = [{ username: "test" }, { username: "test2" }, { username: "test3" }];
-
-    // let clonedElement = document.querySelector(`.embla[data-type="requested"] .embla__slide`)?.cloneNode(true);
-    // console.log(clonedElement);
-
-    // let requestedSessionsContainer = document.querySelector(`.embla[data-type="requested"] .embla__container`)
-    // clonedElement.querySelector('.slideItem').id = "Test"
-    // clonedElement.querySelector('.addPlayer').setAttribute("onclick", `joinGameSession(Test, '241273372892200963')`)
-    // clonedElement.querySelector('#userList').parentNode.querySelector('h5').textContent = `Players (${USER_ARRAY.length}/5)`
-    // addUsernamesToElement(USER_ARRAY, clonedElement.querySelector('#userList'))
-    // addUsernamesToElement([USER_ARRAY[0]], clonedElement.querySelector('.sessionCommander'))
-    // requestedSessionsContainer.append(clonedElement);
+    let sessionPartyElements = document.querySelectorAll('span.custom-option.selected')
 
     setTimeout(() => {
         try {
@@ -155,20 +176,27 @@ async function createGameSession(button) {
                 session_objective: sessionObjectiveElement.value?.trim(),
                 session_date_text: sessionDateElement.value?.trim(),
                 session_location: sessionLocationElement.value?.trim(),
+                session_party: Array.from(sessionPartyElements).map((element) => element.getAttribute('data-value')),
             }).then((response) => {
                 if (response.status === 200) {
-                    console.log(response);
+                    toggleModal('create')
+
+                    let requestedSessionsElement = document.querySelector('.embla[data-type="requested"] .embla__container')
+                    requestedSessionsElement.appendChild(createElementFromHTML(response.data.HTMLElement))
+
+                    let detailsElement = document.querySelector('.embla[data-type="requested"]').parentNode;
+                    detailsElement.open = true;
 
                     let requestedSessionCounter = document.querySelector(`summary[data-type="requested"] span.count`);
                     requestedSessionCounter.textContent = parseInt(requestedSessionCounter.textContent) + 1;
-                    // Add embed, close modal
 
                     pushNotify("success", "Session created", response.data.message);
                 }
             }).catch((error) => {
-                pushNotify("error", "Session not created", error.response.data);
+                pushNotify("error", "Session not created", error.message);
             });
         } catch (error) {
+            console.log(error);
             console.log("error occured during creation of session: " + button);
         }
     }, 250);
@@ -312,7 +340,7 @@ function updateInput(input) {
         input.parentNode.parentNode.querySelector("#session_location"),
         input.parentNode.parentNode.querySelector("#session_date")
     );
-} 
+}
 
 function checkIfFormIsReady(objectiveElement, locationElement, dateElement) {
     // let priority = priorityElement?.getAttribute('data-value');
@@ -327,4 +355,31 @@ function checkIfFormIsReady(objectiveElement, locationElement, dateElement) {
     } else {
         objectiveElement.parentNode.parentNode.parentNode.parentNode.querySelector('.modal-footer input[type="button"]').setAttribute("disabled", "true");
     }
+}
+
+
+
+function createUserDisplayElement(user = { id: undefined, username: undefined, avatarURL: undefined }) {
+    let userDisplay = document.createElement("div");
+    userDisplay.classList.add("userDisplay");
+    // userDisplay.classList.add("unlocked");
+    userDisplay.setAttribute("data-user-id", user.id);
+    let userAvatarWrapper = document.createElement("div");
+    userAvatarWrapper.classList.add("userAvatarWrapper");
+    userDisplay.appendChild(userAvatarWrapper);
+    let userDisplayImage = document.createElement("img");
+    userDisplayImage.alt = "User Avatar";
+    userDisplayImage.src = user?.avatarURL || 'test';
+    userAvatarWrapper.appendChild(userDisplayImage);
+    let userDisplayName = document.createElement("p");
+    userDisplayName.classList.add("userName");
+    userDisplayName.textContent = user?.username || "User Name";
+    userDisplay.appendChild(userDisplayName);
+    return userDisplay;
+}
+
+function toggleModal(action) {
+    const modal = document.querySelector(`input[action="${action}"]`);
+    modal.checked = !modal.checked;
+    // modal.checked === true ? modal.checked = false : modal.checked = true;
 }

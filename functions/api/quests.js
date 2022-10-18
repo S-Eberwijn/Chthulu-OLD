@@ -59,14 +59,14 @@ async function updateQuest(questData, serverID) {
         if (questData.status) {
             QUEST.quest_status = questData?.status;
             QUEST.save();
-            return resolve();
+            return resolve(QUEST);
         } else if (!questData.status) {
             QUEST.quest_name = questData?.title;
             QUEST.quest_description = questData?.description;
             QUEST.quest_importance_value = questData?.priority;
             QUEST.quest_importance = Importance[questData?.priority];
             QUEST.save();
-            return resolve();
+            return resolve(QUEST);
         }
         return reject();
     });

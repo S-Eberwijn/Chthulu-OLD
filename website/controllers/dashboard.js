@@ -5,8 +5,8 @@ const { getAliveCharacters, getNonPlayableCharacters } = require('../../function
 const { getServerQuestsByStatuses, getQuestsByStatuses, createQuest, deleteQuest, updateQuest } = require('../../functions/api/quests');
 const { getBotCommandsByCategory } = require('../../functions/api/bot');
 const { createGameSession, approveGameSession, declineGameSession, joinGameSession, getAllGameSessions, getAllServerGameSessions } = require('../../functions/api/sessions');
-
-const { editAllGameSessionsForWebsite, getPlayersIDsWithNames } = require('../../functions/website');
+const { editAllGameSessionsForWebsite, getPlayersData } = require('../../functions/website');
+const { QUEST_ELEMENT_TEMPLATE, SESSION_EMBED_ELEMENT_TEMPLATE } = require('../../functions/templating');
 
 exports.dashboardPage = async (req, res) => {
     res.render('dashboardPage', {
@@ -85,9 +85,12 @@ exports.guildInformationalQuestsDashboardPage = async (req, res) => {
 }
 
 //CREATE QUEST POST
+// TODO add validator on backend level
 exports.createQuestPost = async (req, res) => {
-    // TODO add validator on backend level
-    createQuest(req.body, req.params?.id, req.user?.discordID).then((quest) => { res.json(quest); }).catch((error) => { res.status(400).send({ message: `${error.message}` }) });
+    createQuest(req.body, req.params?.id, req.user?.discordID).then((quest) => {
+        quest.HTMLElement = QUEST_ELEMENT_TEMPLATE({ quest: quest });
+        res.json(quest);
+    }).catch((error) => { res.status(400).send({ message: `${error.message}` }) });
 }
 
 exports.deleteQuestRequest = async (req, res) => {
@@ -96,7 +99,10 @@ exports.deleteQuestRequest = async (req, res) => {
 
 //TODO: Add validation with express validation
 exports.editQuestRequest = async (req, res) => {
-    await updateQuest(req.body, req.params?.id).then(() => { return res.sendStatus(200) }).catch(() => { return res.sendStatus(400) });
+    await updateQuest(req.body, req.params?.id).then((quest) => {
+        quest.HTMLElement = QUEST_ELEMENT_TEMPLATE({ quest: quest });
+        res.json(quest);
+    }).catch((error) => { res.status(400).send({ message: `${error.message}` }) });
 }
 
 exports.guildInformationalMapDashboardPage = async (req, res) => {
@@ -118,13 +124,16 @@ exports.sessionsPage = async (req, res) => {
             isGuildDashboardPage: true,
             headerTitle: `Sessions`,
             sessions: await editAllGameSessionsForWebsite(await getAllServerGameSessions(res.locals.renderData?.selectedGuildId)),
-            possiblePlayers: await getPlayersIDsWithNames(req.params?.id),
+            possiblePlayers: await getPlayersData(req.params?.id),
         }
     });
 }
 
 exports.createGameSession = async (req, res) => {
-    await createGameSession(req.body, req.params?.id, req.user?.discordID).then(message => { return res.json(message); }).catch((err) => { return res.status(400).json(err) });
+    await createGameSession(req.body, req.params?.id, req.user?.discordID).then(session => {
+        session.HTMLElement = SESSION_EMBED_ELEMENT_TEMPLATE({ session: session });
+        return res.json(session);
+    }).catch((err) => { console.log(err); return res.status(400).json(err) });
 }
 
 //TODO: Add validation with express validation

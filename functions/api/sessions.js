@@ -17,7 +17,7 @@ const DATE_REGEX_PATTERN =
 
 async function getAllGameSessions() {
 	return GameSession.findAll();
-}
+} 
 
 /**
  * @param {"532525442201026580"} serverID - The ID of a Discord server.
@@ -130,6 +130,8 @@ async function createGameSession(sessionData, serverID, userID) {
 			Date.UTC(date_year, date_month - 1, date_day, date_hour, date_minutes),
 		).getTime();
 
+		if (sessionData.session_party && !sessionData.session_party?.includes(userID)) session_party = [userID, ...session_party];
+		
 		// Makes a request channel for the message author
 		GUILD.channels
 			.create(`${DISCORD_USER.username}s-request`, "text")
@@ -177,35 +179,38 @@ async function createGameSession(sessionData, serverID, userID) {
 					},
 				);
 
-				// Update channel permissions so session commander can see it.
-				CREATED_CHANNEL.permissionOverwrites.create(
-					BOT.users.cache.get(userID),
-					{
-						CREATE_INSTANT_INVITE: false,
-						KICK_MEMBERS: false,
-						BAN_MEMBERS: false,
-						ADMINISTRATOR: false,
-						MANAGE_CHANNELS: false,
-						MANAGE_GUILD: false,
-						ADD_REACTIONS: true,
-						VIEW_CHANNEL: true,
-						SEND_MESSAGES: true,
-						SEND_TTS_MESSAGES: false,
-						MANAGE_MESSAGES: false,
-						EMBED_LINKS: true,
-						ATTACH_FILES: true,
-						READ_MESSAGE_HISTORY: true,
-						MENTION_EVERYONE: false,
-						USE_EXTERNAL_EMOJIS: true,
-						VIEW_GUILD_INSIGHTS: false,
-						CHANGE_NICKNAME: true,
-						MANAGE_NICKNAMES: false,
-						MANAGE_ROLES: false,
-						MANAGE_WEBHOOKS: false,
-						MANAGE_THREADS: false,
-						USE_PUBLIC_THREADS: false,
-					},
-				);
+				// Update channel permissions so every party member can see it.
+				for (const playerID of sessionData.session_party) {
+					CREATED_CHANNEL.permissionOverwrites.create(
+						BOT.users.cache.get(playerID),
+						{
+							CREATE_INSTANT_INVITE: false,
+							KICK_MEMBERS: false,
+							BAN_MEMBERS: false,
+							ADMINISTRATOR: false,
+							MANAGE_CHANNELS: false,
+							MANAGE_GUILD: false,
+							ADD_REACTIONS: true,
+							VIEW_CHANNEL: true,
+							SEND_MESSAGES: true,
+							SEND_TTS_MESSAGES: false,
+							MANAGE_MESSAGES: false,
+							EMBED_LINKS: true,
+							ATTACH_FILES: true,
+							READ_MESSAGE_HISTORY: true,
+							MENTION_EVERYONE: false,
+							USE_EXTERNAL_EMOJIS: true,
+							VIEW_GUILD_INSIGHTS: false,
+							CHANGE_NICKNAME: true,
+							MANAGE_NICKNAMES: false,
+							MANAGE_ROLES: false,
+							MANAGE_WEBHOOKS: false,
+							MANAGE_THREADS: false,
+							USE_PUBLIC_THREADS: false,
+						},
+					);
+				}
+				
 
 				CREATED_CHANNEL.send({
 					content: `${DISCORD_USER}, welcome to your session request channel!`,
@@ -216,7 +221,7 @@ async function createGameSession(sessionData, serverID, userID) {
 						createSessionChannelEmbed(
 							DISCORD_USER,
 							session_date,
-							[userID],
+							sessionData.session_party,
 							session_objective,
 							USER_CHARACTER.picture_url,
 							session_location,
@@ -232,6 +237,7 @@ async function createGameSession(sessionData, serverID, userID) {
 						session_date,
 						MESSAGE.id,
 						CREATED_CHANNEL.id,
+						sessionData.session_party,
 					);
 					// Add the session to a json database.
 					BOT.sessionAddUserRequest["sessions"][
@@ -637,7 +643,7 @@ function createSessionChannelEmbed(
 		.addFields(
 			{
 				name: `**Session Commander:**`,
-				value: `<@!${sessionParticipants[0]}>\n`,
+				value: `<@!${messageAuthor.id}>\n`,
 				inline: false,
 			},
 			{
@@ -673,13 +679,14 @@ async function createSession(
 	date,
 	message_id,
 	session_channel_id,
+	session_party,
 ) {
 	const TIMESTAMP = Date.now();
 	return GameSession.create({
 		id: `GS${TIMESTAMP}`,
 		message_id_discord: message_id,
 		session_commander: userID,
-		session_party: [userID],
+		session_party: session_party,
 		date: date,
 		dungeon_master_id_discord: "",
 		objective: objective,

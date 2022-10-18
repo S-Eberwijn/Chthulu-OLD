@@ -1,3 +1,7 @@
+// TODO: BUG WHEN QUESTS ARE CREATED - CANNOT BE MOVED
+// TODO: BUG WHEN QUESTS ARE CREATED OR EDITED - DOES NOT SHOW CREATION DATE
+// TODO: BUG WHEN QUESTS DESCRIPTION IS BIG - OVERFLOW
+
 const fadeAnimationDuration = 200;
 let globalIDstorage;
 
@@ -159,35 +163,6 @@ document.addEventListener('DOMContentLoaded', () => {
     })
 });
 
-function createCompleteIcon() {
-    // <i class="far fa-check-circle"></i>
-    let completedIcon = document.createElement("i");
-    completedIcon.classList = 'far fa-check-circle';
-    completedIcon.style.color = "lightgreen";
-    completedIcon.style.width = "16px";
-    completedIcon.style.height = "16px";
-    return completedIcon;
-}
-
-function createFailedIcon() {
-    // <i class="fas fa-times"></i>
-    let failedIcon = document.createElement("i");
-    failedIcon.classList = 'fas fa-times';
-    failedIcon.style.color = "red";
-    failedIcon.style.width = "16px";
-    failedIcon.style.height = "16px";
-    return failedIcon;
-}
-
-function createExpiredIcon() {
-    // <i class="far fa-clock"></i>
-    let expiredIcon = document.createElement("i");
-    expiredIcon.classList = 'far fa-clock';
-    expiredIcon.style.color = "orange";
-    expiredIcon.style.width = "16px";
-    expiredIcon.style.height = "16px";
-    return expiredIcon;
-}
 
 function createChevronIcon() {
     // <i class="far fa-clock"></i>
@@ -275,12 +250,12 @@ function searchQuest(searchBar) {
 
 function updateInput(input) {
     checkIfFormIsReady(
-        input.parentNode.parentNode.querySelector('.custom-option.selected'), 
-        input.parentNode.parentNode.querySelector('input[type="text"]'), 
+        input.parentNode.parentNode.querySelector('.custom-option.selected'),
+        input.parentNode.parentNode.querySelector('input[type="text"]'),
         input.parentNode.parentNode.querySelector('textarea')
-        );
+    );
 }
- 
+
 
 function checkIfFormIsReady(priorityElement, titleElement, descriptionElement) {
     let priority = priorityElement?.getAttribute('data-value');
@@ -302,7 +277,6 @@ function createQuest(buttonElement) {
     buttonElement.parentNode.querySelector(`i.fa-spinner`).classList.add('active')
     buttonElement.setAttribute('disabled', 'true')
 
-    // console.log(`Clicking "Create"-button`)
     setTimeout(() => {
         try {
             axios.post(`/dashboard/${guildID}/informational/quests`, {
@@ -311,8 +285,7 @@ function createQuest(buttonElement) {
                 "description": description,
             }).then(response => {
                 if (response.status === 200) {
-                    document.querySelector(`input[action="create"]`).checked = false;
-
+                    toggleModal("create")
                     // Reset createQuestModal
                     let selectDiv = document.querySelector(`#addNewQuestDiv .select`)
                     selectDiv.querySelector(`.custom-option.selected`).classList.remove('selected');
@@ -324,8 +297,9 @@ function createQuest(buttonElement) {
                     document.querySelector(`#quest_description`).value = '';
                     updateInput(document.querySelector(`#quest_description`))
 
+                    
                     let uncompletedQuestsBox = document.querySelector('.questBox[id="uncompletedQuestsBox"]');
-                    uncompletedQuestsBox.insertBefore(createQuestDiv(response.data.data), uncompletedQuestsBox.childNodes[uncompletedQuestsBox.childNodes.length - 1])
+                    uncompletedQuestsBox.insertBefore(createElementFromHTML(response.data.HTMLElement), uncompletedQuestsBox.childNodes[uncompletedQuestsBox.childNodes.length - 1])
 
                     let uncompletedQuestCountElement = document.querySelector(`#uncompletedQuestsCount`);
                     uncompletedQuestCountElement.textContent = parseInt(uncompletedQuestCountElement.textContent) + 1;
@@ -344,62 +318,6 @@ function createQuest(buttonElement) {
 
     }, 250);
 
-}
-
-function createQuestDiv(quest_data) {
-    // console.log(quest_data)
-    let questDiv = document.createElement('div');
-    questDiv.classList.add('questDiv', 'quest');
-    questDiv.setAttribute('id', quest_data.quest_identifier);
-    questDiv.setAttribute('quest_importance_value', quest_data.quest_importance_value);
-    questDiv.setAttribute('quest_started', quest_data.createdAt);
-    questDiv.setAttribute('draggable', 'true');
-
-
-    let questTitleDiv = document.createElement('div');
-    questTitleDiv.classList.add('questTitleDiv');
-    questDiv.appendChild(questTitleDiv);
-
-    let questTitleP = document.createElement('p');
-    questTitleP.classList.add('title');
-    questTitleP.textContent = quest_data.quest_name;
-    questTitleDiv.appendChild(questTitleP);
-
-
-    let questDescriptionSpan = document.createElement('span');
-    questDescriptionSpan.classList.add('description');
-    questDescriptionSpan.textContent = quest_data.quest_description;
-    quest_data.quest_description ? questTitleDiv.appendChild(questDescriptionSpan) : questDiv.classList.add('onlyTitle');
-
-
-    let optionsDiv = document.createElement('div');
-    optionsDiv.classList.add('options');
-    questDiv.appendChild(optionsDiv);
-
-    let deleteLabel = document.createElement('label');
-    deleteLabel.classList.add('trash-label');
-    deleteLabel.setAttribute('action', 'delete');
-    deleteLabel.setAttribute('for', 'deleteQuestModal');
-    deleteLabel.setAttribute('onclick', 'updateGlobalQuestId(this)');
-    optionsDiv.appendChild(deleteLabel);
-
-    let editLabel = document.createElement('label');
-    editLabel.classList.add('edit-label');
-    editLabel.setAttribute('action', 'edit');
-    editLabel.setAttribute('for', 'editQuestModal');
-    editLabel.setAttribute('onclick', 'updateGlobalQuestId(this)');
-    optionsDiv.appendChild(editLabel);
-
-    let trashIcon = document.createElement('i');
-    trashIcon.classList.add('fas', 'fa-trash');
-    deleteLabel.appendChild(trashIcon);
-
-    let editIcon = document.createElement('i');
-    editIcon.classList.add('fas', 'fa-edit');
-    editLabel.appendChild(editIcon);
-
-
-    return questDiv;
 }
 
 function editQuest(buttonElement) {
@@ -422,10 +340,10 @@ function editQuest(buttonElement) {
                 "description": description
             }).then(response => {
                 if (response.status === 201 || response.status === 200) {
-                    document.querySelector(`input[action="edit"]`).checked = false;
-                    questElement.querySelector(`p.title`).textContent = title;
-                    questElement.querySelector(`span.description`).textContent = description;
-                    questElement.setAttribute('quest_importance_value', priority);
+                    let uncompletedQuestsBox = document.querySelector('.questBox[id="uncompletedQuestsBox"]');
+                    uncompletedQuestsBox.insertBefore(createElementFromHTML(response.data.HTMLElement), questElement)
+                    questElement.remove();
+                    toggleModal('edit');
                     pushNotify('success', 'Quest edited', 'The quest has been edited successfully.');
                 }
             }).catch((err) => {
@@ -449,14 +367,15 @@ function deleteQuest(buttonElement) {
     buttonElement.value = '';
     buttonElement.parentNode.querySelector(`i.fa-spinner`).classList.add('active')
     buttonElement.setAttribute('disabled', 'true')
-
     setTimeout(() => {
         try {
             axios.delete(`/dashboard/${guildID}/informational/quests`, { data: { 'quest_id': globalQuestID } }).then(response => {
-                if (response.status === 201) {
-                    document.querySelector(`input[action="delete"]`).checked = false;
+                if (response.status === 200) {
+                    toggleModal("delete");
                     questElement.remove();
-                    uncompletedQuestsCount.innerText = uncompletedQuestsCount.innerText - 1;
+
+                    let uncompletedQuestCountElement = document.querySelector(`#uncompletedQuestsCount`);
+                    uncompletedQuestCountElement.innerText = uncompletedQuestCountElement.innerText - 1;
                     pushNotify('success', 'Quest removed', 'The quest has been removed successfully.');
                 }
             })
@@ -466,22 +385,29 @@ function deleteQuest(buttonElement) {
         buttonElement.value = 'Delete';
         buttonElement.parentNode.querySelector(`i.fa-spinner`).classList.remove('active')
         buttonElement.removeAttribute('disabled')
-
-
     }, 250);
 }
 
 async function statusChangeQuest(buttonValue) {
     let possibleOutcomes = ["done", "expired", "failed"]
     if (!possibleOutcomes.includes(buttonValue.toLowerCase())) console.log("Not in here");
-    // console.log(globalQuestID)
+
+    let questElement = document.querySelector(`.quest[id="${globalQuestID}"]`);
+
     setTimeout(() => {
         try {
             axios.put(`/dashboard/${guildID}/informational/quests`, { 'quest_id': globalQuestID, 'status': buttonValue.toUpperCase() }).then(response => {
-                if (response.status === 201) {
-                    // questElement.remove();
-                    // uncompletedQuestsCount.innerText = uncompletedQuestsCount.innerText - 1;
-                    window.location = './quests';
+                if (response.status === 200) {
+                    toggleModal("status");
+                    let completedQuestsBox = document.querySelector('.questBox[id="completedQuestsBox"]');
+                    completedQuestsBox.appendChild(createElementFromHTML(response.data.HTMLElement))
+                    questElement.remove();
+
+                    let uncompletedQuestCountElement = document.querySelector(`#uncompletedQuestsCount`);
+                    uncompletedQuestCountElement.textContent = parseInt(uncompletedQuestCountElement.textContent) - 1;
+
+                    let completedQuestsCountElement = document.querySelector(`#completedQuestsCount`);
+                    completedQuestsCountElement.textContent = parseInt(completedQuestsCountElement.textContent) + 1;
                 }
             })
         } catch (error) {
@@ -508,3 +434,11 @@ async function updateGlobalQuestId(iconElement) {
         // console.log(document.querySelector('input[id="edit_quest_title"]'))
     }
 }
+
+
+function toggleModal(action) {
+    const modal = document.querySelector(`input[action="${action}"]`);
+    modal.checked = !modal.checked;
+    // modal.checked === true ? modal.checked = false : modal.checked = true;
+}
+ 

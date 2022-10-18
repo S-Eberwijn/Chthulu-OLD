@@ -2,7 +2,10 @@ extends ./template/baseDashboard.pug
 block scripts
     //- script(type='text/javascript', src='https://www.gstatic.com/charts/loader.js')
     script(src="https://unpkg.com/embla-carousel/embla-carousel.umd.js")
-    //- script(src="https://unpkg.com/embla-carousel-autoplay/embla-carousel-autoplay.umd.js")
+    //- script(src="https://pugjs.org/js/pug.js")
+    //- script(src="https://cdn.jsdelivr.net/npm/fs-cdn@0.1.0/index.min.js")
+    //- script(src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-JavaScript-Templates/3.20.0/js/tmpl.min.js")
+    //- script(src="https://cdn.jsdelivr.net/npm/pug-runtime@3.0.1/index.min.js")
 
     script
         include ./static/theme.js
@@ -10,9 +13,11 @@ block scripts
         | var guildID = !{JSON.stringify(selectedGuildId)};
         //- include ./static/mainDashboardStatistics.js
     script. 
+        //- const pug = require('pug');
+        //- var fs = require('fs'); 
         //- var characters = !{JSON.stringify(characters)}; 
         //- var allQuests = !{JSON.stringify(allQuests)}; 
-        //- var sessions = !{JSON.stringify(sessions)}; 
+        var sessions = !{JSON.stringify(sessions)}; 
         //- var locations = !{JSON.stringify(locations)};
         
 
@@ -41,8 +46,7 @@ block dashboardContent
                     .embla__viewport
                         .embla__container
                             each session in sessions.filter(session => session.session_status === 'CREATED')
-                                .embla__slide 
-                                    include ./components/discordSessionEmbed.pug
+                                include ./components/discordSessionEmbed.pug
                 .embla__dots
                 script(type='text/template', id='embla-dot-template')
                     button(class="embla__dot" type='button')
@@ -57,8 +61,7 @@ block dashboardContent
                     .embla__viewport
                         .embla__container
                             each session in sessions.filter(session => session.session_status === 'PLANNED')
-                                .embla__slide 
-                                    include ./components/discordSessionEmbed.pug
+                                include ./components/discordSessionEmbed.pug
                 .embla__dots
                 script(type='text/template', id='embla-dot-template')
                     button(class="embla__dot" type='button')
@@ -73,8 +76,7 @@ block dashboardContent
                     .embla__viewport
                         .embla__container
                             each session in sessions.filter(session => session.session_status === 'PLAYED' || session.session_status === 'CANCELED').reverse()
-                                .embla__slide 
-                                    include ./components/discordSessionEmbed.pug
+                                include ./components/discordSessionEmbed.pug
                 .embla__dots
                 script(type='text/template', id='embla-dot-template')
                     button(class="embla__dot" type='button')
