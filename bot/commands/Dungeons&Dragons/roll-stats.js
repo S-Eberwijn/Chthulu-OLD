@@ -32,7 +32,7 @@ module.exports.run = async (interaction) => {
         singleStat = singleStat.slice(dropLowest, amountOfDice - dropHighest);
         statArray.push(singleStat.reduce(reducer) + additionalModifier);
     }
-    return interaction.reply({ embeds: [createEmbed(command, sortedArray = statArray.sort((a, b) => b - a))] })
+    return interaction.reply({ embeds: [createEmbed(command, statArray.sort((a, b) => b - a))] })
 }
 
 function createEmbed(command, statArray) {
