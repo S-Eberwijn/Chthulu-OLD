@@ -1,3 +1,4 @@
+const { logger } = require(`../../functions/logger`)
 const { MessageEmbed } = require("discord.js");
 
 const { GameSession } = require("../../database/models/GameSession");
@@ -10,14 +11,13 @@ const { getGuildFromBot, isDungeonMaster } = require("./guild");
 const { getUserFromBot, getBot } = require("./bot");
 const { getUserCharacter } = require("./characters");
 const { getPrettyDateString } = require("./misc");
-const { editAllGameSessionsForWebsite } = require("../website");
 
 const DATE_REGEX_PATTERN =
 	/[0-3]\d\/(0[1-9]|1[0-2])\/\d{4} [0-2]\d:[0-5]\d(?:\.\d+)?Z?/g;
 
 async function getAllGameSessions() {
 	return GameSession.findAll();
-} 
+}
 
 /**
  * @param {"532525442201026580"} serverID - The ID of a Discord server.
@@ -32,32 +32,18 @@ async function getAllServerGameSessions(serverID) {
  * @param {""} userID - The ID of a Discord user.
  */
 
-async function fetchGameSessionMessage(
-	SESSION_REQUEST_CHANNEL,
-	PLANNED_SESSIONS_CHANNEL,
-	messageID,
-) {
+async function fetchGameSessionMessage(SESSION_REQUEST_CHANNEL, PLANNED_SESSIONS_CHANNEL, messageID) {
 	try {
-		let foundMessage = await SESSION_REQUEST_CHANNEL.messages
-			.fetch(messageID)
-			.catch(() => console.log("Message not found"));
-		foundMessage =
-			foundMessage != null
-				? foundMessage
-				: await PLANNED_SESSIONS_CHANNEL.messages
-					.fetch(messageID)
-					.catch(() => console.log("Message not found"));
+		let foundMessage = await SESSION_REQUEST_CHANNEL.messages.fetch(messageID).catch((err) => { });
+		foundMessage = foundMessage != null ? foundMessage : await PLANNED_SESSIONS_CHANNEL.messages.fetch(messageID).catch((err) => { });
+		if (!foundMessage) logger.debug(`Session embed (with message id: ${messageID}) not found in session request or planned sessions channel.`)
 		return foundMessage;
 	} catch (error) {
 		console.log(error);
 	}
 }
 
-function editRequestSessionEmbedToPlannedSessionEmbed(
-	dungeonMasterId,
-	sessionNumber,
-	editedEmbed,
-) {
+function editRequestSessionEmbedToPlannedSessionEmbed(dungeonMasterId, sessionNumber, editedEmbed) {
 	editedEmbed.fields[2].value = `<@!${dungeonMasterId}>`;
 	editedEmbed.setTitle(`**Session ${sessionNumber}: **`);
 	return editedEmbed;
@@ -66,9 +52,7 @@ function editRequestSessionEmbedToPlannedSessionEmbed(
 function updatePartyNextSessionId(party, next_session_id, serverId) {
 	//TODO: change to for of loop
 	party.forEach(async (player) => {
-		await PlayerCharacter.findOne({
-			where: { player_id_discord: player, alive: 1, server: serverId },
-		}).then((character) => {
+		await PlayerCharacter.findOne({ where: { player_id_discord: player, alive: 1, server: serverId }, }).then((character) => {
 			character.next_session = next_session_id;
 			character.save();
 		});
@@ -131,7 +115,7 @@ async function createGameSession(sessionData, serverID, userID) {
 		).getTime();
 
 		if (sessionData.session_party && !sessionData.session_party?.includes(userID)) session_party = [userID, ...session_party];
-		
+
 		// Makes a request channel for the message author
 		GUILD.channels
 			.create(`${DISCORD_USER.username}s-request`, "text")
@@ -210,7 +194,7 @@ async function createGameSession(sessionData, serverID, userID) {
 						},
 					);
 				}
-				
+
 
 				CREATED_CHANNEL.send({
 					content: `${DISCORD_USER}, welcome to your session request channel!`,
@@ -251,21 +235,18 @@ async function createGameSession(sessionData, serverID, userID) {
 						"./bot/jsonDb/sessionAddUserRequest.json",
 						BOT.sessionAddUserRequest,
 					);
-					resolve(
-						(await editAllGameSessionsForWebsite([GAME_SESSION.__old]))[0],
-					);
+					resolve(GAME_SESSION.__old);
 				});
 			});
-		DISCORD_USER.send({
-			content: `Session request created! You can find it back in this channel: ${SESSION_REQUEST_CHANNEL}`,
-		});
+		// <Might add commented code later>
+		// DISCORD_USER.send({
+		// 	content: `Session request created! You can find it back in this channel: ${SESSION_REQUEST_CHANNEL}`,
+		// });
 	});
 }
 
 async function approveGameSession(sessionData, serverID, userID) {
-	const { editAllGameSessionsForWebsite } = require("../website");
 	//TODO: Change to a resolve or reject state
-	// if (!isDungeonMaster(userID, serverID)) console.log("You are not allowed to approve a game session - not a dungeon master")
 
 	// if(!sessionData.gameSessionID) throw Error("No gameSessionID provided");
 	// if(!userID) throw Error("No userID provided");
@@ -296,7 +277,11 @@ async function approveGameSession(sessionData, serverID, userID) {
 	);
 
 	return new Promise((resolve, reject) => {
-		if (!GAME_SESSION) return reject();
+		if (!isDungeonMaster(userID, getGuildFromBot(serverID))) {
+			logger.warn(`User ${userID} tried to approve session ${GAME_SESSION?.id}, but is currently not a Dungeon Master.`);
+			reject("Only dungeon masters can approve sessions");
+		}
+		if (!GAME_SESSION) return reject("Session not found in database!");
 
 		PLANNED_SESSIONS_CHANNEL?.send({
 			embeds: [
@@ -335,36 +320,34 @@ async function approveGameSession(sessionData, serverID, userID) {
 
 			GAME_SESSION_MESSAGE.delete();
 
-			GAME_SESSION = await editAllGameSessionsForWebsite([GAME_SESSION]);
-			GAME_SESSION[0].data.message =
-				"The session has been successfully approved.";
-			return resolve(GAME_SESSION[0].data);
+			return resolve(GAME_SESSION.data);
 		});
 	});
 }
 
 async function declineGameSession(sessionData, serverID, userID) {
-	// if (!isDungeonMaster(userID, serverID)) console.log("You are not allowed to approve a game session - not a dungeon master")
 	let GAME_SESSION = await GameSession.findOne({
 		where: { id: sessionData.gameSessionID, server: serverID },
 	});
 	// console.log(GAME_SESSION.data)
 	return new Promise(async (resolve, reject) => {
+		if (!isDungeonMaster(userID, getGuildFromBot(serverID))) {
+			logger.warn(`User ${userID} tried to decline session ${GAME_SESSION?.id}, but is currently not a Dungeon Master.`);
+			reject("Only dungeon masters can decline sessions");
+		}
 		if (!GAME_SESSION) return reject();
-
 		const GUILD = getGuildFromBot(serverID);
 		const SESSION_REQUEST_CHANNEL = GUILD?.channels.cache.find(
 			(c) => c.name.includes("session-request") && c.type == "GUILD_TEXT",
 		);
-
 		const SESSION_EMBED = await SESSION_REQUEST_CHANNEL.messages
 			.fetch(GAME_SESSION.message_id_discord)
 			.catch(() => console.log("Message not found"));
+
 		// Delete session channel.
 		GUILD?.channels.cache.get(GAME_SESSION.session_channel)?.delete();
 		// Update the session status in the database.
 		await updateGameSessionStatus(GAME_SESSION, "DECLINED");
-
 		// Edit session embed to show the session has been declined.
 		SESSION_EMBED?.edit({
 			embeds: [
@@ -375,10 +358,9 @@ async function declineGameSession(sessionData, serverID, userID) {
 			],
 			components: [],
 		});
-
 		getUserFromBot(userID)?.send("Session request declined!");
 		// button.reply({ content: , ephemeral: true })
-		GAME_SESSION.data.message = "The session has been successfully declined.";
+		// GAME_SESSION.data.message = "The session has been successfully declined.";
 		return resolve(GAME_SESSION.data);
 	});
 }
@@ -536,9 +518,48 @@ async function joinGameSession(sessionData, serverID, userID) {
 	});
 }
 
+//TODO: Whole function
+async function updateGameSession(sessionData, serverID, userID) {
+	//TODO: Change to a resolve or reject state
+
+	let GAME_SESSION = await GameSession.findOne({
+		where: { id: sessionData?.gameSessionID, server: serverID },
+	});
+
+	const SESSION_REQUEST_CHANNEL = getGuildFromBot(serverID)?.channels.cache.find((c) => c.name.includes("session-request") && c.type == "GUILD_TEXT");
+	const PLANNED_SESSIONS_CHANNEL = getGuildFromBot(serverID)?.channels.cache.find((c) => c.name.includes("planned-session") && c.type == "GUILD_TEXT");
+	const PAST_SESSIONS_CHANNEL = getGuildFromBot(serverID)?.channels.cache.find((c) => c.name.includes("planned-session") && c.type == "GUILD_TEXT");
+
+	const GAME_SESSION_MESSAGE = await fetchGameSessionMessage(
+		SESSION_REQUEST_CHANNEL,
+		PLANNED_SESSIONS_CHANNEL,
+		GAME_SESSION.message_id_discord,
+	);
+
+	return new Promise(async (resolve, reject) => {
+		if (![`PLAYED`, `CANCELED`].includes(sessionData?.sessionStatus)) reject(`Session status "${sessionData?.sessionStatus}" is not known!`);
+		if (!isDungeonMaster(userID, getGuildFromBot(serverID))) {
+			logger.warn(`User ${userID} tried to update session status of ${GAME_SESSION?.id}, but is currently not a Dungeon Master.`);
+			reject("Only dungeon masters can update sessions");
+		}
+		if (!GAME_SESSION) return reject("Session not found in database!");
+		if (!GAME_SESSION_MESSAGE) return reject("Session message not found in server!");
+
+		// Update session database status.
+		updateGameSessionStatus(GAME_SESSION, `${sessionData?.sessionStatus}`);
+		// Delete session channel.
+		getGuildFromBot(serverID)?.channels.cache.get(GAME_SESSION.session_channel)?.delete();
+		// Send the edited session embed to the "past-sessions" channel.
+		PAST_SESSIONS_CHANNEL?.send({ embeds: [await editRequestSessionEmbedTitle(GAME_SESSION_MESSAGE?.embeds[0], `${sessionData?.sessionStatus}`)], components: [] })
+		// Delete the planned session embed.
+		GAME_SESSION_MESSAGE?.delete();
+		return resolve(GAME_SESSION.data);
+	});
+}
+
 async function editRequestSessionEmbedTitle(editedEmbed, status) {
 	editedEmbed.title = `${editedEmbed.title} [${status}]`;
-	switch (status) {
+	switch (status) {	
 		case "PLAYED":
 			editedEmbed.setColor("#78b159");
 			break;
@@ -582,7 +603,6 @@ function removeUserRequestStatus(sessions, gameSessionChannel, userID, jsonDB) {
 	// Write the edited data to designated JSON database. -> doet dit iets?
 	writeToJsonDb("./bot/jsonDb/sessionAddUserRequest.json", jsonDB);
 }
-// ./bot/jsonDb/sessionAddUserRequest.json
 
 function writeToJsonDb(location, data) {
 	const fs = require("fs");
@@ -705,6 +725,7 @@ module.exports = {
 	approveGameSession,
 	declineGameSession,
 	joinGameSession,
+	updateGameSession,
 	fetchGameSessionMessage,
 	updateGameSessionStatus,
 	updateGameSessionMessageId,

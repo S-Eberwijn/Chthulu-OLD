@@ -1,3 +1,5 @@
+// TODO: funky stuff going on with embla carousel after "resetting" it after session is approved, or declined
+// TODO: add validation for when DM tries to create a new session
 
 const sections = ["requested", "planned", "past"];
 document.addEventListener("DOMContentLoaded", async function () {
@@ -86,12 +88,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
 //listen for window resize event
 window.addEventListener('resize', async function (event) {
-    for (const key in sections) {
-        if (Object.hasOwnProperty.call(sections, key)) {
-            const section = sections[key];
-            await createCarousel(section);
-        }
-    }
+    await resetEmbla();
 });
 
 // Carousel for section
@@ -108,7 +105,7 @@ async function createCarousel(sectionName) {
     let itemWidth = item.getBoundingClientRect().width;
     let slidesToScrollAmount = viewPort.getBoundingClientRect().width / itemWidth < 1 ? 1 : Math.floor(viewPort.getBoundingClientRect().width / itemWidth);
 
-    if(dots.childNodes.length === Math.ceil(items.length/slidesToScrollAmount)) return;
+    if (dots.childNodes.length === Math.ceil(items.length / slidesToScrollAmount)) return;
     // console.log(`Slides to scroll: ${Math.ceil(items.length/slidesToScrollAmount)}\nCurrent slides to scroll: ${dots.childNodes.length}`);
 
     let options = {
@@ -149,21 +146,6 @@ const selectDotBtn = (dotsArray, embla) => () => {
     dotsArray[selected].classList.add("is-selected");
 };
 
-function addUsernamesToElement(users, element) {
-    for (const user of users) {
-        if (users.length > 1) {
-            const COMMA = document.createElement("span");
-            COMMA.textContent = ", ";
-            element.insertBefore(COMMA, element.lastChild);
-        }
-        const USERNAME = document.createElement("span");
-        USERNAME.classList.add("user");
-        USERNAME.textContent = `@${user.username}`;
-
-        element.insertBefore(USERNAME, element.lastChild);
-    }
-}
-
 async function createGameSession(button) {
     let sessionObjectiveElement = document.querySelector('#session_objective')
     let sessionLocationElement = document.querySelector('#session_location')
@@ -179,21 +161,26 @@ async function createGameSession(button) {
                 session_party: Array.from(sessionPartyElements).map((element) => element.getAttribute('data-value')),
             }).then((response) => {
                 if (response.status === 200) {
+                    //Close the "Create Session" modal
                     toggleModal('create')
 
-                    let requestedSessionsElement = document.querySelector('.embla[data-type="requested"] .embla__container')
-                    requestedSessionsElement.appendChild(createElementFromHTML(response.data.HTMLElement))
+                    //Put the new element in the "Requested" section
+                    getSectionCarousel("requested").appendChild(createElementFromHTML(response.data.HTMLElement))
 
-                    let detailsElement = document.querySelector('.embla[data-type="requested"]').parentNode;
-                    detailsElement.open = true;
+                    //Unfold the section
+                    getSectionSummary("requested").parentNode.open = true;
 
-                    let requestedSessionCounter = document.querySelector(`summary[data-type="requested"] span.count`);
-                    requestedSessionCounter.textContent = parseInt(requestedSessionCounter.textContent) + 1;
+                    //Update the counter(s)
+                    updateCounter(["requested"])
 
+                    //Update the next session date per section
+                    updateNextSessionDate();
+
+                    //Notify the end-user
                     pushNotify("success", "Session created", response.data.message);
                 }
             }).catch((error) => {
-                pushNotify("error", "Session not created", error.message);
+                pushNotify("error", "Session not created", error.response.data.message);
             });
         } catch (error) {
             console.log(error);
@@ -211,12 +198,26 @@ async function approveGameSession(gameSessionElement) {
                 })
                 .then((response) => {
                     if (response.status === 200) {
-                        updateSessionRequestToPlannedSession(
-                            gameSessionElement,
-                            response.data
-                        );
+                        //Delete current element
+                        gameSessionElement.parentNode.remove()
+
+                        //Put the new element in the "Planned" section
+                        getSectionCarousel("planned").appendChild(createElementFromHTML(response.data.HTMLElement));
+
+                        //Update the counter(s)
+                        updateCounter(["planned", "requested"])
+
+                        //Reset Embla (Carousel)
+                        resetEmbla();
+
+                        //Update the next session date per section
+                        updateNextSessionDate();
+
+                        //Notify the end-user
                         pushNotify("success", "Session approved", response.data.message);
                     }
+                }).catch((error) => {
+                    pushNotify("error", "Session not approved", error.response.data.message);
                 });
         } catch (error) {
             console.log(
@@ -235,15 +236,24 @@ async function declineGameSession(gameSessionElement) {
                 })
                 .then((response) => {
                     if (response.status === 200) {
-                        gameSessionElement.parentNode.removeChild(gameSessionElement);
-                        let countElement = document.querySelector(
-                            `summary[data-type="requested"] span.count`
-                        );
-                        let count = parseInt(countElement.textContent) - 1;
-                        countElement.textContent = count;
+                        //Delete current element
+                        gameSessionElement.parentNode.remove()
+
+                        //Update the counter(s)
+                        updateCounter(["requested"])
+
+                        //Reset Embla (Carousel)
+                        resetEmbla();
+
+                        //Update the next session date per section
+                        updateNextSessionDate();
+
+                        //Notify the end-user
                         pushNotify("success", "Session declined", response.data.message);
                     }
-                });
+                }).catch((error) => {
+                    pushNotify("error", "Session not declined", error.response.data.message);
+                });;
         } catch (error) {
             console.log(
                 "error occured during decline of session: " + gameSessionElement.id
@@ -268,37 +278,36 @@ async function joinGameSession(gameSessionElement, userID = null) {
                     console.log(response);
                     if (response.status === 200) {
                         // updateSessionRequestToPlannedSession(gameSessionElement, response.data)
-                        if (userID) {
-                            const USER_LIST = gameSessionElement.querySelector("#userList");
-                            let comma = document.createElement("span");
-                            comma.textContent = ", ";
-                            let user = document.createElement("span");
-                            user.classList.add("user");
-                            //TODO: Change later to use username
-                            user.textContent = `@${response.data.session_party[
-                                response.data.session_party.length - 1
-                            ]
-                                }`;
+                        // if (userID) {
+                        //     const USER_LIST = gameSessionElement.querySelector("#userList");
+                        //     let comma = document.createElement("span");
+                        //     comma.textContent = ", ";
+                        //     let user = document.createElement("span");
+                        //     user.classList.add("user");
+                        //     //TODO: Change later to use username
+                        //     user.textContent = `@${response.data.session_party[
+                        //         response.data.session_party.length - 1
+                        //     ]
+                        //         }`;
 
-                            USER_LIST.parentNode.querySelector(
-                                "h5"
-                            ).textContent = `Players (${response.data.session_party.length}/5)`;
+                        //     USER_LIST.parentNode.querySelector(
+                        //         "h5"
+                        //     ).textContent = `Players (${response.data.session_party.length}/5)`;
 
-                            USER_LIST.insertBefore(comma, USER_LIST.lastChild);
-                            USER_LIST.insertBefore(user, USER_LIST.lastChild);
+                        //     USER_LIST.insertBefore(comma, USER_LIST.lastChild);
+                        //     USER_LIST.insertBefore(user, USER_LIST.lastChild);
 
-                            // Remove 'Add Player' button
-                            if (response.data.session_party.length >= 5) {
-                                USER_LIST.removeChild(USER_LIST.lastChild);
-                            }
-                        }
+                        //     // Remove 'Add Player' button
+                        //     if (response.data.session_party.length >= 5) {
+                        //         USER_LIST.removeChild(USER_LIST.lastChild);
+                        //     }
+                        // }
 
                         pushNotify("success", "Session join", response.data.message);
                     }
-                })
-                .catch((error) => {
-                    pushNotify("error", "Session join", error.response.data);
-                });
+                }).catch((error) => {
+                    pushNotify("error", "Session not joined", error.response.data.message);
+                });;
         } catch (error) {
             console.log(
                 "error occured during join of session: " + gameSessionElement.id
@@ -307,28 +316,45 @@ async function joinGameSession(gameSessionElement, userID = null) {
     }, 250);
 }
 
-function updateSessionRequestToPlannedSession(
-    gameSessionElement,
-    gameSessionData
-) {
-    const PLANNED_SESSION_CONTAINER = document.querySelector(
-        `.embla[data-type="planned"] .embla__container`
-    );
-    let dungeonMasterField = gameSessionElement.querySelector(
-        `p.embedFieldValue[data-attribute="DM"]`
-    );
-    dungeonMasterField.classList.remove("italic");
-    dungeonMasterField.textContent = "";
-    let dungeonMasterEl = document.createElement("span");
-    dungeonMasterEl.classList.add("user");
-    dungeonMasterEl.textContent = `@${gameSessionData.dungeon_master_id_discord.nickname}`;
-    dungeonMasterField.appendChild(dungeonMasterEl);
+async function updateGameSessionStatus(gameSessionElement, status) {
+    console.log(gameSessionElement.id);
+    console.log(status);
+    setTimeout(() => {
+        try {
+            axios
+                .put(`/dashboard/${guildID}/informational/sessions/update`, {
+                    gameSessionID: gameSessionElement.id,
+                    sessionStatus: status,
+                })
+                .then((response) => {
+                    if (response.status === 200) {
+                        //Delete current element
+                        gameSessionElement.parentNode.remove()
 
-    gameSessionElement.querySelector(
-        `h4`
-    ).textContent = `Session ${gameSessionData.session_number}`;
+                        //Put the new element in the "Planned" section
+                        getSectionCarousel("past").appendChild(createElementFromHTML(response.data.HTMLElement));
 
-    PLANNED_SESSION_CONTAINER.appendChild(gameSessionElement.parentNode);
+                        //Update the counter(s)
+                        updateCounter(["planned", "past"])
+
+                        //Reset Embla (Carousel)
+                        resetEmbla();
+
+                        //Update the next session date per section
+                        updateNextSessionDate();
+
+                        //Notify the end-user
+                        pushNotify("success", "Session status updated", response.data.message);
+                    }
+                }).catch((error) => {
+                    pushNotify("error", "Session status not updated", error.response.data.message);
+                });
+        } catch (error) {
+            console.log(
+                "error occured during edit of session: " + gameSessionElement.id
+            );
+        }
+    }, 250);
 }
 
 function updateInput(input) {
@@ -381,5 +407,39 @@ function createUserDisplayElement(user = { id: undefined, username: undefined, a
 function toggleModal(action) {
     const modal = document.querySelector(`input[action="${action}"]`);
     modal.checked = !modal.checked;
-    // modal.checked === true ? modal.checked = false : modal.checked = true;
+}
+
+function getSectionCarousel(section = "") {
+    return document.querySelector(`.embla[data-type="${section}"] .embla__container`);
+}
+
+function getSectionSummary(section = "") {
+    return document.querySelector(`summary[data-type="${section}"]`);
+
+}
+
+function updateCounter(sections = ["requested", "planned", "past"]) {
+    for (const section of sections) {
+        let counterElement = document.querySelector(`summary[data-type="${section}"] span.count`);
+        counterElement.textContent = getSectionCarousel(section).childElementCount;
+    }
+}
+
+async function resetEmbla() {
+    for (const key in sections) {
+        if (Object.hasOwnProperty.call(sections, key)) {
+            const section = sections[key];
+            await createCarousel(section);
+        }
+    }
+}
+
+function updateNextSessionDate() {
+    for (const key in sections) {
+        if (Object.hasOwnProperty.call(sections, key)) {
+            const section = sections[key];
+            let nextDate = getSectionCarousel(section).firstElementChild.querySelector('code').textContent;
+            getSectionSummary(section).setAttribute('data-session-date', nextDate ? nextDate : 'No data');
+        }
+    }
 }
