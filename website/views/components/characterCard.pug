@@ -1,23 +1,52 @@
-.characterCardHolder
-    .characterCard(id=`card-${character.character_id}` unselectable="on" style=`--character-count: ${index > 0 ? index * (30 + 5) : index * 15}px;`)
-        .characterImageHolder(style=`--average-color: ${character.average_color || '#000000'}`)
-            img(src=character.picture_url alt="Character Image")
-        .characterInformation
-            span.characterName #{character.name} (#{character.age})
-            
-
-            span.characterLevel 
+//- .characterCardHolder
+.characterCard(id=`card-${character.character_id}` unselectable="on" style=`--character-count: ${index > 0 ? index * (30 + 5) : index * 15}px;`)
+    .characterImageHolder(style=`--average-color: ${character.average_color || '#000000'}`)
+        img(src=character.picture_url alt="Character Image")
+    .characterInformation
+        .characterInformationHeader
+            span.characterName #{character.name}
+            span.characterLevel Lvl.
                 img(src=`../../../${character.level}.png`, alt="icon")
-            span.characterDescription #{character.description}
+        span.characterDescription #{character.description}
+        .characterInformationStatistics
             .infoBundle
-                span(--race=character.race) Race
-                    //- span.characterRace #{}
-                span(--class=character.class) Class 
-                span Icon
-                    img(src=`../../../${character.class}.png`, alt="icon").classIcon
-
-                    //- span.characterClass #{character.class} 
-                span(--background=character.background) Background 
-                //- img(src=`../../../${character.class}.png`, alt="icon") 
-                    //- span.characterBackground #{character.background}
+                .infoPair
+                    span Age 
+                    span #{character.age}
+                .infoPair
+                    span Race 
+                    span #{character.race}
+                .infoPair
+                    span Class 
+                    span #{character.class}
+                .infoPair
+                    span Background 
+                    span #{character.background}
+            .infoBundle
+                .infoPair
+                    i.fa-solid.fa-hand-fist 
+                    .progressBar
+                        span(style=`--progress: ${50}%;`)
+                .infoPair
+                    i.fa-solid.fa-hand 
+                    .progressBar
+                        span(style=`--progress: ${25}%;`)
+                .infoPair
+                    i.fa-solid.fa-heart 
+                    .progressBar
+                        span(style=`--progress: ${75}%;`)
+                .infoPair
+                    i.fa-solid.fa-brain 
+                    .progressBar
+                        span(style=`--progress: ${30}%;`)
+                .infoPair
+                    i.fa-solid.fa-eye 
+                    .progressBar
+                        span(style=`--progress: ${60}%;`)
+                .infoPair
+                    i.fa-solid.fa-comment 
+                    .progressBar
+                        span(style=`--progress: ${100}%;`)
+        
+        
         
