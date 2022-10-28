@@ -1,0 +1,451 @@
+/*CHARACTERS PAGE*/
+* {
+    --characterList-width: 350px;
+
+}
+
+.dashboardContent[characters] {
+    display: flex;
+    /* align-items: center; */
+    justify-content: space-evenly;
+    /* align-items: center; */
+    /* For the informational characters page */
+}
+
+.dashboardContent[characters] h1 {
+    user-select: none;
+    width: 100%;
+    height: var(--title-height);
+    background-color: var(--content-color);
+    margin: 0;
+    padding-left: 15px;
+    box-sizing: border-box;
+    text-align: center;
+    display: flex;
+    position: relative;
+    align-items: center;
+}
+
+.dashboardContent[characters] h1 .count {
+    font-size: calc(var(--header-font-size) * 1.25);
+}
+
+.dashboardContent[characters] h1 .title {
+    margin-left: 10px;
+    font-size: var(--header-font-size);
+}
+
+.dashboardContent[characters] .characterBoxWrapper {
+    height: auto;
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: row;
+    
+}
+
+.dashboardContent[characters] .characterBoxWrapper .characterSelectionBox {
+    width: var(--characterList-width);
+    height: 500px;
+    background-color: var(--content-color);
+}
+
+
+.dashboardContent[characters] .charactersList {
+    width: 100%;
+    height: calc(100% - var(--title-height));
+    padding-left: 20px;
+
+    /* background-color: var(--menu-color); */
+    display: flex;
+    flex-direction: column;
+    /* justify-content: center; */
+    /* gap: 5px; */
+    /* align-items: flex-start; */
+    /* padding: 10px; */
+    box-sizing: border-box;
+    /* overflow-y: hidden;
+    overflow-x: hidden; */
+    /* z-index: 1; */
+    /* box-shadow: inset 0px 0px 0px 3px var(--sidebar-color); */
+}
+
+.charactersList ul {
+    position: relative;
+    width: 100%;
+    /* padding-left: 5px;
+    padding-top: 5px; */
+    padding: 0;
+    /* list-style: none; */
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.charactersList ul li {
+    position: relative;
+    list-style: none;
+    width: 100%;
+
+}
+
+.charactersList ul li {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    /* align-items: center;
+    justify-content: center; */
+    width: 100%;
+    text-decoration: none;
+    color: var(--text-color);
+
+}
+
+ 
+.charactersList li .characterItem {
+    width: 100%;
+    /* min-width: 300px; */
+    height: 30px;
+    /* background-color: var(--sidebar-color); */
+    /* transition: all .2s ease; */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top-left-radius: var(--modal-border-radius);
+    border-bottom-left-radius: var(--modal-border-radius);
+
+    position: relative;
+    /* z-index: 1; */
+}
+
+.characterItem.selected {
+    background-color:  var(--menu-color) !important;
+}
+
+.characterItem.selected::before {
+    content: '';
+    position: absolute;
+    top: -30px;
+    right: 0;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    box-shadow: 15px 15px 0 var(--menu-color);
+    /* transition: all .2s ease; */
+
+}
+
+li:first-child .characterItem.selected::before {
+    content: none !important;
+}
+
+.characterItem.selected::after {
+    content: '';
+    position: absolute;
+    bottom: -30px;
+    right: 0;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    box-shadow: 15px -15px 0 var(--menu-color);
+    /* transition: all .2s ease; */
+
+}
+
+.characterItem.notDisplayed {
+    display: none;
+}
+
+.charactersList .characterItem .classIcon {
+    width: 10%;
+    min-width: 40px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.charactersList .characterItem .classIcon img {
+    height: 70%;
+    width: auto;
+    border-radius: 50%;
+
+}
+
+.charactersList .characterItem .characterFullName {
+    width: calc(100% - 10% - 70px);
+    height: 100%;
+    display: flex;
+    align-items: center;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.charactersList .characterItem .characterFullName p {
+    margin: 0;
+}
+
+.charactersList .characterItem .characterLevel {
+    width: 70px;
+    min-width: 70px;
+    height: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+.charactersList .characterItem .characterLevel p {
+    margin: 0;
+}
+
+.charactersList .characterItem:hover {
+    cursor: pointer;
+    background-color: #42494c;
+
+}
+
+.dashboardContent[characters] .characterBoxWrapper .characterDisplayBox {
+    width: calc(100% - var(--characterList-width));
+    height: 700px;
+    background-color: var(--menu-color);
+    border-radius: var(--modal-border-radius);
+    box-sizing: border-box;
+    overflow: hidden;
+    margin-top: var(--title-height);
+}
+
+
+
+
+
+
+
+
+.dashboardContent[characters] .characterDisplayBox .characterCard {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    background: var(--menu-color);
+    padding: 2rem;
+    display: flex;
+    flex-direction: row;
+    gap: 1.5rem;
+    box-sizing: border-box;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+}
+
+.characterCard:not(.selected) {
+    display: none !important;
+}
+
+.dashboardContent[characters] .characterCard div.characterImageHolder {
+    width: 30%;
+    min-width: 235px;
+    /* height: 60%; */
+    border-radius: 5px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+
+    -moz-box-shadow: 0 0 20px var(--average-color);
+    -webkit-box-shadow: 0 0 20px var(--average-color);
+    box-shadow: 0 0 20px var(--average-color);
+}
+
+.dashboardContent[characters] .characterCard div.characterImageHolder img {
+    object-fit: cover;
+    width: 100%;
+    border-radius: 5px;
+}
+
+.characterInformation {
+    /* height: 60%; */
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+    /* align-items: center; */
+    justify-content: space-between;
+    align-items: center;
+
+    /* overflow: hidden; */
+}
+
+.characterInformation .characterInformationHeader{
+    height: var(--title-height);
+    width: 100%;
+    min-width: 620px;
+    display: flex;
+    flex-direction: row;
+    /* align-items: center; */
+    justify-content: space-between;
+    border-bottom: 2px solid var(--text-color);
+    padding-bottom: 10px;
+    /* overflow: hidden; */
+}
+
+.dashboardContent[characters] .characterCard span.characterName {
+    /* font-weight: bold; */
+    font-size: calc(var(--modal-title-font-size) * 2);
+}
+
+.dashboardContent[characters] .characterCard span.characterLevel {
+    object-fit: cover;
+    flex-direction: row;
+    display: flex;
+    gap: 15px;
+    font-size: calc(var(--modal-title-font-size) * 2);
+}
+
+.dashboardContent[characters] .characterCard span.characterLevel img {
+    width: 100%;
+    object-fit: cover;
+}
+
+.dashboardContent[characters] .characterCard .characterInformationStatistics {
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    /* overflow: hidden; */
+    /* gap: 5rem; */
+}
+
+.dashboardContent[characters] .characterCard div.infoBundle {
+    position: relative;
+    width: 30%;
+    height: 100%;
+    max-height: 175px;
+    min-width: 235px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background-color: var(--sidebar-color);
+    padding: 1rem;
+    box-sizing: border-box;
+    justify-content: space-between;
+    gap: 10px;
+    font-size: 0.8rem;
+    /* gap: 5rem; */
+}
+
+.dashboardContent[characters] .characterCard div.infoBundle.classIcon {
+    width: 20%;
+    min-width: 155px;
+}
+
+.dashboardContent[characters] .characterCard div.infoBundle img{
+    object-fit: contain;
+}
+
+.dashboardContent[characters] .characterCard div.infoBundle .infoPair{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    overflow: hidden;
+}
+
+.dashboardContent[characters] .characterCard div.infoBundle .infoPair span:first-child {
+    text-transform: uppercase;
+    font-weight: bold;
+    color: var(--text-color);
+}
+
+.dashboardContent[characters] .characterCard div.infoBundle .infoPair span:nth-child(2) {
+    color: var(--placeholder-text-color);
+}
+ 
+
+.infoPair .progressBar {
+    width: calc(100% - 30px);
+    height: 10px;
+    position: relative;
+    background: #555;
+    border-radius: 3px;
+    /* padding: 10px; */
+    box-shadow: inset 0 -1px 1px rgba(255, 255, 255, 0.3);
+}
+
+.infoPair .progressBar span{
+    width: var(--progress);
+    display: block;
+    height: 100%;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+    box-shadow: 
+        inset 0 2px 9px  rgba(255,255,255,0.3),
+        inset 0 -2px 6px rgba(0,0,0,0.4);
+    position: relative;
+    overflow: hidden;
+}
+
+.dashboardContent[characters] .characterCard span.characterDescription {
+    width: 100%;
+    height: 300px;
+    min-width: 620px;
+    overflow-y: scroll;
+    background-color: var(--sidebar-color);
+    font-size: 1rem;
+    text-align: justify;
+    box-sizing: border-box;
+    padding: 1rem;
+}
+
+.dashboardContent[characters] .characterCard .characterDescription::-webkit-scrollbar {
+    width: 0px;
+    /* width of the entire scrollbar */
+}
+
+.dashboardContent[characters] .characterCard div.infoBundle.wip::after{
+    content: "Work In Progress";
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: large;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+
+.infoPair .progressBar.strength span{
+    background-color: var(--delete-color);
+}
+
+.infoPair .progressBar.dexterity span{
+    background-color: var(--success-color);
+}
+
+.infoPair .progressBar.constitution span{
+    background-color: burlywood;
+}
+
+.infoPair .progressBar.intelligence span{
+    background-color: var(--edit-color);
+}
+
+.infoPair .progressBar.wisdom span{
+    background-color: orange;
+}
+
+.infoPair .progressBar.charisma span{
+    background-color: purple;
+}

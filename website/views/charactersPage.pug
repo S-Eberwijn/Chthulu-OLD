@@ -15,19 +15,13 @@ block styles
 
 block dashboardContent
     .dashboardContent(characters=true)
-        .characterBoxWrapper 
-            .characterSelectionBox
-                h1 
-                    span.count #{characters.length}
-                    span.title Characters
-                .charactersList 
-                    ul 
-                        each character in characters
-                            li 
-                                include ./components/characterListItem.pug
-            .characterDisplayBox
-                each character, index in characters
-                    include ./components/characterCard.pug
+        h1 
+            span.count #{characters.length}
+            span.title Characters
+        .characterDisplayBox
+            each character, index in characters
+                include ./components/characterCard.pug
+            
 
         
 

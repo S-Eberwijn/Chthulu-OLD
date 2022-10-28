@@ -1,12 +1,12 @@
 // const MAXIMUM_DISPLAYED_CHARACTER_ITEMS = 10;
  
 document.addEventListener("DOMContentLoaded", function () {
-    let characterListItems = document.querySelectorAll('.characterItem');
-    characterListItems[0].classList.add('selected');
+    // let characterListItems = document.querySelectorAll('.characterItem');
+    // characterListItems[0].classList.add('selected');
 
-    let characterCards = document.querySelectorAll('.characterCard');
-    characterCards[0].classList.add('selected');
-    console.log(characterCards);
+    // let characterCards = document.querySelectorAll('.characterCard');
+    // characterCards[0].classList.add('selected');
+    // console.log(characterCards);
 });
 
 
