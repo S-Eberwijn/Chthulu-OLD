@@ -1,8 +1,5 @@
-//TODO: Refactor? Make less api calls?
-const paginationEmbed = require('discordjs-button-pagination');
-
 const { logger } = require(`../../../functions/logger`)
-const { MessageEmbed, Modal, TextInputComponent, MessageActionRow, MessageButton } = require('discord.js');
+const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
 
 const { GameSession } = require('../../../database/models/GameSession');
 const { PlayerCharacter } = require('../../../database/models/PlayerCharacter');
@@ -10,14 +7,12 @@ const { GeneralInfo } = require('../../../database/models/GeneralInfo');
 
 const fs = require("fs");
 
-const { getBot } = require('../../../functions/api/bot');
 const { getPrettyDateString } = require('../../../functions/api/misc');
 
 const { fetchGameSessionMessage, editRequestSessionEmbedToPlannedSessionEmbed, updatePartyNextSessionId, updateGameSessionStatus, updateGameSessionMessageId, updateGameSessionNumber, updateGameSessionParty, updateGeneralServerSessionNumber, updateGameSessionDungeonMaster } = require('../../../functions/api/sessions');
 
 const DATE_REGEX_PATTERN = /[0-3]\d\/(0[1-9]|1[0-2])\/\d{4} [0-2]\d:[0-5]\d(?:\.\d+)?Z?/g;
-const COMMAND_OPTIONS = ['request', 'board'];
-//- const QUESTIONS_ARRAY = require('../../jsonDb/sessionChannelQuestion.json');
+
 const MODAL_IDS = ['session-request-modal'];
 const BUTTON_IDS = ['approve-session-request-button', 'decline-session-request-button', 'join-session-button', 'played-session-button', 'cancel-session-button', 'join-accepted-button', 'join-denied-button']
 
@@ -72,57 +67,11 @@ const MESSAGE_COMPONENTS_JOIN = new MessageActionRow()
             .setEmoji('✖️'),
     );
 
-const previousButton = new MessageButton()
-    .setCustomId('previousbtn')
-    .setLabel('Previous')
-    .setStyle('SECONDARY');
-
-const nextButton = new MessageButton()
-    .setCustomId('nextbtn')
-    .setLabel('Next')
-    .setStyle('SECONDARY');
-
-module.exports.run = async (interaction) => {
-    const SESSION_MODAL = await createModal(MODAL_IDS[0]);
-
-    // VARIABLES
-    const SESSIONS_CATEGORY = interaction.member.guild.channels.cache.find(c => c.name == "--SESSIONS--" && c.type == "GUILD_CATEGORY");
-
-    let messageAuthorCharacter = await PlayerCharacter.findOne({ where: { player_id_discord: interaction.user.id, alive: 1, server: interaction.guild.id } });
-    messageAuthorCharacter ? logger.debug(`Character found: ${messageAuthorCharacter.name} `) : logger.debug("Character not found.");
-    if (!messageAuthorCharacter) return interaction.reply({ content: `You do not have a character in the database!\nCreate one by using the "/createcharacter" command.` }).then(() => { setTimeout(() => interaction.deleteReply(), 3000) }).catch(err => logger.error(err));
-
-    if (!SESSIONS_CATEGORY) return interaction.reply({ content: `There is no category named \"--SESSIONS--\"!` }).then(() => { setTimeout(() => interaction.deleteReply(), 3000) }).catch(err => logger.error(err));
-    //- if (!interaction.options.get('action').value) return interaction.channel.send({ content: "Not enough valid arguments\nCorrect format: !session [request]" });
-    if (!COMMAND_OPTIONS.includes(interaction.options.get('action').value)) return interaction.channel.send({ content: `Not a valid session option\nCorrect format: !session [${COMMAND_OPTIONS.map(option => option).join(', ')}]` });
-
-    switch (interaction.options.get('action').value) {
-        case COMMAND_OPTIONS[0]:
-            await interaction.showModal(SESSION_MODAL);
-            break;
-
-        case COMMAND_OPTIONS[1]:
-            const ALL_SERVER_PLANNED_SESSIONS = await GameSession.findAll({ where: { session_status: 'PLANNED', server: interaction.guild.id } });
-            !ALL_SERVER_PLANNED_SESSIONS.length ? interaction.reply({ content: `There are no planned sessions.`, ephemeral: true }) : paginationEmbed(interaction, createSessionsOverviewEmbedPages(ALL_SERVER_PLANNED_SESSIONS), [previousButton, nextButton]);
-            break;
-
-        default:
-            interaction.reply({ content: "Not a valid session option!", ephemeral: true });
-            break;
-    }
-}
 
 module.exports.help = {
+    name:"Session",
     category: "Dungeons & Dragons",
-    name: "session",
-    // alias: [],
-    description: "Handles actions around sessions",
-    options: [{
-        name: 'action',
-        type: 'STRING',
-        description: `Type of action you want to do: "${COMMAND_OPTIONS.join(', ')}"`,
-        required: true
-    }],
+    description: "DiscordJs Session helper",
     modalIds: MODAL_IDS,
     buttonIds: BUTTON_IDS
 }
@@ -421,64 +370,11 @@ function createSessionChannelEmbed(messageAuthor, sessionDate, sessionParticipan
         .setFooter({ text: `Requested by ${messageAuthor.username}`, iconURL: messageAuthor.avatarURL() });
 }
 
-
-
 // TODO: Centralize this code
 function writeToJsonDb(location, data) {
     fs.writeFile(`${location}`, JSON.stringify(data, null, 4), err => {
         if (err) throw err;
     });
-}
-
-async function createModal(MODAL_ID) {
-    // Create the modal
-    const modal = new Modal()
-        .setCustomId(MODAL_ID)
-        .setTitle('Session Request');
-
-    const sessionTitle = new TextInputComponent()
-        .setCustomId('sessionTitle')
-        // The label is the prompt the user sees for this input
-        .setLabel("Title")
-        // Short means only a single line of text
-        .setStyle('SHORT')
-        .setRequired(true)
-    const sessionObjective = new TextInputComponent()
-        .setCustomId('sessionObjective')
-        .setLabel("Objective")
-        .setPlaceholder('e.g. "Defeat the BBEG at his lair."')
-        // Paragraph means multiple lines of text.
-        .setStyle('PARAGRAPH')
-        .setRequired(true)
-
-    const sessionDate = new TextInputComponent()
-        .setCustomId('sessionDate')
-        // The label is the prompt the user sees for this input
-        .setLabel("Date - Time ~> [DD/MM/YYYY HH:MM]")
-        // Short means only a single line of text
-        .setStyle('SHORT')
-        .setRequired(true)
-        .setPlaceholder(`20/12/${(new Date).getFullYear()} 15:30`)
-        .setMaxLength(16)
-
-    const sessionLocation = new TextInputComponent()
-        .setCustomId('sessionLocation')
-        // The label is the prompt the user sees for this input
-        .setLabel("Location")
-        // Short means only a single line of text
-        .setStyle('SHORT')
-        .setPlaceholder('Roll20 (online)')
-        .setRequired(false)
-
-    // An action row only holds one text input,
-    const firstActionRow = new MessageActionRow().addComponents(sessionTitle),//??->does this work?
-        secondActionRow = new MessageActionRow().addComponents(sessionObjective),
-        thirdActionRow = new MessageActionRow().addComponents(sessionDate),
-        fourthActionRow = new MessageActionRow().addComponents(sessionLocation);
-
-    // Add inputs to the modal
-    modal.addComponents(secondActionRow, fourthActionRow, thirdActionRow,);
-    return modal;
 }
 
 //this method seems realy simular to the next method, refacator posible.
@@ -542,18 +438,6 @@ async function updatePartyOnSessionEmbed(message, sessionParty) {
     message.embeds[0].fields[1].value = `${sessionParty.map(id => `<@!${id}>`).join(', ')}`
     return message;
 }
-
-//??why is this commented out?, it has some references to it in the code.
-// async function fetchGameSessionMessage(SESSION_REQUEST_CHANNEL, PLANNED_SESSIONS_CHANNEL, messageID) {
-//     try {
-//         let foundMessage = await SESSION_REQUEST_CHANNEL.messages.fetch(messageID).catch(() => console.log('Message not found'));
-//         foundMessage = foundMessage != null ? foundMessage : await PLANNED_SESSIONS_CHANNEL.messages.fetch(messageID).catch(() => console.log('Message not found'));
-//         return foundMessage;
-//     } catch (error) {
-//         console.log(error);
-//     }
-// }
-
 async function editRequestSessionEmbedTitle(editedEmbed, status) {
     editedEmbed.title = `${editedEmbed.title} [${status}]`;
     switch (status) {
@@ -568,18 +452,3 @@ async function editRequestSessionEmbedTitle(editedEmbed, status) {
     }
     return editedEmbed;
 }
-
-function createSessionsOverviewEmbedPages(sessions) {
-    const MAX_SESSIONS_SHOWN_PER_PAGE = 5;
-    let pages = [];
-    for (let index = 0; index < Math.ceil(sessions.length / MAX_SESSIONS_SHOWN_PER_PAGE); index++) {
-        pages.push(new MessageEmbed()
-            .setAuthor({ name: 'Session board', iconURL: getBot().user.displayAvatarURL() })
-            .setDescription(`${sessions.slice(index * 5, 5 * (index + 1))
-                ?.map(session => `> **Session ${session.session_number}:** \u200b \` ${getPrettyDateString(new Date(session.date))}\` \n\`\`\`${session.objective}\`\`\` `).join('\n\n')}`)
-            .setFooter({ text: `${1}/${Math.ceil(sessions.length / MAX_SESSIONS_SHOWN_PER_PAGE)} page` })
-            .setTimestamp())
-    }
-    return pages
-}
-
