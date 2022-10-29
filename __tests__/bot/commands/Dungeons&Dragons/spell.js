@@ -15,7 +15,6 @@ const AID_INTERACTION = {
         expect(output.embeds[0].title).toBe("Aid") 
         expect(output.embeds[0].description).toBe("Abjuration") 
         expect(output.embeds[0].url).toBe("https://www.dnd-spells.com/spell/aid") 
-        //...
     },
     options:{
         getString: function (name) {

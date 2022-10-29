@@ -228,7 +228,7 @@ module.exports.buttonSubmit = async (button) => {
             // Delete the session request in the database.
             updateGameSessionStatus(FOUND_GAME_SESSION, 'DECLINED')
             // Update the session request embed.
-            button.message.edit({ embeds: [await editRequestSessionEmbedTitle(button.message.embeds[0], 'DECLINED')], components: [] })
+            button.message.edit({ embeds: [editRequestSessionEmbedTitle(button.message.embeds[0], 'DECLINED')], components: [] })
             button.reply({ content: 'Session request declined!', ephemeral: true })
             break;
         // 'join'
@@ -258,7 +258,7 @@ module.exports.buttonSubmit = async (button) => {
             // Delete session channel.
             button.message.guild.channels.cache.get(FOUND_GAME_SESSION.session_channel)?.delete();
             // Send the edited session embed to the "past-sessions" channel.
-            PAST_SESSIONS_CHANNEL?.send({ embeds: [await editRequestSessionEmbedTitle(button.message.embeds[0], 'PLAYED')], components: [] })
+            PAST_SESSIONS_CHANNEL?.send({ embeds: [editRequestSessionEmbedTitle(button.message.embeds[0], 'PLAYED')], components: [] })
             // Delete the planned session embed.
             button.message.delete();
             break;
@@ -270,7 +270,7 @@ module.exports.buttonSubmit = async (button) => {
             // Delete session channel.
             button.message.guild.channels.cache.get(FOUND_GAME_SESSION.session_channel)?.delete();
             // Send the edited session embed to the "past-sessions" channel.
-            PAST_SESSIONS_CHANNEL?.send({ embeds: [await editRequestSessionEmbedTitle(button.message.embeds[0], 'CANCELED')], components: [] })
+            PAST_SESSIONS_CHANNEL?.send({ embeds: [editRequestSessionEmbedTitle(button.message.embeds[0], 'CANCELED')], components: [] })
             // Delete the planned session embed.
             button.message.delete();
             break;
@@ -310,8 +310,8 @@ module.exports.buttonSubmit = async (button) => {
             // Update session party database entry.
             updateGameSessionParty(FOUND_GAME_SESSION, [...FOUND_GAME_SESSION.session_party, targetUser.id]);
             // Edit the session message embed.
-            const GAME_SESSION_MESSAGE = await fetchGameSessionMessage(SESSION_REQUEST_CHANNEL, PLANNED_SESSIONS_CHANNEL, FOUND_GAME_SESSION?.message_id_discord)
-            GAME_SESSION_MESSAGE.edit({ embeds: [(await updatePartyOnSessionEmbed(GAME_SESSION_MESSAGE, FOUND_GAME_SESSION.session_party)).embeds[0]] });
+            const GAME_SESSION_MESSAGE = fetchGameSessionMessage(SESSION_REQUEST_CHANNEL, PLANNED_SESSIONS_CHANNEL, FOUND_GAME_SESSION?.message_id_discord)
+            GAME_SESSION_MESSAGE.edit({ embeds: [(updatePartyOnSessionEmbed(GAME_SESSION_MESSAGE, FOUND_GAME_SESSION.session_party)).embeds[0]] });
 
             button.message.delete();
             break;
@@ -395,7 +395,7 @@ function playerAlreadyDenied(sessions, userID, sessionChannelID) {
     for(let session of sessions) {
         if (session.session_channel === sessionChannelID) {
             for(sessionDenied of session.denied){
-                if(sessionRequest.user_id === userID) return true;
+                if(sessionDenied.user_id === userID) return true;
             }
         }
     }
@@ -433,22 +433,30 @@ function giveUserDeniedStatus(sessions, gameSessionChannel, userID, jsonDB) {
     }
 }
 
-async function updatePartyOnSessionEmbed(message, sessionParty) {
+function updatePartyOnSessionEmbed(message, sessionParty) {
     message.embeds[0].fields[1].name = `**Players(${sessionParty.length}/5)**`;
     message.embeds[0].fields[1].value = `${sessionParty.map(id => `<@!${id}>`).join(', ')}`
     return message;
 }
-async function editRequestSessionEmbedTitle(editedEmbed, status) {
+
+function editRequestSessionEmbedTitle(editedEmbed, status) {
     editedEmbed.title = `${editedEmbed.title} [${status}]`;
     switch (status) {
         case 'PLAYED':
-            editedEmbed.setColor('#78b159')
+            editedEmbed.setColor(0x78b159)
             break;
         case 'CANCELED':
-            editedEmbed.setColor('#dd2e44')
+            editedEmbed.setColor(0xdd2e44)
             break;
         default:
             break;
     }
     return editedEmbed;
+}
+
+module.exports.exportedForTesting = {
+    createSessionChannelEmbed,
+    playerAlreadyRequestedForSession,
+    playerAlreadyDenied,
+    editRequestSessionEmbedTitle
 }

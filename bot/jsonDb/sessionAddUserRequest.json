@@ -281,6 +281,26 @@
             "session_channel_id": "1035618042811523093",
             "requested": [],
             "denied": []
+        },
+        {
+            "session_channel_id": "1035816585094500412",
+            "requested": [],
+            "denied": []
+        },
+        {
+            "session_channel_id": "1035822806295912538",
+            "requested": [],
+            "denied": []
+        },
+        {
+            "session_channel_id": "1035825110365515796",
+            "requested": [],
+            "denied": []
+        },
+        {
+            "session_channel_id": "1035830381502537819",
+            "requested": [],
+            "denied": []
         }
     ]
 }
