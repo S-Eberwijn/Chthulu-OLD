@@ -159,7 +159,17 @@
         },
         {
             "session_channel_id": "1028913690004705310",
-            "requested": [],
+            "requested": [
+                {
+                    "user_id": "712588051792134166"
+                },
+                {
+                    "user_id": "712588051792134166"
+                },
+                {
+                    "user_id": "712588051792134166"
+                }
+            ],
             "denied": []
         },
         {
@@ -174,7 +184,11 @@
         },
         {
             "session_channel_id": "1028917138108448878",
-            "requested": [],
+            "requested": [
+                {
+                    "user_id": "241273372892200963"
+                }
+            ],
             "denied": []
         },
         {
@@ -218,31 +232,32 @@
             "denied": []
         },
         {
-            "session_channel_id": "1035570174973194354",
+            "session_channel_id": "1031522552209752095",
             "requested": [],
             "denied": []
         },
         {
-            "session_channel_id": "1035576067139846144",
+            "session_channel_id": "1032332568063922187",
             "requested": [],
             "denied": []
         },
         {
-            "session_channel_id": "1035576970957828116",
+            "session_channel_id": "1032334131213901864",
             "requested": [],
             "denied": []
         },
         {
-            "session_channel_id": "1035602736403726438",
+            "session_channel_id": "1032335832931127357",
             "requested": [],
             "denied": []
         },
         {
-            "session_channel_id": "1035603247152504832",
+            "session_channel_id": "1032934246102335528",
             "requested": [],
             "denied": []
         },
         {
+
             "session_channel_id": "1035605796890873987",
             "requested": [],
             "denied": []

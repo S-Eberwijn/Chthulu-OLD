@@ -1,3 +1,5 @@
+//TODO: If previous character dies, and has requested a session before, now the layout is fucked and throws erros -> mock player data
+
 const { getPrettyDateString, getDoubleDigitNumber } = require("./api/misc");
 const { getUserCharacter, getAliveCharacters } = require("./api/characters");
 
@@ -18,10 +20,9 @@ async function editAllGameSessionsForWebsite(sessions) {
                 session.session_party[key] = (await getUserFromGuild(playerID, guild)).user || { username: 'Unknown' };
             }
         }
-
         // Set session commander player character.
-        session.session_commander = await getUserCharacter(session.session_commander, guild.id);
-        session.session_commander.player = (await getUserFromGuild(session.session_commander.player_id_discord, guild)).user;
+        session.session_commander = await getUserCharacter(session.session_commander, guild.id) || { data: { picture_url: 'Unknown' } };
+        session.session_commander.player = (await getUserFromGuild(session.session_commander?.player_id_discord, guild))?.user || { username: 'Unknown', displayAvatarURL: () => 'Unknown' };
         // Get the user information from the DM.
         session.dungeon_master_id_discord = await getUserFromGuild(session.dungeon_master_id_discord, guild);
         // Get the correct date string output.
@@ -36,11 +37,11 @@ async function editAllGameSessionsForWebsite(sessions) {
     return sessions
 }
 
-async function getPlayersData(guildID){
-    const CHARACTER_INFO = (await getAliveCharacters(guildID)).map(character => {return {id:character.player_id_discord, name:character.name}})
+async function getPlayersData(guildID) {
+    const CHARACTER_INFO = (await getAliveCharacters(guildID)).map(character => { return { id: character.player_id_discord, name: character.name } })
     const PLAYER_IDS = CHARACTER_INFO.map(character => character.id)
-    return getUsersFromGuild(guildID).filter(user => user.user.bot == false && PLAYER_IDS.includes(user.id)).map(user => {return {id: user.id, username: user.user.username, avatarURL: user.displayAvatarURL({dynamic: true}), characterName: CHARACTER_INFO.find(character => character.id == user.id).name}});
-} 
+    return getUsersFromGuild(guildID).filter(user => user.user.bot == false && PLAYER_IDS.includes(user.id)).map(user => { return { id: user.id, username: user.user.username, avatarURL: user.displayAvatarURL({ dynamic: true }), characterName: CHARACTER_INFO.find(character => character.id == user.id).name } });
+}
 
 
 module.exports = {

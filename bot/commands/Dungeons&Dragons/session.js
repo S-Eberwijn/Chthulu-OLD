@@ -449,7 +449,7 @@ function editRequestSessionEmbedTitle(editedEmbed, status) {
             editedEmbed.setColor(0xdd2e44)
             break;
         default:
-            break;
+            break; 
     }
     return editedEmbed;
 }
