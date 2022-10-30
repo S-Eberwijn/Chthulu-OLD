@@ -54,6 +54,8 @@
     border-radius: var(--modal-border-radius);
     box-sizing: border-box;
     overflow: hidden;
+    display: flex;
+    flex-direction: row;
     /* margin-top: var(--title-height); */
 }
 

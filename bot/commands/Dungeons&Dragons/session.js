@@ -69,7 +69,7 @@ const MESSAGE_COMPONENTS_JOIN = new MessageActionRow()
 
 
 module.exports.help = {
-    name:"Session",
+    name:"session",
     category: "Dungeons & Dragons",
     description: "DiscordJs Session helper",
     modalIds: MODAL_IDS,
@@ -446,7 +446,7 @@ function playerAlreadyDenied(sessions, userID, sessionChannelID) {
     for(let session of sessions) {
         if (session.session_channel === sessionChannelID) {
             for(let sessionDenied of session.denied){
-                if(sessionRequest.user_id === userID) return true;
+                if(sessionDenied.user_id === userID) return true;
             }
         }
     }
