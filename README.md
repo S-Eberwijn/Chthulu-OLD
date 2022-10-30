@@ -18,371 +18,42 @@
 If you want to add the Chthulu to your Discord server, click [here](https://discord.com/oauth2/authorize?client_id=532524817740464138&permissions=0&scope=bot%20applications.commands)
 
 # Commands
-<table>
-<tr>
-<th colspan="3" align="left">
-<font size=5>1. General </font>
-</th>
-</tr>
-<tr>
-<th colspan="3" align="left">
-</th>
-</tr>
-<tr>
-<th align="left">
-Command name
-</th>
-<th align="left">
-Options
-</th>
-<th align="left">
-Description
-</th>
-</tr>
-<tr>
-<td>
-
-/`spell`  
-
-</td>
-<td>
-
-\<spell-name\>
-</td>
-<td>
-This command will provide more information about the given spell-name.
-</td>
-
-</tr>
-<tr>
-<td>
-
-/`condition`
-
-</td>
-<td>
-
-\<condition-name\>
-</td>
-<td>
-This command will provide more information about the given condition-name.
-</td>
-
-</tr>
-<tr>
-<tr>
-<td>
-
-/`weapon`
-</td>
-<td>
-
-\<weapon-name\>
-</td>
-<td>
-A user with a configured character can use this command to request a new session, as well as see all planned session in a nicely formatted embed.
-</td>
-
-</tr>
-<tr>
-<td>
-
-/`magicItemList`
-
-</td>
-<td>
-
-\<magic-item-name\>
-</td>
-<td>
-Chthulu will give a list with magic items.
-</td>
-
-</tr>
-<td>
-
-/`npc`  
-
-</td>
-<td>
-[npc-name]
-</td>
-<td>
-TODO
-</td>
-
-</tr>
-
-<tr>
-<td>
-
-/`roll-dice`
-
-</td>
-<td>
-[d4] [d6] [d8] [d10] [d12] [d20] [d100] [modifier]
-</td>
-<td>
-TODO
-</td>
-</tr>
-<tr>
-<td>
-
-/`roll-check`
-
-</td>
-<td>
-[modifier] [roll twice]
-</td>
-<td>
-TODO
-</td>
-</tr>
-
-<tr>
-<th colspan="3" align="left">
-</th>
-</tr>
-<tr>
-<th colspan="3" align="left">
-<font size="+2">2. Players </font>
-</th>
-</tr>
-<tr>
-<th colspan="3" align="left">
-</th>
-</tr>
-<tr>
-<th align="left">
-Command name
-</th>
-<th align="left">
-Options
-</th>
-<th align="left">
-Description
-</th>
-</tr>
-<tr>
-<td>
-
-/`characterCreation`
-
-</td>
-<td>
-</td>
-<td>
-
-This command will create a new text channel, in which Chthulu will ask the user some question about his/her soon to be character. Once all questions have been filled in, the character will be created and assigned to the user.
-
-</td>
-
-</tr>
-<tr>
-<td>
-
-/`character`
-
-</td>
-<td>
-
-[@User]
-
-</td>
-<td>
-
-When a user has a character configured, the can view their (or someone else's) by using this command.
-
-</td>
-
-</tr>
-<tr>
-<td>
-
-/`quests`
-
-</td>
-<td>
-</td>
-<td>
-
-Chthulu will show a list of all ongoing quests, which can be configured and updated on the website.
-
-</td>
-
-</tr>
-<tr>
-<td>
-
-/`session`    
-
-</td>
-<td>
-<'request', 'board'>
-</td>
-<td>
-A user with a configured character can use this command to request a new session, as well as see all planned session in a nicely formatted embed.
-</td>
-
-</tr>
-<tr>
-<td>
-
-/`magicItemList`
-
-</td>
-<td>
-</td>
-<td>
-Chthulu will give a list with magic items.
-</td>
-
-</tr>
-<tr>
-<td>
-
-/`roll-stats`
-
-</td>
-<td>
-[amount-of-dice] [drop-lowest] [drop-highest] [modifier]
-</td>
-<td>
-TODO
-</td>
-
-</tr>
-<tr>
-<th colspan="3" align="left">
-</th>
-</tr>
-<tr>
-<th colspan="3" align="left">
-<font size="+2">3. Dungeon Masters </font>
-</th>
-</tr>
-<tr>
-<th colspan="3" align="left">
-</th>
-</tr>
-<tr>
-<th align="left">
-Command name
-</th>
-<th align="left">
-Options
-</th>
-<th align="left">
-Description
-</th>
-</tr>
-<td>
-
-/`add-character-channel`
-
-</td>
-<td>
-
-\<channel-name\>
-
-</td>
-<td>
-
-Add in-character channel (voice), so if someone has a character on that server configured, their name will change to his/her/they character's.
-
-</td>
-
-</tr>
-<tr>
-<td>
-
-/`nonPlayableCharacterCreation`
-
-</td>
-<td>
-</td>
-<td>
-
-A Dungeon Master can use this command to create a new NPC. Chthulu will create a new channel and ask questions about the new, soon to be, NPC. Once finished, the NPC will be stored in the database and the Dungeon Master can start impersonating the creature.
-
-</td>
-
-</tr>
-<tr>
-<td>
-
-/`set-level`
-
-</td>
-<td>
-
-\<@User\> \<1-20\>
-
-</td>
-<td>
-
-A Dungeon Master can use this command to set a new level to the provided user, considering the user has an active character configured.
-
-</td>
-
-</tr>
-<tr>
-<td>
-
-/`impersonate`  
-
-</td>
-<td>
-</td>
-<td>
-
-Chthulu will show a list where the Dungeon Master can choose which create to impersonate. When the Dungeon Master is in an 'in-character'-channel, their name will change to the responding NPC.
-
-</td>
-
-</tr>
-<tr>
-<td>
-
-/`stop-impersonating`
-
-</td>
-<td>
-</td>
-<td>
-
-A Dungeon Master can use this command to stop impersonating the previously chosen creature.
-
-</td>
-
-</tr>
-</table>
-
-
-
-
-# Developers information
-##### .env
-```
-APP_ENV=TEST
-
-BOT_TOKEN=
-AUTHOR=
-
-OATH2_CLIENT_ID=
-OATH2_CLIENT_SECRET=
-OATH2_CLIENT_GRANT_TYPE=
-
-WB_BASE_URL=http://localhost
-WB_PORT=8080
-SECRET_KEY=
-
-FS_PROJECT_ID=
-FS_PRIVATE_KEY_ID=
-FS_PRIVATE_KEY=
-FS_CLIENT_EMAIL=
-FS_CLIENT_ID=
-FS_CERT_URL=
-FS_DATABASE_NAME=
-```
+## 1. General
+| Command   | Parameters    | Description     |
+| :------ | :---------- | :---------- |
+| /character  [@User]   | This command will show a character-card the active character of the mentioned user. (if the target-user has a character configured)   |
+| /condition     | [condition-name] | This command will provide basic information about the given condition. |
+| /magicItemList |    | Currently unavailable  |
+| /npc           | [npc-name]  | This command will show a character-card the NPC with a given name (leaving the name-field blank will give 2 dropdown menus to select an NPC). |
+| /roll-check    | [modifier] [roll twice] | This command will roll 1 d20, You can use parameters to add a skillmodefier(a numeric value) or add a second dice by not leaving the "roll-twice"-field |
+| /roll-dice  | [d4] [d6] [d8] [d10] [d12] [d20] [d100] [modifier]  | This command allows you to roll any combination of the 7 most commun dice-types (upto 24 dice).    |
+| /roll-stats    | \<amount-of-dice> \<dice-type> [drop-highest] [drop-lowest] [modifier] | This command will generate 6 random stats based on the given parameters. we recommend 4 d6 drop-lowest 1. <br/> - You can chose how many dice are rolled per stat,<br/> -  What type of dice (only one dicekind can be used).<br/> -   It's possible to add an additional modifier (to garantee a minimum value for stats) <br/>- And you can chose to ignore the highest/lowest x dice per stat |
+| /spell         | \<spell-name>    | This command will provide basic information about the given spell. |
+| /weapon        | [weapon-name]   | This command will provide basic information about the given weapon.    | 
+
+
+## 2. Payers
+
+| Command | Parameters  | Description       |
+| :------ | :---------- | :---------------- |
+| /characterCreation | | This command will create a new text channel, in which Chthulu will ask the user some question about his/her soon to be character. Once all questions have been filled in, the character will be created and assigned to the user. |
+| /quests            | &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | Chthulu will show a list of all ongoing quests, which can be configured and updated on the website.  |
+| /session           | <'request' OR 'board'>  | A user with a configured character can use this command to request a new session, as well as see all planned session in a nicely formatted embed. |
+
+## 3. Game Masters
+
+| Command   | Parameters   | Description     |
+| :-------- | :----------- | :-------------- |
+| /add-character-channel   | \<channel-name>  | Add in-character channel (voice), so if someone has a character on that server configured, their name will change to his/her/they character's.  |
+| /impersonate  |   | Chthulu will show a list where the Dungeon Master can choose which create to impersonate. When the Dungeon Master is in an 'in-character'-channel, their name will change to the responding NPC.   |
+| /nonPlayableCharacterCreation |   | A Dungeon Master can use this command to create a new NPC. Chthulu will create a new channel and ask questions about the new, soon to be, NPC. Once finished, the NPC will be stored in the database and the Dungeon Master can start impersonating the creature. |
+| /set-level  | \<@User> \<1-20> | A Dungeon Master can use this command to set a new level to the provided user, considering the user has an active character configured.  |
+| /stop-impersonating   | &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| A Dungeon Master can use this command to stop impersonating the previously chosen creature.   |
+
+# Feedback
+
+Your feedback is important to us, we are only a small team who intensively use the bot and therefore might just miss some things. You can leave your feedback [in this form](https://forms.gle/bi1Kng7JG2UkW9618) so we can implement it when suited.
+
+# Contribution
+
+No formal way to contribute *yet* Just leave a message and we'll figure things out.
