@@ -471,8 +471,8 @@ async function createModal(MODAL_ID) {
         .setRequired(false)
 
     // An action row only holds one text input,
-    const firstActionRow = new MessageActionRow().addComponents(sessionTitle),//??->does this work?
-        secondActionRow = new MessageActionRow().addComponents(sessionObjective),
+    // outdated firstActionRow = new MessageActionRow().addComponents(sessionTitle),
+    const secondActionRow = new MessageActionRow().addComponents(sessionObjective),
         thirdActionRow = new MessageActionRow().addComponents(sessionDate),
         fourthActionRow = new MessageActionRow().addComponents(sessionLocation);
 
@@ -486,7 +486,7 @@ function playerAlreadyRequestedForSession(sessions, userID, sessionChannelID) {
     // TODO: Make this per server.
     for(let session of sessions) {
         if (session.session_channel === sessionChannelID) {
-            for(sessionRequest of session.requested){
+            for(let sessionRequest of session.requested){
                 if(sessionRequest.user_id === userID) return true;
             }
         }
@@ -498,7 +498,7 @@ function playerAlreadyDenied(sessions, userID, sessionChannelID) {
     // TODO: Make this per server.
     for(let session of sessions) {
         if (session.session_channel === sessionChannelID) {
-            for(sessionDenied of session.denied){
+            for(let sessionDenied of session.denied){
                 if(sessionRequest.user_id === userID) return true;
             }
         }

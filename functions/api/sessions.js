@@ -88,6 +88,7 @@ async function createGameSession(sessionData, serverID, userID) {
 	const BOT = getBot();
 	const GUILD = getGuildFromBot(serverID);
 	const DISCORD_USER = getUserFromBot(userID);
+	let session_party;
 	return new Promise(async (resolve, reject) => {
 		const USER_CHARACTER = await getUserCharacter(userID, serverID);
 		if (!USER_CHARACTER) return reject("No playable character found for user");
@@ -114,8 +115,8 @@ async function createGameSession(sessionData, serverID, userID) {
 			Date.UTC(date_year, date_month - 1, date_day, date_hour, date_minutes),
 		).getTime();
 
-		if (sessionData.session_party && !sessionData.session_party?.includes(userID)) session_party = [userID, ...session_party];
 
+		if (sessionData.session_party && !sessionData.session_party?.includes(userID)) session_party = [userID, ...session_party];
 		// Makes a request channel for the message author
 		GUILD.channels
 			.create(`${DISCORD_USER.username}s-request`, "text")
@@ -441,7 +442,7 @@ async function joinGameSession(sessionData, serverID, userID) {
 				components: [MESSAGE_COMPONENTS.JOIN_SESSION],
 			}).then(async (JOIN_MESSAGE) => {
 				// Add REQUESTED-status to user in json database.
-				await giveUserRequestedStatus(
+				giveUserRequestedStatus(
 					BOT.sessionAddUserRequest["sessions"],
 					GAME_SESSION.session_channel,
 					USER_ID,
