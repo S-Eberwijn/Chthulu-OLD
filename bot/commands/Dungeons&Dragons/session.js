@@ -377,12 +377,63 @@ function writeToJsonDb(location, data) {
     });
 }
 
+async function createModal(MODAL_ID) {
+    // Create the modal
+    const modal = new Modal()
+        .setCustomId(MODAL_ID)
+        .setTitle('Session Request');
+
+    const sessionTitle = new TextInputComponent()
+        .setCustomId('sessionTitle')
+        // The label is the prompt the user sees for this input
+        .setLabel("Title")
+        // Short means only a single line of text
+        .setStyle('SHORT')
+        .setRequired(true)
+    const sessionObjective = new TextInputComponent()
+        .setCustomId('sessionObjective')
+        .setLabel("Objective")
+        .setPlaceholder('e.g. "Defeat the BBEG at his lair."')
+        // Paragraph means multiple lines of text.
+        .setStyle('PARAGRAPH')
+        .setRequired(true)
+
+    const sessionDate = new TextInputComponent()
+        .setCustomId('sessionDate')
+        // The label is the prompt the user sees for this input
+        .setLabel("Date - Time ~> [DD/MM/YYYY HH:MM]")
+        // Short means only a single line of text
+        .setStyle('SHORT')
+        .setRequired(true)
+        .setPlaceholder(`20/12/${(new Date).getFullYear()} 15:30`)
+        .setMaxLength(16)
+
+    const sessionLocation = new TextInputComponent()
+        .setCustomId('sessionLocation')
+        // The label is the prompt the user sees for this input
+        .setLabel("Location")
+        // Short means only a single line of text
+        .setStyle('SHORT')
+        .setPlaceholder('Roll20 (online)')
+        .setRequired(false)
+
+    // An action row only holds one text input,
+    // outdated firstActionRow = new MessageActionRow().addComponents(sessionTitle),
+    const secondActionRow = new MessageActionRow().addComponents(sessionObjective),
+        thirdActionRow = new MessageActionRow().addComponents(sessionDate),
+        fourthActionRow = new MessageActionRow().addComponents(sessionLocation);
+
+    // Add inputs to the modal
+    modal.addComponents(secondActionRow, fourthActionRow, thirdActionRow,);
+    return modal;
+}
+
 //this method seems realy simular to the next method, refacator posible.
 function playerAlreadyRequestedForSession(sessions, userID, sessionChannelID) {
     // TODO: Make this per server.
     for(let session of sessions) {
         if (session.session_channel === sessionChannelID) {
-            for(sessionRequest of session.requested){
+            for(let sessionRequest of session.requested){
                 if(sessionRequest.user_id === userID) return true;
             }
         }
@@ -394,8 +445,8 @@ function playerAlreadyDenied(sessions, userID, sessionChannelID) {
     // TODO: Make this per server.
     for(let session of sessions) {
         if (session.session_channel === sessionChannelID) {
-            for(sessionDenied of session.denied){
-                if(sessionDenied.user_id === userID) return true;
+            for(let sessionDenied of session.denied){
+                if(sessionRequest.user_id === userID) return true;
             }
         }
     }

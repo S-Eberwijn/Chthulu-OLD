@@ -24,14 +24,12 @@ module.exports.run = async (interaction) => {
             }
         })
     await NonPlayableCharacter.findAll({ where: { server: interaction.guildId, status: "VISIBLE" } }).then((npcs) => {
-        console.log(npcs)
         if (npcs.length < 1) {
             interaction.reply({
                 content: "Your server has no visible npcs, add a new ncp using the !cnpc command and set it to visible.",
                 ephemeral: true,
             });
             successfull = false;
-            return
         }
         else if (npcs.length <= 25)//create new method
             messageComponentsArray.push(

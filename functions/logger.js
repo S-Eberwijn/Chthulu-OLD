@@ -28,7 +28,6 @@ logger.add(new transports.Console({
     format:
         combine(
             process.env.PLATFORM != "HEROKU" ? format.colorize() : format.json(),
-            // timestamp({ format: "HH:mm:ss" }),
             consoleFormat,
         )
 }));
