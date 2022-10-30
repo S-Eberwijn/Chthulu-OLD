@@ -564,7 +564,7 @@ async function editRequestSessionEmbedTitle(editedEmbed, status) {
             editedEmbed.setColor('#dd2e44')
             break;
         default:
-            break;
+            break; 
     }
     return editedEmbed;
 }

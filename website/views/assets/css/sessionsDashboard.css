@@ -220,13 +220,17 @@ details.closing .embla__dots {
 /* Carousel for embeds */
 .embla {
     overflow: hidden;
-    padding: 0 5px;
+    padding: 0px;
     box-sizing: border-box;
     background-color: var(--menu-color);
     width: 100%;
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
     border-top-right-radius: 5px;
+    border: 10px solid var(--menu-color);
+    border-top: 10px solid var(--menu-color);
+    border-bottom: 10px solid var(--menu-color);
+
     height: 470px;
     transition: all 200ms ease;
     /* width: 100%; */
@@ -238,11 +242,9 @@ details.closing .embla__dots {
     overflow: hidden;
     margin-left: auto;
     margin-right: auto;
-    padding: 25px 5px;
+    padding: 0px 0px 25px 0px;
     /* box-sizing: border-box; */
     background-color: var(--menu-color);
-
-
 }
 
 .embla__viewport.is-draggable {
@@ -519,15 +521,19 @@ details.closing .embla__dots {
     height: 30px;
     border-radius: 2px;
     cursor: pointer;
+    color: var(--sidebar-color);
+}
 
+.embedButtons .button i {
+    color: var(--menu-color);
 }
 
 .button.approve {
-    background-color: green;
+    background-color: var(--success-color);
 }
 
 .button.decline {
-    background-color: red;
+    background-color: var(--delete-color);
 }
 
 .button.join {

@@ -32,7 +32,7 @@
 
     --edit-color: rgba(88, 101, 242, 1);
     --disabled-edit-color: rgba(88, 101, 242, 0.4);
-
+    --notify-warning: #f2c94c;
     --delete-color: #eb5757;
 }
 

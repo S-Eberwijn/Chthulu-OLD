@@ -1,3 +1,5 @@
+//- TODO: There is something off with the embed buttons, it's not showing up correctly
+
 .embla__slide     
     .slideItem(id=session.id)    
         .embedWrapper   
@@ -59,10 +61,10 @@
                         i(class="fas fa-times")
                         p Decline
                 else if (session.session_status === 'PLANNED')
-                    .button.approve(onclick=`doneGameSession(${session.id})`)
+                    .button.approve(onclick=`updateGameSessionStatus(${session.id}, 'PLAYED')`)
                         i(class="fas fa-thumbs-up")
                         p Played
-                    .button.decline
+                    .button.decline(onclick=`updateGameSessionStatus(${session.id}, 'CANCELED')`)
                         i(class="fas fa-times")
                         p Canceled
             else if(userCharacter && (session.session_party.length < 5 && !["PLAYED", "CANCELED"].includes(session.session_status) &&  !session.session_party.map(user => user.id).includes(loggedInUser.discordID)) && session.session_commander.player.id != loggedInUser.discordID)

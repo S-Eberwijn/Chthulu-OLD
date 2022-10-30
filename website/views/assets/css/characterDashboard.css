@@ -1,8 +1,16 @@
 /*CHARACTERS PAGE*/
+* {
+    --characterList-width: 350px;
+    --characterCard-width: 700px;
+    --characterCard-left-side-width: 200px;
+}
+
 .dashboardContent[characters] {
     display: flex;
-    align-items: center;
-    justify-content: space-evenly;
+    box-sizing: border-box;
+    /* align-items: center; */
+    /* justify-content: space-evenly; */
+    /* align-items: center; */
     /* For the informational characters page */
 }
 
@@ -10,14 +18,15 @@
     user-select: none;
     width: 100%;
     height: var(--title-height);
+    background-color: var(--content-color);
     margin: 0;
     padding-left: 15px;
+    box-sizing: border-box;
     text-align: center;
     display: flex;
     position: relative;
     align-items: center;
 }
-
 
 .dashboardContent[characters] h1 .count {
     font-size: calc(var(--header-font-size) * 1.25);
@@ -28,343 +37,317 @@
     font-size: var(--header-font-size);
 }
 
-
-.charactersList {
+.dashboardContent[characters] .characterBoxWrapper {
+    height: auto;
     width: 100%;
-    max-height: 365px;
-    height: 365px;
-
-    border-radius: 10px;
-    /* border: 3px solid var(--sidebar-color);
-    border-top: 0;
-    border-bottom-left-radius: 5px;
-    border-bottom-right-radius: 5px; */
-    background-color: var(--menu-color);
-    display: flex;
-    flex-direction: column;
-    /* justify-content: center; */
-    gap: 5px;
-    /* align-items: flex-start; */
-    padding: 10px;
     box-sizing: border-box;
-    overflow-y: hidden;
-    overflow-x: hidden;
-    /* z-index: 1; */
-    box-shadow: inset 0px 0px 0px 3px var(--sidebar-color);
-}
-
-
-
-.charactersList::-webkit-scrollbar {
-    width: 15px;
-    /* width of the entire scrollbar */
-}
-
-.charactersList::-webkit-scrollbar-track {
-    background: transparent;
-    /* color of the tracking area */
-}
-
-.charactersList::-webkit-scrollbar-thumb {
-    background-color: var(--sidebar-color);
-    /* color of the scroll thumb */
-    border-radius: 15px;
-    /* roundness of the scroll thumb */
-    border: 5px solid transparent;
-    background-clip: padding-box;
-}
-
-.characterItem.selected {
-    background-color: var(--sidebar-color) !important;
-    cursor: default !important;
-}
-
-
-.charactersList .characterItem {
-    width: 100%;
-    min-width: 370px;
-    height: 30px;
-    background-color: var(--menu-color);
-    transition: all .2s ease;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-radius: 3px;
-    position: relative;
-    z-index: 1;
-
-}
-
-.characterItem.notDisplayed {
-    display: none;
-}
-
-.charactersList .characterItem .classIcon {
-    width: 10%;
-    min-width: 40px;
-    height: 100%;
-    /* overflow: hidden; */
-    /* background-color: red; */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.charactersList .characterItem .classIcon img {
-    height: 70%;
-    width: auto;
-    border-radius: 50%;
-
-}
-
-.charactersList .characterItem .characterFullName {
-    width: calc(100% - 10% - 70px);
-    min-width: 250px;
-    height: 100%;
-    /* background-color: yellow; */
-    display: flex;
-    align-items: center;
-    /* justify-content: flex-start; */
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-}
-
-.charactersList .characterItem .characterFullName p {
-    margin: 0;
-}
-
-.charactersList .characterItem .characterLevel {
-    width: 70px;
-    min-width: 70px;
-    height: 100%;
-    box-sizing: border-box;
-    padding: 10px;
-    /* background-color: blue; */
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-
-.charactersList .characterItem .characterLevel p {
-    margin: 0;
-}
-
-.charactersList .characterItem:hover {
-    cursor: pointer;
-    background-color: #42494c;
-
-}
-
-.dashboardContent[characters] .characterBox {
-    height: 75%;
-    width: 60%;
-    display: flex;
-    /* z-index: 1; */
-    /* flex-direction: row; */
-    align-items: center;
-    /* justify-content: space-between; */
-    /* For the informational characters page */
-}
-
-.dashboardContent[characters] .characterSelectionBox {
-    height: 75%;
-    width: 30%;
-    display: flex;
-    /* flex-direction: row; */
-    align-items: center;
-    /* justify-content: space-between; */
-    /* For the informational characters page */
-}
-
-.characterSelectionBox .paginationDiv {
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-    width: 15%;
-    margin: 10px;
-    cursor: pointer;
-    color: var(--menu-color);
-}
-
-.characterSelectionBox .paginationDiv i {
-    font-size: .8em;
-    color: var(--text-color);
-}
-
-
-.dashboardContent[characters] .cardStack {
-    height: 365px;
-    width: 20rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    margin-top: var(--title-height);
-
-}
-
-.dashboardContent[characters] .cardStack .characterCardHolder {
-    position: absolute;
-    height: 100%;
-    width: 60rem;
-
-    /* z-index: 3; */
-
-    /* transition: all .75s; */
-    /* overflow: hidden; */
-
-    opacity: 0;
-    transition: opacity .2s ease;
-
-}
-
-.dashboardContent[characters] .cardStack .characterCardHolder .characterCard {
-    position: relative;
-    height: 100%;
-    width: 100%;
-    background: var(--menu-color);
-    border-radius: 10px;
-    padding: 1rem;
     display: flex;
     flex-direction: row;
-    gap: 1.5rem;
-    /* justify-content: space-evenly; */
-    /* /* -webkit-box-shadow: inset 0px 5px 3px var(--sidebar-color); */
-    box-shadow: inset 0px 0px 0px 3px var(--sidebar-color);
-    /* inset: 10px var(--sidebar-color); */
+    
+}
+
+
+.dashboardContent[characters] .characterDisplayBox {
+    width: calc(100%);
+    height: calc(100% - var(--title-height));
+    
+    border-radius: var(--modal-border-radius);
     box-sizing: border-box;
-    /* If you want to implement it in very old browser-versions */
-    -webkit-user-select: none;
-    /* Chrome/Safari */
-    -moz-user-select: none;
-    /* Firefox */
-    -ms-user-select: none;
-    /* IE10+ */
-    /* The rule below is not implemented in browsers yet */
-    -o-user-select: none;
-    /* The rule below is implemented in most browsers by now */
-    user-select: none;
-    /* z-index: 10; */
-    /* overflow: hidden; */
-    /* transition: all .4s ease; */
-    /* transition: opacity .4s ease; */
-
+    overflow: hidden;
+    /* margin-top: var(--title-height); */
 }
 
-.dashboardContent[characters] .cardStack .characterCardHolder:first-child {
-    opacity: 1;
+
+
+
+
+
+
+
+.dashboardContent[characters] .characterDisplayBox .characterCard {
+    width: var(--characterCard-width);
+    height: 250px;
+    /* background-color: #fff; */
+    background-color: var(--menu-color);
+    /* background: linear-gradient(#f8f8f8, #fff); */
+    box-shadow: 0 8px 16px -8px rgba(0,0,0,0.4);
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+    margin: 1.5rem;
 }
 
-.characterInformation {
-    height: 100%;
-    width: 70%;
+.characterCard:not(.selected) {
+    display: none !important;
+}
+
+.characterCard h1 {
+    text-align: center;
+    background-color: unset !important;
+    padding-left: unset !important;
     display: flex;
-    flex-direction: column;
-    /* align-items: center; */
-    justify-content: space-evenly;
-    /* overflow: hidden; */
+    justify-content: space-between;
+    border-bottom: 2px solid var(--placeholder-text-color);
+    font-size: 1.2rem;
 }
 
-.dashboardContent[characters] .cardStack .characterCard span.characterName {
-    font-weight: bold;
+.characterCard h1 .level-wrapper{
+    height: 16px ;
+    width: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    
 }
 
-.dashboardContent[characters] .cardStack .characterCard span.characterLevel {
-    width: 9%;
+.characterCard h1 .level-wrapper img.level{
+    height: calc(var(--title-height) / 3) !important;
+    width: auto !important;
+
+    
+}
+
+.characterCard .additional {
     position: absolute;
-    /* font-weight: bold;
-    font-size: 3.5rem; */
-    right: 1.5rem;
-    top: 1.5rem;
+  width: var(--characterCard-left-side-width);
+  height: 100%;
+  /* background: linear-gradient(#dE685E, #EE786E); */
+  background: var(--average-color);
+  transition: width 0.4s;
+  overflow: hidden;
+  z-index: 2;
 }
 
-.dashboardContent[characters] .cardStack .characterCard span.characterLevel img {
+.characterCard:hover .additional {
     width: 100%;
-    object-fit: cover;
-    /* height: 10px; */
+    border-radius: 0 5px 5px 0;
 }
 
-.dashboardContent[characters] .cardStack .characterCard div.infoBundle {
+.characterCard .additional .user-card{
+    width: var(--characterCard-left-side-width);
+  height: 100%;
+  position: relative;
+  float: left;
+}
+
+.characterCard .additional .user-card::after{
+    content: "";
+  display: block;
+  position: absolute;
+  top: 10%;
+  right: -2px;
+  height: 80%;
+  border-left: 2px solid rgba(0,0,0,0.025);
+}
+
+/* .characterCard .additional .user-card .level, */
+.characterCard .additional .user-card .points {
+  top: 15%;
+  color: #fff;
+  text-transform: uppercase;
+  font-size: 0.75em;
+  font-weight: bold;
+  background: rgba(0,0,0,0.15);
+  padding: 0.125rem 0.75rem;
+  border-radius: 100px;
+  white-space: nowrap;
+}
+
+.characterCard .additional .user-card .points {
+  top: 90%;
+}
+
+.characterCard .additional .user-card .img-holder {
+    /* object-fit: contain; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+
+    
+  /* top: 50%; */
+}
+
+.characterCard .additional .user-card img {
     width: 75%;
-    height: 50px;
-    display: flex;
-    flex-direction: row;
-    gap: 5rem;
+    height: 75%;
+
+    object-fit: contain;
+    /* height: 50%; */
+
+  /* top: 50%; */
 }
 
-.dashboardContent[characters] .cardStack .characterCard .characterDescription {
-    width: 77%;
-    height: 175px;
-    overflow-y: scroll;
-    /* background: green; */
-    font-size: .8rem;
-    text-align: justify;
+.characterCard .additional .more-info {
+  width: calc(var(--characterCard-width) - var(--characterCard-left-side-width));
+  /* float: left; */
+  position: absolute;
+  left: var(--characterCard-left-side-width);
+  top: 0;
+  height: 100%;
+  padding: 1rem;
+  padding-top: 0;
+  box-sizing: border-box;
 }
 
-
-.dashboardContent[characters] .cardStack .characterCard .characterDescription::-webkit-scrollbar {
-    width: 0px;
-    /* width of the entire scrollbar */
-}
-
-.dashboardContent[characters] .cardStack .characterCard div.infoBundle span {
+.dashboardContent[characters] .characterCard div.infoBundle {
+    position: relative;
+    width: 100%;
+    height: 60%;
     display: flex;
     flex-direction: column;
-    /* text-transform: uppercase; */
-    font-weight: bold;
-}
-
-span.characterRace, span.characterClass, span.characterBackground {
-    text-transform: capitalize !important;
-    font-weight: normal !important;
-}
-
-.dashboardContent[characters] .cardStack .characterCard div.characterImageHolder {
-    width: 30%;
-    height: 100%;
-    border-radius: 5px;
     overflow: hidden;
+    padding-top: 1rem; 
+    box-sizing: border-box;
+    gap: 5px;
+    font-size: 0.8rem;
+}
+
+.dashboardContent[characters] .characterCard div.infoBundle .infoPair{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    overflow: hidden;
+}
+
+.infoPair .progressBar {
+    width: calc(100% - 30px);
+    height: 10px;
+    position: relative;
+    background: #555;
+    border-radius: 3px;
+    /* padding: 10px; */
+    box-shadow: inset 0 -1px 1px rgba(255, 255, 255, 0.3);
+}
+
+.infoPair .progressBar span{
+    width: var(--progress);
+    display: block;
+    height: 100%;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+    box-shadow: 
+        inset 0 2px 9px  rgba(255,255,255,0.3),
+        inset 0 -2px 6px rgba(0,0,0,0.4);
+    position: relative;
+    overflow: hidden;
+}
+
+/* .dashboardContent[characters] .characterCard div.infoBundle.wip::after{
+    content: "Work In Progress";
+    font-weight: bold;
     display: flex;
     justify-content: center;
-
-    -moz-box-shadow: 0 0 20px var(--average-color);
-    -webkit-box-shadow: 0 0 20px var(--average-color);
-    box-shadow: 0 0 20px var(--average-color);
-}
-
-.dashboardContent[characters] .cardStack .characterCard div.characterImageHolder img {
-    object-fit: cover;
+    align-items: center;
+    font-size: large;
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+} */
 
 
-    border-radius: 5px;
+.infoPair .progressBar.strength span{
+    background-color: var(--delete-color);
 }
 
-span[--race] {
-    position: relative;
+.infoPair .progressBar.dexterity span{
+    background-color: var(--success-color);
 }
 
-span[--race]::after {
-    content: attr(--race);
+.infoPair .progressBar.constitution span{
+    background-color: burlywood;
+}
+
+.infoPair .progressBar.intelligence span{
+    background-color: var(--edit-color);
+}
+
+.infoPair .progressBar.wisdom span{
+    background-color: orange;
+}
+
+.infoPair .progressBar.charisma span{
+    background-color: purple;
+}
+
+.characterCard .additional .stats {
+  font-size: 2rem;
+  display: flex;
+  position: absolute;
+  bottom: 1rem;
+  left: 1rem;
+  right: 1rem;
+  top: auto;
+  color: #fff;
+}
+
+.characterCard.green .additional .stats {
+  color: #325C46;
+}
+
+.characterCard .additional .stats > div {
+    height: 50px;
+    flex: 1;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  /* position: relative; */
+}
+
+.characterCard .additional .stats img.icon {
+    height: 30px;
+    width: auto;
+}
+
+.characterCard .additional .stats div.title {
+  font-size: 1rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.characterCard .additional .stats div.value {
+  font-size: .8rem;
+  font-weight: bold;
+  line-height: 1.5rem;
+}
+
+.characterCard .additional .stats div.value.infinity {
+  font-size: 2.5rem;
+}
+
+.characterCard .general {
+  width: calc(var(--characterCard-width) - var(--characterCard-left-side-width));
+  height: 100%;
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 1;
+  box-sizing: border-box;
+  padding: 1rem;
+  padding-top: 0;
+}
+
+.characterCard .general .more {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  font-size: 0.9em;
+}
+
+.center {
     position: absolute;
-    transform: translate(0, 100%);
-}
-
-span[--class]::after {
-    content: attr(--class);
-    position: absolute;
-    transform: translate(0, 100%);
-}
-
-span[--background]::after {
-    content: attr(--background);
-    position: absolute;
-    transform: translate(0, 100%);
-}
-
-img.classIcon {
-    width: 50%;
-    object-fit: cover;
-}
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+  }
