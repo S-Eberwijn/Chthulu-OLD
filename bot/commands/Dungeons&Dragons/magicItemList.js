@@ -5,7 +5,9 @@ const { MessageActionRow, MessageSelectMenu, MessageEmbed } = require('discord.j
 const api = "https://api.open5e.com/magicitems/"
 const request = require('request');
 
+//TODO make this method actually usefull
 module.exports.run = async (interaction) => {
+    return interaction.reply({content:"This command is currently disabled",ephemeral: true});
     interaction.reply("processing")
     //TODO: refactor so it's actually useful
     for (let i = 1; i < 6; i++) {

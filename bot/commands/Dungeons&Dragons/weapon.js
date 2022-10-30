@@ -15,7 +15,7 @@ module.exports.run = async (interaction) => {
                 return interaction.reply({ embeds: [createEmbed(item)] })
             }
         }
-        return useSelectionMenu(interaction, data);
+        return await useSelectionMenu(interaction, data);
     });
 }
 
@@ -61,7 +61,7 @@ async function useSelectionMenu(interaction, weapons) {
             interaction.deferUpdate();
             for(let weapon of weapons){
                 if(weapon.name == interaction.values[0]){
-                    return interaction.editReply({ embeds: [createEmbed(weapon)] })
+                    return interaction.channel.send({ embeds: [createEmbed(weapon)] })
                 }
             }
         }).catch(function () {
