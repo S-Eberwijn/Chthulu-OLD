@@ -1,7 +1,11 @@
-.characterCard(id=`card-${character.character_id}` unselectable="on" style=`--average-color: ${character.average_color || '#000000'}`).selected
+.characterCard(id=`card-${character.character_id}` unselectable="on" style=`--average-color: ${character.average_color || 'var(--sidebar-color)'}`)
+    input(action="show" type="checkbox" id=`show-more-info-${character.character_id}`)
     .additional 
         .user-card 
-            .points.center Placeholder for player
+            label(for=`show-more-info-${character.character_id}`)
+            .player.center 
+                img(src=`${character.player.displayAvatarURL()}`)
+                span #{character.player.username}
             .img-holder
                 img(src=character.picture_url alt="Character Image")
             .more-info 
@@ -9,7 +13,7 @@
                     .level-wrapper 
                         span Lvl.
                         img(src=`../../../${character.level}.png`, alt="icon").level
-                .infoBundle.wip
+                .infoBundle
                     .infoPair
                         i.fa-solid.fa-hand-fist 
                         .progressBar.strength

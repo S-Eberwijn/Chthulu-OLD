@@ -2,6 +2,7 @@
 * {
     --characterList-width: 350px;
     --characterCard-width: 700px;
+    --characterCard-height: 250px;
     --characterCard-left-side-width: 200px;
 }
 
@@ -56,6 +57,7 @@
     overflow: hidden;
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
     /* margin-top: var(--title-height); */
 }
 
@@ -68,20 +70,66 @@
 
 .dashboardContent[characters] .characterDisplayBox .characterCard {
     width: var(--characterCard-width);
-    height: 250px;
-    /* background-color: #fff; */
+    min-width: var(--characterCard-width);
+    height: var(--characterCard-height);
+    min-height: var(--characterCard-height);
+
     background-color: var(--menu-color);
-    /* background: linear-gradient(#f8f8f8, #fff); */
     box-shadow: 0 8px 16px -8px rgba(0,0,0,0.4);
     border-radius: 6px;
     overflow: hidden;
     position: relative;
     margin: 1.5rem;
+    /* cursor: pointer; */
+    pointer-events: auto;
+
 }
 
-.characterCard:not(.selected) {
-    display: none !important;
+.dashboardContent[characters] .characterDisplayBox .characterCard input[type="checkbox"] {
+    display: none;
 }
+
+.dashboardContent[characters] .characterDisplayBox .characterCard label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    z-index: 100;
+    
+    /* pointer-events: none; */
+}
+
+.dashboardContent[characters] .characterDisplayBox .characterCard label::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 5px;
+    transform: translateY(-50%);
+    opacity: 1;
+    font-family: 'Poppins', 'FontAwesome', sans-serif;
+    color: var(--text-color);
+    transition: transform 0.2s ease-in-out;
+}
+
+.dashboardContent[characters] .characterDisplayBox .characterCard:hover label::after {
+    opacity: 1;
+    
+}
+
+input[action="show"]:checked~.additional label::after {
+    transform-origin: center;
+    transform: translateY(-50%) rotate(180deg) !important;
+} 
+
+.dashboardContent[characters] .characterDisplayBox .characterCard:hover label{
+    animation: breathing 1s ease-out infinite normal;
+}
+
+/* .characterCard:not(.selected) {
+    display: none !important;
+} */
 
 .characterCard h1 {
     text-align: center;
@@ -99,15 +147,11 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-
-    
 }
 
 .characterCard h1 .level-wrapper img.level{
     height: calc(var(--title-height) / 3) !important;
     width: auto !important;
-
-    
 }
 
 .characterCard .additional {
@@ -121,10 +165,10 @@
   z-index: 2;
 }
 
-.characterCard:hover .additional {
+input[action="show"]:checked~.additional {
     width: 100%;
     border-radius: 0 5px 5px 0;
-}
+} 
 
 .characterCard .additional .user-card{
     width: var(--characterCard-left-side-width);
@@ -143,43 +187,43 @@
   border-left: 2px solid rgba(0,0,0,0.025);
 }
 
-/* .characterCard .additional .user-card .level, */
-.characterCard .additional .user-card .points {
+.characterCard .additional .user-card .player {
+    height: 22px;
   top: 15%;
   color: #fff;
-  text-transform: uppercase;
   font-size: 0.75em;
   font-weight: bold;
   background: rgba(0,0,0,0.15);
-  padding: 0.125rem 0.75rem;
+  padding: 0.125rem 1rem;
   border-radius: 100px;
   white-space: nowrap;
+  display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
 }
 
-.characterCard .additional .user-card .points {
+.characterCard .additional .user-card .player {
   top: 90%;
 }
 
+.characterCard .additional .user-card .player img {
+    object-fit: contain;
+    border-radius: 100px;
+  }
+
 .characterCard .additional .user-card .img-holder {
-    /* object-fit: contain; */
     display: flex;
     align-items: center;
     justify-content: center;
     width: 100%;
     height: 100%;
-
-    
-  /* top: 50%; */
 }
 
 .characterCard .additional .user-card img {
     width: 75%;
     height: 75%;
-
     object-fit: contain;
-    /* height: 50%; */
-
-  /* top: 50%; */
 }
 
 .characterCard .additional .more-info {
@@ -192,19 +236,29 @@
   padding: 1rem;
   padding-top: 0;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+    justify-content: space-between;
 }
 
 .dashboardContent[characters] .characterCard div.infoBundle {
     position: relative;
     width: 100%;
-    height: 60%;
     display: flex;
     flex-direction: column;
+    justify-content: space-evenly;
     overflow: hidden;
-    padding-top: 1rem; 
     box-sizing: border-box;
     gap: 5px;
     font-size: 0.8rem;
+
+
+
+    background: rgba(0,0,0,0.15);
+    padding: 0.4rem;
+    border-radius: var(--modal-border-radius);
+    /* white-space: nowrap; */
+
 }
 
 .dashboardContent[characters] .characterCard div.infoBundle .infoPair{
@@ -241,22 +295,6 @@
     overflow: hidden;
 }
 
-/* .dashboardContent[characters] .characterCard div.infoBundle.wip::after{
-    content: "Work In Progress";
-    font-weight: bold;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: large;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.8);
-} */
-
-
 .infoPair .progressBar.strength span{
     background-color: var(--delete-color);
 }
@@ -284,26 +322,31 @@
 .characterCard .additional .stats {
   font-size: 2rem;
   display: flex;
-  position: absolute;
-  bottom: 1rem;
+    flex-direction: row;
+    justify-content: space-evenly;
+  /* position: absolute; */
+  /* bottom: 1rem;
   left: 1rem;
-  right: 1rem;
-  top: auto;
+  right: 1rem; */
+  /* top: auto; */
   color: #fff;
 }
 
-.characterCard.green .additional .stats {
-  color: #325C46;
-}
 
 .characterCard .additional .stats > div {
     height: 50px;
-    flex: 1;
+    /* flex: 1; */
     text-align: center;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+
+
+
+    /* background: rgba(0,0,0,0.15);
+    padding: 0.2rem;
+    border-radius: var(--modal-border-radius); */
   /* position: relative; */
 }
 
@@ -331,14 +374,44 @@
 .characterCard .general {
   width: calc(var(--characterCard-width) - var(--characterCard-left-side-width));
   height: 100%;
-  position: absolute;
-  top: 0;
-  right: 0;
-  z-index: 1;
+  margin-left: var(--characterCard-left-side-width);
+  z-index: 101;
   box-sizing: border-box;
   padding: 1rem;
   padding-top: 0;
+  /* overflow: hidden; */
 }
+
+.characterCard .general p {
+    height: calc(100% - var(--title-height));
+    font-size: 0.75em;
+    padding: .5rem;
+    /* padding-top: 0; */
+    box-sizing: border-box;
+    text-align: justify;
+    overflow-y: scroll;
+    margin: 0;
+  }
+
+  .characterCard .general p::-webkit-scrollbar {
+    width: var(--scrollbar-width);
+    /* width of the entire scrollbar */
+}
+
+.characterCard .general p::-webkit-scrollbar-track {
+    background: transparent;
+    /* color of the tracking area */
+}
+
+.characterCard .general p::-webkit-scrollbar-thumb {
+    background-color: var(--sidebar-color);
+    /* color of the scroll thumb */
+    border-radius: var(--scrollbar-width);
+    /* roundness of the scroll thumb */
+    border: var(--scrollbar-border-width) solid transparent;
+    background-clip: padding-box;
+}
+  
 
 .characterCard .general .more {
   position: absolute;
@@ -351,5 +424,55 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
   }
+
+
+  @-webkit-keyframes breathing {
+    0% {
+        -webkit-transform: scale(1);
+        transform: scale(1);
+      }
+  
+    25% {
+        -webkit-transform: scale(0.95);
+        transform: scale(0.95);
+      }
+  
+    60% {
+      -webkit-transform: scale(0.95);
+      transform: scale(0.95);
+    }
+  
+    100% {
+        -webkit-transform: scale(1);
+        transform: scale(1);
+      }
+  }
+  
+  @keyframes breathing {
+    0% {
+        -webkit-transform: scale(1);
+        -ms-transform: scale(1);
+        transform: scale(1);
+      }
+  
+    25% {
+        -webkit-transform: scale(0.95);
+        -ms-transform: scale(0.95);
+        transform: scale(0.95);
+      }
+  
+    60% {
+      -webkit-transform: scale(0.95);
+      -ms-transform: scale(0.95);
+      transform: scale(0.95);
+    }
+  
+    100% {
+        -webkit-transform: scale(1);
+        -ms-transform: scale(1);
+        transform: scale(1);
+      }
+  }
+  
