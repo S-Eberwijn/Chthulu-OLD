@@ -15,18 +15,11 @@ block styles
  
 block dashboardContent
     .dashboardContent(characters=true)
-        .characterBoxWrapper 
-            .characterSelectionBox
-                h1 
-                    span.count #{npcs.length}
-                    span.title Non Playable Characters
-                .charactersList 
-                    ul 
-                        each character in npcs
-                            li 
-                                include ./components/characterListItem.pug
-            .characterDisplayBox
-                each npc, index in npcs
-                    include ./components/nonPlayableCharacterCard.pug
+        h1 
+            span.count #{npcs.length}
+            span.title Non Playable Characters
+        //- .characterDisplayBox
+        //-     each character, index in npcs
+        //-         include ./components/characterCard.pug
         
 

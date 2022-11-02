@@ -560,7 +560,7 @@ async function updateGameSession(sessionData, serverID, userID) {
 
 async function editRequestSessionEmbedTitle(editedEmbed, status) {
 	editedEmbed.title = `${editedEmbed.title} [${status}]`;
-	switch (status) {	
+	switch (status) {
 		case "PLAYED":
 			editedEmbed.setColor("#78b159");
 			break;

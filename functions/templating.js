@@ -11,7 +11,7 @@ const QUEST_ELEMENT_TEMPLATE = pug.compileFile(TEMPLATE_PATH + 'quest' + TEMPLAT
 /**
  * @param {} session - Needs a session object ferom the database
  */
- const SESSION_EMBED_ELEMENT_TEMPLATE = pug.compileFile(TEMPLATE_PATH + 'discordSessionEmbed' + TEMPLATE_FILE_EXTENSION)
+const SESSION_EMBED_ELEMENT_TEMPLATE = pug.compileFile(TEMPLATE_PATH + 'discordSessionEmbed' + TEMPLATE_FILE_EXTENSION)
 
 module.exports = {
     QUEST_ELEMENT_TEMPLATE,

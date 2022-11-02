@@ -150,7 +150,7 @@ exports.approveGameSession = async (req, res) => {
 
 //TODO: Add validation with express validation
 exports.declineGameSession = async (req, res) => {
-    await declineGameSession(req.body, req.params?.id, req.user?.discordID).then( async session => {
+    await declineGameSession(req.body, req.params?.id, req.user?.discordID).then(async session => {
         session = (await editAllGameSessionsForWebsite([session]))[0];
         session.HTMLElement = SESSION_EMBED_ELEMENT_TEMPLATE({ session: session });
         return res.json(session);
@@ -165,12 +165,12 @@ exports.joinGameSession = async (req, res) => {
 
 //TODO: Add validation with express validation
 exports.updateGameSession = async (req, res) => {
-    await updateGameSession(req.body, req.params?.id, req.user?.discordID).then( async session => {
+    await updateGameSession(req.body, req.params?.id, req.user?.discordID).then(async session => {
         session = (await editAllGameSessionsForWebsite([session]))[0];
         session.HTMLElement = SESSION_EMBED_ELEMENT_TEMPLATE({ session: session });
         return res.json(session);
 
-    }).catch((error) => {res.status(400).send({ message: `${error}` }) });
+    }).catch((error) => { res.status(400).send({ message: `${error}` }) });
 }
 
 

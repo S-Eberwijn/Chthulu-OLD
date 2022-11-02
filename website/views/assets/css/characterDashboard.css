@@ -7,12 +7,10 @@
 }
 
 .dashboardContent[characters] {
-    display: flex;
-    box-sizing: border-box;
-    /* align-items: center; */
-    /* justify-content: space-evenly; */
-    /* align-items: center; */
-    /* For the informational characters page */
+    display: unset;
+    /* box-sizing: border-box;
+    justify-content: unset;
+    align-items: unset; */
 }
 
 .dashboardContent[characters] h1 {
@@ -38,51 +36,32 @@
     font-size: var(--header-font-size);
 }
 
-.dashboardContent[characters] .characterBoxWrapper {
-    height: auto;
-    width: 100%;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: row;
-    
-}
-
 
 .dashboardContent[characters] .characterDisplayBox {
     width: calc(100%);
-    height: calc(100% - var(--title-height));
-    
+    height: auto !important;
     border-radius: var(--modal-border-radius);
     box-sizing: border-box;
-    overflow: hidden;
     display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    /* margin-top: var(--title-height); */
+    flex-flow: row wrap;
 }
 
-
-
-
-
-
-
+.characterDisplayBox>*{
+    flex: 0 0 var(--characterCard-height);
+}
 
 .dashboardContent[characters] .characterDisplayBox .characterCard {
     width: var(--characterCard-width);
     min-width: var(--characterCard-width);
     height: var(--characterCard-height);
     min-height: var(--characterCard-height);
-
     background-color: var(--menu-color);
-    box-shadow: 0 8px 16px -8px rgba(0,0,0,0.4);
+    box-shadow: 0 8px 16px -8px rgba(0, 0, 0, 0.4);
     border-radius: 6px;
     overflow: hidden;
     position: relative;
     margin: 1.5rem;
-    /* cursor: pointer; */
     pointer-events: auto;
-
 }
 
 .dashboardContent[characters] .characterDisplayBox .characterCard input[type="checkbox"] {
@@ -97,8 +76,6 @@
     height: 100%;
     cursor: pointer;
     z-index: 100;
-    
-    /* pointer-events: none; */
 }
 
 .dashboardContent[characters] .characterDisplayBox .characterCard label::after {
@@ -115,21 +92,17 @@
 
 .dashboardContent[characters] .characterDisplayBox .characterCard:hover label::after {
     opacity: 1;
-    
+
 }
 
 input[action="show"]:checked~.additional label::after {
     transform-origin: center;
     transform: translateY(-50%) rotate(180deg) !important;
-} 
-
-.dashboardContent[characters] .characterDisplayBox .characterCard:hover label{
-    animation: breathing 1s ease-out infinite normal;
 }
 
-/* .characterCard:not(.selected) {
-    display: none !important;
-} */
+.dashboardContent[characters] .characterDisplayBox .characterCard:hover label {
+    animation: breathing 1s ease-out infinite normal;
+}
 
 .characterCard h1 {
     text-align: center;
@@ -139,78 +112,85 @@ input[action="show"]:checked~.additional label::after {
     justify-content: space-between;
     border-bottom: 2px solid var(--placeholder-text-color);
     font-size: 1.2rem;
+    gap: 5px;
 }
 
-.characterCard h1 .level-wrapper{
-    height: 16px ;
+.characterCard h1 span.age {
+    margin-right: auto;
+    font-size: .7rem;
+    height: 100%;
+    line-height: 52px;
+}
+
+.characterCard h1 .level-wrapper {
+    height: 16px;
     width: 50px;
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
 
-.characterCard h1 .level-wrapper img.level{
+.characterCard h1 .level-wrapper img.level {
     height: calc(var(--title-height) / 3) !important;
     width: auto !important;
 }
 
 .characterCard .additional {
     position: absolute;
-  width: var(--characterCard-left-side-width);
-  height: 100%;
-  /* background: linear-gradient(#dE685E, #EE786E); */
-  background: var(--average-color);
-  transition: width 0.4s;
-  overflow: hidden;
-  z-index: 2;
+    width: var(--characterCard-left-side-width);
+    height: 100%;
+    background: var(--average-color);
+    transition: width 0.4s;
+    overflow: hidden;
+    z-index: 2;
 }
 
 input[action="show"]:checked~.additional {
     width: 100%;
     border-radius: 0 5px 5px 0;
-} 
-
-.characterCard .additional .user-card{
-    width: var(--characterCard-left-side-width);
-  height: 100%;
-  position: relative;
-  float: left;
 }
 
-.characterCard .additional .user-card::after{
+.characterCard .additional .user-card {
+    width: var(--characterCard-left-side-width);
+    height: 100%;
+    position: relative;
+    float: left;
+}
+
+.characterCard .additional .user-card::after {
     content: "";
-  display: block;
-  position: absolute;
-  top: 10%;
-  right: -2px;
-  height: 80%;
-  border-left: 2px solid rgba(0,0,0,0.025);
+    display: block;
+    position: absolute;
+    top: 10%;
+    right: -2px;
+    height: 80%;
+    border-left: 2px solid rgba(0, 0, 0, 0.025);
 }
 
 .characterCard .additional .user-card .player {
     height: 22px;
-  top: 15%;
-  color: #fff;
-  font-size: 0.75em;
-  font-weight: bold;
-  background: rgba(0,0,0,0.15);
-  padding: 0.125rem 1rem;
-  border-radius: 100px;
-  white-space: nowrap;
-  display: flex;
+    top: 15%;
+    color: #fff;
+    font-size: 0.75em;
+    font-weight: bold;
+    background: rgba(0, 0, 0, 0.15);
+    padding: 0.125rem 1rem;
+    border-radius: 100px;
+    white-space: nowrap;
+    display: flex;
     align-items: center;
     justify-content: center;
     gap: 5px;
 }
 
 .characterCard .additional .user-card .player {
-  top: 90%;
+    top: 93%;
 }
 
 .characterCard .additional .user-card .player img {
     object-fit: contain;
     border-radius: 100px;
-  }
+}
 
 .characterCard .additional .user-card .img-holder {
     display: flex;
@@ -227,17 +207,16 @@ input[action="show"]:checked~.additional {
 }
 
 .characterCard .additional .more-info {
-  width: calc(var(--characterCard-width) - var(--characterCard-left-side-width));
-  /* float: left; */
-  position: absolute;
-  left: var(--characterCard-left-side-width);
-  top: 0;
-  height: 100%;
-  padding: 1rem;
-  padding-top: 0;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
+    width: calc(var(--characterCard-width) - var(--characterCard-left-side-width));
+    position: absolute;
+    left: var(--characterCard-left-side-width);
+    top: 0;
+    height: 100%;
+    padding: 1rem;
+    padding-top: 0;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
     justify-content: space-between;
 }
 
@@ -251,17 +230,12 @@ input[action="show"]:checked~.additional {
     box-sizing: border-box;
     gap: 5px;
     font-size: 0.8rem;
-
-
-
-    background: rgba(0,0,0,0.15);
+    background: rgba(0, 0, 0, 0.15);
     padding: 0.4rem;
     border-radius: var(--modal-border-radius);
-    /* white-space: nowrap; */
-
 }
 
-.dashboardContent[characters] .characterCard div.infoBundle .infoPair{
+.dashboardContent[characters] .characterCard div.infoBundle .infoPair {
     width: 100%;
     display: flex;
     flex-direction: row;
@@ -276,11 +250,10 @@ input[action="show"]:checked~.additional {
     position: relative;
     background: #555;
     border-radius: 3px;
-    /* padding: 10px; */
     box-shadow: inset 0 -1px 1px rgba(255, 255, 255, 0.3);
 }
 
-.infoPair .progressBar span{
+.infoPair .progressBar span {
     width: var(--progress);
     display: block;
     height: 100%;
@@ -288,66 +261,33 @@ input[action="show"]:checked~.additional {
     border-bottom-right-radius: 3px;
     border-top-left-radius: 3px;
     border-bottom-left-radius: 3px;
-    box-shadow: 
-        inset 0 2px 9px  rgba(255,255,255,0.3),
-        inset 0 -2px 6px rgba(0,0,0,0.4);
+    box-shadow:
+        inset 0 2px 9px rgba(255, 255, 255, 0.3),
+        inset 0 -2px 6px rgba(0, 0, 0, 0.4);
     position: relative;
     overflow: hidden;
 }
 
-.infoPair .progressBar.strength span{
-    background-color: var(--delete-color);
-}
-
-.infoPair .progressBar.dexterity span{
-    background-color: var(--success-color);
-}
-
-.infoPair .progressBar.constitution span{
-    background-color: burlywood;
-}
-
-.infoPair .progressBar.intelligence span{
-    background-color: var(--edit-color);
-}
-
-.infoPair .progressBar.wisdom span{
-    background-color: orange;
-}
-
-.infoPair .progressBar.charisma span{
-    background-color: purple;
-}
 
 .characterCard .additional .stats {
-  font-size: 2rem;
-  display: flex;
+    font-size: 2rem;
+    display: flex;
     flex-direction: row;
-    justify-content: space-evenly;
-  /* position: absolute; */
-  /* bottom: 1rem;
-  left: 1rem;
-  right: 1rem; */
-  /* top: auto; */
-  color: #fff;
+    justify-content: space-between;
+    color: #fff;
+    box-sizing: border-box;
+
+    background: rgba(0, 0, 0, 0.15);
+    padding: 0.3rem;
+    border-radius: var(--modal-border-radius);
+    /* text-align: center; */
+    /* align-items: center; */
 }
 
 
-.characterCard .additional .stats > div {
-    height: 50px;
-    /* flex: 1; */
-    text-align: center;
+.characterCard .additional .stats>div {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-
-
-
-    /* background: rgba(0,0,0,0.15);
-    padding: 0.2rem;
-    border-radius: var(--modal-border-radius); */
-  /* position: relative; */
+    gap: 5px;
 }
 
 .characterCard .additional .stats img.icon {
@@ -356,68 +296,67 @@ input[action="show"]:checked~.additional {
 }
 
 .characterCard .additional .stats div.title {
-  font-size: 1rem;
-  font-weight: bold;
-  text-transform: uppercase;
+    font-size: 1rem;
+    font-weight: 500;
+    height: 100%;
+    color: lightgray;   
 }
 
 .characterCard .additional .stats div.value {
-  font-size: .8rem;
-  font-weight: bold;
-  line-height: 1.5rem;
+    font-size: .8rem;
+    font-weight: normal;
+    line-height: 1.5rem;
+    line-height: 27px;
+    height: 100%;
+    color: var(--navbar-text-color)
+
 }
 
 .characterCard .additional .stats div.value.infinity {
-  font-size: 2.5rem;
+    font-size: 2.5rem;
 }
 
 .characterCard .general {
-  width: calc(var(--characterCard-width) - var(--characterCard-left-side-width));
-  height: 100%;
-  margin-left: var(--characterCard-left-side-width);
-  z-index: 101;
-  box-sizing: border-box;
-  padding: 1rem;
-  padding-top: 0;
-  /* overflow: hidden; */
+    width: calc(var(--characterCard-width) - var(--characterCard-left-side-width));
+    height: 100%;
+    margin-left: var(--characterCard-left-side-width);
+    z-index: 101;
+    box-sizing: border-box;
+    padding: 1rem;
+    padding-top: 0;
 }
 
 .characterCard .general p {
     height: calc(100% - var(--title-height));
     font-size: 0.75em;
     padding: .5rem;
-    /* padding-top: 0; */
     box-sizing: border-box;
     text-align: justify;
     overflow-y: scroll;
     margin: 0;
-  }
+}
 
-  .characterCard .general p::-webkit-scrollbar {
+.characterCard .general p::-webkit-scrollbar {
     width: var(--scrollbar-width);
-    /* width of the entire scrollbar */
 }
 
 .characterCard .general p::-webkit-scrollbar-track {
     background: transparent;
-    /* color of the tracking area */
 }
 
 .characterCard .general p::-webkit-scrollbar-thumb {
     background-color: var(--sidebar-color);
-    /* color of the scroll thumb */
     border-radius: var(--scrollbar-width);
-    /* roundness of the scroll thumb */
     border: var(--scrollbar-border-width) solid transparent;
     background-clip: padding-box;
 }
-  
+
 
 .characterCard .general .more {
-  position: absolute;
-  bottom: 1rem;
-  right: 1rem;
-  font-size: 0.9em;
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+    font-size: 0.9em;
 }
 
 .center {
@@ -425,54 +364,53 @@ input[action="show"]:checked~.additional {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-  }
+}
 
 
-  @-webkit-keyframes breathing {
+@-webkit-keyframes breathing {
     0% {
         -webkit-transform: scale(1);
         transform: scale(1);
-      }
-  
+    }
+
     25% {
         -webkit-transform: scale(0.95);
         transform: scale(0.95);
-      }
-  
-    60% {
-      -webkit-transform: scale(0.95);
-      transform: scale(0.95);
     }
-  
+
+    60% {
+        -webkit-transform: scale(0.95);
+        transform: scale(0.95);
+    }
+
     100% {
         -webkit-transform: scale(1);
         transform: scale(1);
-      }
-  }
-  
-  @keyframes breathing {
+    }
+}
+
+@keyframes breathing {
     0% {
         -webkit-transform: scale(1);
         -ms-transform: scale(1);
         transform: scale(1);
-      }
-  
+    }
+
     25% {
         -webkit-transform: scale(0.95);
         -ms-transform: scale(0.95);
         transform: scale(0.95);
-      }
-  
-    60% {
-      -webkit-transform: scale(0.95);
-      -ms-transform: scale(0.95);
-      transform: scale(0.95);
     }
-  
+
+    60% {
+        -webkit-transform: scale(0.95);
+        -ms-transform: scale(0.95);
+        transform: scale(0.95);
+    }
+
     100% {
         -webkit-transform: scale(1);
         -ms-transform: scale(1);
         transform: scale(1);
-      }
-  }
-  
+    }
+}

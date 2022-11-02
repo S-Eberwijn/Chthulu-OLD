@@ -1,4 +1,4 @@
-.characterCard(id=`card-${character.character_id}` unselectable="on" style=`--average-color: ${character.average_color || 'var(--sidebar-color)'}`)
+.characterCard(id=`card-${character.character_id}` unselectable="on" style=`--average-color: ${character.average_color || 'var(--placeholder-text-color)'}`)
     input(action="show" type="checkbox" id=`show-more-info-${character.character_id}`)
     .additional 
         .user-card 
@@ -10,6 +10,7 @@
                 img(src=character.picture_url alt="Character Image")
             .more-info 
                 h1 #{character.name}
+                    span.age - #{character.age} years
                     .level-wrapper 
                         span Lvl.
                         img(src=`../../../${character.level}.png`, alt="icon").level
@@ -17,47 +18,44 @@
                     .infoPair
                         i.fa-solid.fa-hand-fist 
                         .progressBar.strength
-                            span(style=`--progress: ${50}%;`)
+                            span(style=`--progress: ${50}%; background-color: var(--delete-color);`)
                     .infoPair
                         i.fa-solid.fa-hand 
                         .progressBar.dexterity
-                            span(style=`--progress: ${25}%;`)
+                            span(style=`--progress: ${25}%; background-color: var(--success-color);`)
                     .infoPair
                         i.fa-solid.fa-heart 
                         .progressBar.constitution
-                            span(style=`--progress: ${75}%;`)
+                            span(style=`--progress: ${75}%; background-color: burlywood;`)
                     .infoPair
                         i.fa-solid.fa-brain 
                         .progressBar.intelligence
-                            span(style=`--progress: ${30}%;`)
+                            span(style=`--progress: ${30}%; background-color: var(--edit-color);`)
                     .infoPair
                         i.fa-solid.fa-eye 
                         .progressBar.wisdom
-                            span(style=`--progress: ${60}%;`)
+                            span(style=`--progress: ${60}%; background-color: orange;`)
                     .infoPair
                         i.fa-solid.fa-comment 
                         .progressBar.charisma
-                            span(style=`--progress: ${100}%;`)
+                            span(style=`--progress: ${100}%; background-color: purple;`)
                 .stats 
                     div 
-                        .title Race
+                        .title Race: 
                         .value #{character.race}
                     
                     div 
-                        .title Class
+                        .title Class: 
                         .value #{character.class}
                             //- img(src=`../../../${character.class}.png`, alt="icon").icon
                     div 
-                        .title Background
+                        .title Background: 
                         .value #{character.background}
-                    div 
-                        .title Age
-                        .value #{character.age}
     .general
-        h1 #{character.name}
+        h1 #{character.name} 
+            span.age - #{character.age} years
             .level-wrapper 
                 span Lvl.
                 img(src=`../../../${character.level}.png`, alt="icon").level
         p #{character.description}
-        //- span Mouse over the card for more info
     
