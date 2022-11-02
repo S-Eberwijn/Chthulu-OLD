@@ -6,3 +6,4 @@ Unused_Commands/
 database/service-account.json
 logs
 coverage
+bot/jsonDB/

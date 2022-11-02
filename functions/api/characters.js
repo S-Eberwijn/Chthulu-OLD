@@ -9,7 +9,7 @@ async function getAliveCharacters(guildId = null) {
     const characters = await PlayerCharacter.findAll({ where: { alive: 1, server: guildId } })
     if (!characters) return []
     for (const character of characters) {   
-        character.playerIcon = getUserFromBot(character.player_id_discord)?.displayAvatarURL();
+        character.player = getUserFromBot(character.player_id_discord);
     }
     return characters
 }

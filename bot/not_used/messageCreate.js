@@ -1,0 +1,1 @@
+//this file used to make embeds in the ic channels when players were speaking

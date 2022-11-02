@@ -12,20 +12,21 @@ block styles
         include ./assets/css/menu.css
         include ./assets/css/dashboard.css
         include ./assets/css/characterDashboard.css
-
+ 
 block dashboardContent
     .dashboardContent(characters=true)
-        .characterSelectionBox
-            h1 
-                span.count #{npcs.length}
-                span.title Characters
-                //- input(placeholder="Search Character", oninput="updateInput(this.value)", spellcheck="false")
-            .charactersList
-                each character in npcs.reverse()
-                    include ./components/characterListItem.pug
-        .characterBox
-            .cardStack#characterCardStack
-                each npc in npcs
+        .characterBoxWrapper 
+            .characterSelectionBox
+                h1 
+                    span.count #{npcs.length}
+                    span.title Non Playable Characters
+                .charactersList 
+                    ul 
+                        each character in npcs
+                            li 
+                                include ./components/characterListItem.pug
+            .characterDisplayBox
+                each npc, index in npcs
                     include ./components/nonPlayableCharacterCard.pug
         
 

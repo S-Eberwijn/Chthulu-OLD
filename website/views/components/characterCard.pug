@@ -1,23 +1,63 @@
-.characterCardHolder
-    .characterCard(id=`card-${character.character_id}` unselectable="on" style=`--character-count: ${index > 0 ? index * (30 + 5) : index * 15}px;`)
-        .characterImageHolder(style=`--average-color: ${character.average_color || '#000000'}`)
-            img(src=character.picture_url alt="Character Image")
-        .characterInformation
-            span.characterName #{character.name} (#{character.age})
-            
-
-            span.characterLevel 
-                img(src=`../../../${character.level}.png`, alt="icon")
-            span.characterDescription #{character.description}
-            .infoBundle
-                span(--race=character.race) Race
-                    //- span.characterRace #{}
-                span(--class=character.class) Class 
-                span Icon
-                    img(src=`../../../${character.class}.png`, alt="icon").classIcon
-
-                    //- span.characterClass #{character.class} 
-                span(--background=character.background) Background 
-                //- img(src=`../../../${character.class}.png`, alt="icon") 
-                    //- span.characterBackground #{character.background}
-        
+.characterCard(id=`card-${character.character_id}` unselectable="on" style=`--average-color: ${character.average_color || 'var(--sidebar-color)'}`)
+    input(action="show" type="checkbox" id=`show-more-info-${character.character_id}`)
+    .additional 
+        .user-card 
+            label(for=`show-more-info-${character.character_id}`)
+            .player.center 
+                img(src=`${character.player.displayAvatarURL()}`)
+                span #{character.player.username}
+            .img-holder
+                img(src=character.picture_url alt="Character Image")
+            .more-info 
+                h1 #{character.name}
+                    .level-wrapper 
+                        span Lvl.
+                        img(src=`../../../${character.level}.png`, alt="icon").level
+                .infoBundle
+                    .infoPair
+                        i.fa-solid.fa-hand-fist 
+                        .progressBar.strength
+                            span(style=`--progress: ${50}%;`)
+                    .infoPair
+                        i.fa-solid.fa-hand 
+                        .progressBar.dexterity
+                            span(style=`--progress: ${25}%;`)
+                    .infoPair
+                        i.fa-solid.fa-heart 
+                        .progressBar.constitution
+                            span(style=`--progress: ${75}%;`)
+                    .infoPair
+                        i.fa-solid.fa-brain 
+                        .progressBar.intelligence
+                            span(style=`--progress: ${30}%;`)
+                    .infoPair
+                        i.fa-solid.fa-eye 
+                        .progressBar.wisdom
+                            span(style=`--progress: ${60}%;`)
+                    .infoPair
+                        i.fa-solid.fa-comment 
+                        .progressBar.charisma
+                            span(style=`--progress: ${100}%;`)
+                .stats 
+                    div 
+                        .title Race
+                        .value #{character.race}
+                    
+                    div 
+                        .title Class
+                        .value #{character.class}
+                            //- img(src=`../../../${character.class}.png`, alt="icon").icon
+                    div 
+                        .title Background
+                        .value #{character.background}
+                    div 
+                        .title Age
+                        .value #{character.age}
+    .general
+        h1 #{character.name}
+            .level-wrapper 
+                span Lvl.
+                img(src=`../../../${character.level}.png`, alt="icon").level
+        p #{character.description}
+        //- span Mouse over the card for more info
+    

@@ -1,5 +1,10 @@
+//TODO: revese logic of updateGuildsToAddNotification function
+//TODO: remake access and refresh token system in sessions (website)
+//TODO: When cache is cleared, users are loaded, but the guild icon still remains empty (website)
+
+const { getBot } = require('../../../functions/api/bot');
 const { getUserCharacter } = require('../../../functions/api/characters');
-const { getMutualGuilds, isUserAdminInGuild, isDungeonMaster, getGuildFromBot } = require('../../../functions/api/guild');
+const { getMutualGuilds, isUserAdminInGuild, isDungeonMaster, getGuildFromBot, cacheAllUsers } = require('../../../functions/api/guild');
 
 function isAlreadyLoggedIn(req, res, next) {
     if (req.user) return res.redirect('/dashboard/chthulu');
@@ -12,15 +17,16 @@ function isAuthorized(req, res, next) {
 }
 
 async function centralizedData(req, res, next) {
-    const bot = require('../../../index');
+    const bot = getBot();
     const selectedGuildID = req.params.id || '';
+
+    // Reload cache, if no members can be found in guilds (or if chthulu is selected), might take a while in PROD environment.
+    if (bot.guilds.cache.get(selectedGuildID)?.members.cache.size < 2 || bot.guilds.cache.get(selectedGuildID)?.members.cache.size === undefined) await cacheAllUsers(bot)
+
     const guild = getGuildFromBot(selectedGuildID);
     const mutualGuilds = getMutualGuilds(req.user?.discordID);
 
-    //?? i dont fully understand what this line does, but it's a blocking error
-    const loggedInUser = req.user ? { username, discriminator, avatar, discordID } = req.user : undefined;
 
-    // console.log(req)
 
     updateGuildsToAddNotification(req.user?.guildsToAddNotification, selectedGuildID).then(guildArray => { req.user.guildsToAddNotification = guildArray; req.session.save() }).catch(() => { });
 
@@ -32,7 +38,7 @@ async function centralizedData(req, res, next) {
         guildName: guild?.name || '',
         guilds: mutualGuilds,
         guildsToAddNotification: req.user?.guildsToAddNotification,
-        loggedInUser: loggedInUser,
+        loggedInUser: req.user ? { username, discriminator, avatar, discordID } = req.user : undefined,
         isAdmin: isUserAdminInGuild(req.user?.discordID, guild),
         isDungeonMaster: isDungeonMaster(req.user?.discordID, guild),
         userCharacter: isDungeonMaster(req.user?.discordID, guild) ? undefined : await getUserCharacter(req.user?.discordID, selectedGuildID),

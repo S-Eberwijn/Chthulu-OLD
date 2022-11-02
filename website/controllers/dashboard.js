@@ -1,10 +1,12 @@
+const { logger } = require(`../../functions/logger`)
+
 const { addCreatedDate } = require('../../functions/api/misc');
 const { getServerMap, getAllMaps } = require('../../functions/api/maps');
 const { getServerDisabledCommands, editServerCommands } = require('../../functions/api/guild');
 const { getAliveCharacters, getNonPlayableCharacters } = require('../../functions/api/characters');
 const { getServerQuestsByStatuses, getQuestsByStatuses, createQuest, deleteQuest, updateQuest } = require('../../functions/api/quests');
 const { getBotCommandsByCategory } = require('../../functions/api/bot');
-const { createGameSession, approveGameSession, declineGameSession, joinGameSession, getAllGameSessions, getAllServerGameSessions } = require('../../functions/api/sessions');
+const { createGameSession, approveGameSession, declineGameSession, joinGameSession, updateGameSession, getAllGameSessions, getAllServerGameSessions } = require('../../functions/api/sessions');
 const { editAllGameSessionsForWebsite, getPlayersData } = require('../../functions/website');
 const { QUEST_ELEMENT_TEMPLATE, SESSION_EMBED_ELEMENT_TEMPLATE } = require('../../functions/templating');
 
@@ -130,7 +132,8 @@ exports.sessionsPage = async (req, res) => {
 }
 
 exports.createGameSession = async (req, res) => {
-    await createGameSession(req.body, req.params?.id, req.user?.discordID).then(session => {
+    await createGameSession(req.body, req.params?.id, req.user?.discordID).then(async session => {
+        session = (await editAllGameSessionsForWebsite([session]))[0];
         session.HTMLElement = SESSION_EMBED_ELEMENT_TEMPLATE({ session: session });
         return res.json(session);
     }).catch((err) => { console.log(err); return res.status(400).json(err) });
@@ -138,16 +141,36 @@ exports.createGameSession = async (req, res) => {
 
 //TODO: Add validation with express validation
 exports.approveGameSession = async (req, res) => {
-    await approveGameSession(req.body, req.params?.id, req.user?.discordID).then(message => { return res.json(message); }).catch((err) => { return res.status(400).json(err) });
+    await approveGameSession(req.body, req.params?.id, req.user?.discordID).then(async session => {
+        session = (await editAllGameSessionsForWebsite([session]))[0];
+        session.HTMLElement = SESSION_EMBED_ELEMENT_TEMPLATE({ session: session });
+        return res.json(session);
+    }).catch((error) => { res.status(400).send({ message: `${error}` }) });
 }
 
 //TODO: Add validation with express validation
 exports.declineGameSession = async (req, res) => {
-    await declineGameSession(req.body, req.params?.id, req.user?.discordID).then(message => { return res.json(message); }).catch((err) => { return res.status(400).json(err) });
+    await declineGameSession(req.body, req.params?.id, req.user?.discordID).then( async session => {
+        session = (await editAllGameSessionsForWebsite([session]))[0];
+        session.HTMLElement = SESSION_EMBED_ELEMENT_TEMPLATE({ session: session });
+        return res.json(session);
+
+    }).catch((error) => { console.log(error); res.status(400).send({ message: `${error}` }) });
 }
 
+//TODO: Add validation with express validation
 exports.joinGameSession = async (req, res) => {
     await joinGameSession(req.body, req.params?.id, req.user?.discordID).then(message => { return res.json(message); }).catch((err) => { return res.status(400).json(err) });
+}
+
+//TODO: Add validation with express validation
+exports.updateGameSession = async (req, res) => {
+    await updateGameSession(req.body, req.params?.id, req.user?.discordID).then( async session => {
+        session = (await editAllGameSessionsForWebsite([session]))[0];
+        session.HTMLElement = SESSION_EMBED_ELEMENT_TEMPLATE({ session: session });
+        return res.json(session);
+
+    }).catch((error) => {res.status(400).send({ message: `${error}` }) });
 }
 
 

@@ -235,7 +235,7 @@ input::placeholder {
 
 
 }
-
+ 
 .modal-header h3 {
     margin: 0;
     box-sizing: border-box;
@@ -524,7 +524,6 @@ input::placeholder {
     transform: translate(10px,0);
 
     position: relative;
-    display: block;
     padding: 5px;
     font-size: .8rem;
     /* font-weight: 300; */
