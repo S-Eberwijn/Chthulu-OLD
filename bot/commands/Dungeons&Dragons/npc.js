@@ -19,7 +19,6 @@ module.exports.run = async (interaction) => {
 
     if (!(interaction.options.get('name'))) {
         const nonPlayerCharacters = await NonPlayableCharacter.findAll({ where: { server: interaction.guild.id } })
-        // console.log(nonPlayerCharacters)
         if (nonPlayerCharacters.length <= 0) return interaction.reply({ content: 'There are no NPC\'s to be found.' }).then(() => { setTimeout(() => interaction.deleteReply(), 3000) }).catch(err => logger.error(err));
 
         await createNPCPaginationEmbedInChannel(interaction.channel, nonPlayerCharacters, buttonList)

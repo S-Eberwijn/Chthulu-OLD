@@ -11,8 +11,6 @@ module.exports.run = async (interaction) => {
 
     let serverembed = new MessageEmbed()
         .setAuthor({ name: "Discord Server Information", iconURL: interaction.guild.iconURL() })
-        // .setTitle("Discord Server Information")
-        // .setThumbnail(message.guild.iconURL())
         .setColor("GREEN")
         .addFields([
             { name: "Name:", value: `${interaction.guild.name}`, inline: true },
