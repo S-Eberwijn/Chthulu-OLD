@@ -17,6 +17,9 @@
 # Getting started
 If you want to add the Chthulu to your Discord server, click [here](https://discord.com/oauth2/authorize?client_id=532524817740464138&permissions=0&scope=bot%20applications.commands).
 
+# Online Presence
+Chthulu is also available as a web-app, to access the webplatform for your servers click[here](https://chthulu.herokuapp.com/). The website has most features you find in the discord-app and many more, like a map to track important locations. 
+
 # Commands
 
 We have carefully constructed our commands to ease their use. All commands are written in lowercase and multiple words are seperated by a hyphen ("-").
