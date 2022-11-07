@@ -50,7 +50,7 @@ module.exports = async bot => {
     // });
 
     //setting slash command for all guilds
-    //todo change to for loop
+
     bot.guilds.cache.forEach(async guild => {
         await GeneralInfo.findOne({ where: { id: guild.id } }).then(async server => {
             try {

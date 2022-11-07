@@ -5,10 +5,6 @@ module.exports = async (bot, member) => {
     const newcomerRole = member.guild.roles.cache.find(role => role.name === 'Newcomer');
     const welcomeZoneChannel = bot.channels.cache.find(c => c.name == "general" && c.type == "text");
 
-    // Update Server Stats channels
-    //updateServerStatChannels(bot, member);
-
-    //When a new person joins the server
     if (newcomerRole) member.roles.add(newcomerRole);
     if (welcomeZoneChannel) welcomeZoneChannel.send({ content: `<@${member.id}>`, files: [await createWelcomeAttachment(member)] });
 
@@ -22,14 +18,12 @@ async function createWelcomeAttachment(member) {
     const background = await Canvas.loadImage('./images/WelcomeCanvas/test.png');
     ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
 
-    // Slightly smaller text placed under the member's display name
     ctx.font = '34px sans-serif';
     ctx.fillStyle = '#ffffff';
     ctx.fillText(`Welcome to the ${member.guild.name}`, canvas.width / 3.6, canvas.height / 1.1);
     ctx.lineWidth = 0.5;
     ctx.strokeText(`Welcome to the ${member.guild.name}`, canvas.width / 3.6, canvas.height / 1.1);
 
-    // Number of user in the server
     ctx.font = '34px sans-serif';
     ctx.fillStyle = '#ffffff';
     ctx.fillText(`#${member.guild.members.cache.filter(m => !m.user.bot).size}`, canvas.width / 1.08, canvas.height / 5.2);

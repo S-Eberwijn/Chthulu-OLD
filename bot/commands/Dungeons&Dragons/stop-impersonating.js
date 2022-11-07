@@ -26,9 +26,6 @@ module.exports.run = async (interaction) => {
 }
 
 module.exports.help = {
-    // name: 'stop-impersonating',
-    // permission: [],
-    // alias: [],
     category: "Dungeons & Dragons",
     name: 'stop-impersonating',
     description: 'The dm will stop impersonating his current npc',

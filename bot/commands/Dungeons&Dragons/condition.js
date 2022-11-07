@@ -7,7 +7,7 @@ const request = require('request');
 module.exports.run = async (interaction) => {
     let condition = interaction.options.getString('condition-name')?.toLowerCase();
 
-    request(api, { json: true }, async (err,res, body) => {//! res is unused but needs to be here else it breaks
+    request(api, { json: true }, async (err,res, body) => {
         if (err) { return logger.error(err); }
         let data = body.results
         for (const item of data){

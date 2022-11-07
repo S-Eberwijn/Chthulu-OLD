@@ -14,17 +14,12 @@ module.exports.run = async (interaction) => {
     diceSet.set("d100", interaction.options.getNumber('d100') == null ? 0 : interaction.options.getNumber('d100'));
 
     let additionalModifier = interaction.options.getNumber('additional-modifier') == null ? 0 : interaction.options.getNumber('additional-modifier');
-    //error handling
     if (tooManyDice(diceSet)) { return interaction.reply({ content: `Total number of dice you want to roll can not be higher than 24!`, ephemeral: true }) }
 
-    //do calculation
     resultSet = rollDice(diceSet);
-    //constructing command
     let command = constructCommand(diceSet, additionalModifier)
 
     logger.debug(`${interaction.user.username}#${interaction.user.discriminator} rolled ${command} in ${interaction.guild.name}.`);
-
-    //rolling the dice
     return interaction.reply({ embeds: [createEmbed(command, resultSet, additionalModifier)] })
 }
 

@@ -1,7 +1,9 @@
 /*CHARACTERS PAGE*/
 * {
     --characterList-width: 350px;
-    --characterCard-width: 700px;
+    --characterCard-width: 600px;
+    /* --characterCard-min-width: 600px; */
+
     --characterCard-height: 250px;
     --characterCard-left-side-width: 200px;
 }
@@ -25,6 +27,7 @@
     display: flex;
     position: relative;
     align-items: center;
+    white-space: nowrap;
 }
 
 .dashboardContent[characters] h1 .count {
@@ -276,7 +279,6 @@ input[action="show"]:checked~.additional {
     justify-content: space-between;
     color: #fff;
     box-sizing: border-box;
-
     background: rgba(0, 0, 0, 0.15);
     padding: 0.3rem;
     border-radius: var(--modal-border-radius);

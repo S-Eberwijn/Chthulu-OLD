@@ -1,8 +1,7 @@
 const { PlayerCharacter } = require('../../../database/models/PlayerCharacter');
 const { logger } = require(`../../../functions/logger`)
 
-const { getCharacterEmbed, getCharacterLevelImage, getCharacterPicture } = require('../../otherFunctions/characterEmbed')
-const { sendCharacterEmbedMessageFromInteraction, sendCharacterEmbedMessageInChannel } = require('../../otherFunctions/characterEmbed');
+const { sendCharacterEmbedMessageFromInteraction } = require('../../otherFunctions/characterEmbed');
 
 module.exports.run = async (interaction) => {
     await interaction.deferReply()
@@ -13,15 +12,11 @@ module.exports.run = async (interaction) => {
     logger.debug(`${interaction.user.username}(${interaction.user.id}) is requesting a character${interaction.options.getUser('user') ? ` from ${user.username}(${user.id})` : ``}. Result: ${character?.name ? character.name : 'No character found'}`)
     //If no character is linked to the user, return an error message
     if (!character) return interaction.editReply({ content: 'This user does not have a character!', ephemeral: true })
-    // await interaction.deferReply({ content: 'Test'})
+
     sendCharacterEmbedMessageFromInteraction(interaction, character, null, null);
-    // await interaction.reply({ embeds: [await getCharacterEmbed(character)], files: [  await getCharacterLevelImage(character), await getCharacterPicture(character)] });
 }
 
 module.exports.help = {
-    // name: 'character',
-    // permission: [],
-    // alias: [],
     category: "Dungeons & Dragons",
     name: 'character',
     description: 'Show an user character.',

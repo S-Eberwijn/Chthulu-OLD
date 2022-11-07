@@ -28,9 +28,6 @@ function createEmbed(item) {
 }
 
 module.exports.help = {
-    // name: 'magic-item',
-    // permission: [],
-    // alias: [],
     category: "Dungeons & Dragons",
     name: 'magic-item',
     description: 'look up a magic item',
