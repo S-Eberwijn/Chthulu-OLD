@@ -32,20 +32,10 @@ module.exports.run = async (interaction) => {
 
 
 module.exports.help = {
-    // name: "help",
-    // alias: ["hlp"],
-    // description: "Gives all possible commands",
     name: "help",
-    // alias: ["hlp"],
     description: "Gives all possible commands",
     category: "Information",
     options: [
-        //     {
-        //     name: 'command',
-        //     type: 'STRING',
-        //     description: 'Command name',
-        //     required: false
-        // }
     ],
 }
 

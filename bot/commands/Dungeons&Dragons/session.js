@@ -383,13 +383,6 @@ async function createModal(MODAL_ID) {
         .setCustomId(MODAL_ID)
         .setTitle('Session Request');
 
-    const sessionTitle = new TextInputComponent()
-        .setCustomId('sessionTitle')
-        // The label is the prompt the user sees for this input
-        .setLabel("Title")
-        // Short means only a single line of text
-        .setStyle('SHORT')
-        .setRequired(true)
     const sessionObjective = new TextInputComponent()
         .setCustomId('sessionObjective')
         .setLabel("Objective")

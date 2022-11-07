@@ -18,17 +18,17 @@ describe("editRequestSessionEmbedTitle changes title color correctly", ()=> {
         EDITED_EMBED.setTitle(EMBED_TITLE).setColor(0x333333);
     });
     test("it changes PLAYED to" + PLAYED_COLOR,  () => {
-        embed = sessionPrivateMethods.exportedForTesting.editRequestSessionEmbedTitle(EDITED_EMBED,STATUS_PLAYED);
+        let embed = sessionPrivateMethods.exportedForTesting.editRequestSessionEmbedTitle(EDITED_EMBED,STATUS_PLAYED);
         expect(embed.color).toBe(PLAYED_COLOR);
         expect(embed.title).toBe(`${EMBED_TITLE} [${STATUS_PLAYED}]`);
     })
     test("it changes CANCELED to" + CANCELED_COLOR,  () => {
-        embed = sessionPrivateMethods.exportedForTesting.editRequestSessionEmbedTitle(EDITED_EMBED,STATUS_CANCELED);
+        let embed = sessionPrivateMethods.exportedForTesting.editRequestSessionEmbedTitle(EDITED_EMBED,STATUS_CANCELED);
         expect(embed.color).toBe(CANCELED_COLOR);
         expect(embed.title).toBe(`${EMBED_TITLE} [${STATUS_CANCELED}]`);
     })
     test("it doesn't change in any other case",  () => {
-        embed = sessionPrivateMethods.exportedForTesting.editRequestSessionEmbedTitle(EDITED_EMBED,STATUS_CANCELED+STATUS_PLAYED);
+        let embed = sessionPrivateMethods.exportedForTesting.editRequestSessionEmbedTitle(EDITED_EMBED,STATUS_CANCELED+STATUS_PLAYED);
         expect(embed.color).toBe(0x333333);
     })
 })
