@@ -14,6 +14,7 @@
     display: flex;
     position: relative;
     align-items: center;
+    height: var(--title-height);
 } 
 
 .dashboardContent[quests] h1 input {
@@ -55,6 +56,12 @@ input::placeholder {
     color: var(--placeholder-text-color);
 }
 
+.dashboardContent[quests] .questBoxWrapper {
+    width: 100%;
+    height: auto;
+    
+}
+
 
 .dashboardContent[quests] .questBox {
     height: 290px;
@@ -70,6 +77,9 @@ input::placeholder {
     overflow-y: scroll;
     overflow-x: hidden;
     position: relative;
+    margin-top: 0;
+    flex-direction: column;
+    /* margin-bottom: auto; */
 }
 
 .questBox .questDiv {
@@ -325,6 +335,7 @@ i.fas.fa-chevron-up.rotateChevron {
 .questBoxTitle {
     margin-left: 10px;
     font-size: var(--menu-font-size);
+    white-space: nowrap;
 }
 
 span.questCount {

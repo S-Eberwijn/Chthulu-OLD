@@ -169,7 +169,7 @@ input:checked+.slider:before {
     height: 100%;
     width: 100%;
     box-shadow: none;
-
+    margin-right: 10px;
 }
 
 
@@ -181,6 +181,7 @@ input:checked+.slider:before {
     align-items: center;
     justify-content: center;
     /* background-color: blue; */
+    
 
 }
 
@@ -188,6 +189,8 @@ input:checked+.slider:before {
     /* text-decoration: underline; */
     border-bottom: 1px solid #fff;
     cursor: pointer;
+    white-space: nowrap;
+    margin-left: 10px;
 
 }
 
