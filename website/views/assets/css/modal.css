@@ -113,17 +113,6 @@ input::placeholder {
     justify-content: center;
 }
 
-/* .button-wrapper::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 200%;
-    width: 200%;
-    background-color: var(--menu-color);
-    z-index: -1;
-    transform: translate(-50px, -15px);
-} */
 
 .button-wrapper>i.fa-spinner {
     position: absolute;
@@ -697,4 +686,3 @@ div#addPlayer {
     margin-bottom: auto;
     transition: color .2s ease;
 }
-

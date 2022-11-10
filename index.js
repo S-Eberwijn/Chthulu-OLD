@@ -47,9 +47,11 @@ const WB_PORT = process.env.PORT || process.env.WB_PORT || 5000;
 
 // Initialize Webapp
 const app = express();
+app.use(bodyParser.json({ limit: '10mb',type:'application/json' }));
+app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
 app.use(favicon(path.join(__dirname, 'website', 'public', 'favicon.ico')));
-app.use(bodyParser.json());
 app.use(bodyParser.text({ type: "*/*" }));
+
 //Load View Engine
 app.set('views', path.join(__dirname, 'website', 'views'));
 app.set('view engine', 'pug');

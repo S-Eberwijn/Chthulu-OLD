@@ -24,6 +24,7 @@
     "express": "^4.17.1",
     "express-session": "^1.17.2",
     "fast-average-color-node": "^1.0.3",
+    "firebase": "^9.13.0",
     "firebase-admin": "^10.0.2",
     "firestore-sequelizer": "^0.2.5",
     "firestore-store": "^2.0.2",

@@ -8,45 +8,11 @@ style
         .icon
             .bot-icon
                 img(src=bot_icon alt="Chthulu Avatar")
-        h3 Create Quest
-        label(for="createQuestModal") 
-            i.fa-solid.fa-xmark.fa-xl
+        h3 Upload map
+        label(for="uploadMapModal") 
+            i.fa-solid.fa-xmark.fa-xl#closeButtonMap
     .modal-content
         form
-            .label-input-section 
-                label.required Priority
-                .select-wrapper 
-                    .select 
-                        .select_trigger 
-                            span( id="quest_priority") Select a priority
-                            i.fas.fa-chevron-down
-                        .custom-options 
-                            span.custom-option(data-value="5" style=`--index:${0};`) 
-                                i.fas.fa-circle(style="color: #DE3700;")
-                                | !{' | '}
-                                span.text Very high
-                            span.custom-option(data-value="4" style=`--index:${1};`) 
-                                i.fas.fa-circle(style="color: #F58B00;")
-                                | !{' | '}
-                                span.text High
-                            span.custom-option(data-value="3" style=`--index:${2};`)
-                                i.fas.fa-circle(style="color: #E1FF00;")
-                                | !{' | '}
-                                span.text Normal
-                            span.custom-option(data-value="2" style=`--index:${3};`)
-                                i.fas.fa-circle(style="color: #92E000;")
-                                | !{' | '}
-                                span.text Low
-                            span.custom-option(data-value="1" style=`--index:${4};`)
-                                i.fas.fa-circle(style="color: #2AA10F;")
-                                | !{' | '}
-                                span.text Very low
-            .label-input-section
-                label().required Title
-                input(type="text" autocomplete="off" spellcheck="false" id="quest_title" oninput="updateInput(this)" onkeydown="return event.key != 'Enter';" maxlength="30").title-field
-            .label-input-section
-                label.optional Description
-                textarea(cols="5" rows="5" maxlength="400" spellcheck="false" autocomplete="off" id="quest_description" oninput="updateInput(this)").description-field
     .modal-footer           
         .button-wrapper
             input(id="create_quest" type="button" value="Create" disabled="true" onclick="createQuest(this)")

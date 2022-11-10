@@ -9,6 +9,7 @@ const { getBotCommandsByCategory } = require('../../functions/api/bot');
 const { createGameSession, approveGameSession, declineGameSession, joinGameSession, updateGameSession, getAllGameSessions, getAllServerGameSessions } = require('../../functions/api/sessions');
 const { editAllGameSessionsForWebsite, getPlayersData } = require('../../functions/website');
 const { QUEST_ELEMENT_TEMPLATE, SESSION_EMBED_ELEMENT_TEMPLATE } = require('../../functions/templating');
+const { uploadMapImageApi } = require('../../functions/api/maps');
 
 exports.dashboardPage = async (req, res) => {
     res.render('dashboardPage', {
@@ -189,4 +190,9 @@ exports.guildSettingsPage = async (req, res) => {
 
 exports.editSettingsRequest = async (req, res) => {
     editServerCommands(res.locals.renderData?.selectedGuildId, req.body).then(() => { return res.sendStatus(201) }).catch(() => { return res.sendStatus(400) });
+}
+
+//MAP PAGE
+exports.uploadMapImage = async (req, res) => {
+    uploadMapImageApi(req.params?.id, req.body).then(() => {return res.sendStatus(200) }).catch((e) => { console.log(e); return res.sendStatus(400) });
 }
