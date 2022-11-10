@@ -8,11 +8,33 @@
     --characterCard-left-side-width: 200px;
 }
 
+.dashboardContent[quests] .questBox {
+    height: 290px;
+    padding: 0;
+    padding-left: 25px;
+    padding-right: 0px;
+    max-height: 290px;
+    /* z-index: 100; */
+    width: calc(100% - 20px);
+    /* border: 5px dashed var(--content-color); */
+    display: flex;
+    gap: 5px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    position: relative;
+    margin-top: 0;
+    flex-direction: column;
+    /* margin-bottom: auto; */
+}
+
 .dashboardContent[characters] {
     display: unset;
     /* box-sizing: border-box;
     justify-content: unset;
     align-items: unset; */
+    overflow-y: scroll;
+    overflow-x: hidden;
+    position: relative;
 }
 
 .dashboardContent[characters] h1 {
