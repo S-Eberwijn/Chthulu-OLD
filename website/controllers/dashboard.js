@@ -194,5 +194,5 @@ exports.editSettingsRequest = async (req, res) => {
 
 //MAP PAGE
 exports.uploadMapImage = async (req, res) => {
-    uploadMapImageApi(req.params?.id, req.body).then(() => {return res.sendStatus(200) }).catch((e) => { console.log(e); return res.sendStatus(400) });
+    uploadMapImageApi(req.params?.id, req.body).then((result) => {return res.json(result.data) }).catch((e) => { console.log(e); return res.sendStatus(400) });
 }

@@ -23,6 +23,7 @@ const { cacheAllUsers } = require('./functions/api/guild');
 const admin = require("firebase-admin");
 const firebaseSequelizer = require("firestore-sequelizer");
 
+//!export this bit to external file
 //Initialize Firebase database
 const firebase = admin.initializeApp({
     credential: admin.credential.cert({
@@ -37,7 +38,8 @@ const firebase = admin.initializeApp({
         "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
         "client_x509_cert_url": process.env.FS_CERT_URL || ""
     }),
-    databaseURL: `https://${process.env.FS_DATABASE_NAME}.firebaseio.com`
+    databaseURL: `https://${process.env.FS_DATABASE_NAME}.firebaseio.com`,
+    storageBucket: process.env.FS_DB_URL,
 });
 firebaseSequelizer.initializeApp(admin);
 
@@ -47,7 +49,7 @@ const WB_PORT = process.env.PORT || process.env.WB_PORT || 5000;
 
 // Initialize Webapp
 const app = express();
-app.use(bodyParser.json({ limit: '10mb',type:'application/json' }));
+app.use(bodyParser.json({ limit: '50mb',type:'application/json' }));
 app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
 app.use(favicon(path.join(__dirname, 'website', 'public', 'favicon.ico')));
 app.use(bodyParser.text({ type: "*/*" }));

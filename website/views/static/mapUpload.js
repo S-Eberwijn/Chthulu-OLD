@@ -6,21 +6,17 @@ document.getElementById("fileElem").addEventListener("dragover", (e)=>{
 
 ondrop = (e) => {
 	e.preventDefault();
-	showModal(e)
+	let file = document.getElementById('fileElem').files[0];
+	uploadMapImage(file);
 };
 
 function handleFiles(e) {
-	showModal(e);
+	e.preventDefault();
+	let file = document.getElementById('fileElem').files[0];
+	uploadMapImage(file);
 }
 
-function showModal(e){
-	e.preventDefault();
-
-	let file = document.getElementById('fileElem').files[0];
-	file.name = Date.now() + file.name.split(".")[file.name.split(".").length - 1];
-
-	uploadMapImage(file);
-
+function showModal(){
 	document.getElementById("fileElem").dataset.content = " file uploaded successfully";
 	uploadMapModal.style.display = "block";
 	modalBackgroundMap.style.display = "block";
@@ -48,12 +44,14 @@ function uploadMapImage(file){
 				}).then(response => {
 					if (response.status === 200) {
 						console.log("request handled successfully", response);
+						pushNotify('success', 'Map creation', 'Map uploaded successfully, please add some details about the map!');
+						showModal();
 					} else {
 						console.log("Something went wrong!; ERROR STATUS: " + response.status);
 					}
 				}).catch((err) => {
 					console.log(err)
-					pushNotify('error', 'Quest creation', 'Something went wrong!')
+					pushNotify('error', 'Map creation', 'Something went wrong!')
 	
 				})
 			} catch (error) {
