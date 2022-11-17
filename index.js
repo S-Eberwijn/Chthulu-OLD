@@ -33,7 +33,7 @@ const firebase = admin.initializeApp({
         "client_email": process.env.FS_CLIENT_EMAIL,
         "client_id": process.env.FS_CLIENT_ID,
         "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-        "token_uri": "https://oauth2.googleapis.com/token",
+        "token_uri": "https://oauth2.googleapis.com/token", 
         "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
         "client_x509_cert_url": process.env.FS_CERT_URL || ""
     }),
@@ -95,6 +95,7 @@ const bot = new Client({ restTimeOffset: 0, partials: ['MESSAGE', 'CHANNEL', 'RE
 
 const Enmap = require('enmap');
 const { getBotGuilds } = require('./functions/api/misc');
+const { getItem } = require('./functions/api/items');
 bot.commands = new Enmap();
 bot.slashCommands = new Enmap();
 
@@ -147,12 +148,12 @@ bot.login(BOT_TOKEN).then(async () => {
 
     // Start Webserver
     app.listen(WB_PORT, () => {
-        const HEROKU_OPTIONS = {
-            interval: 29,
-            logging: false,
-            stopTimes: { start: '04:00', end: '23:00' }
-        }
-        wakeDyno(DYNO_URL, HEROKU_OPTIONS); // Use this function when only needing to wake a single Heroku app.
+        // const HEROKU_OPTIONS = {
+        //     interval: 29,
+        //     logging: false,
+        //     stopTimes: { start: '04:00', end: '23:00' }
+        // }
+        // wakeDyno(DYNO_URL, HEROKU_OPTIONS); // Use this function when only needing to wake a single Heroku app.
         logger.info(`Website is up and running at ${WB_BASE_URL}:${WB_PORT || 5000}`)
         module.exports = bot;
     })

@@ -76,8 +76,8 @@
 }
 
 .dashboardContent[characters] .characterDisplayBox .characterCard {
-    width: var(--characterCard-width);
     min-width: var(--characterCard-width);
+    max-width: calc(var(--characterCard-width));
     height: var(--characterCard-height);
     min-height: var(--characterCard-height);
     background-color: var(--menu-color);

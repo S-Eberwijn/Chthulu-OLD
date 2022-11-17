@@ -9,6 +9,7 @@ const { getBotCommandsByCategory } = require('../../functions/api/bot');
 const { createGameSession, approveGameSession, declineGameSession, joinGameSession, updateGameSession, getAllGameSessions, getAllServerGameSessions } = require('../../functions/api/sessions');
 const { editAllGameSessionsForWebsite, getPlayersData } = require('../../functions/website');
 const { QUEST_ELEMENT_TEMPLATE, SESSION_EMBED_ELEMENT_TEMPLATE } = require('../../functions/templating');
+const { getAllItems,getAllItemImagesNames } = require('../../functions/api/items');
 
 exports.dashboardPage = async (req, res) => {
     res.render('dashboardPage', {
@@ -171,6 +172,19 @@ exports.updateGameSession = async (req, res) => {
         return res.json(session);
 
     }).catch((error) => { res.status(400).send({ message: `${error}` }) });
+}
+
+//ITEMS PAGE
+exports.guildLookupItemsDashboardPage = async (req, res) => {
+    res.render('itemsPage', {
+        ...res.locals.renderData,
+        ...{
+            isGuildDashboardPage: true,
+            headerTitle: `Items`,
+            allItems: await getAllItems(),
+            imgNames: await getAllItemImagesNames(),
+        }
+    });
 }
 
 

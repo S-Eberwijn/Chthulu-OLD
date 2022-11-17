@@ -1,0 +1,31 @@
+extends ./template/baseDashboard.pug
+block scripts
+    script
+        include ./static/theme.js
+        include ./static/itemsDashboard.js
+    script 
+        //- | var items = !{JSON.stringify(allItems)}; 
+        | var imgNames = !{JSON.stringify(imgNames)};
+        //- | var categories = items.map(item => item.category_range).filter((item, i, ar) => ar.indexOf(item) === i);
+        //- | var uniqueCategories = items.filter((item, i, ar) => ar.indexOf(item.equipment_category.name) === i);
+
+block styles 
+    style 
+        include ./assets/css/main.css
+        include ./assets/css/sidebar.css
+        include ./assets/css/menu.css
+        include ./assets/css/dashboard.css
+        include ./assets/css/itemsDashboard.css
+
+block dashboardContent
+    .dashboardContent(items=true)
+        .inputWrapper
+            input(placeholder="Search item...", oninput="searchItem(this)", spellcheck="false")
+        .itemsWrapper
+            - let uniqueNames = []
+            each item_outer in allItems
+                if (-1 === uniqueNames.indexOf(item_outer.equipment_category.name))
+                    - uniqueNames.push(item_outer.equipment_category.name)
+                    .itemCategory !{item_outer.equipment_category.name}
+                        each item in allItems.filter(item_inner => item_inner.equipment_category.name == item_outer.equipment_category.name)
+                            include ./components/itemComponent.pug
