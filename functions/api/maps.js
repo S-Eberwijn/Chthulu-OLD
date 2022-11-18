@@ -24,23 +24,27 @@ async function uploadMapImageApi(id, body) {
             await fs.writeFile(filePath, buffer);
             await CLOUDSTORAGE.uploadFile(filePath); 
             await fs.unlink(filePath);
-            
-            // create new map-entry in database with default values and the map_url
-            const map = await Map.create({
-                id: id,
-                map_url: await CLOUDSTORAGE.getFileByName(fileName),
-                locations: [],
-                server: id
-            });
-            return resolve(map);
+            return resolve(await CLOUDSTORAGE.getFileByName(fileName));
         }
         catch(err){
             console.log(err);
+            return reject(err);
         }
     });
 }
 
+async function createMap(id, body) {
+    // create new map-entry in database with default values and the map_url
+    const map = await Map.create({
+        id: id,
+        map_url: body.map_url,
+        locations: [],
+        server: id
+    });
+    return map;
+
+}
 
 module.exports = {
-    getServerMap, getAllMaps,uploadMapImageApi
+    getServerMap, getAllMaps,createMap,uploadMapImageApi
 };

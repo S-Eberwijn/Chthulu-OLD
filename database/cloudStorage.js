@@ -6,7 +6,6 @@ class CloudStorage  {
     }
     
     async uploadFile(filename) {
-        console.log("uploading file: " + filename)
         try {
             this.bucket.upload(filename, function (err) {
                 if (err) {

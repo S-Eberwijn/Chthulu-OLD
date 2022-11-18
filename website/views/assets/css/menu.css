@@ -16,7 +16,6 @@
     position: relative; 
 }
 
-
 .menu::-webkit-scrollbar {
     display: none;
 }
@@ -31,7 +30,6 @@ header.menuHeader {
 
 header.menuHeader span {
     font-size: var(--header-font-size);
-
 }
 
 /* header.menuHeader.collapsed {

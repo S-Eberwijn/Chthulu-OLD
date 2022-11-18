@@ -49,3 +49,7 @@
 #closeButtonMap{
     all: unset;
 }
+
+#upload_map{
+    background-color: var(--success-color);
+}

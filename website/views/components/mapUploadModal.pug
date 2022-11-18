@@ -17,11 +17,10 @@ style
         form(action="create" method="POST" enctype="multipart/form-data")
             .label-input-section
                 label().required Title
-                input(type="text" autocomplete="off" spellcheck="false" id="quest_title" oninput="updateInput(this)" onkeydown="return event.key != 'Enter';" maxlength="30").title-field
+                input(type="text" autocomplete="off" spellcheck="false" id="map_title" oninput="updateInput()" onkeydown="return event.key != 'Enter';" maxlength="30").title-field
             .label-input-section
                 label.optional Description
-                textarea(cols="5" rows="5" maxlength="400" spellcheck="false" autocomplete="off" id="quest_description" oninput="updateInput(this)").description-field
+                textarea(cols="5" rows="5" maxlength="400" spellcheck="false" autocomplete="off" id="map_description" oninput="updateInput()").description-field
     .modal-footer           
         .button-wrapper
-            input(id="create_quest" type="button" value="Create" disabled="true" onclick="createQuest(this)")
-            i.fa.fa-spinner.fa-spin.fa-align-center
+            input(id="upload_map" type="button" value="Create" onclick="createMapEntry(this)")
