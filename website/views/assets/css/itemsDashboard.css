@@ -15,11 +15,16 @@
 }
 
 .dashboardContent[items] .inputWrapper{
-    height: 40px;
+    height: 20px;
     min-height: 40px;
 
     width: 70%;
     position: relative;
+    display: flex;
+    flex-direction: row;
+    /* justify-content: space-evenly; */
+    align-items: center;
+    gap: 20px;
 }
 
 .dashboardContent[items] .inputWrapper::after {
@@ -34,9 +39,9 @@
     color: var(--placeholder-text-color) ;
 }
 
-.dashboardContent[items] .inputWrapper input {
+.dashboardContent[items] .inputWrapper > input {
     height: 100%;
-    width: 100%;
+    width: 70%;
     /* border: 2px solid var(--menu-color);*/
     border: none;
     box-shadow: inset 0 0 0 2px var(--sidebar-color);
@@ -70,6 +75,11 @@
     color: var(--placeholder-text-color);
 }
 
+.dashboardContent[items] .inputWrapper select {
+    height: 100%;
+    width: 20%;
+}
+
 
 .dashboardContent[items] .itemsWrapper {
     height: auto;
@@ -95,6 +105,7 @@
 .dashboardContent[items] .itemsWrapper .item {
     height: var(--item-height);
     width: 90%;
+    min-width: 700px;
     background-color: var(--menu-color);
     border-radius: var(--modal-border-radius);
     margin-left: 20px;
@@ -110,6 +121,8 @@
 .item .itemIconHolder {
     height: calc(var(--item-content-height) - 2 * 5px);
     width: 80px;
+    min-width: 80px;
+
     background-color: var(--sidebar-color);
     border: 5px solid var(--sidebar-color);
     border-radius: var(--modal-border-radius);
@@ -205,7 +218,7 @@ display: -webkit-box;
 }
 
 .itemSecondMiddleBlock .informationPart {
-
+    font-size: 0.8rem;
     display: flex;
     flex-direction: row;
     position: relative;

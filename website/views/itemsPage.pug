@@ -5,8 +5,9 @@ block scripts
         include ./static/itemsDashboard.js
     script 
         //- | var items = !{JSON.stringify(allItems)}; 
-        | var imgNames = !{JSON.stringify(imgNames)};
-        //- | var categories = items.map(item => item.category_range).filter((item, i, ar) => ar.indexOf(item) === i);
+        //- | var imgNames = !{JSON.stringify(imgNames)};
+        | var categories = !{JSON.stringify(allItems)}.map(item => ({'label': item.equipment_category.name, 'value': item.equipment_category.index}));
+        | var uniqueCategories = [...new Map(categories.map(item => [item['value'], item])).values()]
         //- | var uniqueCategories = items.filter((item, i, ar) => ar.indexOf(item.equipment_category.name) === i);
 
 block styles 
@@ -20,12 +21,16 @@ block styles
 block dashboardContent
     .dashboardContent(items=true)
         .inputWrapper
-            input(placeholder="Search item...", oninput="searchItem(this)", spellcheck="false")
+            input(id="search-item-bar" placeholder="Search item...", oninput="searchItem()", spellcheck="false")
+            for filter in ["category-filter"]
+                include ./components/multiselect-dropdown.pug
         .itemsWrapper
             - let uniqueNames = []
             each item_outer in allItems
                 if (-1 === uniqueNames.indexOf(item_outer.equipment_category.name))
                     - uniqueNames.push(item_outer.equipment_category.name)
-                    .itemCategory !{item_outer.equipment_category.name}
-                        each item in allItems.filter(item_inner => item_inner.equipment_category.name == item_outer.equipment_category.name)
-                            include ./components/itemComponent.pug
+
+            each category in uniqueNames.sort().reverse()
+                .itemCategory !{category}
+                    each item in allItems.filter(item_inner => item_inner.equipment_category.name == category)
+                        include ./components/itemComponent.pug

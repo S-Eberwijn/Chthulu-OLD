@@ -1,23 +1,47 @@
-.item
+.item(category=item.equipment_category.index)
     .itemIconHolder 
-        - let splitItemName = item.index.split("-")
-        - let matchedImg = imgNames.filter(imgName => splitItemName.includes(imgName) || splitItemName[0].includes(imgName) || imgName.includes(splitItemName[0]))
-        if (matchedImg.length <= 0)
-            - let matchedImg = imgNames.filter(imgName => imgName.includes(item.equipment_category.index) )
-            if (matchedImg.length <= 0)
-                img(src=`/images/items/other.png`)
-            else
-                img(src=`/images/items/${matchedImg[0]}.png`)
-        else
-            img(src=`/images/items/${matchedImg[0]}.png`)
+        - 
+            const NAME_CHECKS = {
+                0: function(item) {
+                    let itemName = item.index
+                    return IMG_NAMES.filter(imgName => itemName == imgName);
+                },
+                1: function(item) {
+                    let itemName = item.index
+                    return IMG_NAMES.filter(imgName => itemName.startsWith(imgName));
+                },
+                2: function(item) {
+                    let itemName = item.index
+                    return IMG_NAMES.filter(imgName => imgName.split("-").some(r=> itemName.startsWith(r)));
+                },
+                3: function(item) {
+                    let itemName = item.index
+                    return IMG_NAMES.filter(imgName => imgName.split("-").some(r=> itemName.includes(r)));
+                }, 
+                4: function(item) {
+                    let category = item.equipment_category.index;
+                    return IMG_NAMES.filter(imgName => imgName.split("-").some(r=> category.includes(r)));
+                },
+                5: function(item) {
+                    return ["other"];
+                },
+                   
+            }
+        for [index, value] of Object.entries(NAME_CHECKS)
+            //- Execute check to see if there is a match
+            if value(item).length > 0
+                img(src=`/images/items/${value(item)[0]}.png`)
+                - break;
     .itemMiddleBlock
         span.itemName !{item.name}
             span -
             if item.rarity === undefined 
                 - item.rarity = {name: "Common"}
             span.itemRarity(rarity=`${item.rarity.name}`) !{item.rarity.name}
-        if item.desc !== undefined
-            span.itemDescription !{item.desc}
+        if item.desc !== undefined && item.desc.length > 1
+            span.itemDescription !{item.desc.slice(1)}
+        else if item.desc !== undefined && item.desc.length == 1
+            span.itemDescription !{item.desc[0]}
     .itemSecondMiddleBlock
         .informationPart 
             if item.damage !== undefined

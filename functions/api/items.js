@@ -89,7 +89,7 @@ async function getAllItemImagesNames() {
 
 
 (async () => {
-    console.log(await getAllItemImagesNames())
+    // console.log(await getAllItemImagesNames())
     // console.log((await getJSONDatabase("equipment")).length)
     // console.log((await getAllItems()).length)
 })()

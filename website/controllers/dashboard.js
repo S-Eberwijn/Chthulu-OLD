@@ -182,7 +182,7 @@ exports.guildLookupItemsDashboardPage = async (req, res) => {
             isGuildDashboardPage: true,
             headerTitle: `Items`,
             allItems: await getAllItems(),
-            imgNames: await getAllItemImagesNames(),
+            IMG_NAMES: await getAllItemImagesNames(),
         }
     });
 }
