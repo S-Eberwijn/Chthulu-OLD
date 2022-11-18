@@ -203,13 +203,9 @@ function sortingChanged(sortingSelector) {
         })
     }
 
-
-
     if (document.getElementById('sortingIcon').classList.contains('desc')) {
         questToSortArray.reverse();
     }
-
-
 
     // Remove Quests
     questsToSort.forEach(quest => {

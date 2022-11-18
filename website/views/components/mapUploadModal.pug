@@ -1,5 +1,6 @@
 style 
     include ../assets/css/modal.css
+    include ../assets/css/mapUploadform.css
 
 #modalBackgroundMap 
 
@@ -10,9 +11,16 @@ style
                 img(src=bot_icon alt="Chthulu Avatar")
         h3 Upload map
         label(for="uploadMapModal") 
-            i.fa-solid.fa-xmark.fa-xl#closeButtonMap
-    .modal-content
-        form
+            button#closeButtonMap
+                i.fa-solid.fa-xmark.fa-xl
+    .modal-content#mapUploadModal
+        form(action="create" method="POST" enctype="multipart/form-data")
+            .label-input-section
+                label().required Title
+                input(type="text" autocomplete="off" spellcheck="false" id="quest_title" oninput="updateInput(this)" onkeydown="return event.key != 'Enter';" maxlength="30").title-field
+            .label-input-section
+                label.optional Description
+                textarea(cols="5" rows="5" maxlength="400" spellcheck="false" autocomplete="off" id="quest_description" oninput="updateInput(this)").description-field
     .modal-footer           
         .button-wrapper
             input(id="create_quest" type="button" value="Create" disabled="true" onclick="createQuest(this)")
