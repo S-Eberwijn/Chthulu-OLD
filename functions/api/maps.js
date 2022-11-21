@@ -23,6 +23,7 @@ async function uploadMapImageApi(id, body) {
         try{
             await fs.writeFile(filePath, buffer);
             await CLOUDSTORAGE.uploadFile(filePath); 
+            console.log("File uploaded to cloud storage");
             await fs.unlink(filePath);
             return resolve(await CLOUDSTORAGE.getFileByName(fileName));
         }

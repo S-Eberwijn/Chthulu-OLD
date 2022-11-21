@@ -23,14 +23,19 @@ block styles
     //- link(rel="stylesheet" href="https://cdn.jsdelivr.net/npm/react-leaflet-sidebarv2@0.6.0/lib/index.min.css")
 
 block dashboardContent
-    include ./components/mapUploadModal.pug 
-    .dashboardContent(map=true)
-        #map-container
-            input(type="file" id="fileElem" multiple accept=".png, .jpeg, .jpg, .gpx, .osm, .zip" data-content=" Upload file")
+    if(False)
+        include ./components/mapUploadModal.pug 
+        .dashboardContent(map=false)
+            #map-container
+                input(type="file" id="fileElem" multiple accept=".png, .jpeg, .jpg, .gpx, .osm, .zip" data-content=" Upload file")
+    else
+        .dashboardContent(map=true)
+            #map-container
+                div(id="map")
 
     script
         include ./static/theme.js
-        //include ./static/mapDashboard.js
+        include ./static/mapDashboard.js
         include ./static/mapUpload.js
     //- script var databaseMap = !{JSON.stringify(databaseMap)}; 
 

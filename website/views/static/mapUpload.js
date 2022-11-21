@@ -64,7 +64,7 @@ function uploadMapImage(file){
 	
 }
 
-function createMapEntry(e){
+function createMapEntry(){
 	let title = document.getElementById("map_title").value;
 	let description = document.getElementById("map_description").value;
 	try {
