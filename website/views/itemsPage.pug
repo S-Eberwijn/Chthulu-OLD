@@ -6,8 +6,10 @@ block scripts
     script 
         //- | var items = !{JSON.stringify(allItems)}; 
         //- | var imgNames = !{JSON.stringify(imgNames)};
-        | var categories = !{JSON.stringify(allItems)}.map(item => ({'label': item.equipment_category.name, 'value': item.equipment_category.index}));
-        | var uniqueCategories = [...new Map(categories.map(item => [item['value'], item])).values()]
+        //- | var categories = !{JSON.stringify(allItems)}.map(item => ({'label': item.equipment_category.name, 'value': item.equipment_category.index}));
+        | var uniqueCategories = [...new Map(!{JSON.stringify(allItems)}.map(item => ({'label': item.equipment_category.name, 'value': item.equipment_category.index})).map(item => [item['value'], item])).values()]
+        | var uniqueRarities = [...new Map(!{JSON.stringify(allItems)}.map(item => ({'label': item.rarity ? item.rarity.name : "Common", 'value': item.rarity ? item.rarity.name : "Common"})).map(item => [item['value'], item])).values()]
+
         //- | var uniqueCategories = items.filter((item, i, ar) => ar.indexOf(item.equipment_category.name) === i);
 
 block styles 
@@ -22,7 +24,7 @@ block dashboardContent
     .dashboardContent(items=true)
         .inputWrapper
             input(id="search-item-bar" placeholder="Search item...", oninput="searchItem()", spellcheck="false")
-            for filter in ["category-filter"]
+            for filter in ["category-filter", "rarity-filter"]
                 include ./components/multiselect-dropdown.pug
         .itemsWrapper
             - let uniqueNames = []

@@ -213,8 +213,10 @@ input[action="show"]:checked~.additional {
 }
 
 .characterCard .additional .user-card .player img {
-    object-fit: contain;
-    border-radius: 100px;
+    object-fit: unset;
+    border-radius: 100%;
+    width: auto;
+    height: 100%;
 }
 
 .characterCard .additional .user-card .img-holder {

@@ -43,9 +43,12 @@ var Motus = {};
       var selection = element.querySelectorAll("input:checked");
       if (selection.length === 0) {
         text = labels.emptyText;
+        clearSelection.classList.add('hidden');
       } else if (selection.length > 3) {
         text = selection.length + " " +labels.selectedText;
+        clearSelection.classList.remove('hidden');
       } else { 
+        clearSelection.classList.remove('hidden');
         var arr = [];
         for (var i = 0; i < selection.length; i++) {
           arr.push(selection[i].parentNode.textContent);
@@ -140,7 +143,8 @@ var Motus = {};
     searchField.addEventListener("keyup", _performSearch);
 
     clearSelection.classList.add('multiselect-clear');
-    clearSelection.innerHTML = '';
+    clearSelection.classList.add('hidden');
+    clearSelection.innerHTML = '';
     clearSelection.addEventListener("click", _fnClearSelection);
     
     carret.classList.add("carret");

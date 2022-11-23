@@ -1,11 +1,11 @@
-let selectedCategories = [''];
+let selectedCategories = [''], selectedRarities = [''];
 
 function searchItem() {
     let searchValue = document.querySelector('#search-item-bar')?.value.trim().toLowerCase();
     let itemsWrapperElement = document.querySelector('.itemsWrapper');
     let itemsToSort = itemsWrapperElement.querySelectorAll('.item');
 
-    let filteredItems = Array.prototype.slice.call(itemsToSort).filter(item => item.querySelector('span.itemName').textContent.trim().toLowerCase().includes(searchValue) && selectedCategories.some(category => item.getAttribute('category').includes(category)));
+    let filteredItems = Array.prototype.slice.call(itemsToSort).filter(item => item.querySelector('span.itemName').textContent.trim().toLowerCase().includes(searchValue) && selectedCategories.some(category => item.getAttribute('category').startsWith(category)) && selectedRarities.some(rarity => item.getAttribute('rarity').startsWith(rarity)));
 
     // Hide Other Quests    
     itemsToSort.forEach(item => {
@@ -17,13 +17,22 @@ function searchItem() {
 }
 
 window.addEventListener('DOMContentLoaded', async (event) => {
-    var element = document.querySelector("#multiselect__container-category-filter");
+    var categoryFilterElement = document.querySelector("#multiselect__container-category-filter");
+    var rarityFilterElement = document.querySelector("#multiselect__container-rarity-filter");
 
-    var select = function (data) {
+
+    var selectCategories = function (data) {
         data.length > 0 ? selectedCategories = data: selectedCategories = [''];
         searchItem();
     }
 
-    Motus.ElementMultiselect.init(element, uniqueCategories, select, { title: "Category: " });
+    var selectRarities = function (data) {
+        data.length > 0 ? selectedRarities = data: selectedRarities = [''];
+        searchItem();
+    }
+
+    Motus.ElementMultiselect.init(categoryFilterElement, uniqueCategories, selectCategories, { title: "Category: ", emptyText: "Select a category...", selectedText: "Categories" });
+    Motus.ElementMultiselect.init(rarityFilterElement, uniqueRarities, selectRarities, { title: "Rarity: ", emptyText: "Select a rarity...", selectedText: "Rarities" });
+
 })
 
