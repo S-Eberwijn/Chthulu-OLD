@@ -33,6 +33,7 @@ block dashboardContent
                     - uniqueNames.push(item_outer.equipment_category.name)
 
             each category in uniqueNames.sort().reverse()
-                .itemCategory !{category}
+                .itemCategory 
+                    h1 !{category}
                     each item in allItems.filter(item_inner => item_inner.equipment_category.name == category)
                         include ./components/itemComponent.pug

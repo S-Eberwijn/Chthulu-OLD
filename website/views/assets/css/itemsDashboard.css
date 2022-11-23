@@ -108,6 +108,21 @@
     margin-left: 5px;
     gap: 20px;
     box-sizing: border-box;
+    /* overflow-y: scroll; */
+    /* position: fixed; */
+}
+
+.dashboardContent[items] .itemCategory > h1{
+    top: 0;
+    position: sticky;
+    position: -webkit-sticky;
+    z-index: 1;
+    background-color: var(--content-color);
+    height: 40px;
+    display: flex;
+    align-items: center;
+    padding: 0;
+    margin: 0;
 }
 
 .dashboardContent[items] .itemsWrapper .item {
