@@ -1,11 +1,6 @@
 #map-container {
     height: 100%;
     width: 100%;
-    margin-left:2%;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }
 
 #map {
@@ -15,7 +10,6 @@
 }
 
 .dashboardContent[map] {
-    display: flex;
     justify-content: center;
     align-items: center;
     padding: 0;

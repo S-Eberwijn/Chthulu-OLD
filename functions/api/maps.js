@@ -22,8 +22,8 @@ async function uploadMapImageApi(id, body) {
 
         try{
             await fs.writeFile(filePath, buffer);
+            await sleep(1000);
             await CLOUDSTORAGE.uploadFile(filePath); 
-            console.log("File uploaded to cloud storage");
             await fs.unlink(filePath);
             return resolve(await CLOUDSTORAGE.getFileByName(fileName));
         }
@@ -43,7 +43,10 @@ async function createMap(id, body) {
         server: id
     });
     return map;
+}
 
+async function sleep(interval) {
+    return new Promise(resolve => setTimeout(resolve, interval));
 }
 
 module.exports = {

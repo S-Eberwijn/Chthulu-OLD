@@ -1,12 +1,15 @@
 
-document.getElementById("fileElem").addEventListener("change", handleFiles, false);
-document.getElementById("fileElem").addEventListener("dragover", (e)=>{
-	e.preventDefault();
-});
-document.getElementById("closeButtonMap").addEventListener("click", (e)=>{
-	e.preventDefault();
-	resetPage();
-});
+function loadEventListeners(){
+	document.getElementById("fileElem").addEventListener("change", handleFiles, false);
+	document.getElementById("fileElem").addEventListener("dragover", (e)=>{
+		e.preventDefault();
+	});
+	document.getElementById("closeButtonMap").addEventListener("click", (e)=>{
+		e.preventDefault();
+		resetPage();
+	});
+}
+
 let mapUrl = ""
 
 ondrop = (e) => {
