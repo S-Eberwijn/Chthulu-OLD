@@ -1,4 +1,3 @@
-
 function loadEventListeners(){
 	document.getElementById("fileElem").addEventListener("change", handleFiles, false);
 	document.getElementById("fileElem").addEventListener("dragover", (e)=>{
@@ -29,12 +28,6 @@ function showModal(){
 	modalBackgroundMap.style.display = "block";
 }
 
-function resetPage(){
-	uploadMapModal.style.display = "none";
-	modalBackgroundMap.style.display = "none";
-	document.getElementById("fileElem").dataset.content = " Upload file";
-}
-
 function uploadMapImage(file){
     let reader = new FileReader();
     reader.onloadend = function() {
@@ -50,21 +43,18 @@ function uploadMapImage(file){
 						pushNotify('success', 'Map creation', 'Map uploaded successfully, please add some details about the map!');
 						showModal();
 					} else {
-						console.log("Something went wrong!; ERROR STATUS: " + response.status);
+						pushNotify("Something went wrong!; ERROR STATUS: " + response.status);
 					}
-				}).catch((err) => {
-					console.log(err)
+				}).catch(() => {
 					pushNotify('error', 'Map creation', 'Something went wrong!')
 	
 				})
 			} catch (error) {
-				console.log(error);
-				console.log("error occured during create");
+				pushNotify("error occured during create");
 			}
 		}, 250);
     }
     reader.readAsDataURL(file);
-	
 }
 
 function createMapEntry(){
@@ -79,19 +69,16 @@ function createMapEntry(){
 			if (response.status === 200) {
 				console.log("request handled successfully", response);
 				pushNotify('success', 'Map creation', 'Map created successfully!');
-				resetPage();
+				setTimeout(() => {location.reload();}, 3000);
 			} else {
-				console.log("Something went wrong!; ERROR STATUS: " + response.status);
+				pushWarning("Something went wrong!; ERROR STATUS: " + response.status);
 			}
-		}).catch((err) => {
-			console.log(err)
+		}).catch(() => {
 			pushNotify('error', 'Map creation', 'Something went wrong!')
 		})
 	} catch (error) {
-		console.log(error);
-		console.log("error occured during create");
+		pushError("error occured during create");
 	}
-
 }
 
 function updateInput(){

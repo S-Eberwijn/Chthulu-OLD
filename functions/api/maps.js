@@ -24,7 +24,7 @@ async function uploadMapImageApi(id, body) {
             await fs.writeFile(filePath, buffer);
             await sleep(1000);
             await CLOUDSTORAGE.uploadFile(filePath); 
-            await fs.unlink(filePath);
+            await fs.rm(filePath);
             return resolve(await CLOUDSTORAGE.getFileByName(fileName));
         }
         catch(err){

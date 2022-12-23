@@ -1,22 +1,27 @@
 
 async function loadMap(databaseMap) {
     databaseMap = databaseMap[0];
-    let mapElement = document.getElementById("map");
-    let size = mapElement.getBoundingClientRect();
-    let width = size.width;
-    let height = size.height;
 
     let center = [0, 0]
     let map = L.map('map', {
-        zoomControl: false,
+        zoomControl: true,
         center: center,
-        crs: L.CRS.Simple
+        crs: L.CRS.Simple,
+        maxBoundsViscosity: 1,
+        zoomSnap: 0.25,
+        zoomDelta: 0.25,
+        zoom: .75
     });
-    let bounds = [[0, 0], [height, width]];
-    let mapImg = L.imageOverlay(databaseMap.data.map_url, bounds).addTo(map);
-    map.fitBounds(bounds);
-    mapImg.bringToFront();
-    map.setMaxBounds(bounds);
+    let mapImage = new Image();
+    mapImage.src = databaseMap.data.map_url;
+    mapImage.onload = function () {
+        let innerBounds = [center, [mapImage.height, mapImage.width]];
+        let outerBounds = [center, [mapImage.height, mapImage.width]];
+        let mapImg = L.imageOverlay(databaseMap.data.map_url, innerBounds).addTo(map);
+        map.setMaxBounds(outerBounds);
+        map.fitBounds(innerBounds);
+        mapImg.bringToFront();
+    }
 
     const uniqueTypes = [...new Set(databaseMap.data.locations.map(location => location.type))]
 
@@ -77,7 +82,7 @@ async function loadMap(databaseMap) {
     })
         .addTo(map);
 
-    /* add a new panel */
+    //add a new panel
     let welcomeContent = {
         id: 'welcomePanel',                     // UID, used to access the panel
         tab: '<i class="fas fa-home"></i>',  // content can be passed as HTML string,
@@ -130,11 +135,6 @@ async function loadMap(databaseMap) {
     mapSidebar.addPanel(settingsContent);
     mapSidebar.open('filterPanel');
 
-    mapImg.on('click', async (e) => {
-        let latLng = e.latlng;
-        console.log(latLng);
-        mapSidebar.close()
-    });
 
     document.querySelectorAll('.locationCategoryHeader').forEach(category => {
         category.addEventListener('click', function (e) {

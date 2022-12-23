@@ -16,10 +16,6 @@
     overflow: hidden;
 }
 
-#map{
-    background: #500
-}
-
 .dashboardContent[map]>div {
     height: unset;
     width: unset;
