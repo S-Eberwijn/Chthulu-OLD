@@ -1,0 +1,119 @@
+.multiselect-container{
+    width: 100%;
+    position: relative;
+    display: flex;  
+    flex-direction: row;
+    align-items: center;
+    overflow: visible;
+    vertical-align: middle;
+  }
+  .multiselect-label{
+    font-weight: bold;
+    font-size: 14px;
+    margin: 0 5px
+  }
+  .multiselect-data-container{
+    position: relative;
+    overflow: visible;
+    vertical-align: middle;
+  }
+  .multiselect-button{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--menu-color);
+    /* box-shadow: inset 0 0 0 2px var(--sidebar-color); */
+    border: 2px solid var(--sidebar-color);
+    padding: 0px 12px;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.42857143;
+    color: #333;
+    cursor: pointer;
+    color: var(--placeholder-text-color);
+    border-radius: var(--modal-border-radius);
+  }
+  
+  .multiselect-text{
+    border: 0;
+    padding: 3px 0;
+    width: 145px;
+  }
+  
+  .multiselect-button input,
+  .multiselect-button b{
+    pointer-events: none;
+    background-color: var(--menu-color);
+  }
+  
+  .multiselect-list{
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin: 0;
+    padding: 0;
+    max-height: 250px;
+    width: 100%;
+    background-color: var(--menu-color);
+    border: 1px solid rgba(0,0,0,.15);
+    box-shadow: 0 6px 12px rgba(0,0,0,.175);
+    font-size: 14px;
+    text-align: left;
+    list-style: none;
+    background-clip: padding-box;
+    border-radius: 4px;
+    list-style-type: none;
+    overflow: auto;
+    z-index: 1000;
+  }
+  
+  .multiselect-item-label{
+    display:block;
+    height: 100%;
+    border: 1px solid transparent;  
+  }
+  
+  .multiselect-item-label--active{
+    /* border: 1px solid red;   */
+  }
+  
+  .multiselect-clear{
+    font-family: 'Poppins', 'FontAwesome', sans-serif;
+    padding: 0 5px; 
+  }
+
+  .multiselect-clear.hidden{
+    /* display: none; */
+    visibility: hidden;
+  }
+  
+  .carret{
+    display: inline-block;
+    width: 0;
+    height: 0;
+    margin-left: 0;
+    vertical-align: middle;
+    border-top: 4px solid;
+    border-right: 4px solid transparent;
+    border-left: 4px solid transparent;
+  }
+  
+  .multiselect-item-label--select-all{
+    font-weight: bold;
+    border-bottom: 1px solid #b7b7b7;
+    padding: 5px;
+  }
+
+  input[type="checkbox"] {
+    /* -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border: none; */
+    filter: sepia(100%) brightness(80%) hue-rotate(170deg) saturate(70%) contrast(300%);
+    /* -moz-appearance:none;
+-webkit-appearance:none;
+-o-appearance:none; */
+}

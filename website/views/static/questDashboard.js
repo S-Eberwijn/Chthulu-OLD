@@ -304,6 +304,10 @@ function createQuest(buttonElement) {
                 } else {
                     console.log("Something went wrong!; ERROR STATUS: " + response.status);
                 }
+            }).catch((err) => {
+                console.log(err)
+                pushNotify('error', 'Quest creation', 'Something went wrong!')
+
             })
         } catch (error) {
             console.log("error occured during create");

@@ -10,6 +10,8 @@ const { createGameSession, approveGameSession, declineGameSession, joinGameSessi
 const { editAllGameSessionsForWebsite, getPlayersData } = require('../../functions/website');
 const { QUEST_ELEMENT_TEMPLATE, SESSION_EMBED_ELEMENT_TEMPLATE } = require('../../functions/templating');
 const { uploadMapImageApi, createMap } = require('../../functions/api/maps');
+const { getAllItems,getAllItemImagesNames } = require('../../functions/api/items');
+
 
 exports.dashboardPage = async (req, res) => {
     res.render('dashboardPage', {
@@ -172,6 +174,19 @@ exports.updateGameSession = async (req, res) => {
         return res.json(session);
 
     }).catch((error) => { res.status(400).send({ message: `${error}` }) });
+}
+
+//ITEMS PAGE
+exports.guildLookupItemsDashboardPage = async (req, res) => {
+    res.render('itemsPage', {
+        ...res.locals.renderData,
+        ...{
+            isGuildDashboardPage: true,
+            headerTitle: `Items`,
+            allItems: await getAllItems(),
+            IMG_NAMES: await getAllItemImagesNames(),
+        }
+    });
 }
 
 
