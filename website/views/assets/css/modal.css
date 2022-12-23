@@ -393,7 +393,6 @@ input::placeholder {
 }
 
 /* CREATE QUEST */
-
 .new-quest-label {
     user-select: none;
     color: var(--placeholder-text-color);
@@ -669,4 +668,8 @@ div#addPlayer {
     margin-top: auto;
     margin-bottom: auto;
     transition: color .2s ease;
+}
+
+.title-field:focus, .description-field:focus{
+    border: 2px solid gray;
 }

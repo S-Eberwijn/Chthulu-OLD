@@ -39,6 +39,8 @@ async function createMap(id, body) {
     const map = await Map.create({
         id: id,
         map_url: body.map_url,
+        description: body.description,
+        mapName: body.title,
         locations: [],
         server: id
     });

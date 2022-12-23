@@ -4,6 +4,14 @@ const Map = defineModel("maps", {
         type: 'string',
         required: true,
     },
+    description: {
+        type: 'string',
+        required: true,
+    },
+    mapName: {
+        type: 'string',
+        required: true,
+    },
     map_url: {
         type: 'string',
         required: true,

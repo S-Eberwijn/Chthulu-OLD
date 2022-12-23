@@ -2,7 +2,7 @@ document.addEventListener('keydown', (e) => {
     if (e.key == 'Escape') return e.preventDefault();
 });
 
-document.addEventListener('DOMContentLoaded', (event) => {
+document.addEventListener('DOMContentLoaded', () => {
     // Immediately invoked function to set the theme on initial load
     (function () {
         if (localStorage.getItem('menuState') === 'menuClosed') {
@@ -16,8 +16,13 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
         }
     })();
-    document.querySelectorAll('a').forEach(element => {
-        element.addEventListener('click', (event) => {
+    document.querySelectorAll('.sidebarContent a').forEach(element => {
+        element.addEventListener('click', () => {
+            showPageLoader();
+        })
+    })
+    document.querySelectorAll('.menuCategory a').forEach(element => {
+        element.addEventListener('click', () => {
             showPageLoader();
         })
     })

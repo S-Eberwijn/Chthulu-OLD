@@ -1,4 +1,3 @@
-
 async function loadMap(databaseMap) {
     databaseMap = databaseMap[0];
 
@@ -86,8 +85,8 @@ async function loadMap(databaseMap) {
     let welcomeContent = {
         id: 'welcomePanel',                     // UID, used to access the panel
         tab: '<i class="fas fa-home"></i>',  // content can be passed as HTML string,
-        pane: 'someDomNode.innerHTML',        // DOM elements can be passed, too
-        title: 'Welcome to Ghaeya',              // an optional pane header
+        pane: databaseMap.data.description,        // DOM elements can be passed, too
+        title: 'Welcome to ' + databaseMap.data.mapName,              // an optional pane header
         position: 'top'                  // optional vertical alignment, defaults to 'top'
     };
     mapSidebar.addPanel(welcomeContent);
@@ -116,11 +115,13 @@ async function loadMap(databaseMap) {
         button: function () {
             let elem = document.getElementById(`map`);
             if (!document.fullscreenElement) {
+                map.setZoom(1);
                 elem.requestFullscreen().catch(err => {
                     alert(`Error attempting to enable fullscreen mode: ${err.message} (${err.name})`);
                 });
             } else {
                 document.exitFullscreen();
+                map.setZoom(0);
             }
         }
     };
@@ -147,7 +148,6 @@ async function loadMap(databaseMap) {
         location.addEventListener('click', function (e) {
             marker = map.getMarkerById(location.id); // returns marker instance
             if (!marker) return;
-            console.log(marker.options.type)
             map.setView(marker.getLatLng(), 5);
             mapSidebar.close()
         })
