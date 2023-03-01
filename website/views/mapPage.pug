@@ -4,15 +4,14 @@ block scripts
     script(src='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js')
     script(src="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.js")
     script(src="https://cdn.jsdelivr.net/npm/leaflet-popup-sidebar@1.1.0/js/leaflet-sidebar.min.js")
+    script var guildID = !{JSON.stringify(selectedGuildId)};
     //- <script src="https://cdn.jsdelivr.net/npm/leaflet-popup-sidebar@1.1.0/js/leaflet-sidebar.min.js"></script>
     //- <script src="https://cdn.jsdelivr.net/npm/react-leaflet-sidebarv2@0.6.0/lib/index.min.js"></script>
-
-
+    script let databaseMap = !{JSON.stringify(databaseMap)}; 
     script
         include ./static/theme.js
+        include ./static/mapUpload.js
         include ./static/mapDashboard.js
-    script var mapFromDatabase = !{JSON.stringify(databaseMap)}; 
-    
 
 block styles 
     style 
@@ -21,24 +20,22 @@ block styles
         include ./assets/css/menu.css
         include ./assets/css/dashboard.css
         include ./assets/css/mapDashboard.css
-        include ./assets/css/mapPopUpForm.css
+        include ./assets/css/mapUploadform.css
     link(rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css" integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA==" crossorigin="")
     link(href='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css' rel='stylesheet')
     link(rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.css")
     link(rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-popup-sidebar@1.1.0/css/leaflet-sidebar.min.css")
     //- link(rel="stylesheet" href="https://cdn.jsdelivr.net/npm/react-leaflet-sidebarv2@0.6.0/lib/index.min.css")
 
-
-
 block dashboardContent
-    .dashboardContent(map=true)
-        #map-container
-            div(id="map")
-
-
-
-
-
-
-
-
+    if(databaseMap.length < 1)
+        include ./components/mapUploadModal.pug 
+        .dashboardContent(map=true)
+            #map-container
+                input(type="file" id="fileElem" multiple accept=".png, .jpeg, .jpg, .gpx, .osm, .zip" data-content=" Upload file")
+        script loadEventListeners()
+    else
+        .dashboardContent(map=true)
+            #map-container
+                div(id="map")
+        script loadMap(databaseMap);

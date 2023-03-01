@@ -9,7 +9,9 @@ const { getBotCommandsByCategory } = require('../../functions/api/bot');
 const { createGameSession, approveGameSession, declineGameSession, joinGameSession, updateGameSession, getAllGameSessions, getAllServerGameSessions } = require('../../functions/api/sessions');
 const { editAllGameSessionsForWebsite, getPlayersData } = require('../../functions/website');
 const { QUEST_ELEMENT_TEMPLATE, SESSION_EMBED_ELEMENT_TEMPLATE } = require('../../functions/templating');
+const { uploadMapImageApi, createMap } = require('../../functions/api/maps');
 const { getAllItems,getAllItemImagesNames } = require('../../functions/api/items');
+
 
 exports.dashboardPage = async (req, res) => {
     res.render('dashboardPage', {
@@ -203,4 +205,13 @@ exports.guildSettingsPage = async (req, res) => {
 
 exports.editSettingsRequest = async (req, res) => {
     editServerCommands(res.locals.renderData?.selectedGuildId, req.body).then(() => { return res.sendStatus(201) }).catch(() => { return res.sendStatus(400) });
+}
+
+//MAP PAGE
+exports.uploadMapImage = async (req, res) => {
+    uploadMapImageApi(req.params?.id, req.body).then((result) => {return res.json(result) }).catch((e) => { console.log(e); return res.sendStatus(400) });
+}
+
+exports.createMap = async (req, res) => {
+    createMap(req.params?.id, req.body).then((result) => {return res.json(result.data) }).catch((e) => { console.log(e); return res.sendStatus(400) });
 }

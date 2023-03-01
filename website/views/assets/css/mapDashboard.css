@@ -1,24 +1,15 @@
 #map-container {
-    height: calc(100% - 40px);
-    width: calc(100% - 40px);
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
+    height: 100%;
+    width: 100%;
 }
 
 #map {
     height: calc(100%);
     width: calc(100%);
-
     background: var(--content-color);
 }
 
-
-
 .dashboardContent[map] {
-    display: flex;
     justify-content: center;
     align-items: center;
     padding: 0;
@@ -244,4 +235,11 @@ img.huechange {
 } */
 img.hidden {
     display: none !important;
+}
+
+#welcomePanel {
+    color: #000;
+    font-weight: bold;
+    text-align: center;
+    margin-inline: 16px;
 }
